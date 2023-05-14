@@ -1,4 +1,5 @@
 import {
+  Box,
   Card,
   Checkbox,
   FormControl,
@@ -6,6 +7,7 @@ import {
   FormHelperText,
   FormLabel,
   Grid,
+  LinearProgress,
   Radio,
   RadioGroup
 } from '@mui/material'
@@ -25,9 +27,10 @@ interface Question {
   type: string
 }
 
-const Test = (): JSX.Element => {
+const Index = (): JSX.Element => {
   const [Questions, setQuestion] = useState<Question[]>([])
   const [loading, setLoading] = React.useState(false)
+  const [loadingPage, setLoadingPage] = React.useState(false)
 
   let arrStr: string[]
   function handleSubmit(): void {
@@ -39,14 +42,12 @@ const Test = (): JSX.Element => {
       setQuestion(response.data)
     })
   }, [])
-
   return (
     <>
       <Layout>
         <form onSubmit={handleSubmit}>
           {Questions.map(function (q, index) {
             arrStr = q.asw.split('<--->')
-
             if (q.type == 'Radio') {
               return (
                 <Card sx={{ maxWidth: '100%', mt: 4, p: 3, background: blue[50] }} key={index}>
@@ -106,4 +107,4 @@ const Test = (): JSX.Element => {
     </>
   )
 }
-export default Test
+export default Index
