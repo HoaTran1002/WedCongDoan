@@ -5,11 +5,12 @@ import Competition from './page/Competition'
 import CompetitionCreate from './page/CompetitionCreate'
 import TestCreate from './page/TestCreate'
 import Login from './page/Login'
-import Register from './page/Register'
+
 import TestManage from './page/TestManage'
 import Test from './page/Test'
 import UserManager from './page/UserManager'
 import CompetitionManage from './page/CompetitionManage'
+import Register from './page/Register'
 
 function App(): JSX.Element {
   return (
