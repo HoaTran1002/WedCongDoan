@@ -5,7 +5,7 @@ const Index = (): JSX.Element => {
   return (
     <>
       <LayoutAdmin>
-        <div>this is competition create page</div>
+        
       </LayoutAdmin>
     </>
   )

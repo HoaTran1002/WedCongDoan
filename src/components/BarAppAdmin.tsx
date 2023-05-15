@@ -27,7 +27,7 @@ import AdbIcon from '@mui/icons-material/Adb'
 
 const drawerWidth = 250
 const pages = [
-  { name: 'QUẢN LÝ CUỘC THI', to: '/CompetitionCreate' },
+  { name: 'QUẢN LÝ CUỘC THI', to: '/CompetitionManage' },
   { name: 'QUẢN LÝ BÀI THI', to: '/TestManage' },
   { name: 'QUẢN LÝ USER', to: '/UserManager' }
 ]
