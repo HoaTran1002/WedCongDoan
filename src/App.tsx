@@ -7,6 +7,7 @@ import TestCreate from './page/TestCreate'
 import Login from './page/Login'
 
 import TestManage from './page/TestManage'
+import BlogManage from './page/BlogManage'
 import Test from './page/Test'
 import UserManager from './page/UserManager'
 import CompetitionManage from './page/CompetitionManage'
@@ -25,6 +26,7 @@ function App(): JSX.Element {
       <Route path='/TestManage' element={<TestManage />} />
       <Route path='/Test' element={<Test />} />
       <Route path='/UserManager' element={<UserManager />} />
+      <Route path='/blogManage' element={<BlogManage />} />
     </Routes>
   )
 }
