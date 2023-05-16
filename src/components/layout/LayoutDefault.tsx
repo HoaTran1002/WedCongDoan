@@ -8,7 +8,7 @@ type Props = {
 const LayoutDefault = ({ children }: Props): JSX.Element => {
   return (
     <>
-      <BarApp />
+      <BarApp/>
       <Container sx={{ mt: 10 }} maxWidth='md'>
         {children}
       </Container>

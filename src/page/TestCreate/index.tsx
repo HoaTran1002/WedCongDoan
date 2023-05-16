@@ -25,7 +25,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked'
 import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import { jsx } from '@emotion/react'
+import DeleteIcon from '@mui/icons-material/Delete'
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
 import { blue } from '@mui/material/colors'
 
 interface Question {
@@ -266,6 +267,7 @@ const Index = (): JSX.Element => {
                     </>
                   </FormGroup>
                 </FormControl>
+                <Button></Button>
               </Card>
             )
           })}
