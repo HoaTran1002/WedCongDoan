@@ -27,7 +27,6 @@ import AdbIcon from '@mui/icons-material/Adb'
 
 const drawerWidth = 250
 const pages = [
-  { name: 'THAM GIA CUỘC THI', to: '/Test' },
   { name: 'KHOA', to: '/Deparments' },
   { name: 'BÀI VIẾT', to: '/blog' }
 ]
