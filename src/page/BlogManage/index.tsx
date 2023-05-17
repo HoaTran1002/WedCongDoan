@@ -2,7 +2,19 @@ import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import {Typography,Paper,Grid,TableContainer,Box,TableCell,Table,TableHead,TableRow,Button,Stack} from '@mui/material'
 import image from '~/assets/img/competion-1.jpg';
 import AddIcon from '@mui/icons-material/Add';
+function BlogInfo(
+    id:number,
+    heading:string,
+    title:string,
+ ) {
+    return { id, heading,title};
+  }
 
+const Blog =[
+    BlogInfo(1,'Tựa đề bài viết','Thanh tiêu đề bài viết'),
+    BlogInfo(2,'Tựa đề bài viết','Thanh tiêu đề bài viết'),
+    BlogInfo(3,'Tựa đề bài viết','Thanh tiêu đề bài viết'),
+]
 const Index = (): JSX.Element => {
     return (
         <>
@@ -18,157 +30,78 @@ const Index = (): JSX.Element => {
                             </Button>
                         </Stack>
                     </Grid>
-                    <Grid xs={6} style={{paddingRight:"20px"}}>
-                        <Stack 
-                            direction={'row'} 
-                            style={{
-                                border:"1px solid #e7eeff",
-                                display:"inline-flex",
-                                marginTop:"10px",
-                                borderRadius:"5px",
-                                overflow:"hidden",
-                                
-                            }}
-                        >
-                            <div 
-                                className="" 
-                                style={{
-                                    maxHeight:"150px",
-                                    width:"140px"
-                                }}
-                            >
-                                <img src={image} alt="" style={{height:"100%",width:"100%"}} />
-                            </div>
-                            <div 
-                                className=''
-                                style={{
-                                    backgroundColor:"rgba(25, 118, 210,0.1)",
-                                    padding:"10px"
-                                }}
-                            >
-                                <Typography 
+                    {
+                        Blog.map((row)=>(
+                            <Grid xs={6} style={{paddingRight:"20px"}} key={row.id}>
+                                <Stack 
+                                    direction={'row'} 
                                     style={{
-                                        color:"#1976d2",  
-                                        fontWeight:"bold",
-                                        fontSize:"22px"
+                                        border:"1px solid #e7eeff",
+                                        display:"inline-flex",
+                                        marginTop:"10px",
+                                        borderRadius:"5px",
+                                        overflow:"hidden",
+                                        width:"100%"
                                     }}
                                 >
-                                    Tựa đề bài thi Tựa đề bài thi Tựa đề bài thi Tựa đề bài thi 
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        color:"#444",
-                                    }}
-                                >
-                                    Phần miêu tả tựa đề bài thi
-                                </Typography>
-                            </div>
-                            <Stack 
-                                direction={'column'}
-                                gap={1}
-                                style={{
-                                    padding:"8px",
-                                }}
-                            >
-                                <Button
-                                    href=''
-                                    variant='contained'
-                                    style={{
-                                        width:"120px"
+                                    <div 
+                                        className="" 
+                                        style={{
+                                            maxHeight:"150px",
+                                            width:"140px"
+                                        }}
+                                    >
+                                        <img src={image} alt="" style={{height:"100%",width:"100%"}} />
+                                    </div>
+                                    <div 
+                                        className=''
+                                        style={{
+                                            backgroundColor:"rgba(25, 118, 210,0.1)",
+                                            padding:"10px",
+                                            width:"100%"
+                                        }}
+                                    >
+                                        <Typography 
+                                            style={{
+                                                color:"#1976d2",  
+                                                fontWeight:"bold",
+                                                fontSize:"22px"
+                                            }}
+                                        >
+                                            {row.heading}
+                                        </Typography>
+                                        <Typography
+                                            style={{
+                                                color:"#444",
+                                            }}
+                                        >
+                                            {row.title}
+                                        </Typography>
+                                    </div>
+                                    <Stack 
+                                        direction={'column'}
+                                        alignItems={'center'}
+                                        justifyContent={'center'}
+                                        gap={1}
+                                        style={{
+                                            padding:"8px",
+                                        }}
+                                    >
+                                        <Button
+                                            href='/BlogDetail'
+                                            variant='outlined'
+                                            style={{
+                                                width:"120px"
 
-                                    }}
-                                >
-                                    Xem thêm
-                                </Button>
-                                <Button
-                                    href='#'
-                                    variant='outlined'
-                                    style={{
-                                        width:"120px"
-
-                                    }}
-                                >
-                                    Chỉnh Sủa
-                                </Button>
-                            </Stack>
-                        </Stack>
-                    </Grid>
-                    <Grid xs={6}>
-                        <Stack 
-                            direction={'row'} 
-                            style={{
-                                border:"1px solid #e7eeff",
-                                display:"inline-flex",
-                                marginTop:"10px",
-                                borderRadius:"5px",
-                                overflow:"hidden",
-                                
-                            }}
-                        >
-                            <div 
-                                className="" 
-                                style={{
-                                    maxHeight:"150px",
-                                    width:"140px"
-                                }}
-                            >
-                                <img src={image} alt="" style={{height:"100%",width:"100%"}} />
-                            </div>
-                            <div 
-                                className=''
-                                style={{
-                                    backgroundColor:"rgba(25, 118, 210,0.1)",
-                                    padding:"10px"
-                                }}
-                            >
-                                <Typography 
-                                    style={{
-                                        color:"#1976d2",  
-                                        fontWeight:"bold",
-                                        fontSize:"22px"
-                                    }}
-                                >
-                                    Tựa đề bài thi Tựa đề bài thi Tựa đề bài thi Tựa đề bài thi 
-                                </Typography>
-                                <Typography
-                                    style={{
-                                        color:"#444",
-                                    }}
-                                >
-                                    Phần miêu tả tựa đề bài thi
-                                </Typography>
-                            </div>
-                            <Stack 
-                                direction={'column'}
-                                gap={1}
-                                style={{
-                                    padding:"8px",
-                                }}
-                            >
-                                <Button
-                                    href='#'
-                                    variant='contained'
-                                    style={{
-                                        width:"120px"
-
-                                    }}
-                                >
-                                    Xem thêm
-                                </Button>
-                                <Button
-                                    href='#'
-                                    variant='outlined'
-                                    style={{
-                                        width:"120px"
-
-                                    }}
-                                >
-                                    Chỉnh Sủa
-                                </Button>
-                            </Stack>
-                        </Stack>
-                    </Grid>
-                    
+                                            }}
+                                        >
+                                            Chỉnh Sủa
+                                        </Button>
+                                    </Stack>
+                                </Stack>
+                            </Grid>
+                        ))
+                    }
                 </Grid>
             </LayoutAdmin>
         </>

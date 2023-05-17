@@ -9,6 +9,11 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { SelectChangeEvent } from '@mui/material/Select';
+const textPagagrap = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea error ut necessitatibus praesentium tempore doloribus eaque maxime autem nobis aperiam aliquid minus, ratione perferendis optio unde nemo totam iure repellat.
+Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro ut corporis natus alias quisquam aut inventore neque non nam delectus accusamus, iste repudiandae animi eum quibusdam ullam eius saepe velit.
+
+
+`
 const Index = (): JSX.Element => {
     const [age, setAge] = React.useState('');
   
@@ -22,7 +27,7 @@ const Index = (): JSX.Element => {
                     <Grid xs={12} >
                         <Stack direction="row" spacing={20} alignItems="center" sx={{marginTop:"20px"}}>
                             <Typography variant='h4' sx={{fontWeight:500,color:"#1976d2"}}>
-                            Thêm blog mới
+                            Chi tiết blog
                             </Typography>
                         </Stack>
                     </Grid>
@@ -34,12 +39,14 @@ const Index = (): JSX.Element => {
                                 type="search"
                                 variant="outlined"
                                 style={{width:"100%"}}
+                                defaultValue="Tựa đề trang blog"
                             />
                             <TextField
                                 id="filled-search"
                                 label="Thanh phụ tiêu đề"
                                 type="search"
                                 variant="outlined"
+                                defaultValue="Thanh phu đề tiêu đề trang blog"
                                 style={{width:"100%"}}
                             />
                         </Stack>
@@ -51,7 +58,7 @@ const Index = (): JSX.Element => {
                                 <Select
                                     labelId="demo-simple-select-autowidth-label"
                                     id="demo-simple-select-autowidth"
-                                    value={age}
+                                    defaultValue={'21'}
                                     onChange={handleChange}
                                     label="Age"
                                 >
@@ -65,7 +72,7 @@ const Index = (): JSX.Element => {
                                 <Select
                                     labelId="demo-simple-select-autowidth-label"
                                     id="demo-simple-select-autowidth"
-                                    value={age}
+                                    defaultValue={'21'}
                                     onChange={handleChange}
                                     label="Age"
                                 >
@@ -83,6 +90,7 @@ const Index = (): JSX.Element => {
                             rows={15}
                             variant="outlined"
                             style={{width:"100%"}}
+                            defaultValue={textPagagrap}
                         />
                     </Grid>
                     <Grid>

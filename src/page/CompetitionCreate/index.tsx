@@ -42,7 +42,6 @@ const Index = (): JSX.Element => {
                     id="demo-simple-select-autowidth"
                     value={age}
                     onChange={handleChange}
-                    
                     label="Age"
                   >
                     <MenuItem value={10}>Khoa</MenuItem>

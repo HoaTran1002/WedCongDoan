@@ -9,6 +9,7 @@ import Login from './page/Login'
 import TestManage from './page/TestManage'
 import BlogManage from './page/BlogManage'
 import BlogCreate from './page/BlogCreate'
+import BlogDetail from './page/BlogDetail'
 import Test from './page/Test'
 import UserManager from './page/UserManager'
 import CompetitionManage from './page/CompetitionManage'
@@ -29,6 +30,7 @@ function App(): JSX.Element {
       <Route path='/UserManager' element={<UserManager />} />
       <Route path='/blogManage' element={<BlogManage />} />
       <Route path='/BlogCreate' element={<BlogCreate />} />
+      <Route path='/BlogDetail' element={<BlogDetail />} />
     </Routes>
   )
 }
