@@ -5,7 +5,7 @@ const Index = (): JSX.Element => {
   return (
     <>
       <Layout>
-        <div>this is Blog page</div>
+        <div>this is Competion page</div>
       </Layout>
     </>
   )
