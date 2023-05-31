@@ -24,12 +24,16 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
+import { Image } from '@mui/icons-material'
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
+import { ButtonGroup, Stack } from '@mui/material'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 
 const drawerWidth = 250
 const pages = [
-  { name: 'THAM GIA CUỘC THI', to: '/Test' },
-  { name: 'KHOA', to: '/Deparments' },
-  { name: 'BÀI VIẾT', to: '/blog' }
+  { name: 'TRANG CHỦ', to: '/' },
+  { name: 'DANH SÁCH CUỘC THI', to: '/Listcompetition' },
+  { name: 'GIẢI THƯỞNG', to: '/blog' }
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
@@ -102,52 +106,36 @@ export default function SideBar(): JSX.Element {
           >
             <MenuIcon />
           </IconButton>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant='h6'
-            noWrap
-            component='a'
-            href='/'
-            sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none'
-            }}
-          >
-            LOGO
-          </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page, index) => (
-              <Button
-                key={index}
-                href={page.to}
-                onClick={handleCloseNavMenu}
-                sx={{
-                  ml: 1,
-                  mr: 1,
-                  my: 2,
-                  color: 'white',
-                  background: 'transperent',
-                  boxShadow: 'none',
-                  display: 'block',
-                  '&:hover': {
-                    backgroundColor: 'transperent',
-                    borderRadius: 'none',
-                    boxShadow: 'none'
-                  }
-                }}
-                variant='contained'
-              >
-                {page.name}
-              </Button>
-            ))}
+          <Box
+            component='img'
+            sx={{
+              height: 50,
+              width: 70
+            }}
+            alt='The house from the offer.'
+            src='https://api.congdoantphochiminh.org.vn/Upload/Multimedia/Images/20221229150859445_logo%20DAI%20HOI%20XII%20CONG%20DOAN%20TP%20-%20png.png'
+          />
+
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, pl: 2 }}>
+            <ButtonGroup
+              sx={{ border: '0.5px solid #fff' }}
+              variant='contained'
+              aria-label='outlined primary button group'
+            >
+              {pages.map((page, index) => (
+                <Button href={page.to} key={index}>
+                  {page.name}
+                </Button>
+              ))}
+            </ButtonGroup>
           </Box>
           <Box sx={{ flexGrow: 0, display: { md: 'flex' } }}>
+            <Stack direction='row' spacing={2}>
+              <Button href='/TestSchedule' variant='contained' sx={{ mr: 2, border: '0.5px solid #fff' }}>
+                <CalendarMonthIcon /> <span> </span> LỊCH THI
+              </Button>
+            </Stack>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
@@ -214,7 +202,9 @@ export default function SideBar(): JSX.Element {
               <ListItemButton>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                 <ListItemText>
-                  <Button href={page.to}>{page.name}</Button>
+                  <Button variant='contained' href={page.to}>
+                    {page.name}
+                  </Button>
                 </ListItemText>
               </ListItemButton>
             </ListItem>

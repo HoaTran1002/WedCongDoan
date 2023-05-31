@@ -1,24 +1,50 @@
 import React from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
-import {Typography,Paper,Grid,TableContainer,TableBody,TableCell,Table,TableHead,TableRow,Button,Stack} from '@mui/material'
-import AddIcon from '@mui/icons-material/Add';
+import {
+  Typography,
+  Paper,
+  Grid,
+  TableContainer,
+  TableBody,
+  TableCell,
+  Table,
+  TableHead,
+  TableRow,
+  Button,
+  Stack
+} from '@mui/material'
+import AddIcon from '@mui/icons-material/Add'
 function createData(
   name: string,
   dateStart: string,
   dateEnd: string,
   timeStart: string,
   timeEnd: string,
-  scale: string,
-) {
-  return { name, dateStart,dateEnd,timeStart,timeEnd, scale};
+  scale: string
+): {
+  name: string
+  dateStart: string
+  dateEnd: string
+  timeStart: string
+  timeEnd: string
+  scale: string
+} {
+  return { name, dateStart, dateEnd, timeStart, timeEnd, scale }
 }
 
 const rows = [
-  createData('Khảo sát an toàn thông tin','20/03/2023','20/03/2023','10:00:00','11:00:00','Khoa'),
-  createData('Khảo sát chất lượng anh văn đầu vào', '20/03/2023','20/03/2023','10:00:00','11:00:00', 'Khoa'),
-  createData('Kiểm Tra anh văn đầu vào', '20/03/2023','20/03/2023','10:00:00','11:00:00', 'Lớp'),
-  createData('Khảo sát chất lượng giảng dạy của trường HUFI', '20/03/2023','20/03/2023','10:00:00','11:00:00', 'Trường'),
-];
+  createData('Khảo sát an toàn thông tin', '20/03/2023', '20/03/2023', '10:00:00', '11:00:00', 'Khoa'),
+  createData('Khảo sát chất lượng anh văn đầu vào', '20/03/2023', '20/03/2023', '10:00:00', '11:00:00', 'Khoa'),
+  createData('Kiểm Tra anh văn đầu vào', '20/03/2023', '20/03/2023', '10:00:00', '11:00:00', 'Lớp'),
+  createData(
+    'Khảo sát chất lượng giảng dạy của trường HUFI',
+    '20/03/2023',
+    '20/03/2023',
+    '10:00:00',
+    '11:00:00',
+    'Trường'
+  )
+]
 
 const Index = (): JSX.Element => {
   return (
