@@ -1,6 +1,18 @@
 import React from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
-import { Typography, Grid, FormControl, InputLabel, Select, MenuItem, Button, Stack, TextField } from '@mui/material'
+import {
+  Typography,
+  Grid,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
+  Stack,
+  TextField,
+  Checkbox,
+  Switch
+} from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -77,6 +89,194 @@ const Index = (): JSX.Element => {
                 </LocalizationProvider>
               </Stack>
             </Stack>
+          </Grid>
+          <Grid xs={12} style={{ marginTop: '100px' }}>
+            <Stack direction={'row'} gap={'20px'}>
+              <Typography variant='h4' sx={{ fontWeight: 500, color: '#1976d2' }}>
+                Giải cá nhân
+              </Typography>
+              <Switch {...label} defaultChecked />
+            </Stack>
+            <div style={{ marginTop: '20px' }}>
+              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
+                <Checkbox {...label} defaultChecked />
+                <img src={gold} alt='' style={{ width: 30 }} />
+                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
+                  Hạng nhất
+                </span>
+                <TextField
+                  id='filled-search'
+                  label='Tên giải thưởng'
+                  type='search'
+                  variant='outlined'
+                  style={{ width: '100%' }}
+                />
+                <TextField
+                  id='filled-search'
+                  label='Số lượng'
+                  type='number'
+                  variant='outlined'
+                  style={{ width: '300px' }}
+                />
+              </Stack>
+              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
+                <Checkbox {...label} defaultChecked />
+                <img src={siver} alt='' style={{ width: 30 }} />
+                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
+                  Hạng nhì
+                </span>
+                <TextField
+                  id='filled-search'
+                  label='Tên giải thưởng'
+                  type='search'
+                  variant='outlined'
+                  style={{ width: '100%' }}
+                />
+                <TextField
+                  id='filled-search'
+                  label='Số lượng'
+                  type='number'
+                  variant='outlined'
+                  style={{ width: '300px' }}
+                />
+              </Stack>
+              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
+                <Checkbox {...label} defaultChecked />
+                <img src={bronze} alt='' style={{ width: 30 }} />
+                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
+                  Hạng ba
+                </span>
+                <TextField
+                  id='filled-search'
+                  label='Tên giải thưởng'
+                  type='search'
+                  variant='outlined'
+                  style={{ width: '100%' }}
+                />
+                <TextField
+                  id='filled-search'
+                  label='Số lượng'
+                  type='number'
+                  variant='outlined'
+                  style={{ width: '300px' }}
+                />
+              </Stack>
+              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
+                <Checkbox {...label} defaultChecked />
+                <img src={khuyenkhich} alt='' style={{ width: 30 }} />
+                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
+                  Khuyến khích
+                </span>
+                <TextField
+                  id='filled-search'
+                  label='Tên giải thưởng'
+                  type='search'
+                  variant='outlined'
+                  style={{ width: '100%' }}
+                />
+                <TextField
+                  id='filled-search'
+                  label='Số lượng'
+                  type='number'
+                  variant='outlined'
+                  style={{ width: '300px' }}
+                />
+              </Stack>
+            </div>
+          </Grid>
+          <Grid xs={12} style={{ marginTop: '100px' }}>
+            <Stack direction={'row'} gap={'20px'}>
+              <Typography variant='h4' sx={{ fontWeight: 500, color: '#1976d2' }}>
+                Giải tập thể
+              </Typography>
+              <Switch {...label} defaultChecked />
+            </Stack>
+            <div style={{ marginTop: '20px' }}>
+              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
+                <Checkbox {...label} defaultChecked />
+                <img src={gold} alt='' style={{ width: 30 }} />
+                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
+                  Hạng nhất
+                </span>
+                <TextField
+                  id='filled-search'
+                  label='Tên giải thưởng'
+                  type='search'
+                  variant='outlined'
+                  style={{ width: '100%' }}
+                />
+                <TextField
+                  id='filled-search'
+                  label='Số lượng'
+                  type='number'
+                  variant='outlined'
+                  style={{ width: '300px' }}
+                />
+              </Stack>
+              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
+                <Checkbox {...label} defaultChecked />
+                <img src={siver} alt='' style={{ width: 30 }} />
+                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
+                  Hạng nhì
+                </span>
+                <TextField
+                  id='filled-search'
+                  label='Tên giải thưởng'
+                  type='search'
+                  variant='outlined'
+                  style={{ width: '100%' }}
+                />
+                <TextField
+                  id='filled-search'
+                  label='Số lượng'
+                  type='number'
+                  variant='outlined'
+                  style={{ width: '300px' }}
+                />
+              </Stack>
+              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
+                <Checkbox {...label} defaultChecked />
+                <img src={bronze} alt='' style={{ width: 30 }} />
+                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
+                  Hạng ba
+                </span>
+                <TextField
+                  id='filled-search'
+                  label='Tên giải thưởng'
+                  type='search'
+                  variant='outlined'
+                  style={{ width: '100%' }}
+                />
+                <TextField
+                  id='filled-search'
+                  label='Số lượng'
+                  type='number'
+                  variant='outlined'
+                  style={{ width: '300px' }}
+                />
+              </Stack>
+              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
+                <Checkbox {...label} defaultChecked />
+                <img src={khuyenkhich} alt='' style={{ width: 30 }} />
+                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
+                  Khuyến khích
+                </span>
+                <TextField
+                  id='filled-search'
+                  label='Tên giải thưởng'
+                  type='search'
+                  variant='outlined'
+                  style={{ width: '100%' }}
+                />
+                <TextField
+                  id='filled-search'
+                  label='Số lượng'
+                  type='number'
+                  variant='outlined'
+                  style={{ width: '300px' }}
+                />
+              </Stack>
+            </div>
           </Grid>
           <Grid>
             <Button variant='contained' endIcon={<AddIcon />} style={{ marginTop: '20px' }}>
