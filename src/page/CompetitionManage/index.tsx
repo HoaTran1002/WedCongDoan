@@ -64,6 +64,9 @@ const Index = (): JSX.Element => {
                         <TableCell align="right">{row.timeEnd}</TableCell>
                         <TableCell align="right">{row.scale}</TableCell>
                         <TableCell align="right">
+                          <Button href="/Competition" variant="outlined">Xem đề thi</Button>
+                        </TableCell>
+                        <TableCell align="right">
                           <Button href="/Competition" variant="outlined">Xem chi tiết</Button>
                         </TableCell>
                       </TableRow>

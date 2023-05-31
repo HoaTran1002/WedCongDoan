@@ -14,6 +14,7 @@ import ListBlog from './page/ListBlog'
 import Test from './page/Test'
 import UserManager from './page/UserManager'
 import CompetitionManage from './page/CompetitionManage'
+import CompetitionTest from './page/CompetitionTest'
 import Register from './page/Register'
 
 function App(): JSX.Element {
@@ -23,6 +24,7 @@ function App(): JSX.Element {
       <Route path='/Competition' element={<Competition />} />
       <Route path='/CompetitionCreate' element={<CompetitionCreate />} />
       <Route path='/CompetitionManage' element={<CompetitionManage />} />
+      <Route path='/CompetitionTest' element={<CompetitionTest />} />
       <Route path='/TestCreate' element={<TestCreate />} />
       <Route path='/Login' element={<Login />} />
       <Route path='/Register' element={<Register />} />
