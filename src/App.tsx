@@ -6,7 +6,7 @@ import TestCreate from './page/TestCreate'
 import Login from './page/Login'
 
 import TestManage from './page/TestManage'
-// import BlogManage from './page/BlogManage'
+import BlogManage from './page/BlogManage'
 import BlogCreate from './page/BlogCreate'
 import BlogDetail from './page/BlogDetail'
 import ListBlog from './page/ListBlog'
@@ -27,7 +27,7 @@ function App(): JSX.Element {
       <Route path='/TestManage' element={<TestManage />} />
       <Route path='/Test' element={<Test />} />
       <Route path='/UserManager' element={<UserManager />} />
-      {/* <Route path='/blogManage' element={<BlogManage />} /> */}
+      <Route path='/blogManage' element={<BlogManage />} />
       <Route path='/BlogCreate' element={<BlogCreate />} />
       <Route path='/BlogDetail' element={<BlogDetail />} />
       <Route path='/ListBlog' element={<ListBlog />} />

@@ -7,7 +7,7 @@ interface UseAxiosProps {
   body: object
   headers: object
 }
-axios.defaults.baseURL = 'http://localhost:5237/api'
+axios.defaults.baseURL = 'http://localhost:5050/api'
 
 const useAxios = ({ url, method, body, headers }: UseAxiosProps): [AxiosResponse<any> | null, string, boolean] => {
   const [response, setResponse] = useState<AxiosResponse<any> | null>(null)
@@ -23,18 +23,16 @@ const useAxios = ({ url, method, body, headers }: UseAxiosProps): [AxiosResponse
     }
     axios(options)
       .then((res) => {
+        setLoading(false)
         setResponse(res)
       })
       .catch((err) => {
         setError(err)
       })
-      .finally(() => {
-        setLoading(false)
-      })
   }
   useEffect((): void => {
     fetchData()
-  }, [url, method])
+  }, [])
   return [response, error, loading]
 }
 
