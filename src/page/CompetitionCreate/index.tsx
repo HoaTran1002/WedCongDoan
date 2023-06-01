@@ -20,6 +20,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import { SelectChangeEvent } from '@mui/material/Select'
+import WestIcon from '@mui/icons-material/West';
+import bronze from "~/assets/img/bronze-removebg-preview.png";
+import siver from "~/assets/img/siver-removebg-preview.png";
+import gold from "~/assets/img/gold-removebg-preview.png";
+import khuyenkhich from "~/assets/img/kk-removebg-preview.png";
+const label = { inputProps: { 'aria-label': 'Switch demo' } };
 const Index = (): JSX.Element => {
   const [age, setAge] = React.useState('')
 
