@@ -2,14 +2,14 @@ import { useEffect, useState } from 'react'
 import axios, { AxiosResponse } from 'axios'
 
 interface UseAxiosProps {
-  url: string
+  enp: string
   method: string
   body: object
   headers: object
 }
 axios.defaults.baseURL = 'http://localhost:5050/api'
 
-const useAxios = ({ url, method, body, headers }: UseAxiosProps): [AxiosResponse<any> | null, string, boolean] => {
+const useAxios = ({ enp, method, body, headers }: UseAxiosProps): [AxiosResponse<any> | null, string, boolean] => {
   const [response, setResponse] = useState<AxiosResponse<any> | null>(null)
   const [error, setError] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
@@ -17,9 +17,9 @@ const useAxios = ({ url, method, body, headers }: UseAxiosProps): [AxiosResponse
   const fetchData = (): void => {
     const options = {
       method: method,
-      headers: headers,
-      data: body,
-      url: url
+      url: enp,
+      body: body,
+      headers: headers
     }
     axios(options)
       .then((res) => {

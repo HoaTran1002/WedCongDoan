@@ -24,6 +24,7 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
+import { Link } from 'react-router-dom'
 
 const drawerWidth = 250
 const pages = [
@@ -125,32 +126,32 @@ export default function Index(): JSX.Element {
             {pages.map((page, index) => (
               <Button
                 key={index}
-                href={page.to}
                 onClick={handleCloseNavMenu}
                 sx={{
                   ml: 1,
                   mr: 1,
                   my: 2,
-                  color: 'white',
-                  background: 'transperent',
+                  background: 'transparent',
                   boxShadow: 'none',
                   display: 'block',
                   '&:hover': {
-                    backgroundColor: 'transperent',
+                    backgroundColor: 'transparent',
                     borderRadius: 'none',
                     boxShadow: 'none'
-                  }
+                  },
+                  color: '#fff',
+                  textDecoration: 'none'
                 }}
                 variant='contained'
               >
-                {page.name}
+                <Link to={page.to}>{page.name}</Link>
               </Button>
             ))}
           </Box>
           <Box sx={{ flexGrow: 0, display: { md: 'flex' } }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
+                <Avatar alt='Remy Sharp' />
               </IconButton>
             </Tooltip>
             <Menu

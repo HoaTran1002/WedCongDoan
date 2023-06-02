@@ -1,11 +1,12 @@
 import React from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
+import TableTest from './TableTest'
 
 const Index = (): JSX.Element => {
   return (
     <>
       <LayoutAdmin>
-        <div>this is Test manage page</div>
+        <TableTest />
       </LayoutAdmin>
     </>
   )

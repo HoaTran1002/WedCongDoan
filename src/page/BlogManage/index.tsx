@@ -3,7 +3,8 @@ import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import { Typography, Grid, Button, Stack } from '@mui/material'
 import image from '~/assets/img/competion-1.jpg'
 import AddIcon from '@mui/icons-material/Add'
-import useAxios from '~/hook/useAxios'
+import useFetch from '~/hook/useAxios'
+import { getAll } from '~/api/blogApi'
 function BlogInfo(
   id: number,
   heading: string,
@@ -21,13 +22,9 @@ const Blog = [
   BlogInfo(2, 'Tựa đề bài viết', 'Thanh tiêu đề bài viết'),
   BlogInfo(3, 'Tựa đề bài viết', 'Thanh tiêu đề bài viết')
 ]
+
 const Index = (): JSX.Element => {
-  const [response, err, loader] = useAxios({
-    url: '/Blogs',
-    method: 'Get',
-    body: {},
-    headers: {}
-  })
+  const [response, err, loader] = useFetch(getAll)
 
   if (response) {
     console.log(response.data)
@@ -45,7 +42,7 @@ const Index = (): JSX.Element => {
       ) : (
         <>
           <Grid container rowSpacing={2} columnSpacing={{ xs: 2, sm: 2, md: 3 }}>
-            <Grid xs={12}>
+            <Grid columnSpacing={{ xs: 12 }}>
               <Stack direction='row' spacing={20} alignItems='center' sx={{ marginTop: '20px' }}>
                 <Typography variant='h4' sx={{ fontWeight: 500, color: '#1976d2' }}>
                   Quản lý trang blog
@@ -56,7 +53,7 @@ const Index = (): JSX.Element => {
               </Stack>
             </Grid>
             {Blog.map((row) => (
-              <Grid xs={6} style={{ paddingRight: '20px' }} key={row.id}>
+              <Grid columnSpacing={{ xs: 6, paddingRight: '20px' }} key={row.id}>
                 <Stack
                   direction={'row'}
                   style={{
