@@ -11,7 +11,7 @@ import BlogCreate from './page/BlogCreate'
 import BlogDetail from './page/BlogDetail'
 import ListBlog from './page/ListBlog'
 import Test from './page/Test'
-import UserManager from './page/UserManager'
+import UserManager from './page/User'
 import CompetitionManage from './page/CompetitionManage'
 import CompetitionCreate from './page/CompetitionCreate'
 import CompetitionTest from './page/CompetitionTest'
@@ -32,7 +32,7 @@ function App(): JSX.Element {
       <Route path='/Register' element={<Register />} />
       <Route path='/TestManage' element={<TestManage />} />
       <Route path='/Test' element={<Test />} />
-      <Route path='/UserManager' element={<UserManager />} />
+      <Route path='/User' element={<UserManager />} />
       <Route path='/blogManage' element={<BlogManage />} />
       <Route path='/BlogCreate' element={<BlogCreate />} />
       <Route path='/BlogDetail' element={<BlogDetail />} />

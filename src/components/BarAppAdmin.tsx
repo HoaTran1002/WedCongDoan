@@ -28,9 +28,10 @@ import { Link } from 'react-router-dom'
 
 const drawerWidth = 250
 const pages = [
-  { name: 'QUẢN LÝ CUỘC THI', to: '/CompetitionManage' },
-  { name: 'QUẢN LÝ BÀI THI', to: '/TestManage' },
-  { name: 'QUẢN LÝ USER', to: '/UserManager' }
+  { name: 'CUỘC THI', to: '/CompetitionManage' },
+  { name: 'BÀI THI', to: '/TestManage' },
+  { name: 'USER', to: '/User' },
+  { name: 'BLOG', to: '/BlogManage' }
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
