@@ -24,25 +24,25 @@ const Blog = [
 ]
 
 const Index = (): JSX.Element => {
-  const [response, err, loader] = useFetch(getAll)
+  // const [response, err, loader] = useFetch(getAll)
 
-  if (response) {
-    console.log(response.data)
-  }
-  if (err) {
-    console.log(err)
-  }
-  if (loader) {
-    console.log(loader)
-  }
+  // if (response) {
+  //   console.log(response.data)
+  // }
+  // if (err) {
+  //   console.log(err)
+  // }
+  // if (loader) {
+  //   console.log(loader)
+  // }
   return (
     <LayoutAdmin>
-      {loader == true ? (
+      {/* {loader == true ? (
         <h1>đang tải trang ...</h1>
-      ) : (
+      ) : ( */}
         <>
-          <Grid container rowSpacing={2} columnSpacing={{ xs: 2, sm: 2, md: 3 }}>
-            <Grid columnSpacing={{ xs: 12 }}>
+          <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
+            <Grid item xs={12}>
               <Stack direction='row' spacing={20} alignItems='center' sx={{ marginTop: '20px' }}>
                 <Typography variant='h4' sx={{ fontWeight: 500, color: '#1976d2' }}>
                   Quản lý trang blog
@@ -53,7 +53,7 @@ const Index = (): JSX.Element => {
               </Stack>
             </Grid>
             {Blog.map((row) => (
-              <Grid columnSpacing={{ xs: 6, paddingRight: '20px' }} key={row.id}>
+              <Grid item xs={6} columnSpacing={{ xs: 6, paddingRight: '20px' }} key={row.id}>
                 <Stack
                   direction={'row'}
                   style={{
@@ -123,7 +123,7 @@ const Index = (): JSX.Element => {
             ))}
           </Grid>
         </>
-      )}
+      {/* )} */}
     </LayoutAdmin>
   )
 }

@@ -1,4 +1,5 @@
 import AddIcon from '@mui/icons-material/Add'
+import UpdateIcon from '@mui/icons-material/Update';
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import { SelectChangeEvent } from '@mui/material/Select'
 import React from 'react'
@@ -18,14 +19,14 @@ const Index = (): JSX.Element => {
     <>
       <LayoutAdmin>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid xs={12}>
+          <Grid item xs={12}>
             <Stack direction='row' spacing={20} alignItems='center' sx={{ marginTop: '20px' }}>
               <Typography variant='h4' sx={{ fontWeight: 500, color: '#1976d2' }}>
                 Chi tiết blog
               </Typography>
             </Stack>
           </Grid>
-          <Grid xs={12}>
+          <Grid item xs={12}>
             <Stack direction={'row'} alignItems='center' gap={5}>
               <TextField
                 id='filled-search'
@@ -45,7 +46,7 @@ const Index = (): JSX.Element => {
               />
             </Stack>
           </Grid>
-          <Grid xs={12} style={{ marginTop: '10px' }}>
+          <Grid item xs={12} style={{ marginTop: '10px' }}>
             <Stack direction={'row'} alignItems='center' gap={5}>
               <FormControl sx={{ m: 1, minWidth: 80 }} style={{ width: '100%' }}>
                 <InputLabel id='demo-simple-select-autowidth-label'>Cuộc thi</InputLabel>
@@ -76,7 +77,7 @@ const Index = (): JSX.Element => {
               </FormControl>
             </Stack>
           </Grid>
-          <Grid xs={12} style={{ marginTop: '10px' }}>
+          <Grid item xs={12} style={{ marginTop: '10px' }}>
             <TextField
               id='standard-multiline-static'
               label='Nội dung trang blog'
@@ -87,9 +88,9 @@ const Index = (): JSX.Element => {
               defaultValue={textPagagrap}
             />
           </Grid>
-          <Grid>
-            <Button variant='contained' startIcon={<AddIcon />} style={{ marginTop: '20px' }}>
-              Thêm blog
+          <Grid item xs={12}>
+            <Button variant='contained' startIcon={<UpdateIcon />} style={{ marginTop: '20px' }}>
+              Cập nhập
             </Button>
           </Grid>
         </Grid>

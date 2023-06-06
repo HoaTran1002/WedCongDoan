@@ -215,7 +215,7 @@ export default function Index(): JSX.Element {
               <ListItemButton>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                 <ListItemText>
-                  <Button href={page.to}>{page.name}</Button>
+                  <Button href={page.to} >{page.name}</Button>
                 </ListItemText>
               </ListItemButton>
             </ListItem>
