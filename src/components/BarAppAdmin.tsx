@@ -104,50 +104,43 @@ export default function Index(): JSX.Element {
           >
             <MenuIcon />
           </IconButton>
-          <AdbIcon sx={{ display: { xs: 'flex', md: 'flex' }, mr: 1 }} />
-          <Typography
-            variant='h6'
-            noWrap
-            component='a'
-            href='/'
+          <Box
+            component='img'
             sx={{
-              mr: 2,
-              display: { xs: 'flex', md: 'flex' },
-              fontFamily: 'monospace',
-              fontWeight: 700,
-              letterSpacing: '.3rem',
-              color: 'inherit',
-              textDecoration: 'none'
+              height: 50,
+              width: 70
             }}
-          >
-            LOGO
-          </Typography>
+            alt='The house from the offer.'
+            src='https://api.congdoantphochiminh.org.vn/Upload/Multimedia/Images/20221229150859445_logo%20DAI%20HOI%20XII%20CONG%20DOAN%20TP%20-%20png.png'
+          />
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, index) => (
-              <Button
-                key={index}
-                onClick={handleCloseNavMenu}
-                sx={{
-                  ml: 1,
-                  mr: 1,
-                  my: 2,
-                  background: 'transparent',
-                  boxShadow: 'none',
-                  display: 'block',
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                    borderRadius: 'none',
-                    boxShadow: 'none'
-                  },
-                  color: '#fff',
-                  textDecoration: 'none'
-                }}
-                style={{backgroundColor:'#1769ba'}}
-                variant='contained'
-              >
-                <Link style={{color:'white',textDecoration:'none'}} to={page.to}>{page.name}</Link>
-              </Button>
+              <Link style={{ color: 'white', textDecoration: 'none' }} to={page.to}>
+                <Button
+                  key={index}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    ml: 1,
+                    mr: 1,
+                    my: 2,
+                    background: 'transparent',
+                    boxShadow: 'none',
+                    display: 'block',
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                      borderRadius: 'none',
+                      boxShadow: 'none'
+                    },
+                    color: '#fff',
+                    textDecoration: 'none'
+                  }}
+                  style={{ backgroundColor: '#1769ba' }}
+                  variant='contained'
+                >
+                  {page.name}
+                </Button>
+              </Link>
             ))}
           </Box>
           <Box sx={{ flexGrow: 0, display: { md: 'flex' } }}>
