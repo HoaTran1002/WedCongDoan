@@ -3,7 +3,7 @@ import React from 'react'
 import BarApp from '../BarApp'
 
 type Props = {
-  children: string | JSX.Element
+  children: any | JSX.Element
 }
 const Layout = ({ children }: Props): JSX.Element => {
   return (
