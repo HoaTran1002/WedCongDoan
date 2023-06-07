@@ -6,13 +6,13 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import useAxios from '~/hook/Fetch'
+
 import { getAll } from '~/api/depApi'
 import { getAllRole } from '~/api/roleApi'
-import { Insert } from '~/api/userApi'
+
 import dayjs from 'dayjs'
-import FetchData from '~/hook/Fetch'
-import axios, { AxiosResponse } from 'axios'
+
+import axios from 'axios'
 import Fetch from '~/hook/Fetch'
 axios.defaults.baseURL = 'http://localhost:5237/api'
 interface Dep {
@@ -28,7 +28,7 @@ export default function UserTextFields(): JSX.Element {
   const [userName, setUserName] = React.useState<string>('')
   const [pass, setPass] = React.useState<string>('')
   const [gmail, setGmail] = React.useState('')
-  const [address, setAddress] = React.useState<string>('')
+  // const [address, setAddress] = React.useState<string>('')
   const [birthDay, setBirthDay] = React.useState<string>('')
   const [dep, setDep] = React.useState<string>('')
   const [role, setRole] = React.useState<string>('')
@@ -46,9 +46,9 @@ export default function UserTextFields(): JSX.Element {
   const onchangePass = function (event: React.ChangeEvent<HTMLInputElement>): void {
     setPass(event.target.value)
   }
-  const onchangeAddress = function (event: React.ChangeEvent<HTMLInputElement>): void {
-    setAddress(event.target.value)
-  }
+  // const onchangeAddress = function (event: React.ChangeEvent<HTMLInputElement>): void {
+  //   setAddress(event.target.value)
+  // }
   const onchangeGmail = function (event: React.ChangeEvent<HTMLInputElement>): void {
     setGmail(event.target.value)
   }
@@ -70,7 +70,7 @@ export default function UserTextFields(): JSX.Element {
     dateOfBirth: birthDay,
     email: gmail,
     password: pass,
-    userAddress: address,
+    // UserAddress: address,
     roleId: role,
     depId: dep
   }
@@ -111,7 +111,7 @@ export default function UserTextFields(): JSX.Element {
         </LocalizationProvider>
         <TextField onChange={onchangeGmail} id='outlined-basic' label='Gmail' variant='outlined' />
         <TextField onChange={onchangePass} id='filled-basic' label='Mật Khẩu' variant='outlined' />
-        <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' />
+        {/* <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' /> */}
 
         <TextField onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
           {Roles == null ? (

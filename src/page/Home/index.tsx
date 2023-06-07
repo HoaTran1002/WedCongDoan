@@ -11,7 +11,21 @@ import { Grid, Box, Typography, SxProps } from '@mui/material'
 import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-function Blogs(id: number, blogName: string, imgName: string, imgSrc: string, author: string, postDay: string) {
+function Blogs(
+  id: number,
+  blogName: string,
+  imgName: string,
+  imgSrc: string,
+  author: string,
+  postDay: string
+): {
+  id: number
+  blogName: string
+  imgName: string
+  imgSrc: string
+  author: string
+  postDay: string
+} {
   return { id, blogName, imgName, imgSrc, author, postDay }
 }
 
@@ -87,8 +101,8 @@ const Home = (): JSX.Element => {
                 </Typography>
               </Box>
               <Grid container sx={{ marginTop: '20px' }} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                {row.map((row) => (
-                  <Grid item xs={4}>
+                {row.map((row, index) => (
+                  <Grid key={index} item xs={4}>
                     <Box sx={styleBlogWarp}>
                       <Box sx={{ position: 'relative', backgroundColor: 'black' }}>
                         <img src={row.imgSrc} alt='' style={{ width: '100%' }} />
