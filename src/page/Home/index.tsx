@@ -1,7 +1,7 @@
 import React from 'react'
 import Layout from '~/components/layout/Layout'
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { Carousel } from 'react-responsive-carousel'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import image1 from '~/assets/img/bg_home_page.jpg'
 import image2 from '~/assets/img/bg_home_page_1.jpg'
 import image3 from '~/assets/img/bg_home_page_2.png'
@@ -10,8 +10,8 @@ const Home = (): JSX.Element => {
   return (
     <>
       <Layout>
-        <div className="carousel-wrapper">
-          <Carousel 
+        <div className='carousel-wrapper'>
+          <Carousel
             autoPlay={true}
             infiniteLoop={true}
             showStatus={false}
@@ -20,16 +20,16 @@ const Home = (): JSX.Element => {
             interval={2000}
           >
             <div className='carousel-items-banner'>
-              <img src={image1} alt="Image 1" />
+              <img src={image1} alt='hinh 1' />
             </div>
             <div className='carousel-items-banner'>
-              <img src={image2} alt="Image 2" />
+              <img src={image2} alt='hinh 2' />
             </div>
             <div className='carousel-items-banner'>
-              <img src={image3} alt="Image 3" />
+              <img src={image3} alt='hinh 3' />
             </div>
             <div className='carousel-items-banner'>
-              <img src={image4} alt="Image 3" />
+              <img src={image4} alt='hinh 3' />
             </div>
           </Carousel>
         </div>

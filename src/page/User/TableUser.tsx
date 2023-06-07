@@ -1,8 +1,6 @@
 import * as React from 'react'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
-import useAxios from '~/hook/useAxios'
-import { useGridRootProps, DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
+import useAxios from '~/hook/Fetch'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import { getAll } from '~/api/userApi'
 
 const columns: GridColDef[] = [
@@ -28,7 +26,6 @@ const columns: GridColDef[] = [
     type: 'string',
     width: 200
   }
-  // ,
   // {
   //   field: 'actions',
   //   type: 'actions',
