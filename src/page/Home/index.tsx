@@ -18,7 +18,7 @@ function Blogs(
   imgSrc: string,
   author: string,
   postDay: string
-) { return { id, blogName, imgName, imgSrc, author, postDay } }
+):any { return { id, blogName, imgName, imgSrc, author, postDay } }
 
 const row = [
   Blogs(1, 'An toàn thông tin', 'Ảnh thi trắc nghiệm an toàn thông tin', `${imageItemBlog}`, 'Công đoàn', '20-04-2023'),
@@ -42,16 +42,16 @@ const Home = (): JSX.Element => {
             interval={2000}
           >
             <div className='carousel-items-banner'>
-              <img src={image1} alt="Image 1" />
+              <img src={image1} alt="Image1" />
             </div>
             <div className='carousel-items-banner'>
-              <img src={image2} alt="Image 2" />
+              <img src={image2} alt="Image2" />
             </div>
             <div className='carousel-items-banner'>
-              <img src={image3} alt="Image 3" />
+              <img src={image3} alt="Image3" />
             </div>
             <div className='carousel-items-banner'>
-              <img src={image4} alt="Image 3" />
+              <img src={image4} alt="Image3" />
             </div>
           </Carousel>
         </div>
@@ -66,10 +66,10 @@ const Home = (): JSX.Element => {
               <Grid container sx={{ marginTop: "20px" }} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
               {
                 row.map((row) => (
-                  <Grid  item xs={4}>
+                  <Grid key={row.id} item xs={4}>
                     <Box sx={styleBlogWarp}>
-                      <Box sx={{ position: "relative" ,backgroundColor:"black"}}>
-                        <img src={row.imgSrc} alt="" style={{ width: "100%" }} />
+                      <Box sx={{ position: "relative" }}>
+                        <img src={row.imgSrc} alt="" style={{ width: "100%" ,height:"145px",objectFit:"cover"}} />
                         <Author>
                           {row.author}
                         </Author>
@@ -108,7 +108,7 @@ const Author = styled.span`
   position:absolute;
   background-color:#1976d2;
   top: -10px;
-  left: 0px;
+  left: -4px;
   border-radius:50px;
   color:white;
   font-size:12px;
@@ -124,15 +124,18 @@ const BogName = styled.h2`
   word-break: break-word;
   font-size:14px;
   height:43px;
+  margin: 0;
 `
 
 const styleBlogWarp :SxProps = {
-  height:"300px",
+  height:"270px",
   display:"flex",
   flexDirection:"column",
-  justifyContent:"space-between",
+  justifyContent:"flex-start",
   boxShadow:"rgba(0, 0, 0, 0.1) -3px 4px 14px 0px",
-  mb:2
+  mb:2,
+  gap:"10px"
+
 }
 
 const linkMore :SxProps={

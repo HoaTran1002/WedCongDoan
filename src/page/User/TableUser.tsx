@@ -2,9 +2,10 @@ import * as React from 'react'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import useAxios from '~/hook/useAxios'
-import { useGridRootProps, DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import { getAll } from '~/api/userApi'
 import { CircularProgress } from '@mui/material'
+
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID Người Dùng', width: 200 },
@@ -34,9 +35,19 @@ const columns: GridColDef[] = [
     field: 'actions',
     type: 'actions',
     width: 100,
-    getActions: () => [
-      <GridActionsCellItem icon={<EditIcon />} label='Edit' />,
-      <GridActionsCellItem icon={<DeleteIcon />} label='Delete' />
+    getActions: (params): any => [
+      <GridActionsCellItem
+        key={1}
+        icon={<EditIcon />}
+        label='Edit'
+        onClick={() => handleActionClick(params)}
+      />,
+      <GridActionsCellItem
+        key={2}
+        icon={<DeleteIcon />}
+        label='Delete'
+        onClick={() => handleActionClick(params)}
+      />
     ]
   }
 ]
@@ -117,6 +128,11 @@ interface User {
   roleId: number
   depId: number
 }
+const handleActionClick = (params): any => {
+  const rowData = params.row;
+  console.log(rowData);
+};
+
 const TableUser = (): JSX.Element => {
   // const [response, err, loader] = useAxios(getAll)
   // const users = response?.data
@@ -143,18 +159,19 @@ const TableUser = (): JSX.Element => {
       {/* {loader ? (
         <CircularProgress />
       ) : ( */}
-        <div style={{ height: 400, width: '100%' }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: { page: 0, pageSize: 6 }
-              }
-            }}
-            pageSizeOptions={[5, 10]}
-          />
-        </div>
+      <div style={{ height: 400, width: '100%' }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 6 }
+            }
+          }}
+          pageSizeOptions={[5, 10]}
+        />
+
+      </div>
       {/* )} */}
     </>
   )

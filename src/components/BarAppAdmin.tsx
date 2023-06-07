@@ -25,6 +25,7 @@ import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
 import { Link } from 'react-router-dom'
+import { IndeterminateCheckBoxOutlined } from '@mui/icons-material'
 
 const drawerWidth = 250
 const pages = [
@@ -116,7 +117,7 @@ export default function Index(): JSX.Element {
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, index) => (
-              <Link style={{ color: 'white', textDecoration: 'none' }} to={page.to}>
+              <Link key={index} style={{ color: 'white', textDecoration: 'none' }} to={page.to}>
                 <Button
                   key={index}
                   onClick={handleCloseNavMenu}
