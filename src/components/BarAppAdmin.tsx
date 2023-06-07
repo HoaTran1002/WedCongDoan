@@ -143,9 +143,10 @@ export default function Index(): JSX.Element {
                   color: '#fff',
                   textDecoration: 'none'
                 }}
+                style={{backgroundColor:'#1769ba'}}
                 variant='contained'
               >
-                <Link to={page.to}>{page.name}</Link>
+                <Link style={{color:'white',textDecoration:'none'}} to={page.to}>{page.name}</Link>
               </Button>
             ))}
           </Box>
