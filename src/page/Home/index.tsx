@@ -18,16 +18,7 @@ function Blogs(
   imgSrc: string,
   author: string,
   postDay: string
-): {
-  id: number
-  blogName: string
-  imgName: string
-  imgSrc: string
-  author: string
-  postDay: string
-} {
-  return { id, blogName, imgName, imgSrc, author, postDay }
-}
+):any { return { id, blogName, imgName, imgSrc, author, postDay } }
 
 const row = [
   Blogs(1, 'An toàn thông tin', 'Ảnh thi trắc nghiệm an toàn thông tin', `${imageItemBlog}`, 'Công đoàn', '20-04-2023'),
@@ -79,16 +70,16 @@ const Home = (): JSX.Element => {
             interval={2000}
           >
             <div className='carousel-items-banner'>
-              <img src={image1} alt='hinh 1' />
+              <img src={image1} alt="Image1" />
             </div>
             <div className='carousel-items-banner'>
-              <img src={image2} alt='hinh 2' />
+              <img src={image2} alt="Image2" />
             </div>
             <div className='carousel-items-banner'>
-              <img src={image3} alt='hinh 3' />
+              <img src={image3} alt="Image3" />
             </div>
             <div className='carousel-items-banner'>
-              <img src={image4} alt='hinh 3' />
+              <img src={image4} alt="Image3" />
             </div>
           </Carousel>
         </div>
@@ -141,12 +132,12 @@ const Author = styled.span`
   position: absolute;
   background-color: #1976d2;
   top: -10px;
-  left: 0px;
-  border-radius: 50px;
-  color: white;
-  font-size: 12px;
-  padding: 3px 10px;
-`
+  left: -4px;
+  border-radius:50px;
+  color:white;
+  font-size:12px;
+  padding:3px 10px;
+  `
 
 const BogName = styled.h2`
   display: -webkit-box;
@@ -155,17 +146,20 @@ const BogName = styled.h2`
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-word;
-  font-size: 14px;
-  height: 43px;
+  font-size:14px;
+  height:43px;
+  margin: 0;
 `
 
-const styleBlogWarp: SxProps = {
-  height: '300px',
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'space-between',
-  boxShadow: 'rgba(0, 0, 0, 0.1) -3px 4px 14px 0px',
-  mb: 2
+const styleBlogWarp :SxProps = {
+  height:"270px",
+  display:"flex",
+  flexDirection:"column",
+  justifyContent:"flex-start",
+  boxShadow:"rgba(0, 0, 0, 0.1) -3px 4px 14px 0px",
+  mb:2,
+  gap:"10px"
+
 }
 
 const linkMore: SxProps = {

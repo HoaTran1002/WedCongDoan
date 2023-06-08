@@ -2,19 +2,20 @@ import AddIcon from '@mui/icons-material/Add'
 import UpdateIcon from '@mui/icons-material/Update';
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import { SelectChangeEvent } from '@mui/material/Select'
-import React from 'react'
+import React,{useState} from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
-const textPagagrap = `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea error ut necessitatibus praesentium tempore doloribus eaque maxime autem nobis aperiam aliquid minus, ratione perferendis optio unde nemo totam iure repellat.
-Lorem ipsum dolor sit amet consectetur adipisicing elit. Porro ut corporis natus alias quisquam aut inventore neque non nam delectus accusamus, iste repudiandae animi eum quibusdam ullam eius saepe velit.
-
-
-`
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 const Index = (): JSX.Element => {
   const [age, setAge] = React.useState('')
 
   const handleChange = (event: SelectChangeEvent): void => {
     setAge(event.target.value)
   }
+  const handleContentChange = (value:any):any => {
+    setContent(value);
+  };
+  const [content, setContent] = useState('');
   return (
     <>
       <LayoutAdmin>
@@ -78,14 +79,17 @@ const Index = (): JSX.Element => {
             </Stack>
           </Grid>
           <Grid item xs={12} style={{ marginTop: '10px' }}>
-            <TextField
-              id='standard-multiline-static'
-              label='Nội dung trang blog'
-              multiline
-              rows={15}
-              variant='outlined'
-              style={{ width: '100%' }}
-              defaultValue={textPagagrap}
+            <ReactQuill
+              value={content}
+              onChange={handleContentChange}
+              modules={modules}
+              formats={[
+                'header',
+                'bold', 'italic', 'underline', 'strike', 'blockquote',
+                'list', 'bullet', 'indent',
+                'link', 'image'
+              ]}
+              
             />
           </Grid>
           <Grid item xs={12}>
@@ -99,4 +103,13 @@ const Index = (): JSX.Element => {
   )
 }
 
+const modules ={
+  toolbar: [
+    [{ 'header': [1, 2, false] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+    ['link', 'image'],
+    ['clean']
+  ]
+};
 export default Index

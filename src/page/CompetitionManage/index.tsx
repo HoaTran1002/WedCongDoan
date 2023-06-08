@@ -17,6 +17,7 @@ import {
 import AddIcon from '@mui/icons-material/Add'
 import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import ArticleIcon from '@mui/icons-material/Article';
+import { Link } from 'react-router-dom';
 function createData(
   name: string,
   dateStart: string,
@@ -59,9 +60,11 @@ const Index = (): JSX.Element => {
               <Typography variant='h4' sx={{ fontWeight: 500, color: "#1976d2" }}>
                 Danh sách cuộc thi
               </Typography>
-              <Button href="/CompetitionCreate" variant="contained" startIcon={<AddIcon />}>
-                Thêm cuộc thi mới
-              </Button>
+              <Link to={'/CompetitionCreate'} style={{textDecoration:"none"}}>
+                <Button variant="contained" startIcon={<AddIcon />}>
+                  Thêm cuộc thi mới
+                </Button>
+              </Link>
             </Stack>
           </Grid>
           <Grid xs={12} style={{ marginTop: "10px" }}>

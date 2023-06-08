@@ -5,6 +5,7 @@ import image from '~/assets/img/competion-1.jpg'
 import AddIcon from '@mui/icons-material/Add'
 import useFetch from '~/hook/Fetch'
 import { getAll } from '~/api/blogApi'
+
 function BlogInfo(
   id: number,
   heading: string,
@@ -24,6 +25,7 @@ const Blog = [
 ]
 
 const Index = (): JSX.Element => {
+
   // const [response, err, loader] = useFetch(getAll)
 
   // if (response) {

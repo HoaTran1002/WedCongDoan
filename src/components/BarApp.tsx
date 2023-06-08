@@ -29,6 +29,7 @@ import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
 import { ButtonGroup, Stack } from '@mui/material'
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import { Link } from 'react-router-dom'
+import Index from '~/page'
 
 
 const drawerWidth = 250
@@ -121,7 +122,7 @@ export default function SideBar(): JSX.Element {
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, index) => (
-              <Link style={{ color: 'white', textDecoration: 'none' }} to={page.to}>
+              <Link key={index} style={{ color: 'white', textDecoration: 'none' }} to={page.to}>
                 <Button
                   key={index}
                   onClick={handleCloseNavMenu}

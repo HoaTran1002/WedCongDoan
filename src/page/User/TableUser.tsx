@@ -7,72 +7,116 @@ import { getAll } from '~/api/userApi'
 import axios from 'axios'
 import BasicModal from './ModalEditUser'
 axios.defaults.baseURL = 'http://localhost:5237/api'
-// const rows = [
-//   {
-//     id: 1,
-//     username: 'Snow',
-//     dateofbirth: '29/10/2002',
-//     email: 'vanhoa@gmail.com',
-//     password: '67789',
-//     useraddress: 'TP.HCM'
-//   },
-//   {
-//     id: 2,
-//     username: 'Snow',
-//     dateofbirth: '29/10/2002',
-//     email: 'huutoan@gmail.com',
-//     password: '67789',
-//     useraddress: 'Vũng Tàu'
-//   },
-//   {
-//     id: 4,
-//     username: 'Snow',
-//     dateofbirth: '29/10/2002',
-//     email: 'giadat@gmail.com',
-//     password: '67789',
-//     useraddress: 'Bình Thuận'
-//   },
-//   {
-//     id: 5,
-//     username: 'Snow',
-//     dateofbirth: '29/10/2002',
-//     email: 'dangkhoa@gmail.com',
-//     password: '67789',
-//     useraddress: 'Bình Định'
-//   },
-//   {
-//     id: 6,
-//     username: 'Snow',
-//     dateofbirth: '29/10/2002',
-//     email: 'huutri@gmail.com',
-//     password: '67789',
-//     useraddress: 'Đà Nẵng'
-//   },
-//   {
-//     id: 7,
-//     username: 'Snow',
-//     dateofbirth: '29/10/2002',
-//     email: 'vanquyet@gmail.com',
-//     password: '67789',
-//     useraddress: 'Lâm Đồng'
-//   },
-//   {
-//     id: 8,
-//     username: 'Snow',
-//     dateofbirth: '29/10/2002',
-//     email: 'vandat@gmail.com',
-//     password: '67789',
-//     useraddress: 'Hà Nội'
-//   },
-//   {
-//     id: 9,
-//     username: 'Snow',
-//     dateofbirth: '29/10/2002',
-//     email: 'gialong@gmail.com',
-//     password: '67789',
-//     useraddress: 'Hải Phòng'
-//   }
-// ]
+
+const columns: GridColDef[] = [
+  { field: 'id', headerName: 'ID Người Dùng', width: 200 },
+  { field: 'username', headerName: 'Họ và tên', width: 200 },
+  { field: 'dateofbirth', headerName: 'Ngày Sinh', width: 200 },
+  {
+    field: 'email',
+    headerName: 'Gmail',
+    type: 'string',
+    width: 200
+  },
+  {
+    field: 'password',
+    headerName: 'Mật Khẩu',
+    description: 'This column has a value getter and is not sortable.',
+    sortable: false,
+    width: 200
+  },
+  {
+    field: 'useraddress',
+    headerName: 'Địa Chỉ',
+    type: 'string',
+    width: 200
+  },
+  {
+    field: 'actions',
+    type: 'actions',
+    width: 100,
+    getActions: () => [
+      <GridActionsCellItem key={1} icon={<EditIcon />} label='Edit' />,
+      <GridActionsCellItem key={2} icon={<DeleteIcon />} label='Delete' />
+    ]
+  },
+  {
+    field: 'actions',
+    type: 'actions',
+    width: 100,
+    getActions: () => [
+      <GridActionsCellItem key={1} icon={<EditIcon />} label='Edit' />,
+      <GridActionsCellItem key={2} icon={<DeleteIcon />} label='Delete' />
+    ]
+  }
+]
+
+const rows = [
+  {
+    id: 1,
+    username: 'Snow',
+    dateofbirth: '29/10/2002',
+    email: 'vanhoa@gmail.com',
+    password: '67789',
+    useraddress: 'TP.HCM'
+  },
+  {
+    id: 2,
+    username: 'Snow',
+    dateofbirth: '29/10/2002',
+    email: 'huutoan@gmail.com',
+    password: '67789',
+    useraddress: 'Vũng Tàu'
+  },
+  {
+    id: 4,
+    username: 'Snow',
+    dateofbirth: '29/10/2002',
+    email: 'giadat@gmail.com',
+    password: '67789',
+    useraddress: 'Bình Thuận'
+  },
+  {
+    id: 5,
+    username: 'Snow',
+    dateofbirth: '29/10/2002',
+    email: 'dangkhoa@gmail.com',
+    password: '67789',
+    useraddress: 'Bình Định'
+  },
+  {
+    id: 6,
+    username: 'Snow',
+    dateofbirth: '29/10/2002',
+    email: 'huutri@gmail.com',
+    password: '67789',
+    useraddress: 'Đà Nẵng'
+  },
+  {
+    id: 7,
+    username: 'Snow',
+    dateofbirth: '29/10/2002',
+    email: 'vanquyet@gmail.com',
+    password: '67789',
+    useraddress: 'Lâm Đồng'
+  },
+  {
+    id: 8,
+    username: 'Snow',
+    dateofbirth: '29/10/2002',
+    email: 'vandat@gmail.com',
+    password: '67789',
+    useraddress: 'Hà Nội'
+  },
+  {
+    id: 9,
+    username: 'Snow',
+    dateofbirth: '29/10/2002',
+    email: 'gialong@gmail.com',
+    password: '67789',
+    useraddress: 'Hải Phòng'
+  }
+]
 interface User {
   userId: string
   userName: string
@@ -183,22 +227,22 @@ const TableUser = (): JSX.Element => {
   ]
   return (
     <>
-      {loader ? (
-        <h1>đang tải xuống ...</h1>
-      ) : (
-        <div style={{ height: 400, width: '100%' }}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            initialState={{
-              pagination: {
-                paginationModel: { page: 0, pageSize: 6 }
-              }
-            }}
-            pageSizeOptions={[5, 10]}
-          />
-        </div>
-      )}
+      {/* {loader ? (
+        <CircularProgress />
+      ) : ( */}
+      <div style={{ height: 400, width: '100%' }}>
+        <DataGrid
+          rows={rows}
+          columns={columns}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 6 }
+            }
+          }}
+          pageSizeOptions={[5, 10]}
+        />
+      </div>
+      {/* )} */}
     </>
   )
 }
