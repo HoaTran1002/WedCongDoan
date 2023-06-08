@@ -6,9 +6,6 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { SelectChangeEvent } from '@mui/material/Select'
 
-
-const ImageResize = require('quill-image-resize-module-react').default;
-Quill.register('modules/imageResize', ImageResize);
 const Index = (): JSX.Element => {
   const [age, setAge] = React.useState('')
 
