@@ -128,7 +128,7 @@ interface User {
   roleId: number
   depId: number
 }
-const handleActionClick = (params): any => {
+const handleActionClick = (params:any) => {
   const rowData = params.row;
   console.log(rowData);
 };
