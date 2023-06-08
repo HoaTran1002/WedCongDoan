@@ -14,6 +14,7 @@ import dayjs from 'dayjs'
 
 import axios from 'axios'
 import Fetch from '~/hook/Fetch'
+import { Edit } from '~/api/userApi'
 axios.defaults.baseURL = 'http://localhost:5237/api'
 interface Dep {
   depId: number
@@ -47,6 +48,11 @@ export default function UserTextFields(prop: {
   const [roleData, ,] = Fetch(getAllRole)
   const Deps = depData?.data
   const Roles = roleData?.data
+  let formattedDateOfBirth: any
+  if (prop.dateOfBirth) {
+    formattedDateOfBirth = dayjs(prop.dateOfBirth).format('MM-DD-YYYY')
+  }
+
   const onchangeUserName = function (event: React.ChangeEvent<HTMLInputElement>): void {
     setUserName(event.target.value)
   }
@@ -80,14 +86,15 @@ export default function UserTextFields(prop: {
     dateOfBirth: birthDay,
     email: gmail,
     password: pass,
-    // UserAddress: address,
+    UserAddress: '',
     roleId: role,
     depId: dep
   }
 
   const onSubmitForm = (): void => {
+    console.log(requestData)
     axios
-      .post('/Users', requestData)
+      .put(`/Users`, requestData)
       .then(function (response) {
         console.log(response)
       })
@@ -131,7 +138,7 @@ export default function UserTextFields(prop: {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
-                  value={prop.dateOfBirth}
+                  defaultValue={dayjs(formattedDateOfBirth)}
                   onChange={onchangeBirthDay}
                   sx={{ width: '100%' }}
                   label='Ngày Sinh'
@@ -145,10 +152,16 @@ export default function UserTextFields(prop: {
               label='Gmail'
               variant='outlined'
             />
-            <TextField onChange={onchangePass} id='filled-basic' label='Mật Khẩu' variant='outlined' />
+            <TextField
+              defaultValue={prop.password}
+              onChange={onchangePass}
+              id='filled-basic'
+              label='Mật Khẩu'
+              variant='outlined'
+            />
             {/* <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' /> */}
 
-            <TextField defaultValue={prop.roleId} onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
+            <TextField value={String(prop.roleId)} onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
               {Roles == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
               ) : (
@@ -161,7 +174,7 @@ export default function UserTextFields(prop: {
                 })
               )}
             </TextField>
-            <TextField defaultValue={prop.depId} onChange={onchangeDep} id='selectDep' label='Chọn Khoa' select>
+            <TextField value={String(prop.depId)} onChange={onchangeDep} id='selectDep' label='Chọn Khoa' select>
               {Deps == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
               ) : (
@@ -210,7 +223,7 @@ export default function UserTextFields(prop: {
             <TextField onChange={onchangePass} id='filled-basic' label='Mật Khẩu' variant='outlined' />
             {/* <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' /> */}
 
-            <TextField onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
+            <TextField defaultValue={prop.roleId} onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
               {Roles == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
               ) : (
@@ -223,7 +236,7 @@ export default function UserTextFields(prop: {
                 })
               )}
             </TextField>
-            <TextField onChange={onchangeDep} id='selectDep' label='Chọn Khoa' select>
+            <TextField value={prop.depId} onChange={onchangeDep} id='selectDep' label='Chọn Khoa' select>
               {Deps == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
               ) : (

@@ -58,7 +58,6 @@ export default function BasicModal(prop: BasicModalProps): JSX.Element {
           </Typography>
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
             <UserTextFields
-              edit={true}
               id={prop.id}
               userName={prop.userName}
               dateOfBirth={prop.dateOfBirth}
@@ -67,6 +66,7 @@ export default function BasicModal(prop: BasicModalProps): JSX.Element {
               userAddress={prop.userAddress}
               roleId={prop.roleId}
               depId={prop.depId}
+              edit={true}
             />
           </Typography>
         </Box>

@@ -83,7 +83,6 @@ interface User {
   roleId: number
   depId: number
 }
-
 const TableUser = (): JSX.Element => {
   const [response, err, loader] = useAxios(getAll)
   const users = response?.data
@@ -93,7 +92,9 @@ const TableUser = (): JSX.Element => {
     dateofbirth: user.dateOfBirth,
     email: user.email,
     password: user.password,
-    useraddress: user.userAddress
+    useraddress: user.userAddress,
+    roleId: user.roleId,
+    depId: user.depId
   }))
   if (response) {
     console.log(response.data)
@@ -140,6 +141,20 @@ const TableUser = (): JSX.Element => {
       width: 200
     },
     {
+      field: 'roleId',
+      headerName: 'Mã Quyền',
+      type: 'number',
+      width: 80,
+      hideable: true
+    },
+    {
+      field: 'depId',
+      headerName: 'Mã Phòng',
+      type: 'number',
+      width: 80,
+      hideable: true
+    },
+    {
       field: 'actions',
       type: 'actions',
       width: 100,
@@ -147,14 +162,15 @@ const TableUser = (): JSX.Element => {
         // <GridActionsCellItem key={1} icon={<EditIcon />} label='Edit' />,
         // eslint-disable-next-line react/jsx-key
         <BasicModal
-          id={params.id}
-          userName={params.userName}
-          dateOfBirth={params.dateOfBirth}
-          email={params.email}
-          password={params.password}
-          userAddress={params.userAddress}
-          roleId={params.roleId}
-          depId={params.depId}
+          key={1}
+          id={params.row.id}
+          userName={params.row.username}
+          dateOfBirth={params.row.dateofbirth}
+          email={params.row.email}
+          password={params.row.password}
+          userAddress={params.row.useraddress}
+          roleId={params.row.roleId}
+          depId={params.row.depId}
         />,
         <GridActionsCellItem
           key={2}
