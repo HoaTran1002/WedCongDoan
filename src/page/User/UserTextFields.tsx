@@ -23,7 +23,17 @@ interface Role {
   roleId: number
   roleName: string
 }
-export default function UserTextFields(): JSX.Element {
+export default function UserTextFields(prop: {
+  edit: boolean
+  id: string
+  userName: string
+  dateOfBirth: string
+  email: string
+  password: string
+  userAddress: string
+  roleId: number
+  depId: number
+}): JSX.Element {
   const [cccd, setCCCD] = React.useState<string>('')
   const [userName, setUserName] = React.useState<string>('')
   const [pass, setPass] = React.useState<string>('')
@@ -88,65 +98,154 @@ export default function UserTextFields(): JSX.Element {
 
   return (
     <>
-      <Box
-        component='form'
-        sx={{
-          '& > :not(style)': { m: 1, width: '45%' },
+      {prop.edit ? (
+        <>
+          <Box
+            component='form'
+            sx={{
+              '& > :not(style)': { m: 1, width: '45%' },
 
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          gridTemplateColumns: { sm: '1fr 1fr' },
-          gap: 2
-        }}
-        noValidate
-        autoComplete='off'
-      >
-        <TextField onChange={onchangeCCCD} id='outlined-basic' label='CCCD' variant='outlined' />
-        <TextField id='filled-basic' label='Họ Và Tên' onChange={onchangeUserName} variant='outlined' />
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
-          <DemoContainer components={['DatePicker']}>
-            <DatePicker onChange={onchangeBirthDay} sx={{ width: '100%' }} label='Ngày Sinh' />
-          </DemoContainer>
-        </LocalizationProvider>
-        <TextField onChange={onchangeGmail} id='outlined-basic' label='Gmail' variant='outlined' />
-        <TextField onChange={onchangePass} id='filled-basic' label='Mật Khẩu' variant='outlined' />
-        {/* <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' /> */}
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              gridTemplateColumns: { sm: '1fr 1fr' },
+              gap: 2
+            }}
+            noValidate
+            autoComplete='off'
+          >
+            <TextField
+              defaultValue={prop.id}
+              onChange={onchangeCCCD}
+              id='outlined-basic'
+              label='CCCD'
+              variant='outlined'
+            />
+            <TextField
+              defaultValue={prop.userName}
+              id='filled-basic'
+              label='Họ Và Tên'
+              onChange={onchangeUserName}
+              variant='outlined'
+            />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker
+                  value={prop.dateOfBirth}
+                  onChange={onchangeBirthDay}
+                  sx={{ width: '100%' }}
+                  label='Ngày Sinh'
+                />
+              </DemoContainer>
+            </LocalizationProvider>
+            <TextField
+              defaultValue={prop.email}
+              onChange={onchangeGmail}
+              id='outlined-basic'
+              label='Gmail'
+              variant='outlined'
+            />
+            <TextField onChange={onchangePass} id='filled-basic' label='Mật Khẩu' variant='outlined' />
+            {/* <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' /> */}
 
-        <TextField onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
-          {Roles == null ? (
-            <MenuItem value='10'>Ten</MenuItem>
-          ) : (
-            Roles.map((item: Role, index: number): JSX.Element => {
-              return (
-                <MenuItem sx={{ color: 'black' }} key={index} value={item.roleId}>
-                  {item.roleName}
-                </MenuItem>
-              )
-            })
-          )}
-        </TextField>
-        <TextField onChange={onchangeDep} id='selectDep' label='Chọn Khoa' select>
-          {Deps == null ? (
-            <MenuItem value='10'>Ten</MenuItem>
-          ) : (
-            Deps.map((item: Dep, index: number): JSX.Element => {
-              return (
-                <MenuItem sx={{ color: 'black' }} key={index} value={item.depId}>
-                  {item.depName}
-                </MenuItem>
-              )
-            })
-          )}
-        </TextField>
-      </Box>
-      <Button
-        onClick={onSubmitForm}
-        sx={{ position: 'relative', left: '45%', right: '20%', marginTop: 2 }}
-        variant='contained'
-      >
-        TẠO MỚI
-      </Button>
+            <TextField defaultValue={prop.roleId} onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
+              {Roles == null ? (
+                <MenuItem value='10'>Ten</MenuItem>
+              ) : (
+                Roles.map((item: Role, index: number): JSX.Element => {
+                  return (
+                    <MenuItem sx={{ color: 'black' }} key={index} value={item.roleId}>
+                      {item.roleName}
+                    </MenuItem>
+                  )
+                })
+              )}
+            </TextField>
+            <TextField defaultValue={prop.depId} onChange={onchangeDep} id='selectDep' label='Chọn Khoa' select>
+              {Deps == null ? (
+                <MenuItem value='10'>Ten</MenuItem>
+              ) : (
+                Deps.map((item: Dep, index: number): JSX.Element => {
+                  return (
+                    <MenuItem sx={{ color: 'black' }} key={index} value={item.depId}>
+                      {item.depName}
+                    </MenuItem>
+                  )
+                })
+              )}
+            </TextField>
+          </Box>
+          <Button
+            onClick={onSubmitForm}
+            sx={{ position: 'relative', left: '45%', right: '20%', marginTop: 2 }}
+            variant='contained'
+          >
+            LƯU CHỈNH SỬA
+          </Button>
+        </>
+      ) : (
+        <>
+          <Box
+            component='form'
+            sx={{
+              '& > :not(style)': { m: 1, width: '45%' },
+
+              display: 'flex',
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              gridTemplateColumns: { sm: '1fr 1fr' },
+              gap: 2
+            }}
+            noValidate
+            autoComplete='off'
+          >
+            <TextField onChange={onchangeCCCD} id='outlined-basic' label='CCCD' variant='outlined' />
+            <TextField id='filled-basic' label='Họ Và Tên' onChange={onchangeUserName} variant='outlined' />
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DemoContainer components={['DatePicker']}>
+                <DatePicker onChange={onchangeBirthDay} sx={{ width: '100%' }} label='Ngày Sinh' />
+              </DemoContainer>
+            </LocalizationProvider>
+            <TextField onChange={onchangeGmail} id='outlined-basic' label='Gmail' variant='outlined' />
+            <TextField onChange={onchangePass} id='filled-basic' label='Mật Khẩu' variant='outlined' />
+            {/* <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' /> */}
+
+            <TextField onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
+              {Roles == null ? (
+                <MenuItem value='10'>Ten</MenuItem>
+              ) : (
+                Roles.map((item: Role, index: number): JSX.Element => {
+                  return (
+                    <MenuItem sx={{ color: 'black' }} key={index} value={item.roleId}>
+                      {item.roleName}
+                    </MenuItem>
+                  )
+                })
+              )}
+            </TextField>
+            <TextField onChange={onchangeDep} id='selectDep' label='Chọn Khoa' select>
+              {Deps == null ? (
+                <MenuItem value='10'>Ten</MenuItem>
+              ) : (
+                Deps.map((item: Dep, index: number): JSX.Element => {
+                  return (
+                    <MenuItem sx={{ color: 'black' }} key={index} value={item.depId}>
+                      {item.depName}
+                    </MenuItem>
+                  )
+                })
+              )}
+            </TextField>
+          </Box>
+          <Button
+            onClick={onSubmitForm}
+            sx={{ position: 'relative', left: '45%', right: '20%', marginTop: 2 }}
+            variant='contained'
+          >
+            TẠO MỚI
+          </Button>
+        </>
+      )}
     </>
   )
 }

@@ -4,7 +4,7 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import UserTextFields from './UserTextFields'
-
+import EditIcon from '@mui/icons-material/Edit'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -18,17 +18,29 @@ const style = {
   boxShadow: 'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
   p: 4
 }
-
-export default function BasicModal(): JSX.Element {
+interface BasicModalProps {
+  id: string
+  userName: string
+  dateOfBirth: string
+  email: string
+  password: string
+  userAddress: string
+  roleId: number
+  depId: number
+}
+export default function BasicModal(prop: BasicModalProps): JSX.Element {
   const [open, setOpen] = React.useState(false)
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
 
   return (
     <div>
-      <Button variant='contained' onClick={handleOpen}>
-        Thêm Người Dùng
+      <Button onClick={handleOpen} sx={{ width: 30, height: 30, fontSize: 21 }}>
+        <EditIcon />
       </Button>
+      {/* <Button variant='contained' onClick={handleOpen}>
+        Thêm Người Dùng
+      </Button> */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -42,19 +54,19 @@ export default function BasicModal(): JSX.Element {
             variant='h6'
             component='h2'
           >
-            THÊM NGƯỜI DÙNG MỚI
+            THÔNG TIN NGƯỜI DÙNG
           </Typography>
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
             <UserTextFields
-              edit={false}
-              id={''}
-              userName={''}
-              dateOfBirth={''}
-              email={''}
-              password={''}
-              userAddress={''}
-              roleId={0}
-              depId={0}
+              edit={true}
+              id={prop.id}
+              userName={prop.userName}
+              dateOfBirth={prop.dateOfBirth}
+              email={prop.email}
+              password={prop.password}
+              userAddress={prop.userAddress}
+              roleId={prop.roleId}
+              depId={prop.depId}
             />
           </Typography>
         </Box>

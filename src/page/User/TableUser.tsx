@@ -4,50 +4,9 @@ import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import { getAll } from '~/api/userApi'
-
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID Người Dùng', width: 200 },
-  { field: 'username', headerName: 'Họ và tên', width: 200 },
-  { field: 'dateofbirth', headerName: 'Ngày Sinh', width: 200 },
-  {
-    field: 'email',
-    headerName: 'Gmail',
-    type: 'string',
-    width: 200
-  },
-  {
-    field: 'password',
-    headerName: 'Mật Khẩu',
-    description: 'This column has a value getter and is not sortable.',
-    sortable: false,
-    width: 200
-  },
-  {
-    field: 'useraddress',
-    headerName: 'Địa Chỉ',
-    type: 'string',
-    width: 200
-  },
-  {
-    field: 'actions',
-    type: 'actions',
-    width: 100,
-    getActions: () => [
-      <GridActionsCellItem key={1} icon={<EditIcon />} label='Edit' />,
-      <GridActionsCellItem key={2} icon={<DeleteIcon />} label='Delete' />
-    ]
-  }
-  // {
-  //   field: 'actions',
-  //   type: 'actions',
-  //   width: 100,
-  //   getActions: () => [
-  //     <GridActionsCellItem icon={<EditIcon />} label='Edit' />,
-  //     <GridActionsCellItem icon={<DeleteIcon />} label='Delete' />
-  //   ]
-  // }
-]
-
+import axios from 'axios'
+import BasicModal from './ModalEditUser'
+axios.defaults.baseURL = 'http://localhost:5237/api'
 // const rows = [
 //   {
 //     id: 1,
@@ -124,6 +83,7 @@ interface User {
   roleId: number
   depId: number
 }
+
 const TableUser = (): JSX.Element => {
   const [response, err, loader] = useAxios(getAll)
   const users = response?.data
@@ -144,6 +104,67 @@ const TableUser = (): JSX.Element => {
   if (loader) {
     console.log(loader)
   }
+  const handleDelete = (id: string): void => {
+    // Thực hiện xóa hàng dữ liệu với ID tương ứng
+    console.log('Xóa hàng dữ liệu với ID:', id)
+    axios
+      .delete(`/Users?id=${id}`)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((error) => {
+        console.log('có lỗi khi xoá dữ liệu: ' + error)
+      })
+  }
+  const columns: GridColDef[] = [
+    { field: 'id', headerName: 'ID Người Dùng', width: 200 },
+    { field: 'username', headerName: 'Họ và tên', width: 200 },
+    { field: 'dateofbirth', headerName: 'Ngày Sinh', width: 200 },
+    {
+      field: 'email',
+      headerName: 'Gmail',
+      type: 'string',
+      width: 200
+    },
+    {
+      field: 'password',
+      headerName: 'Mật Khẩu',
+      description: 'This column has a value getter and is not sortable.',
+      sortable: false,
+      width: 200
+    },
+    {
+      field: 'useraddress',
+      headerName: 'Địa Chỉ',
+      type: 'string',
+      width: 200
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      width: 100,
+      getActions: (params: any) => [
+        // <GridActionsCellItem key={1} icon={<EditIcon />} label='Edit' />,
+        // eslint-disable-next-line react/jsx-key
+        <BasicModal
+          id={params.id}
+          userName={params.userName}
+          dateOfBirth={params.dateOfBirth}
+          email={params.email}
+          password={params.password}
+          userAddress={params.userAddress}
+          roleId={params.roleId}
+          depId={params.depId}
+        />,
+        <GridActionsCellItem
+          key={2}
+          icon={<DeleteIcon />}
+          label='Delete'
+          onClick={(): void => handleDelete(params.id)}
+        />
+      ]
+    }
+  ]
   return (
     <>
       {loader ? (
