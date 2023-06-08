@@ -56,7 +56,7 @@ const currencies = [
     icon: <RadioButtonCheckedIcon />
   }
 ]
-const Index = (): JSX.Element => {
+const TestCreate = (): JSX.Element => {
   const [open, setOpen] = useState(false)
   const [anw, setAnw] = useState('')
   const [anwString, setAnwString] = useState('')
@@ -276,4 +276,4 @@ const Index = (): JSX.Element => {
     </>
   )
 }
-export default Index
+export default TestCreate

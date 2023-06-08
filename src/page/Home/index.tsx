@@ -1,16 +1,16 @@
 import React from 'react'
 import Layout from '~/components/layout/Layout'
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { Carousel } from 'react-responsive-carousel'
+import 'react-responsive-carousel/lib/styles/carousel.min.css'
 import image1 from '~/assets/img/bg_home_page.jpg'
 import image2 from '~/assets/img/bg_home_page_1.jpg'
 import image3 from '~/assets/img/bg_home_page_2.png'
 import image4 from '~/assets/img/bg_home_page_3.jpg'
 import imageItemBlog from '~/assets/img/blog_item_img.jpg'
-import { Grid, Box, Typography, SxProps } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Grid, Box, Typography, SxProps } from '@mui/material'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 function Blogs(
   id: number,
   blogName: string,
@@ -23,16 +23,44 @@ function Blogs(
 const row = [
   Blogs(1, 'An toàn thông tin', 'Ảnh thi trắc nghiệm an toàn thông tin', `${imageItemBlog}`, 'Công đoàn', '20-04-2023'),
   Blogs(2, 'Chuyển đổi số IDX', 'Ảnh thi trắc nghiệm an toàn thông tin', `${imageItemBlog}`, 'Công đoàn', '20-04-2023'),
-  Blogs(3, 'Tuyên truyền phòng chống ma túy', 'Ảnh thi trắc nghiệm an toàn thông tin', `${imageItemBlog}`, 'Công đoàn', '20-04-2023'),
-  Blogs(4, 'Bảo vệ trẻ em khỏi người xấu', 'Ảnh thi trắc nghiệm an toàn thông tin', `${imageItemBlog}`, 'Công đoàn', '20-04-2023'),
-  Blogs(5, 'Tôi Yêu Thiên Nhiên sologan Doanh nghiệp xanh ', 'Ảnh thi trắc nghiệm an toàn thông tin', `${imageItemBlog}`, 'Công đoàn', '20-04-2023'),
-  Blogs(6, 'Báo Cáo hệ thống chuyên ngành công nghệ thông tin Báo Cáo hệ thống chuyên ngành công nghệ thông tinBáo Cáo hệ thống chuyên ngành công nghệ thông tin ', 'Ảnh thi trắc nghiệm an toàn thông tin', `${imageItemBlog}`, 'Công đoàn', '20-04-2023'),
+  Blogs(
+    3,
+    'Tuyên truyền phòng chống ma túy',
+    'Ảnh thi trắc nghiệm an toàn thông tin',
+    `${imageItemBlog}`,
+    'Công đoàn',
+    '20-04-2023'
+  ),
+  Blogs(
+    4,
+    'Bảo vệ trẻ em khỏi người xấu',
+    'Ảnh thi trắc nghiệm an toàn thông tin',
+    `${imageItemBlog}`,
+    'Công đoàn',
+    '20-04-2023'
+  ),
+  Blogs(
+    5,
+    'Tôi Yêu Thiên Nhiên sologan Doanh nghiệp xanh ',
+    'Ảnh thi trắc nghiệm an toàn thông tin',
+    `${imageItemBlog}`,
+    'Công đoàn',
+    '20-04-2023'
+  ),
+  Blogs(
+    6,
+    'Báo Cáo hệ thống chuyên ngành công nghệ thông tin Báo Cáo hệ thống chuyên ngành công nghệ thông tinBáo Cáo hệ thống chuyên ngành công nghệ thông tin ',
+    'Ảnh thi trắc nghiệm an toàn thông tin',
+    `${imageItemBlog}`,
+    'Công đoàn',
+    '20-04-2023'
+  )
 ]
 const Home = (): JSX.Element => {
   return (
     <>
       <Layout>
-        <div className="carousel-wrapper">
+        <div className='carousel-wrapper'>
           <Carousel
             autoPlay={true}
             infiniteLoop={true}
@@ -55,58 +83,54 @@ const Home = (): JSX.Element => {
             </div>
           </Carousel>
         </div>
-        <div className="banner_home_page_info">
-          <Grid container sx={{ marginTop: "20px" }} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            <Grid item xs={8}  >
-              <Box sx={{ padding: "10px", backgroundColor: "#1976D2" }}>
-                <Typography variant="h6" sx={{ color: "white", fontSize: "14px" }}>
+        <div className='banner_home_page_info'>
+          <Grid container sx={{ marginTop: '20px' }} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+            <Grid item xs={8}>
+              <Box sx={{ padding: '10px', backgroundColor: '#1976D2' }}>
+                <Typography variant='h6' sx={{ color: 'white', fontSize: '14px' }}>
                   ĐẠI HỘI CÔNG ĐOÀN CÁC CẤP TIẾN TỚI ĐẠI HỘI CÔNG ĐOÀN XII CÔNG ĐOÀN THÀNH PHỐ HỒ CHÍ MINH
                 </Typography>
               </Box>
-              <Grid container sx={{ marginTop: "20px" }} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-              {
-                row.map((row) => (
-                  <Grid key={row.id} item xs={4}>
+              <Grid container sx={{ marginTop: '20px' }} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                {row.map((row, index) => (
+                  <Grid key={index} item xs={4}>
                     <Box sx={styleBlogWarp}>
-                      <Box sx={{ position: "relative" }}>
-                        <img src={row.imgSrc} alt="" style={{ width: "100%" ,height:"145px",objectFit:"cover"}} />
-                        <Author>
-                          {row.author}
-                        </Author>
+                      <Box sx={{ position: 'relative', backgroundColor: 'black' }}>
+                        <img src={row.imgSrc} alt='' style={{ width: '100%' }} />
+                        <Author>{row.author}</Author>
                       </Box>
-                      <Box sx={{ padding: "10px" }}>
-                        <BogName>
-                          {row.blogName}
-                        </BogName>
-                        <span style={{display:"block",fontSize:"13px", color:"#999"}}>Ngày đăng: <span style={{color:"black",fontSize:"16px"}}>{row.postDay}</span> </span>
-                        <Link to={'#'} >
+                      <Box sx={{ padding: '10px' }}>
+                        <BogName>{row.blogName}</BogName>
+                        <span style={{ display: 'block', fontSize: '13px', color: '#999' }}>
+                          Ngày đăng: <span style={{ color: 'black', fontSize: '16px' }}>{row.postDay}</span>{' '}
+                        </span>
+                        <Link to={'#'}>
                           <Typography sx={linkMore}>
-                            Xem thêm <ArrowForwardIcon sx={{fontSize:"16px"}} />
+                            Xem thêm <ArrowForwardIcon sx={{ fontSize: '16px' }} />
                           </Typography>
                         </Link>
                       </Box>
                     </Box>
                   </Grid>
-                ))
-              }
+                ))}
               </Grid>
             </Grid>
             <Grid item xs={4}>
-              <Box sx={{ padding: "10px", backgroundColor: "#1976D2" }}>
-                <Typography variant="h6" sx={{ color: "white", fontSize: "16px" }}>
-                  VĂN BẢN MỚI 
+              <Box sx={{ padding: '10px', backgroundColor: '#1976D2' }}>
+                <Typography variant='h6' sx={{ color: 'white', fontSize: '16px' }}>
+                  VĂN BẢN MỚI
                 </Typography>
               </Box>
             </Grid>
           </Grid>
         </div>
       </Layout>
-    </> 
+    </>
   )
 }
 const Author = styled.span`
-  position:absolute;
-  background-color:#1976d2;
+  position: absolute;
+  background-color: #1976d2;
   top: -10px;
   left: -4px;
   border-radius:50px;
@@ -116,8 +140,8 @@ const Author = styled.span`
   `
 
 const BogName = styled.h2`
-  display:-webkit-box;
-  -webkit-line-clamp:2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -138,14 +162,14 @@ const styleBlogWarp :SxProps = {
 
 }
 
-const linkMore :SxProps={
-  fontWeight:"bold",
-  fontSize:"15px",
-  color:"#1976d2",
-  textDecoration:"none",
-  display:"flex",
-  alignItems:"center",
-  gap:"10px",
-  justifyContent:"flex-end"
+const linkMore: SxProps = {
+  fontWeight: 'bold',
+  fontSize: '15px',
+  color: '#1976d2',
+  textDecoration: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  gap: '10px',
+  justifyContent: 'flex-end'
 }
 export default Home

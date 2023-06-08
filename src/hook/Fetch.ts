@@ -7,13 +7,13 @@ interface UseAxiosProps {
   body: object
   headers: object
 }
-axios.defaults.baseURL = 'http://192.168.21.170:5050/api'
+axios.defaults.baseURL = 'http://localhost:5237/api'
 
-const useAxios = ({ enp, method, body, headers }: UseAxiosProps): [AxiosResponse<any> | null, string, boolean] => {
+const Fetch = ({ enp, method, body, headers }: UseAxiosProps): [AxiosResponse<any> | null, string, boolean] => {
   const [response, setResponse] = useState<AxiosResponse<any> | null>(null)
   const [error, setError] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
-
+  console.log(2)
   const fetchData = (): void => {
     const options = {
       method: method,
@@ -36,4 +36,4 @@ const useAxios = ({ enp, method, body, headers }: UseAxiosProps): [AxiosResponse
   return [response, error, loading]
 }
 
-export default useAxios
+export default Fetch

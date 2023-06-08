@@ -1,15 +1,26 @@
-import React from 'react'
+import React,{ useState } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import { Typography, Grid, FormControl, InputLabel, Select, MenuItem, Button, Stack, TextField } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { SelectChangeEvent } from '@mui/material/Select'
+
+
+const ImageResize = require('quill-image-resize-module-react').default;
+Quill.register('modules/imageResize', ImageResize);
 const Index = (): JSX.Element => {
   const [age, setAge] = React.useState('')
 
   const handleChange = (event: SelectChangeEvent): void => {
     setAge(event.target.value)
   }
+  const handleContentChange = (value:any):any => {
+    setContent(value);
+    console.log(value)
+  };
+  const [content, setContent] = useState('');
+  console.log(content)
   return (
     <>
       <LayoutAdmin>
@@ -71,14 +82,19 @@ const Index = (): JSX.Element => {
             </Stack>
           </Grid>
           <Grid xs={12} style={{ marginTop: '10px' }}>
-            <TextField
-              id='standard-multiline-static'
-              label='Nội dung trang blog'
-              multiline
-              rows={15}
-              variant='outlined'
-              style={{ width: '100%' }}
+            <ReactQuill
+              value={content}
+              onChange={handleContentChange}
+              modules={modules}
+              formats={[
+                'header',
+                'bold', 'italic', 'underline', 'strike', 'blockquote',
+                'list', 'bullet', 'indent',
+                'link', 'image'
+              ]}
+              
             />
+
           </Grid>
           <Grid>
             <Button variant='contained' startIcon={<AddIcon />} style={{ marginTop: '20px' }}>
@@ -90,5 +106,23 @@ const Index = (): JSX.Element => {
     </>
   )
 }
+
+const modules ={
+  toolbar: [
+    [{ 'header': [1, 2, false] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+    ['link', 'image'],
+    ['clean']
+  ],
+  imageResize: {
+    displayStyles: {
+      backgroundColor: 'black',
+      border: 'none',
+      color: 'white'
+    },
+    modules: ['Resize', 'DisplaySize', 'Toolbar']
+  }
+};
 
 export default Index

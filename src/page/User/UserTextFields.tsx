@@ -6,15 +6,15 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import useAxios from '~/hook/useAxios'
+
 import { getAll } from '~/api/depApi'
 import { getAllRole } from '~/api/roleApi'
-import { PickerChangeHandlerContext } from '@mui/x-date-pickers/internals/hooks/usePicker/usePickerValue.types'
-import { DateValidationError } from '@mui/x-date-pickers'
-import { Insert } from '~/api/userApi'
-import { AxiosResponse } from 'axios'
+
 import dayjs from 'dayjs'
 
+import axios from 'axios'
+import Fetch from '~/hook/Fetch'
+axios.defaults.baseURL = 'http://localhost:5237/api'
 interface Dep {
   depId: number
   depName: string
@@ -28,18 +28,13 @@ export default function UserTextFields(): JSX.Element {
   const [userName, setUserName] = React.useState<string>('')
   const [pass, setPass] = React.useState<string>('')
   const [gmail, setGmail] = React.useState('')
-  const [address, setAddress] = React.useState<string>('')
+  // const [address, setAddress] = React.useState<string>('')
   const [birthDay, setBirthDay] = React.useState<string>('')
   const [dep, setDep] = React.useState<string>('')
   const [role, setRole] = React.useState<string>('')
 
-  const [fetchStop, setFetchStop] = React.useState<boolean>(false)
-  const [res, setRes] = React.useState<AxiosResponse | null>(null)
-  const [e, setE] = React.useState<string>('')
-  const [load, setLoad] = React.useState<boolean>(false)
-
-  const [depData, ,] = useAxios(getAll)
-  const [roleData, ,] = useAxios(getAllRole)
+  const [depData, ,] = Fetch(getAll)
+  const [roleData, ,] = Fetch(getAllRole)
   const Deps = depData?.data
   const Roles = roleData?.data
   const onchangeUserName = function (event: React.ChangeEvent<HTMLInputElement>): void {
@@ -51,18 +46,15 @@ export default function UserTextFields(): JSX.Element {
   const onchangePass = function (event: React.ChangeEvent<HTMLInputElement>): void {
     setPass(event.target.value)
   }
-  const onchangeAddress = function (event: React.ChangeEvent<HTMLInputElement>): void {
-    setAddress(event.target.value)
-  }
+  // const onchangeAddress = function (event: React.ChangeEvent<HTMLInputElement>): void {
+  //   setAddress(event.target.value)
+  // }
   const onchangeGmail = function (event: React.ChangeEvent<HTMLInputElement>): void {
     setGmail(event.target.value)
   }
-  const onchangeBirthDay = function (
-    value: string | null,
-    context: PickerChangeHandlerContext<DateValidationError>
-  ): void {
+  const onchangeBirthDay = function (value: string | null): void {
     if (value) {
-      const formattedDate = dayjs(value).format('YYYY/MM/DD')
+      const formattedDate = dayjs(value).format('YYYY-MM-DD')
       setBirthDay(formattedDate)
     }
   }
@@ -72,39 +64,28 @@ export default function UserTextFields(): JSX.Element {
   const onchangeRole = function (event: React.ChangeEvent<HTMLInputElement>): void {
     setRole(event.target.value)
   }
-
-  const postUser = function (): void {
-    const requestData = {
-      userId: cccd,
-      userName: userName,
-      dateOfBirth: birthDay,
-      email: gmail,
-      password: pass,
-      userAddress: address,
-      roleId: role,
-      depId: dep
-    }
-
-    const fetchData = async (): Promise<void> => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const [response, error, loading] = await useAxios(Insert(requestData))
-
-      setRes(response)
-      setE(error)
-      setLoad(loading)
-    }
-    fetchData()
+  const requestData = {
+    userId: cccd,
+    userName: userName,
+    dateOfBirth: birthDay,
+    email: gmail,
+    password: pass,
+    // UserAddress: address,
+    roleId: role,
+    depId: dep
   }
-  if (fetchStop) {
-    setFetchStop(false)
-    postUser()
-  }
+
   const onSubmitForm = (): void => {
-    setFetchStop(true)
+    axios
+      .post('/Users', requestData)
+      .then(function (response) {
+        console.log(response)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
   }
-  console.log('post:' + res)
-  console.log('Lỗi:' + e)
-  console.log('Loading:' + load)
+
   return (
     <>
       <Box
@@ -130,7 +111,7 @@ export default function UserTextFields(): JSX.Element {
         </LocalizationProvider>
         <TextField onChange={onchangeGmail} id='outlined-basic' label='Gmail' variant='outlined' />
         <TextField onChange={onchangePass} id='filled-basic' label='Mật Khẩu' variant='outlined' />
-        <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' />
+        {/* <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' /> */}
 
         <TextField onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
           {Roles == null ? (
