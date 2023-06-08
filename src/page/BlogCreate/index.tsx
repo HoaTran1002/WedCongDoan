@@ -14,10 +14,8 @@ const Index = (): JSX.Element => {
   }
   const handleContentChange = (value:any):any => {
     setContent(value);
-    console.log(value)
   };
   const [content, setContent] = useState('');
-  console.log(content)
   return (
     <>
       <LayoutAdmin>
@@ -111,15 +109,7 @@ const modules ={
     [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
     ['link', 'image'],
     ['clean']
-  ],
-  imageResize: {
-    displayStyles: {
-      backgroundColor: 'black',
-      border: 'none',
-      color: 'white'
-    },
-    modules: ['Resize', 'DisplaySize', 'Toolbar']
-  }
+  ]
 };
 
 export default Index
