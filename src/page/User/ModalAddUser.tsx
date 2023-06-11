@@ -53,8 +53,8 @@ export default function BasicModal(): JSX.Element {
               email={''}
               password={''}
               userAddress={''}
-              roleId={0}
-              depId={0}
+              roleId={'0'}
+              depId={'0'}
             />
           </Typography>
         </Box>

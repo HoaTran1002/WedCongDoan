@@ -1,21 +1,21 @@
 import AddIcon from '@mui/icons-material/Add'
-import UpdateIcon from '@mui/icons-material/Update';
+import UpdateIcon from '@mui/icons-material/Update'
 import { Button, FormControl, Grid, InputLabel, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import { SelectChangeEvent } from '@mui/material/Select'
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
 const Index = (): JSX.Element => {
   const [age, setAge] = React.useState('')
 
   const handleChange = (event: SelectChangeEvent): void => {
     setAge(event.target.value)
   }
-  const handleContentChange = (value:any):any => {
-    setContent(value);
-  };
-  const [content, setContent] = useState('');
+  const handleContentChange = (value: any): any => {
+    setContent(value)
+  }
+  const [content, setContent] = useState('')
   return (
     <>
       <LayoutAdmin>
@@ -85,11 +85,17 @@ const Index = (): JSX.Element => {
               modules={modules}
               formats={[
                 'header',
-                'bold', 'italic', 'underline', 'strike', 'blockquote',
-                'list', 'bullet', 'indent',
-                'link', 'image'
+                'bold',
+                'italic',
+                'underline',
+                'strike',
+                'blockquote',
+                'list',
+                'bullet',
+                'indent',
+                'link',
+                'image'
               ]}
-              
             />
           </Grid>
           <Grid item xs={12}>
@@ -103,13 +109,13 @@ const Index = (): JSX.Element => {
   )
 }
 
-const modules ={
+const modules = {
   toolbar: [
-    [{ 'header': [1, 2, false] }],
+    [{ header: [1, 2, false] }],
     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+    [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
     ['link', 'image'],
     ['clean']
   ]
-};
+}
 export default Index
