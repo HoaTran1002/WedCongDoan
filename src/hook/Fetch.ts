@@ -13,7 +13,6 @@ const Fetch = ({ enp, method, body, headers }: UseAxiosProps): [AxiosResponse<an
   const [response, setResponse] = useState<AxiosResponse<any> | null>(null)
   const [error, setError] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)
-  console.log(2)
   const fetchData = (): void => {
     const options = {
       method: method,

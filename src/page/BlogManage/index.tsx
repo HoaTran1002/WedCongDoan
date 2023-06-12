@@ -4,44 +4,57 @@ import { Typography, Grid, Button, Stack } from '@mui/material'
 import image from '~/assets/img/competion-1.jpg'
 import AddIcon from '@mui/icons-material/Add'
 import useFetch from '~/hook/Fetch'
-import { getAll } from '~/api/blogApi'
+import { getAll,getById } from '~/api/blogApi'
 
-function BlogInfo(
-  id: number,
-  heading: string,
-  title: string
-): {
-  id: number
-  heading: string
-  title: string
-} {
-  return { id, heading, title }
+// function BlogInfo(
+//   id: number,
+//   heading: string,
+//   title: string
+// ): {
+//   id: number
+//   heading: string
+//   title: string
+// } {
+//   return { id, heading, title }
+// }
+
+// const Blog = [
+//   BlogInfo(1, 'Tựa đề bài viết', 'Thanh tiêu đề bài viết'),
+//   BlogInfo(2, 'Tựa đề bài viết', 'Thanh tiêu đề bài viết'),
+//   BlogInfo(3, 'Tựa đề bài viết', 'Thanh tiêu đề bài viết')
+// ]
+
+interface Blog{
+  blogId: number,
+  blogName: string,
+  imgSrc: string,
+  imgName: string,
 }
-
-const Blog = [
-  BlogInfo(1, 'Tựa đề bài viết', 'Thanh tiêu đề bài viết'),
-  BlogInfo(2, 'Tựa đề bài viết', 'Thanh tiêu đề bài viết'),
-  BlogInfo(3, 'Tựa đề bài viết', 'Thanh tiêu đề bài viết')
-]
 
 const Index = (): JSX.Element => {
 
-  // const [response, err, loader] = useFetch(getAll)
-
-  // if (response) {
-  //   console.log(response.data)
-  // }
-  // if (err) {
-  //   console.log(err)
-  // }
-  // if (loader) {
-  //   console.log(loader)
-  // }
+  const [response, err, loader] = useFetch(getAll)
+  const blogs = response?.data
+  const rows = blogs?.map((blog: Blog) => ({
+    id:blog.blogId,
+    blogName:blog.blogName,
+    imgSrc:blog.imgSrc,
+    imgName:blog.imgName
+  }))
+  if (response) {
+    console.log(response.data)
+  }
+  if (err) {
+    console.log(err)
+  }
+  if (loader) {
+    console.log(loader)
+  }
   return (
     <LayoutAdmin>
-      {/* {loader == true ? (
+      {loader == true ? (
         <h1>đang tải trang ...</h1>
-      ) : ( */}
+      ) : (
       <>
         <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
           <Grid item xs={12}>
@@ -53,8 +66,8 @@ const Index = (): JSX.Element => {
                 Thêm một blog mới
               </Button>
             </Stack>
-          </Grid>
-          {Blog.map((row) => (
+          </Grid> 
+          {rows.map((row:any) => (
             <Grid item xs={6} columnSpacing={{ xs: 6, paddingRight: '20px' }} key={row.id}>
               <Stack
                 direction={'row'}
@@ -74,7 +87,7 @@ const Index = (): JSX.Element => {
                     width: '140px'
                   }}
                 >
-                  <img src={image} alt='' style={{ height: '100%', width: '100%' }} />
+                  <img src={`src/assets/img/${row.imgSrc}`} alt='' style={{ height: '100%', width: '100%' }} />
                 </div>
                 <div
                   className=''
@@ -91,7 +104,7 @@ const Index = (): JSX.Element => {
                       fontSize: '22px'
                     }}
                   >
-                    {row.heading}
+                    {row.blogName}
                   </Typography>
                   <Typography
                     style={{
@@ -111,7 +124,7 @@ const Index = (): JSX.Element => {
                   }}
                 >
                   <Button
-                    href='/BlogDetail'
+                    href={`/BlogDetail?id=${row.id}`}
                     variant='outlined'
                     style={{
                       width: '120px'
@@ -125,7 +138,7 @@ const Index = (): JSX.Element => {
           ))}
         </Grid>
       </>
-      {/* )} */}
+      )}
     </LayoutAdmin>
   )
 }

@@ -54,3 +54,24 @@
     content: '<';
   }
   
+  .layout_drag_image{
+    width: 100%;
+    border-radius: 6px;
+    border-style: dashed;
+    border-color: #1976D2;
+    background-color: #daecff;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 23px;
+    color: #1976D2;
+  }
+
+  .selectedImage{
+    height: 250px;
+  }
+
+  .color-primary{
+    color: #1976D2;
+  }
