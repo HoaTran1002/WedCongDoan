@@ -14,7 +14,9 @@ import dayjs from 'dayjs'
 
 import axios from 'axios'
 import Fetch from '~/hook/Fetch'
-import { Edit } from '~/api/userApi'
+import useFetch from '~/hook/useFetch'
+import { editUser, insert } from '~/api/userApi'
+
 axios.defaults.baseURL = 'http://localhost:5237/api'
 interface Dep {
   depId: number
@@ -32,22 +34,24 @@ export default function UserTextFields(prop: {
   email: string
   password: string
   userAddress: string
-  roleId: number
-  depId: number
+  roleId: string
+  depId: string
 }): JSX.Element {
-  const [cccd, setCCCD] = React.useState<string>('')
-  const [userName, setUserName] = React.useState<string>('')
-  const [pass, setPass] = React.useState<string>('')
-  const [gmail, setGmail] = React.useState('')
+  const [cccd, setCCCD] = React.useState<string>(prop.id || '')
+  const [userName, setUserName] = React.useState<string>(prop.userName || '')
+  const [pass, setPass] = React.useState<string>(prop.password || '')
+  const [gmail, setGmail] = React.useState(prop.email || '')
   // const [address, setAddress] = React.useState<string>('')
-  const [birthDay, setBirthDay] = React.useState<string>('')
-  const [dep, setDep] = React.useState<string>('')
-  const [role, setRole] = React.useState<string>('')
+  const [birthDay, setBirthDay] = React.useState<string>(prop.dateOfBirth || '')
+  const [dep, setDep] = React.useState<string>(prop.depId || '0')
+  const [role, setRole] = React.useState<string>(prop.roleId || '0')
 
   const [depData, ,] = Fetch(getAll)
   const [roleData, ,] = Fetch(getAllRole)
   const Deps = depData?.data
   const Roles = roleData?.data
+  const [userInsert, callInsertUser] = useFetch()
+  const [EdittUser, callEdittUser] = useFetch()
   let formattedDateOfBirth: any
   if (prop.dateOfBirth) {
     formattedDateOfBirth = dayjs(prop.dateOfBirth).format('MM-DD-YYYY')
@@ -80,7 +84,16 @@ export default function UserTextFields(prop: {
   const onchangeRole = function (event: React.ChangeEvent<HTMLInputElement>): void {
     setRole(event.target.value)
   }
-  const requestData = {
+  const requestData: {
+    userId: string
+    userName: string
+    dateOfBirth: string
+    email: string
+    password: string
+    UserAddress: string
+    roleId: string
+    depId: string
+  } = {
     userId: cccd,
     userName: userName,
     dateOfBirth: birthDay,
@@ -92,15 +105,15 @@ export default function UserTextFields(prop: {
   }
 
   const onSubmitForm = (): void => {
+    callInsertUser(async () => {
+      insert(requestData)
+    })
+  }
+  const onSubmitFormEdit = (): void => {
     console.log(requestData)
-    axios
-      .put(`/Users`, requestData)
-      .then(function (response) {
-        console.log(response)
-      })
-      .catch(function (error) {
-        console.log(error)
-      })
+    callEdittUser(async () => {
+      editUser(requestData)
+    })
   }
 
   return (
@@ -188,7 +201,7 @@ export default function UserTextFields(prop: {
             </TextField>
           </Box>
           <Button
-            onClick={onSubmitForm}
+            onClick={onSubmitFormEdit}
             sx={{ position: 'relative', left: '45%', right: '20%', marginTop: 2 }}
             variant='contained'
           >
@@ -222,7 +235,7 @@ export default function UserTextFields(prop: {
             <TextField onChange={onchangePass} id='filled-basic' label='Mật Khẩu' variant='outlined' />
             {/* <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' /> */}
 
-            <TextField defaultValue={prop.roleId} onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
+            <TextField onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
               {Roles == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
               ) : (
@@ -235,7 +248,7 @@ export default function UserTextFields(prop: {
                 })
               )}
             </TextField>
-            <TextField value={prop.depId} onChange={onchangeDep} id='selectDep' label='Chọn Khoa' select>
+            <TextField onChange={onchangeDep} id='selectDep' label='Chọn Khoa' select>
               {Deps == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
               ) : (

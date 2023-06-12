@@ -1,3 +1,4 @@
+
 import UpdateIcon from '@mui/icons-material/Update';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -185,9 +186,17 @@ const Index = (): JSX.Element => {
               onChange={handleContentChange}
               modules={modules}
               formats={[
-                'header', 'bold', 'italic', 'underline', 'strike', 'blockquote',
-                'list', 'bullet', 'indent',
-                'link', 'image'
+                'header',
+                'bold',
+                'italic',
+                'underline',
+                'strike',
+                'blockquote',
+                'list',
+                'bullet',
+                'indent',
+                'link',
+                'image'
               ]}
             />
           </Grid>
@@ -228,11 +237,11 @@ const Index = (): JSX.Element => {
 
 const modules = {
   toolbar: [
-    [{ 'header': [1, 2, false] }],
+    [{ header: [1, 2, false] }],
     ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
+    [{ list: 'ordered' }, { list: 'bullet' }, { indent: '-1' }, { indent: '+1' }],
     ['link', 'image'],
     ['clean']
   ]
-};
+}
 export default Index
