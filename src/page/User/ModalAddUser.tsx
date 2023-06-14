@@ -3,7 +3,10 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
+import Stack from '@mui/material/Stack'
 import UserTextFields from './UserTextFields'
+
+import { Link } from 'react-router-dom'
 
 const style = {
   position: 'absolute',
@@ -21,14 +24,16 @@ const style = {
 
 export default function BasicModal(): JSX.Element {
   const [open, setOpen] = React.useState(false)
+  const [formData, setFormData] = React.useState({}); 
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
-
   return (
     <div>
-      <Button variant='contained' onClick={handleOpen}>
-        Thêm Người Dùng
-      </Button>
+      <Stack direction={'row'} gap={'20px'} sx={{mt:"15px",mb:"15px"}}>
+        <Button variant='contained' onClick={handleOpen}>
+          Thêm Người Dùng
+        </Button>
+      </Stack>
       <Modal
         open={open}
         onClose={handleClose}
@@ -55,6 +60,8 @@ export default function BasicModal(): JSX.Element {
               userAddress={''}
               roleId={'0'}
               depId={'0'}
+              onClose={handleClose}
+              
             />
           </Typography>
         </Box>
