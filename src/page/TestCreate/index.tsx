@@ -64,16 +64,18 @@ const TestCreate = (): JSX.Element => {
   const [questions, setQuestion] = useState<Question[]>([])
   const [ques, setQues] = useState('')
   const [texts, setText] = useState<number[]>([1])
-  const handleOpen = (): void => {
-    setOpen(true)
-  }
-  const handleClose = (): void => setOpen(false)
   useEffect(() => {
     if (anwString == '') {
       setAnwString('<--->')
     }
     setAnwString(anwString + anw + '<--->')
   }, [texts])
+
+  const handleOpen = (): void => {
+    setOpen(true)
+  }
+  const handleClose = (): void => setOpen(false)
+
   const handelAddAnw = (): void => {
     setText([...texts, 1])
   }
@@ -122,10 +124,7 @@ const TestCreate = (): JSX.Element => {
             spacing={2}
           >
             <Button onClick={handleOpen} variant='contained'>
-              tạo câu hỏi
-            </Button>
-            <Button onClick={handleOpen} variant='contained'>
-              lưu bài thi
+              tạo trắc nghiệm
             </Button>
             <Modal
               open={open}
@@ -138,7 +137,12 @@ const TestCreate = (): JSX.Element => {
                   <CardContent>
                     <Typography variant='body2'>
                       <FormGroup>
-                        <TextField onChange={onChangeQues} id='standard-basic' label='câu hỏi?' variant='standard' />
+                        <TextField
+                          onChange={onChangeQues}
+                          id='standard-basic'
+                          label='nhập câu hỏi'
+                          variant='standard'
+                        />
                       </FormGroup>
                     </Typography>
                     <Typography variant='body2' color='text.secondary'>
@@ -149,7 +153,7 @@ const TestCreate = (): JSX.Element => {
                               <TextField
                                 id='standard-basic'
                                 variant='standard'
-                                label='Trả lời'
+                                label='nhập đáp án'
                                 onChange={handelonchangeTextFiel}
                               />
                             </FormGroup>
@@ -164,7 +168,7 @@ const TestCreate = (): JSX.Element => {
                         color='primary'
                         endIcon={<AddIcon />}
                       >
-                        Trả lời
+                        Xác Nhận
                       </Button>
                     </Typography>
                   </CardContent>

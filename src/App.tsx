@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from './page/Home'
 import Competition from './page/Competition'
-import TestCreate from './page/TestManage/TestCreate'
+import TestCreate from './page/TestCreate'
 import Login from './page/Login'
 import TestManage from './page/TestManage'
 import BlogManage from './page/BlogManage'
@@ -18,6 +18,7 @@ import Register from './page/Register'
 import Listcompetition from './page/Listcompetition'
 import TestSchedule from './page/TestSchedule'
 import ExamResult from './page/ExamResult'
+import PrizeData from './page/Prize/PrizeData'
 function App(): JSX.Element {
   return (
     <Routes>
@@ -26,10 +27,8 @@ function App(): JSX.Element {
       <Route path='/CompetitionCreate' element={<CompetitionCreate />} />
       <Route path='/CompetitionManage' element={<CompetitionManage />} />
       <Route path='/CompetitionTest' element={<CompetitionTest />} />
-      <Route path='/TestCreate' element={<TestCreate />} />
       <Route path='/Login' element={<Login />} />
       <Route path='/Register' element={<Register />} />
-      <Route path='/TestManage' element={<TestManage />} />
       <Route path='/Test' element={<Test />} />
       <Route path='/User' element={<UserManager />} />
       <Route path='/blogManage' element={<BlogManage />} />
@@ -39,6 +38,9 @@ function App(): JSX.Element {
       <Route path='/Listcompetition' element={<Listcompetition />} />
       <Route path='/TestSchedule' element={<TestSchedule />} />
       <Route path='/ExamResult/:id' element={<ExamResult />} />
+      <Route path='/Prize/Competition/:comId' element={<PrizeData />} />
+      <Route path='/Tests/Competition/:comId' element={<TestManage />} />
+      <Route path='/TestCreate/Competition/:comId' element={<TestCreate />} />
     </Routes>
   )
 }

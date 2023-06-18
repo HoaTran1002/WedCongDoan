@@ -1,5 +1,6 @@
 import React from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
+import SaveIcon from '@mui/icons-material/Save'
 import {
   Typography,
   Grid,
@@ -20,12 +21,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { TimePicker } from '@mui/x-date-pickers/TimePicker'
 import { SelectChangeEvent } from '@mui/material/Select'
-import dayjs, { Dayjs } from 'dayjs';
-import bronze from "~/assets/img/bronze-removebg-preview.png";
-import siver from "~/assets/img/siver-removebg-preview.png";
-import gold from "~/assets/img/gold-removebg-preview.png";
-import khuyenkhich from "~/assets/img/kk-removebg-preview.png";
-const label = { inputProps: { 'aria-label': 'Switch demo' } };
+import dayjs, { Dayjs } from 'dayjs'
+import bronze from '~/assets/img/bronze-removebg-preview.png'
+import siver from '~/assets/img/siver-removebg-preview.png'
+import gold from '~/assets/img/gold-removebg-preview.png'
+import khuyenkhich from '~/assets/img/kk-removebg-preview.png'
+const label = { inputProps: { 'aria-label': 'Switch demo' } }
 const Index = (): JSX.Element => {
   const [age, setAge] = React.useState('')
 
@@ -74,24 +75,24 @@ const Index = (): JSX.Element => {
               <Stack direction={'row'} justifyContent='space-around' style={{ width: '100%' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
-                    <DatePicker label='Ngày bắt đầu' defaultValue={dayjs('2023-04-17')}/>
+                    <DatePicker label='Ngày bắt đầu' defaultValue={dayjs('2023-04-17')} />
                   </DemoContainer>
                 </LocalizationProvider>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
-                    <DatePicker label='Ngày kết thúc' defaultValue={dayjs('2023-05-17')}/>
+                    <DatePicker label='Ngày kết thúc' defaultValue={dayjs('2023-05-17')} />
                   </DemoContainer>
                 </LocalizationProvider>
               </Stack>
               <Stack direction={'row'} style={{ width: '100%' }} justifyContent='space-around'>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['TimePicker']}>
-                    <TimePicker label='Thời gian bắt đầu' defaultValue={dayjs('2022-04-17T17:30')}/>
+                    <TimePicker label='Thời gian bắt đầu' defaultValue={dayjs('2022-04-17T17:30')} />
                   </DemoContainer>
                 </LocalizationProvider>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['TimePicker']}>
-                    <TimePicker label='Thời gian kết thúc' defaultValue={dayjs('2022-04-17T20:30')}/>
+                    <TimePicker label='Thời gian kết thúc' defaultValue={dayjs('2022-04-17T20:30')} />
                   </DemoContainer>
                 </LocalizationProvider>
               </Stack>
@@ -302,8 +303,8 @@ const Index = (): JSX.Element => {
             </div>
           </Grid>
           <Grid>
-            <Button variant='contained' endIcon={<AddIcon />} style={{ marginTop: '20px' }}>
-              Thêm
+            <Button variant='contained' endIcon={<SaveIcon />} style={{ marginTop: '20px' }}>
+              LƯU
             </Button>
           </Grid>
         </Grid>

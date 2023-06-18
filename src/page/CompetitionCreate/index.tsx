@@ -1,39 +1,120 @@
 import React from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
-import {
-  Typography,
-  Grid,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Button,
-  Stack,
-  TextField,
-  Checkbox,
-  Switch
-} from '@mui/material'
+import { Typography, Grid, FormControl, InputLabel, Select, MenuItem, Button, Stack, TextField } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
-import { TimePicker } from '@mui/x-date-pickers/TimePicker'
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker'
 import { SelectChangeEvent } from '@mui/material/Select'
-import WestIcon from '@mui/icons-material/West';
-import bronze from "~/assets/img/bronze-removebg-preview.png";
-import siver from "~/assets/img/siver-removebg-preview.png";
-import gold from "~/assets/img/gold-removebg-preview.png";
-import khuyenkhich from "~/assets/img/kk-removebg-preview.png";
-const label = { inputProps: { 'aria-label': 'Switch demo' } };
+import { getAllDep } from '~/api/depApi'
+import useFetch from '~/hook/useFetch'
+import dayjs from 'dayjs'
+import { insert } from '~/api/competitionApi'
+
+import { Snackbar } from '@mui/material'
+import MuiAlert from '@mui/material/Alert'
+
+const label = { inputProps: { 'aria-label': 'Switch demo' } }
 const Index = (): JSX.Element => {
-  const [age, setAge] = React.useState('')
+  const [showSuccess, setShowSuccess] = React.useState(false)
+  const [showError, setShowError] = React.useState(false)
+
+  const [dep, setDep] = React.useState<string>('')
+  const [comNameValue, setComName] = React.useState<string>('')
+  const [examTimesValue, setExamTimes] = React.useState<string>('')
+  const [startDateValue, setStartDate] = React.useState<string>('')
+  const [endDateValue, setEndDate] = React.useState<string>('')
+  const [userQuanValue, setUerQuan] = React.useState<string>('')
+
+  const [depState, callDep] = useFetch()
+  const [comp, callComp] = useFetch()
+
+  React.useEffect((): void => {
+    callDep(getAllDep)
+  }, [depState.loading])
+
+  const dataDep = depState.payload || [
+    { depId: 1, depName: 'Công Nghệ Thông Tin' },
+    { depId: 2, depName: 'Công Nghệ Thực Phẩm' },
+    { depId: 3, depName: 'Quản Trị Kinh Doanh' },
+    { depId: 4, depName: 'Ngôn Ngữ Anh' },
+    { depId: 5, depName: 'Luật' }
+  ]
+  console.log(depState.loading)
+  const request: {
+    comName: string
+    examTimes: string
+    startDate: string
+    endDate: string
+    userQuan: string
+    depId: string
+  } = {
+    comName: comNameValue,
+    examTimes: examTimesValue,
+    startDate: startDateValue,
+    endDate: endDateValue,
+    userQuan: userQuanValue,
+    depId: dep
+  }
+  const handleCloseSuccess = (): void => {
+    setShowSuccess(false)
+  }
+  const handleCloseError = (): void => {
+    setShowError(false)
+  }
 
   const handleChange = (event: SelectChangeEvent): void => {
-    setAge(event.target.value)
+    setDep(event.target.value)
   }
+  const comNameChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setComName(event.target.value)
+  }
+  const examTimesChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setExamTimes(event.target.value)
+  }
+
+  const startDateChange = (value: string | null): void => {
+    if (value) {
+      const formattedDate = dayjs(value).format('YYYY-MM-DDTHH:mm:ss.SSS' + 'Z')
+      setStartDate(formattedDate)
+    }
+  }
+  const endDateChange = (value: string | null): void => {
+    if (value) {
+      const formattedDate = dayjs(value).format('YYYY-MM-DDTHH:mm:ss.SSS' + 'Z')
+      setEndDate(formattedDate)
+    }
+  }
+  const userQuanChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    setUerQuan(event.target.value)
+  }
+  const submitAddComp = (): void => {
+    callComp(async () => {
+      try {
+        await insert(request)
+        setShowSuccess(true)
+      } catch (error) {
+        console.error(error)
+        // Xử lý và hiển thị thông báo lỗi cho người dùng
+        // Ví dụ:
+        setShowError(true)
+      }
+    })
+  }
+  console.log('status' + comp.payload)
   return (
     <>
+      <Snackbar open={showSuccess} autoHideDuration={3000} onClose={handleCloseSuccess}>
+        <MuiAlert onClose={handleCloseSuccess} severity='success' elevation={6} variant='filled'>
+          Acction successful!
+        </MuiAlert>
+      </Snackbar>
+      <Snackbar open={showError} autoHideDuration={3000} onClose={handleCloseSuccess}>
+        <MuiAlert onClose={handleCloseError} severity='error' elevation={6} variant='filled'>
+          Acction Failed!
+        </MuiAlert>
+      </Snackbar>
       <LayoutAdmin>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid xs={12}>
@@ -46,6 +127,7 @@ const Index = (): JSX.Element => {
           <Grid xs={12} style={{ marginTop: '10px' }}>
             <Stack direction={'row'} alignItems='center' gap={5}>
               <TextField
+                onChange={comNameChange}
                 id='filled-search'
                 label='Tên cuộc thi '
                 type='search'
@@ -53,50 +135,50 @@ const Index = (): JSX.Element => {
                 style={{ width: '100%' }}
               />
               <FormControl sx={{ m: 1, minWidth: 80 }} style={{ width: '100%' }}>
-                <InputLabel id='demo-simple-select-autowidth-label'>Quy mô</InputLabel>
+                <InputLabel id='demo-simple-select-autowidth-label'>Khoa</InputLabel>
                 <Select
                   labelId='demo-simple-select-autowidth-label'
                   id='demo-simple-select-autowidth'
-                  value={age}
+                  value={dep}
                   onChange={handleChange}
-                  label='Age'
+                  label='Khoa'
                 >
-                  <MenuItem value={10}>Khoa</MenuItem>
-                  <MenuItem value={21}>Trường</MenuItem>
-                  <MenuItem value={22}>Lớp</MenuItem>
+                  {dataDep.map((item: any) => (
+                    <MenuItem key={item.depId} value={item.depId}>
+                      {item.depName}
+                    </MenuItem>
+                  ))}
                 </Select>
               </FormControl>
             </Stack>
           </Grid>
           <Grid xs={12} style={{ marginTop: '10px' }}>
             <Stack direction={'row'} gap={5} style={{ width: '100%' }}>
-              <Stack direction={'row'} justifyContent='space-around' style={{ width: '100%' }}>
+              <Stack direction={'row'} spacing={2} justifyContent='flex-start' style={{ width: '100%' }}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
-                    <DatePicker label='Ngày bắt đầu' />
+                    <DateTimePicker onChange={startDateChange} label='Ngày bắt đầu' />
                   </DemoContainer>
                 </LocalizationProvider>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                   <DemoContainer components={['DatePicker']}>
-                    <DatePicker label='Ngày kết thúc' />
+                    <DateTimePicker onChange={endDateChange} label='Ngày kết thúc' />
                   </DemoContainer>
                 </LocalizationProvider>
               </Stack>
-              <Stack direction={'row'} style={{ width: '100%' }} justifyContent='space-around'>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['TimePicker']}>
-                    <TimePicker label='Thời gian bắt đầu' />
-                  </DemoContainer>
-                </LocalizationProvider>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['TimePicker']}>
-                    <TimePicker label='Thời gian kết thúc' />
-                  </DemoContainer>
-                </LocalizationProvider>
+              <Stack
+                direction={'row'}
+                sx={{ marginTop: 0.5 }}
+                spacing={2}
+                style={{ width: '100%' }}
+                justifyContent='flex-start'
+              >
+                <TextField onChange={examTimesChange} label='Thời gian thi' />
+                <TextField onChange={userQuanChange} label='Số lượng thí sinh' />
               </Stack>
             </Stack>
           </Grid>
-          <Grid xs={12} style={{ marginTop: '100px' }}>
+          {/* <Grid xs={12} style={{ marginTop: '100px' }}>
             <Stack direction={'row'} gap={'20px'}>
               <Typography variant='h4' sx={{ fontWeight: 500, color: '#1976d2' }}>
                 Giải cá nhân
@@ -283,9 +365,9 @@ const Index = (): JSX.Element => {
                 />
               </Stack>
             </div>
-          </Grid>
+          </Grid> */}
           <Grid>
-            <Button variant='contained' endIcon={<AddIcon />} style={{ marginTop: '20px' }}>
+            <Button onClick={submitAddComp} variant='contained' endIcon={<AddIcon />} style={{ marginTop: '20px' }}>
               Thêm
             </Button>
           </Grid>

@@ -6,7 +6,7 @@ import axios from 'axios'
 import BasicModal from './ModalEditUser'
 import useFetch from '~/hook/useFetch'
 import Button from '@mui/material/Button'
-import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid';
+import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
 axios.defaults.baseURL = 'http://localhost:5237/api'
 
 interface User {
@@ -21,7 +21,7 @@ interface User {
 }
 const TableUser = (): JSX.Element => {
   const [userState, call] = useFetch()
-  const [reset,setReset] = React.useState(false)
+  const [reset, setReset] = React.useState(false)
   const [deleteUserState, callDelete] = useFetch()
   React.useEffect(() => {
     call(getAllUser)
@@ -40,7 +40,6 @@ const TableUser = (): JSX.Element => {
       depId: user.depId
     })) || []
 
-
   const handleDelete = (id: string): void => {
     const request: { _id: string } = {
       _id: id
@@ -51,11 +50,11 @@ const TableUser = (): JSX.Element => {
       deleteUsers(request)
     })
   }
-  const handelReset=():void =>{
-    if(reset){
-      setReset(false);
-    }else{
-      setReset(true);
+  const handelReset = (): void => {
+    if (reset) {
+      setReset(false)
+    } else {
+      setReset(true)
     }
   }
   const columns: GridColDef[] = [
@@ -124,12 +123,14 @@ const TableUser = (): JSX.Element => {
   ]
   return (
     <>
-
       {userState.loading || deleteUserState.loading ? (
         <h1>đang tải xuống ...</h1>
       ) : (
         <>
-          <Button onClick={handelReset}  variant='contained' startIcon={<FlipCameraAndroidIcon/>}> Reset </Button>
+          <Button onClick={handelReset} variant='contained' startIcon={<FlipCameraAndroidIcon />}>
+            {' '}
+            Reset{' '}
+          </Button>
           <div style={{ height: 400, width: '100%' }}>
             <DataGrid
               rows={rows}

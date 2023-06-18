@@ -30,7 +30,6 @@ import { IndeterminateCheckBoxOutlined } from '@mui/icons-material'
 const drawerWidth = 250
 const pages = [
   { name: 'CUỘC THI', to: '/CompetitionManage' },
-  { name: 'BÀI THI', to: '/TestManage' },
   { name: 'USER', to: '/User' },
   { name: 'BLOG', to: '/BlogManage' }
 ]
@@ -211,7 +210,7 @@ export default function Index(): JSX.Element {
               <ListItemButton>
                 <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
                 <ListItemText>
-                  <Button href={page.to} >{page.name}</Button>
+                  <Button href={page.to}>{page.name}</Button>
                 </ListItemText>
               </ListItemButton>
             </ListItem>

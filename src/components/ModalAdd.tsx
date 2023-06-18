@@ -3,9 +3,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
-import Stack from '@mui/material/Stack'
-import UserTextFields from './UserTextFields'
-
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -20,17 +18,28 @@ const style = {
   p: 4
 }
 
-export default function BasicModal(): JSX.Element {
+interface ModalAddProps {
+  children: React.ReactNode
+  Title: string // Prop bổ sung
+}
+export default function ModalAdd({ children, Title }: ModalAddProps): JSX.Element {
   const [open, setOpen] = React.useState(false)
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
+
   return (
     <div>
-      <Stack direction={'row'} gap={'20px'} sx={{ mt: '15px', mb: '15px' }}>
-        <Button variant='contained' onClick={handleOpen}>
-          Thêm Người Dùng
-        </Button>
-      </Stack>
+      <Button
+        onClick={handleOpen}
+        sx={{ background: '#1976d2', color: '#fff', width: 'auto', height: 'auto', fontSize: 16, marginLeft: 2 }}
+        variant='contained'
+      >
+        Thêm Mới
+        <AddCircleOutlineOutlinedIcon />
+      </Button>
+      {/* <Button variant='contained' onClick={handleOpen}>
+        Thêm Người Dùng
+      </Button> */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -44,21 +53,10 @@ export default function BasicModal(): JSX.Element {
             variant='h6'
             component='h2'
           >
-            THÊM NGƯỜI DÙNG MỚI
+            {Title}
           </Typography>
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-            <UserTextFields
-              edit={false}
-              id={''}
-              userName={''}
-              dateOfBirth={''}
-              email={''}
-              password={''}
-              userAddress={''}
-              roleId={'0'}
-              depId={'0'}
-              onClose={handleClose}
-            />
+            {children}
           </Typography>
         </Box>
       </Modal>

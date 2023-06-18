@@ -16,7 +16,6 @@ import axios from 'axios'
 import Fetch from '~/hook/Fetch'
 import useFetch from '~/hook/useFetch'
 import { editUser, insert } from '~/api/userApi'
-import { Link } from 'react-router-dom'
 
 axios.defaults.baseURL = 'http://localhost:5237/api'
 interface Dep {
@@ -37,8 +36,6 @@ export default function UserTextFields(prop: {
   userAddress: string
   roleId: string
   depId: string
-  onClose?: () => void
-  onReset?: () => void
 }): JSX.Element {
   const [cccd, setCCCD] = React.useState<string>(prop.id || '')
   const [userName, setUserName] = React.useState<string>(prop.userName || '')
@@ -59,6 +56,7 @@ export default function UserTextFields(prop: {
   if (prop.dateOfBirth) {
     formattedDateOfBirth = dayjs(prop.dateOfBirth).format('MM-DD-YYYY')
   }
+
   const onchangeUserName = function (event: React.ChangeEvent<HTMLInputElement>): void {
     setUserName(event.target.value)
   }
@@ -107,7 +105,6 @@ export default function UserTextFields(prop: {
   }
 
   const onSubmitForm = (): void => {
-    prop.onClose();
     callInsertUser(async () => {
       insert(requestData)
     })
@@ -127,6 +124,7 @@ export default function UserTextFields(prop: {
             component='form'
             sx={{
               '& > :not(style)': { m: 1, width: '45%' },
+
               display: 'flex',
               flexWrap: 'wrap',
               justifyContent: 'center',
@@ -217,6 +215,7 @@ export default function UserTextFields(prop: {
             component='form'
             sx={{
               '& > :not(style)': { m: 1, width: '45%' },
+
               display: 'flex',
               flexWrap: 'wrap',
               justifyContent: 'center',
