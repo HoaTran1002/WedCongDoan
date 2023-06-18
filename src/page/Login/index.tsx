@@ -17,6 +17,9 @@ import TwitterIcon from '@mui/icons-material/Twitter'
 import FacebookIcon from '@mui/icons-material/Facebook'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import { green } from '@mui/material/colors'
+import server from '~/api/axios'
+import { Navigate } from 'react-router-dom'
+import useAuth from '~/hook/useAuth'
 
 const buttons = [
   <Button key='one'>
@@ -37,7 +40,12 @@ const buttons = [
 ]
 function Copyright(props: any): JSX.Element {
   return (
-    <Typography variant='body2' color='text.secondary' align='center' {...props}>
+    <Typography
+      variant='body2'
+      color='text.secondary'
+      align='center'
+      {...props}
+    >
       {'IDX_team @ '}
       <Link color='inherit' href='https://mui.com/'>
         WebsiteCongDoanHCM
@@ -49,17 +57,25 @@ function Copyright(props: any): JSX.Element {
 }
 
 const theme = createTheme()
-
 export default function Login(): JSX.Element {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const { profile } = useAuth()
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
-    console.log({
+    const body = {
       email: data.get('email'),
       password: data.get('password')
-    })
+    }
+
+    try {
+      await server.post('/users/login', body)
+      location.reload()
+    } catch (error) {
+      console.log(error)
+    }
   }
 
+  if (profile) return <Navigate to={'/'} replace={true} />
   return (
     <ThemeProvider theme={theme}>
       <Grid container component='main' sx={{ height: '100vh' }}>
@@ -72,7 +88,10 @@ export default function Login(): JSX.Element {
           sx={{
             backgroundImage: 'url(https://source.unsplash.com/random)',
             backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) => (t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900]),
+            backgroundColor: (t) =>
+              t.palette.mode === 'light'
+                ? t.palette.grey[50]
+                : t.palette.grey[900],
             backgroundSize: 'cover',
             backgroundPosition: 'center'
           }}
@@ -93,7 +112,12 @@ export default function Login(): JSX.Element {
             <Typography component='h1' variant='h5'>
               Sign in
             </Typography>
-            <Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Box
+              component='form'
+              noValidate
+              onSubmit={handleSubmit}
+              sx={{ mt: 1 }}
+            >
               <TextField
                 margin='normal'
                 required
@@ -113,9 +137,17 @@ export default function Login(): JSX.Element {
                 id='password'
                 autoComplete='current-password'
               />
-              <FormControlLabel control={<Checkbox value='remember' color='primary' />} label='Remember me' />
+              <FormControlLabel
+                control={<Checkbox value='remember' color='primary' />}
+                label='Remember me'
+              />
 
-              <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
+              <Button
+                type='submit'
+                fullWidth
+                variant='contained'
+                sx={{ mt: 3, mb: 2 }}
+              >
                 Sign In
               </Button>
               <Grid container>

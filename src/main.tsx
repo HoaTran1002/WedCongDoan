@@ -8,10 +8,12 @@ import '@fontsource/roboto/700.css'
 import './assets/css/style.css'
 import { BrowserRouter } from 'react-router-dom'
 import { CssBaseline } from '@mui/material'
-
+import AuthProvider from './context/AuthContext'
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <BrowserRouter>
     <CssBaseline />
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </BrowserRouter>
 )
