@@ -5,6 +5,9 @@ import image from '~/assets/img/competion-1.jpg'
 import AddIcon from '@mui/icons-material/Add'
 import useFetch from '~/hook/Fetch'
 import { getAll,getById } from '~/api/blogApi'
+import { Link } from 'react-router-dom'
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 // function BlogInfo(
 //   id: number,
@@ -53,7 +56,9 @@ const Index = (): JSX.Element => {
   return (
     <LayoutAdmin>
       {loader == true ? (
-        <h1>đang tải trang ...</h1>
+        <Box sx={{ display: 'flex' }}>
+          <CircularProgress />
+        </Box>
       ) : (
       <>
         <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
@@ -62,9 +67,11 @@ const Index = (): JSX.Element => {
               <Typography variant='h4' sx={{ fontWeight: 500, color: '#1976d2' }}>
                 Quản lý trang blog
               </Typography>
-              <Button href='/BlogCreate' variant='contained' startIcon={<AddIcon />}>
-                Thêm một blog mới
-              </Button>
+              <Link to={'/BlogCreate'} style={{ textDecoration: 'none' }}>
+                <Button href='/BlogCreate' variant='contained' startIcon={<AddIcon />}>
+                  Thêm một blog mới
+                </Button>
+              </Link>
             </Stack>
           </Grid> 
           {rows.map((row:any) => (

@@ -18,12 +18,19 @@ import Register from './page/Register'
 import Listcompetition from './page/Listcompetition'
 import TestSchedule from './page/TestSchedule'
 import ExamResult from './page/ExamResult'
+import PrizeManage from './page/PrizeManage'
+import PrizeTypeManage from './page/PrizeTypeManage'
 import PrizeData from './page/Prize/PrizeData'
 import PrivateRoute from './routes/PrivateRoute'
+
+import SettingManage from './page/SettingManage'
+import DepartmentManage from './page/Department'
+import ExamsManage from './page/ExamsManage'
 function App(): JSX.Element {
   return (
     <Routes>
       {/* <Route element={<PrivateRoute roles={[1]} />}> */}
+
       <Route path='/' element={<Home />} />
       <Route path='/Competition' element={<Competition />} />
       <Route path='/CompetitionCreate' element={<CompetitionCreate />} />
@@ -32,7 +39,9 @@ function App(): JSX.Element {
       <Route path='/TestCreate' element={<TestCreate />} />
       <Route path='/Register' element={<Register />} />
       <Route path='/TestManage' element={<TestManage />} />
+      <Route path='/SettingManage' element={<SettingManage />} />
       <Route path='/Test' element={<Test />} />
+      <Route path='/DepartmentManage' element={<DepartmentManage />} />
       <Route path='/User' element={<UserManager />} />
       <Route path='/blogManage' element={<BlogManage />} />
       <Route path='/BlogCreate' element={<BlogCreate />} />
@@ -47,6 +56,7 @@ function App(): JSX.Element {
         path='/TestCreate/Test/:examId/Competition/:comId'
         element={<TestCreate />}
       />
+
       {/* </Route> */}
       {/* <Route path='/Login' element={<Login />} /> */}
     </Routes>

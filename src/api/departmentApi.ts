@@ -1,24 +1,23 @@
 import server from './axios'
 
-
-export const getAll = {
-  enp: '/Blogs',
+export const getAllDep = {
+  enp: '/Departments',
   method: 'Get',
   body: {},
   headers: {}
 }
+
 export const Insert = (body: object): { enp: string; method: string; body: object; headers: object } => {
   return {
-    enp: '/Blogs',
+    enp: '/Departments',
     method: 'Post',
     body: body,
     headers: {}
   }
 }
-
 export const getById = (id: number): { enp: string; method: string; body: object; headers: object } => {
   return {
-    enp: `/Blogs/GetById?id=${id}`,
+    enp: `/Departments/GetById?id=${id}`,
     method: 'Get',
     body: {},
     headers: {}
@@ -26,7 +25,7 @@ export const getById = (id: number): { enp: string; method: string; body: object
 };
 export const Delete = (id: number): { enp: string; method: string; body: object; headers: object } => {
   return {
-    enp: `/Blogs?id=${id}`,
+    enp: `/Departments?id=${id}`,
     method: 'Delete',
     body: {},
     headers: {}
@@ -34,7 +33,7 @@ export const Delete = (id: number): { enp: string; method: string; body: object;
 };
 export const Edit = (body: object): { enp: string; method: string; body: object; headers: object } => {
   return {
-    enp: '/Blogs',
+    enp: '/Departments',
     method: 'Put',
     body: body,
     headers: {}
