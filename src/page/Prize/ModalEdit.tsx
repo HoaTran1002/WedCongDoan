@@ -15,7 +15,8 @@ const style = {
   bgcolor: 'white',
 
   borderRadius: 2,
-  boxShadow: 'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
+  boxShadow:
+    'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
   p: 4
 }
 interface BasicModalProps {
@@ -31,7 +32,7 @@ export default function BasicModal(prop: BasicModalProps): JSX.Element {
   const [open, setOpen] = React.useState(false)
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
-  console.log(prop.priId + prop.id + prop.PrizTId + prop.Quantity + prop.PrizeDetail)
+
   return (
     <div>
       <Button onClick={handleOpen} sx={{ width: 30, height: 30, fontSize: 21 }}>

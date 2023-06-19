@@ -1,6 +1,6 @@
 import server from './axios'
 
-export const getAll = async (): Promise<any> => {
+export const getAllCompExam = async (): Promise<any> => {
   try {
     const { data } = await server.get('/CompetitionsExams')
     return data
@@ -10,12 +10,18 @@ export const getAll = async (): Promise<any> => {
   }
 }
 
-export const insertCompExam = async ({ examId, compId }: { compId: number; examId: number }): Promise<void> => {
+export const insertCompExam = async ({
+  examId,
+  comId
+}: {
+  comId: number
+  examId: number
+}): Promise<void> => {
   try {
-    console.log(examId + compId)
+    console.log(examId + 'va' + comId)
     await server.post('/CompetitionsExams', {
       examId,
-      compId
+      comId
     })
   } catch (error: any) {
     const message = error?.response?.data?.message ?? error.message
