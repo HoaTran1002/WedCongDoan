@@ -40,6 +40,9 @@ function App(): JSX.Element {
       <Route path='/Register' element={<Register />} />
       <Route path='/TestManage' element={<TestManage />} />
       <Route path='/SettingManage' element={<SettingManage />} />
+      <Route path='/PrizeManage' element={<PrizeManage />} />
+      <Route path='/ExamsManage' element={<ExamsManage />} />
+      <Route path='/PrizeTypeManage' element={<PrizeTypeManage />} />
       <Route path='/Test' element={<Test />} />
       <Route path='/DepartmentManage' element={<DepartmentManage />} />
       <Route path='/User' element={<UserManager />} />

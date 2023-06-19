@@ -36,6 +36,7 @@ export default function UserTextFields(prop: {
   userAddress: string
   roleId: string
   depId: string
+  onClose: () => void
 }): JSX.Element {
   const [cccd, setCCCD] = React.useState<string>(prop.id || '')
   const [userName, setUserName] = React.useState<string>(prop.userName || '')
@@ -57,19 +58,27 @@ export default function UserTextFields(prop: {
     formattedDateOfBirth = dayjs(prop.dateOfBirth).format('MM-DD-YYYY')
   }
 
-  const onchangeUserName = function (event: React.ChangeEvent<HTMLInputElement>): void {
+  const onchangeUserName = function (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
     setUserName(event.target.value)
   }
-  const onchangeCCCD = function (event: React.ChangeEvent<HTMLInputElement>): void {
+  const onchangeCCCD = function (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
     setCCCD(event.target.value)
   }
-  const onchangePass = function (event: React.ChangeEvent<HTMLInputElement>): void {
+  const onchangePass = function (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
     setPass(event.target.value)
   }
   // const onchangeAddress = function (event: React.ChangeEvent<HTMLInputElement>): void {
   //   setAddress(event.target.value)
   // }
-  const onchangeGmail = function (event: React.ChangeEvent<HTMLInputElement>): void {
+  const onchangeGmail = function (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
     setGmail(event.target.value)
   }
   const onchangeBirthDay = function (value: string | null): void {
@@ -78,10 +87,14 @@ export default function UserTextFields(prop: {
       setBirthDay(formattedDate)
     }
   }
-  const onchangeDep = function (event: React.ChangeEvent<HTMLInputElement>): void {
+  const onchangeDep = function (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
     setDep(event.target.value)
   }
-  const onchangeRole = function (event: React.ChangeEvent<HTMLInputElement>): void {
+  const onchangeRole = function (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
     setRole(event.target.value)
   }
   const requestData: {
@@ -106,11 +119,10 @@ export default function UserTextFields(prop: {
 
   const onSubmitForm = (): void => {
     callInsertUser(async () => {
-      insert(requestData)
+      return insert(requestData)
     })
   }
   const onSubmitFormEdit = (): void => {
-    console.log(requestData)
     callEdittUser(async () => {
       editUser(requestData)
     })
@@ -174,26 +186,46 @@ export default function UserTextFields(prop: {
             />
             {/* <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' /> */}
 
-            <TextField value={String(prop.roleId)} onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
+            <TextField
+              value={String(prop.roleId)}
+              onChange={onchangeRole}
+              id='selectDep'
+              label='Chọn Quyền'
+              select
+            >
               {Roles == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
               ) : (
                 Roles.map((item: Role, index: number): JSX.Element => {
                   return (
-                    <MenuItem sx={{ color: 'black' }} key={index} value={item.roleId}>
+                    <MenuItem
+                      sx={{ color: 'black' }}
+                      key={index}
+                      value={item.roleId}
+                    >
                       {item.roleName}
                     </MenuItem>
                   )
                 })
               )}
             </TextField>
-            <TextField value={String(prop.depId)} onChange={onchangeDep} id='selectDep' label='Chọn Khoa' select>
+            <TextField
+              value={String(prop.depId)}
+              onChange={onchangeDep}
+              id='selectDep'
+              label='Chọn Khoa'
+              select
+            >
               {Deps == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
               ) : (
                 Deps.map((item: Dep, index: number): JSX.Element => {
                   return (
-                    <MenuItem sx={{ color: 'black' }} key={index} value={item.depId}>
+                    <MenuItem
+                      sx={{ color: 'black' }}
+                      key={index}
+                      value={item.depId}
+                    >
                       {item.depName}
                     </MenuItem>
                   )
@@ -203,7 +235,12 @@ export default function UserTextFields(prop: {
           </Box>
           <Button
             onClick={onSubmitFormEdit}
-            sx={{ position: 'relative', left: '45%', right: '20%', marginTop: 2 }}
+            sx={{
+              position: 'relative',
+              left: '45%',
+              right: '20%',
+              marginTop: 2
+            }}
             variant='contained'
           >
             LƯU CHỈNH SỬA
@@ -225,37 +262,79 @@ export default function UserTextFields(prop: {
             noValidate
             autoComplete='off'
           >
-            <TextField onChange={onchangeCCCD} id='outlined-basic' label='CCCD' variant='outlined' />
-            <TextField id='filled-basic' label='Họ Và Tên' onChange={onchangeUserName} variant='outlined' />
+            <TextField
+              onChange={onchangeCCCD}
+              id='outlined-basic'
+              label='CCCD'
+              variant='outlined'
+            />
+            <TextField
+              id='filled-basic'
+              label='Họ Và Tên'
+              onChange={onchangeUserName}
+              variant='outlined'
+            />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
-                <DatePicker onChange={onchangeBirthDay} sx={{ width: '100%' }} label='Ngày Sinh' />
+                <DatePicker
+                  onChange={onchangeBirthDay}
+                  sx={{ width: '100%' }}
+                  label='Ngày Sinh'
+                />
               </DemoContainer>
             </LocalizationProvider>
-            <TextField onChange={onchangeGmail} id='outlined-basic' label='Gmail' variant='outlined' />
-            <TextField onChange={onchangePass} id='filled-basic' label='Mật Khẩu' variant='outlined' />
+            <TextField
+              onChange={onchangeGmail}
+              id='outlined-basic'
+              label='Gmail'
+              variant='outlined'
+            />
+            <TextField
+              onChange={onchangePass}
+              id='filled-basic'
+              label='Mật Khẩu'
+              variant='outlined'
+            />
             {/* <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' /> */}
 
-            <TextField onChange={onchangeRole} id='selectDep' label='Chọn Quyền' select>
+            <TextField
+              onChange={onchangeRole}
+              id='selectDep'
+              label='Chọn Quyền'
+              select
+            >
               {Roles == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
               ) : (
                 Roles.map((item: Role, index: number): JSX.Element => {
                   return (
-                    <MenuItem sx={{ color: 'black' }} key={index} value={item.roleId}>
+                    <MenuItem
+                      sx={{ color: 'black' }}
+                      key={index}
+                      value={item.roleId}
+                    >
                       {item.roleName}
                     </MenuItem>
                   )
                 })
               )}
             </TextField>
-            <TextField onChange={onchangeDep} id='selectDep' label='Chọn Khoa' select>
+            <TextField
+              onChange={onchangeDep}
+              id='selectDep'
+              label='Chọn Khoa'
+              select
+            >
               {Deps == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
               ) : (
                 Deps.map((item: Dep, index: number): JSX.Element => {
                   return (
-                    <MenuItem sx={{ color: 'black' }} key={index} value={item.depId}>
+                    <MenuItem
+                      sx={{ color: 'black' }}
+                      key={index}
+                      value={item.depId}
+                    >
                       {item.depName}
                     </MenuItem>
                   )
@@ -265,7 +344,12 @@ export default function UserTextFields(prop: {
           </Box>
           <Button
             onClick={onSubmitForm}
-            sx={{ position: 'relative', left: '45%', right: '20%', marginTop: 2 }}
+            sx={{
+              position: 'relative',
+              left: '45%',
+              right: '20%',
+              marginTop: 2
+            }}
             variant='contained'
           >
             TẠO MỚI
