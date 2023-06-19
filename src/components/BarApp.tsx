@@ -36,7 +36,8 @@ const drawerWidth = 250
 const pages = [
   { name: 'TRANG CHỦ', to: '/' },
   { name: 'DANH SÁCH CUỘC THI', to: '/Listcompetition' },
-  { name: 'GIẢI THƯỞNG', to: '/blog' }
+  { name: 'GIẢI THƯỞNG', to: '/blog' },
+  { name: 'ADMIN', to: '/CompetitionManage' }
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 

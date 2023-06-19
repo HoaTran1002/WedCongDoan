@@ -41,6 +41,7 @@ const Index = (): JSX.Element => {
     { depId: 4, depName: 'Ngôn Ngữ Anh' },
     { depId: 5, depName: 'Luật' }
   ]
+  
   console.log(depState.loading)
   const request: {
     comName: string
@@ -96,8 +97,6 @@ const Index = (): JSX.Element => {
         setShowSuccess(true)
       } catch (error) {
         console.error(error)
-        // Xử lý và hiển thị thông báo lỗi cho người dùng
-        // Ví dụ:
         setShowError(true)
       }
     })

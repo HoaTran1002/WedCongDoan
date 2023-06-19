@@ -7,6 +7,8 @@ import BasicModal from './ModalEditUser'
 import useFetch from '~/hook/useFetch'
 import Button from '@mui/material/Button'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 axios.defaults.baseURL = 'http://localhost:5237/api'
 
 interface User {
@@ -124,7 +126,9 @@ const TableUser = (): JSX.Element => {
   return (
     <>
       {userState.loading || deleteUserState.loading ? (
-        <h1>đang tải xuống ...</h1>
+        <Box sx={{ display: 'flex' }}>
+          <CircularProgress />
+        </Box>
       ) : (
         <>
           <Button onClick={handelReset} variant='contained' startIcon={<FlipCameraAndroidIcon />}>
