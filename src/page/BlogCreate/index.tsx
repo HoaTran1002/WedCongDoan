@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Dispatch, SetStateAction } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import {
   Typography,
@@ -45,12 +46,14 @@ const Index = (): JSX.Element => {
 
   const handleImageDrop = (acceptedFiles: any): any => {
     if (acceptedFiles && acceptedFiles.length > 0) {
-      imageFile = acceptedFiles[0]
-      setSelectedImage(URL.createObjectURL(imageFile))
+      const imageFile = acceptedFiles[0]
+      const objectURL = URL.createObjectURL(imageFile)
+      // setSelectedImage(() => objectURL)
       setImgName(imageFile.path)
       setImgSrc(imageFile.path)
     }
   }
+
   const handleClickOpen = (): any => {
     setOpen(true)
     console.log(blogName, content, imgName, imgSrc)
@@ -169,7 +172,7 @@ const Index = (): JSX.Element => {
             <div>
               <Dropzone
                 onDrop={handleImageDrop}
-                accept='image/*'
+                // accept='image/*'
                 multiple={false}
               >
                 {({ getRootProps, getInputProps }): any => (

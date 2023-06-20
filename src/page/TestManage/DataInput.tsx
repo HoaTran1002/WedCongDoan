@@ -28,9 +28,9 @@ const DataInput = (): JSX.Element => {
   useEffect(() => {
     ExamCall(getAllExam)
   }, [])
-  const reqExamComp: { examId: string; comId: any } = {
-    examId: nameExam,
-    comId: comId
+  const reqExamComp: { examId: number; comId: any } = {
+    examId: Number(nameExam),
+    comId: Number(comId)
   }
   const ExamData = examData.payload || []
   const handelAddExam = async (): Promise<void> => {

@@ -89,7 +89,7 @@ const Index = (): JSX.Element => {
   const handleImageDrop = (acceptedFiles: any): any => {
     if (acceptedFiles && acceptedFiles.length > 0) {
       imageFile = acceptedFiles[0]
-      setSelectedImage(URL.createObjectURL(imageFile))
+      // setSelectedImage(URL.createObjectURL(imageFile))
       setImgName(imageFile.path)
       setImgSrc(imageFile.path)
     }

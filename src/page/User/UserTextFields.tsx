@@ -6,7 +6,8 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-
+import { Snackbar } from '@mui/material'
+import MuiAlert from '@mui/material/Alert'
 import { getAll } from '~/api/depApi'
 import { getAllRole } from '~/api/roleApi'
 
@@ -42,6 +43,8 @@ export default function UserTextFields(prop: {
   const [userName, setUserName] = React.useState<string>(prop.userName || '')
   const [pass, setPass] = React.useState<string>(prop.password || '')
   const [gmail, setGmail] = React.useState(prop.email || '')
+  const [showSuccess, setShowSuccess] = React.useState(false)
+  const [showError, setShowError] = React.useState(false)
   // const [address, setAddress] = React.useState<string>('')
   const [birthDay, setBirthDay] = React.useState<string>(prop.dateOfBirth || '')
   const [dep, setDep] = React.useState<string>(prop.depId || '0')
@@ -97,39 +100,83 @@ export default function UserTextFields(prop: {
   ): void {
     setRole(event.target.value)
   }
+  const handleCloseSuccess = (): void => {
+    setShowSuccess(false)
+  }
+  const handleCloseError = (): void => {
+    setShowError(false)
+  }
   const requestData: {
     userId: string
     userName: string
     dateOfBirth: string
     email: string
     password: string
-    UserAddress: string
-    roleId: string
-    depId: string
+    userAddress: string
+    roleId: number
+    depId: number
   } = {
     userId: cccd,
     userName: userName,
     dateOfBirth: birthDay,
     email: gmail,
     password: pass,
-    UserAddress: '',
-    roleId: role,
-    depId: dep
+    userAddress: '',
+    roleId: Number(role),
+    depId: Number(dep)
   }
 
   const onSubmitForm = (): void => {
     callInsertUser(async () => {
-      return insert(requestData)
+      try {
+        insert(requestData)
+        setShowSuccess(true)
+      } catch (error) {
+        setShowError(true)
+      }
     })
   }
   const onSubmitFormEdit = (): void => {
     callEdittUser(async () => {
-      editUser(requestData)
+      try {
+        editUser(requestData)
+        setShowSuccess(true)
+      } catch (error) {
+        setShowError(true)
+      }
     })
   }
 
   return (
     <>
+      <Snackbar
+        open={showSuccess}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+      >
+        <MuiAlert
+          onClose={handleCloseSuccess}
+          severity='success'
+          elevation={6}
+          variant='filled'
+        >
+          Acction successful!
+        </MuiAlert>
+      </Snackbar>
+      <Snackbar
+        open={showError}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+      >
+        <MuiAlert
+          onClose={handleCloseError}
+          severity='error'
+          elevation={6}
+          variant='filled'
+        >
+          Acction Failed!
+        </MuiAlert>
+      </Snackbar>
       {prop.edit ? (
         <>
           <Box
@@ -163,7 +210,11 @@ export default function UserTextFields(prop: {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
-                  defaultValue={dayjs(formattedDateOfBirth)}
+                  defaultValue={
+                    formattedDateOfBirth
+                      ? formattedDateOfBirth.format('YYYY-MM-DD')
+                      : null
+                  }
                   onChange={onchangeBirthDay}
                   sx={{ width: '100%' }}
                   label='Ngày Sinh'
