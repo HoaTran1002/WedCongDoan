@@ -30,7 +30,6 @@ function App(): JSX.Element {
   return (
     <Routes>
       {/* <Route element={<PrivateRoute roles={[1]} />}> */}
-
       <Route path='/' element={<Home />} />
       <Route path='/Competition' element={<Competition />} />
       <Route path='/CompetitionCreate' element={<CompetitionCreate />} />
@@ -59,9 +58,8 @@ function App(): JSX.Element {
         path='/TestCreate/Test/:examId/Competition/:comId'
         element={<TestCreate />}
       />
-
-      {/* </Route> */}
-      {/* <Route path='/Login' element={<Login />} /> */}
+      {/* </Route>
+      <Route path='/Login' element={<Login />} /> */}
     </Routes>
   )
 }

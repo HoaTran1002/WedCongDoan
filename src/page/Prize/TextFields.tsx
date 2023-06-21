@@ -2,7 +2,6 @@ import * as React from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import { Button, MenuItem } from '@mui/material'
-import axios from 'axios'
 import useFetch from '~/hook/useFetch'
 import { getAll } from '~/api/prizeTypesApi'
 import { getAllPrizes } from '~/api/prizesApi'
@@ -11,7 +10,6 @@ import { editcompPrize, insert } from '~/api/CompetitionsPrizesAPI'
 import { Snackbar } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
 
-axios.defaults.baseURL = 'http://localhost:5237/api'
 interface PrizeType {
   priTid: number
   priTname: string
@@ -137,34 +135,36 @@ export default function TextFields(prop: {
 
   return (
     <>
-      <Snackbar
-        open={showSuccess}
-        autoHideDuration={3000}
-        onClose={handleCloseSuccess}
-      >
-        <MuiAlert
+      <>
+        <Snackbar
+          open={showSuccess}
+          autoHideDuration={3000}
           onClose={handleCloseSuccess}
-          severity='success'
-          elevation={6}
-          variant='filled'
         >
-          Acction successful!
-        </MuiAlert>
-      </Snackbar>
-      <Snackbar
-        open={showError}
-        autoHideDuration={3000}
-        onClose={handleCloseSuccess}
-      >
-        <MuiAlert
-          onClose={handleCloseError}
-          severity='error'
-          elevation={6}
-          variant='filled'
+          <MuiAlert
+            onClose={handleCloseSuccess}
+            severity='success'
+            elevation={6}
+            variant='filled'
+          >
+            Acction successful!
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={showError}
+          autoHideDuration={3000}
+          onClose={handleCloseSuccess}
         >
-          Acction Failed!
-        </MuiAlert>
-      </Snackbar>
+          <MuiAlert
+            onClose={handleCloseError}
+            severity='error'
+            elevation={6}
+            variant='filled'
+          >
+            Acction Failed!
+          </MuiAlert>
+        </Snackbar>
+      </>
       {prop.edit ? (
         <>
           <Box

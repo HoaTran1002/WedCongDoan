@@ -1,3 +1,2 @@
-export default {
-  base_url: import.meta.env.VITE_BASE_URL
-}
+const base_url = 'http://localhost:5237/api'
+export default base_url

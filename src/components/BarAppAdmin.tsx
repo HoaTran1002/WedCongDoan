@@ -32,7 +32,7 @@ const pages = [
   { name: 'CUỘC THI', to: '/CompetitionManage' },
   { name: 'USER', to: '/User' },
   { name: 'BLOG', to: '/BlogManage' },
-  { name: 'QUẢN LÝ THÔNG TIN', to: '/SettingManage' },
+  { name: 'CÀI ĐẶT THÔNG TIN', to: '/SettingManage' }
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
@@ -70,7 +70,9 @@ export default function Index(): JSX.Element {
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
+  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
+    null
+  )
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget)
@@ -117,7 +119,11 @@ export default function Index(): JSX.Element {
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, index) => (
-              <Link key={index} style={{ color: 'white', textDecoration: 'none' }} to={page.to}>
+              <Link
+                key={index}
+                style={{ color: 'white', textDecoration: 'none' }}
+                to={page.to}
+              >
                 <Button
                   key={index}
                   onClick={handleCloseNavMenu}
@@ -190,7 +196,11 @@ export default function Index(): JSX.Element {
       >
         <DrawerHeader>
           <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            {theme.direction === 'ltr' ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
           </IconButton>
         </DrawerHeader>
         <Divider />
@@ -198,7 +208,9 @@ export default function Index(): JSX.Element {
           {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
             </ListItem>
@@ -209,7 +221,9 @@ export default function Index(): JSX.Element {
           {pages.map((page, index) => (
             <ListItem key={index} disablePadding>
               <ListItemButton>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
+                <ListItemIcon>
+                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                </ListItemIcon>
                 <ListItemText>
                   <Button href={page.to}>{page.name}</Button>
                 </ListItemText>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import axios, { AxiosResponse } from 'axios'
+import base_url from '~/config/env'
 
 interface UseAxiosProps {
   enp: string
@@ -7,9 +8,14 @@ interface UseAxiosProps {
   body: object
   headers: object
 }
-axios.defaults.baseURL = 'http://localhost:5237/api'
+axios.defaults.baseURL = base_url
 
-const Fetch = ({ enp, method, body, headers }: UseAxiosProps): [AxiosResponse<any> | null, string, boolean] => {
+const Fetch = ({
+  enp,
+  method,
+  body,
+  headers
+}: UseAxiosProps): [AxiosResponse<any> | null, string, boolean] => {
   const [response, setResponse] = useState<AxiosResponse<any> | null>(null)
   const [error, setError] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(true)

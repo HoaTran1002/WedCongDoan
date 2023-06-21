@@ -72,7 +72,7 @@ export default function Login(): JSX.Element {
     try {
       await server.post('/users/login', body)
       console.log(body)
-      location.reload()
+      // location.reload()
     } catch (error) {
       console.log(error)
     }

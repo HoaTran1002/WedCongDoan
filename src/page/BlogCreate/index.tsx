@@ -26,7 +26,9 @@ import Dropzone from 'react-dropzone'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import { Insert } from '~/api/blogApi'
 import { saveAs } from 'file-saver'
-axios.defaults.baseURL = 'http://localhost:5237/api'
+import base_url from '~/config/env'
+
+axios.defaults.baseURL = base_url
 
 const Index = (): JSX.Element => {
   let imageFile: any
@@ -54,15 +56,15 @@ const Index = (): JSX.Element => {
     }
   }
 
-  const handleClickOpen = (): any => {
+  const handleClickOpen = (): void => {
     setOpen(true)
     console.log(blogName, content, imgName, imgSrc)
   }
 
-  const handleClose = (): any => {
+  const handleClose = (): void => {
     setOpen(false)
   }
-  const handleOK = (): any => {
+  const handleOK = (): void => {
     setOpen(false)
 
     const newBlog = {

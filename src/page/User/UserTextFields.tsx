@@ -13,12 +13,11 @@ import { getAllRole } from '~/api/roleApi'
 
 import dayjs from 'dayjs'
 
-import axios from 'axios'
 import Fetch from '~/hook/Fetch'
 import useFetch from '~/hook/useFetch'
 import { editUser, insert } from '~/api/userApi'
+import base_url from '~/config/env'
 
-axios.defaults.baseURL = 'http://localhost:5237/api'
 interface Dep {
   depId: number
   depName: string

@@ -11,7 +11,8 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import { Snackbar } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
-axios.defaults.baseURL = 'http://localhost:5237/api'
+import base_url from '~/config/env'
+axios.defaults.baseURL = base_url
 
 interface User {
   userId: string
@@ -29,6 +30,7 @@ const TableUser = (): JSX.Element => {
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
   const [deleteUserState, callDelete] = useFetch()
+
   React.useEffect(() => {
     call(getAllUser)
   }, [reset])

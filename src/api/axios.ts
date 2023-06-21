@@ -1,11 +1,10 @@
 import axios from 'axios'
+import base_url from '~/config/env'
 
 const server = axios.create({
-  baseURL: 'http://localhost:5237/api',
+  baseURL: base_url,
   withCredentials: false
-  // withCredentials: true
 })
 
 export default server
 // http://103.98.161.6:5050/api'
-// http://localhost:5237/api

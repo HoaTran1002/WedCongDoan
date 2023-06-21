@@ -57,7 +57,7 @@ const Index = (): JSX.Element => {
             <h2 className='color-primary' style={{ margin: '0px' }}>
               Chuyên ngành
             </h2>
-            <p>Quản lý thông tin giải thưởng</p>
+            <p>Quản lý thông tin chuyên ngành</p>
             <div>
               <Link to={'/DepartmentManage'}>
                 <Button variant='contained'>Quản lý</Button>
