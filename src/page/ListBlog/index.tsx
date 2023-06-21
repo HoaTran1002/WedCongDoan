@@ -15,7 +15,11 @@ import {
 import image from '~/assets/img/competion-1.jpg'
 import AddIcon from '@mui/icons-material/Add'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-function BlogInfo(id: number, heading: string, title: string): void {
+function BlogInfo(
+  id: number,
+  heading: string,
+  title: string
+): { id: number; heading: string; title: string } {
   return { id, heading, title }
 }
 
@@ -27,8 +31,8 @@ const Blog = [
 ]
 const Index = (): JSX.Element => {
   return (
-    <>
-      <Layout>
+    <Layout>
+      <>
         <Grid container spacing={2}>
           <Grid xs={12}>
             <Stack
@@ -261,8 +265,8 @@ const Index = (): JSX.Element => {
             ))}
           </Grid>
         </Grid>
-      </Layout>
-    </>
+      </>
+    </Layout>
   )
 }
 

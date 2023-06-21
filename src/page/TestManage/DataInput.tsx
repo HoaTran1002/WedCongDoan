@@ -24,6 +24,7 @@ const DataInput = (): JSX.Element => {
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
     setNameExam(event.target.value)
+    console.log(event.target.value)
   }
   useEffect(() => {
     ExamCall(getAllExam)
@@ -32,6 +33,7 @@ const DataInput = (): JSX.Element => {
     examId: Number(nameExam),
     comId: Number(comId)
   }
+
   const ExamData = examData.payload || []
   const handelAddExam = async (): Promise<void> => {
     try {
@@ -81,7 +83,6 @@ const DataInput = (): JSX.Element => {
       </Snackbar>
       <TextField
         sx={{ width: 200 }}
-        value={1}
         onChange={onChangeNameExam}
         id='selectDep'
         label='Chọn tên đề'
