@@ -3,11 +3,12 @@ import { Typography, Paper, Grid, TableContainer, Box, TableCell, Table, TableHe
 import image from '~/assets/img/competion-1.jpg';
 import AddIcon from '@mui/icons-material/Add';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+
 function BlogInfo(
     id: number,
     heading: string,
     title: string,
-) {
+):any {
     return { id, heading, title };
 }
 
@@ -18,6 +19,7 @@ const Blog = [
     BlogInfo(4, 'Tựa đề bài viết', 'Thanh tiêu đề bài viết'),
 ]
 const Index = (): JSX.Element => {
+   
     return (
         <>
             <Layout>
@@ -248,6 +250,7 @@ const Index = (): JSX.Element => {
                         }
                     </Grid>
                 </Grid>
+                
             </Layout>
         </>
     )

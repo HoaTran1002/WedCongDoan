@@ -33,6 +33,7 @@ const pages = [
   { name: 'USER', to: '/User' },
   { name: 'BLOG', to: '/BlogManage' },
   { name: 'QUẢN LÝ THÔNG TIN', to: '/SettingManage' },
+  { name: 'CLIENT', to: '/' },
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 

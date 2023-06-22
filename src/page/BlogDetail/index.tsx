@@ -8,12 +8,13 @@ import React, { useState, useEffect } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import { useLocation } from 'react-router-dom';
-import useFetch from '~/hook/Fetch'
-import { getById, Edit,Delete } from '~/api/blogApi';
+import { Link, useLocation } from 'react-router-dom';
+import useFetch from '~/hook/useFetch'
+import { getById, Edit ,Delete } from '~/api/blogApi';
 import Dropzone from 'react-dropzone';
 import axios from 'axios';
 
+axios.defaults.baseURL = 'http://localhost:5237/api'
 
 const Index = (): JSX.Element => {
   let imageFile
@@ -24,6 +25,7 @@ const Index = (): JSX.Element => {
   const [imgName, setImgName] = useState('');
   const [imgSrc, setImgSrc] = useState('');
   const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -48,6 +50,12 @@ const Index = (): JSX.Element => {
   const handleClose = (): any => {
     setOpen(false);
   };
+  const handleDeleteOpen = (): any => {
+    setOpenDelete(true);
+  };
+  const handleDeleteClose = (): any => {
+    setOpenDelete(false);
+  };
   const handleOK = (): any => {
     setOpen(false);
     const updateBlog = {
@@ -62,11 +70,11 @@ const Index = (): JSX.Element => {
     console.log(requestData);
     axios.put(requestData.enp, requestData.body, { headers: requestData.headers })
       .then(response => {
-        console.log('Insert successful');
+        console.log('Sửa successful');
         // Xử lý response
       })
       .catch(error => {
-        console.error('Insert failed', error);
+        console.error('sửa failed', error);
         // Xử lý lỗi
       });
     const filePath = `src/assets/img/${imgName}`;
@@ -219,15 +227,40 @@ const Index = (): JSX.Element => {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleOK} variant='contained'>
-                  OK
-                </Button>
+                <Link to={'/BlogManage?updatesucess=true'}>
+                  <Button onClick={handleOK} variant='contained'>
+                    OK
+                  </Button>
+                </Link>
                 <Button onClick={handleClose}>Trở về</Button>
               </DialogActions>
             </Dialog>
-            <Button variant='contained' color='error' startIcon={<DeleteIcon />} style={{ marginTop: '20px' }} onClick={handleClickDelete}>
+            <Button variant='contained' color='error' startIcon={<DeleteIcon />} style={{ marginTop: '20px' }} onClick={handleDeleteOpen}>
               Xóa trang blog
             </Button>
+            <Dialog
+              open={openDelete}
+              onClose={handleDeleteClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"Thông tin "}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Bạn muốn xóa trang Blog ?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Link to={'/BlogManage?deletesucess=true'}>
+                  <Button onClick={handleClickDelete} variant='contained'>
+                    OK
+                  </Button>
+                </Link>
+                <Button onClick={handleDeleteClose}>Trở về</Button>
+              </DialogActions>
+            </Dialog>
           </Grid>
         </Grid>
       </LayoutAdmin>
