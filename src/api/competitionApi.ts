@@ -40,9 +40,14 @@ export const insert = async ({
   }
 }
 
-export const deleteUsers = async ({ _id }: { _id: string }): Promise<void> => {
+export const deleteCompetitions = async ({
+  _id
+}: {
+  _id: number
+}): Promise<void> => {
   try {
-    await server.delete(`/Users?id=${_id}`)
+    console.log(_id)
+    await server.delete(`/Competitions?id=${_id}`)
   } catch (error: any) {
     const message = error?.response?.data?.message ?? error.message
     throw new Error(message)

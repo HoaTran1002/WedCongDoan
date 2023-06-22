@@ -11,16 +11,20 @@ import {
   TableRow,
   Button,
   Stack,
-  Tooltip
+  Tooltip,
+  Snackbar
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 import { Link } from 'react-router-dom'
 import useFetch from '~/hook/useFetch'
-import { getAllComp } from '~/api/competitionApi'
+import { deleteCompetitions, getAllComp } from '~/api/competitionApi'
 import MilitaryTechOutlinedIcon from '@mui/icons-material/MilitaryTechOutlined'
 import { color } from '@mui/system'
 import { getAllDep } from '~/api/depApi'
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
+import MuiAlert from '@mui/material/Alert'
+import base_url from '~/config/env'
 function createData(
   comName: string,
   examTimes: string,
@@ -40,11 +44,14 @@ function createData(
 }
 
 const CompTable = (): JSX.Element => {
+  const [showSuccess, setShowSuccess] = React.useState(false)
+  const [showError, setShowError] = React.useState(false)
   const [compState, callComp] = useFetch()
   const [deps, depCall] = useFetch()
+  const [deleteComp, deleteCompCall] = useFetch()
   React.useEffect(() => {
     callComp(getAllComp)
-  }, [])
+  }, [compState.error])
   React.useEffect(() => {
     depCall(getAllDep)
   }, [])
@@ -54,9 +61,58 @@ const CompTable = (): JSX.Element => {
     const dep = depList?.find((item: any) => item.depId == idDep)
     return dep.depName || 'chưa có đơn vị nào'
   }
+  const handelDeleteComp = (idComp: number): void => {
+    const requestDelete: { _id: number } = { _id: idComp }
 
+    deleteCompCall(async () => {
+      try {
+        await deleteCompetitions(requestDelete)
+        setShowSuccess(true)
+      } catch (error) {
+        setShowError(true)
+      }
+    })
+  }
+
+  const handleCloseSuccess = (): void => {
+    setShowSuccess(false)
+  }
+  const handleCloseError = (): void => {
+    setShowError(false)
+  }
   return (
     <>
+      <>
+        {' '}
+        <Snackbar
+          open={showSuccess}
+          autoHideDuration={3000}
+          onClose={handleCloseSuccess}
+        >
+          <MuiAlert
+            onClose={handleCloseSuccess}
+            severity='success'
+            elevation={6}
+            variant='filled'
+          >
+            Acction successful!
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={showError}
+          autoHideDuration={3000}
+          onClose={handleCloseSuccess}
+        >
+          <MuiAlert
+            onClose={handleCloseError}
+            severity='error'
+            elevation={6}
+            variant='filled'
+          >
+            Acction Failed!
+          </MuiAlert>
+        </Snackbar>
+      </>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         <Grid xs={12}>
           <Stack
@@ -139,6 +195,17 @@ const CompTable = (): JSX.Element => {
                             <MilitaryTechOutlinedIcon />
                           </Button>
                         </Link>
+                      </Tooltip>
+                    </TableCell>
+                    <TableCell align='left'>
+                      <Tooltip title='xoá cuộc thi' placement='top-start'>
+                        <Button
+                          onClick={(): void => handelDeleteComp(row.comId)}
+                          style={{ width: 50 }}
+                          variant='outlined'
+                        >
+                          <DeleteOutlinedIcon />
+                        </Button>
                       </Tooltip>
                     </TableCell>
                   </TableRow>
