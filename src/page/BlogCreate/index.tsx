@@ -27,6 +27,7 @@ import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import { Insert } from '~/api/blogApi'
 import { saveAs } from 'file-saver'
 import base_url from '~/config/env'
+import { Link } from 'react-router-dom'
 
 axios.defaults.baseURL = base_url
 
@@ -244,9 +245,11 @@ const Index = (): JSX.Element => {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleOK} variant='contained'>
-                  OK
-                </Button>
+                <Link to={'/BlogManage?opensucess=true'}>
+                  <Button variant="contained" onClick={handleOK}>
+                    OK
+                  </Button>
+                </Link>
                 <Button onClick={handleClose}>Trở về</Button>
               </DialogActions>
             </Dialog>

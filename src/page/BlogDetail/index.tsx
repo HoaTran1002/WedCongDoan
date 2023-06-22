@@ -20,90 +20,101 @@ import {
 import { SelectChangeEvent } from '@mui/material/Select'
 import React, { useState, useEffect } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
-import ReactQuill from 'react-quill'
-import 'react-quill/dist/quill.snow.css'
-import { useLocation } from 'react-router-dom'
-import useFetch from '~/hook/Fetch'
-import { getById, Edit, Delete } from '~/api/blogApi'
-import Dropzone from 'react-dropzone'
-import axios from 'axios'
-
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import { Link, useLocation } from 'react-router-dom';
+import useFetch from '~/hook/useFetch'
+import { getBlogId, editBlog ,deleteBlog,getAllBlog} from '~/api/blogApi';
+import Dropzone from 'react-dropzone';
 const Index = (): JSX.Element => {
   let imageFile
   const [age, setAge] = React.useState('')
-  const [blogId, setBlogId] = useState('')
-  const [blogName, setBlogName] = useState('')
-  const [blogDetai, setBlogDetai] = useState('')
-  const [imgName, setImgName] = useState('')
-  const [imgSrc, setImgSrc] = useState('')
-  const [open, setOpen] = useState(false)
-  const [selectedImage, setSelectedImage] = useState(null)
-  const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const id = queryParams.get('id')
-  const [response, err, loader] = useFetch(getById(Number(id)))
-  const [res, error, loading] = useFetch(Delete(Number(id)))
+  const [blogName, setBlogName] = useState('');
+  const [blogDetai, setBlogDetai] = useState('');
+  const [imgName, setImgName] = useState('');
+  const [imgSrc, setImgSrc] = useState('');
+  const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get('id');
+  const numericId =parseInt(id, 10)
+  const [blogId, setBlogId] = useState<number>(numericId);
+  const [EditBlog, callEditBlog] = useFetch()
+  const [DeleteBlog, callDeleteBlog] = useFetch()
+  const [IdBlog, callIdBlog] = useFetch()
   const handleChange = (event: SelectChangeEvent): void => {
     setAge(event.target.value)
   }
-  const handleContentChange = (value: any): any => {
+  const handleContentChange = (value:string): any => {
     setBlogDetai(value)
   }
   const handleClickOpen = (): any => {
     setOpen(true)
     console.log(blogName, blogDetai, imgName, imgSrc)
   }
-  const handleClickDelete = (): any => {
-    if (res) {
-      console.log('Xóa thành công')
-    }
-  }
-  const handleClose = (): any => {
-    setOpen(false)
-  }
-  const handleOK = (): any => {
-    setOpen(false)
-    const updateBlog = {
-      blogId: blogId,
-      blogName: blogName,
-      blogDetai: blogDetai,
-      imgName: imgName,
-      imgSrc: imgSrc
-    }
 
-    const requestData = Edit(updateBlog)
-    console.log(requestData)
-    axios
-      .put(requestData.enp, requestData.body, { headers: requestData.headers })
-      .then((response) => {
-        console.log('Insert successful')
-        // Xử lý response
-      })
-      .catch((error) => {
-        console.error('Insert failed', error)
-        // Xử lý lỗi
-      })
+
+  const handleClickDelete = (): any => {
+    const request: { _id:number } = {
+      _id: blogId
+    }
+    callDeleteBlog(async () => {
+      try {
+        await deleteBlog(request)
+      } catch (error) {
+        console.log('thất bại')
+      }
+    })
+  }
+  const handleClose = (): void => {
+    setOpen(false);
+  };
+  const handleDeleteOpen = (): void => {
+    setOpenDelete(true);
+  };
+  const handleDeleteClose = (): void => {
+    setOpenDelete(false);
+  };
+
+  const requestData: {
+    blogId: number
+    blogName: string
+    blogDetai: string
+    imgName: string
+    imgSrc: string
+  } = {
+    blogId: blogId,
+    blogName: blogName,
+    blogDetai: blogDetai,
+    imgName: imgName,
+    imgSrc: imgSrc
+  }
+
+  const handleOK = (): void => {
+    setOpen(false)
+    callEditBlog(async () => {
+      try {
+        await editBlog(requestData)
+      } catch (error) {
+        console.log('Thất bại')
+      }
+    })
     const filePath = `src/assets/img/${imgName}`
     // saveAs(imageFile, filePath);
   }
-  const handleImageDrop = (acceptedFiles: any): any => {
-    if (acceptedFiles && acceptedFiles.length > 0) {
-      imageFile = acceptedFiles[0]
-      // setSelectedImage(URL.createObjectURL(imageFile))
-      setImgName(imageFile.path)
-      setImgSrc(imageFile.path)
-    }
-  }
-  useEffect(() => {
-    if (response && response.data) {
-      setBlogId(response.data.blogId)
-      setBlogName(response.data.blogName)
-      setBlogDetai(response.data.blogDetai)
-      setImgName(response.data.imgName)
-      setImgSrc(response.data.imgSrc)
-    }
-  }, [response])
+  // const handleImageDrop = (acceptedFiles: any): any => {
+  //   if (acceptedFiles && acceptedFiles.length > 0) {
+  //     imageFile = acceptedFiles[0]
+  //     // setSelectedImage(URL.createObjectURL(imageFile))
+  //     setImgName(imageFile.path)
+  //     setImgSrc(imageFile.path)
+  //   }
+  // };
+  const  data =  getBlogId(blogId)
 
+  console.log(data)
   return (
     <>
       <LayoutAdmin>
@@ -270,21 +281,40 @@ const Index = (): JSX.Element => {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Button onClick={handleOK} variant='contained'>
-                  OK
-                </Button>
+                <Link to={'/BlogManage?updatesucess=true'}>
+                  <Button onClick={handleOK} variant='contained'>
+                    OK
+                  </Button>
+                </Link>
                 <Button onClick={handleClose}>Trở về</Button>
               </DialogActions>
             </Dialog>
-            <Button
-              variant='contained'
-              color='error'
-              startIcon={<DeleteIcon />}
-              style={{ marginTop: '20px' }}
-              onClick={handleClickDelete}
-            >
+            <Button variant='contained' color='error' startIcon={<DeleteIcon />} style={{ marginTop: '20px' }} onClick={handleDeleteOpen}>
               Xóa trang blog
             </Button>
+            <Dialog
+              open={openDelete}
+              onClose={handleDeleteClose}
+              aria-labelledby="alert-dialog-title"
+              aria-describedby="alert-dialog-description"
+            >
+              <DialogTitle id="alert-dialog-title">
+                {"Thông tin "}
+              </DialogTitle>
+              <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                  Bạn muốn xóa trang Blog ?
+                </DialogContentText>
+              </DialogContent>
+              <DialogActions>
+                <Link to={'/BlogManage?deletesucess=true'}>
+                  <Button onClick={handleClickDelete} variant='contained'>
+                    OK
+                  </Button>
+                </Link>
+                <Button onClick={handleDeleteClose}>Trở về</Button>
+              </DialogActions>
+            </Dialog>
           </Grid>
         </Grid>
       </LayoutAdmin>
