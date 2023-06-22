@@ -7,6 +7,17 @@ export const getAll = {
   body: {},
   headers: {}
 }
+
+export const getAllBlog= async (): Promise<any> => {
+  try {
+    const { data } = await server.get('/Blogs')
+    return data
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
+  }
+}
+
 export const Insert = (body: object): { enp: string; method: string; body: object; headers: object } => {
   return {
     enp: '/Blogs',
@@ -16,15 +27,28 @@ export const Insert = (body: object): { enp: string; method: string; body: objec
   }
 }
 
-export const getBlogId = async ({ _id }: { _id: number }): Promise<any> => {
+export const getBlogId = async ( { id }: { id: number | null }): Promise<any> => {
+  console.log(id)
   try {
-    const { data } = await server.get(`/Blogs/GetById?id=${_id}`)
+    const { data } = await server.get(`/Blogs/GetById?id=${id}`)
+    console.log(data)
     return data
   } catch (error: any) {
     const message = error?.response?.data?.message ?? error.message
     throw new Error(message)
   }
 }
+
+
+// export const getBlogId = async (): Promise<any> => {
+//   try {
+//     const { data } = await server.get(`/Blogs/GetById?id=26`)
+//     return data
+//   } catch (error: any) {
+//     const message = error?.response?.data?.message ?? error.message
+//     throw new Error(message)
+//   }
+// }
 
 export const deleteBlog = async ({ _id }: { _id: number | null }): Promise<void> => {
   try {

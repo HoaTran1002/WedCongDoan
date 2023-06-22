@@ -24,7 +24,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Link, useLocation } from 'react-router-dom';
 import useFetch from '~/hook/useFetch'
-import { getBlogId, editBlog ,deleteBlog} from '~/api/blogApi';
+import { getBlogId, editBlog ,deleteBlog,getAllBlog} from '~/api/blogApi';
 import Dropzone from 'react-dropzone';
 const Index = (): JSX.Element => {
   let imageFile
@@ -44,8 +44,6 @@ const Index = (): JSX.Element => {
   const [EditBlog, callEditBlog] = useFetch()
   const [DeleteBlog, callDeleteBlog] = useFetch()
   const [IdBlog, callIdBlog] = useFetch()
-
-  console.log(blogId)
   const handleChange = (event: SelectChangeEvent): void => {
     setAge(event.target.value)
   }
@@ -113,20 +111,10 @@ const Index = (): JSX.Element => {
   //     setImgName(imageFile.path)
   //     setImgSrc(imageFile.path)
   //   }
-  // }
-  const res: { _id: number } = {
-    _id: blogId
-  }
-  callIdBlog(async () => {
-    try {
-      await getBlogId(res)
-    } catch (error) {
-      console.log('thất bại')
-    }
-  })
+  // };
+  const  data =  getBlogId(blogId)
 
-  console.log(IdBlog.payload);
-
+  console.log(data)
   return (
     <>
       <LayoutAdmin>
