@@ -55,7 +55,8 @@ const TableUser = (): JSX.Element => {
     callDelete(async () => {
       try {
         await deleteUsers(request)
-        setShowSuccess(true)
+        await setShowSuccess(true)
+        window.location.reload()
       } catch (error) {
         setShowError(true)
       }

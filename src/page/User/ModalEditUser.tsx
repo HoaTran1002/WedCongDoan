@@ -65,10 +65,9 @@ export default function BasicModal(prop: BasicModalProps): JSX.Element {
               email={prop.email}
               password={prop.password}
               userAddress={prop.userAddress}
-              roleId={`${prop.roleId}`}
-              depId={`${prop.depId}`}
+              roleId={prop.roleId}
+              depId={prop.depId}
               edit={true}
-              onClose={handleClose}
             />
           </Typography>
         </Box>

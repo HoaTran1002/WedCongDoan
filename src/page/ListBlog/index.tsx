@@ -1,4 +1,3 @@
-import Layout from '~/components/layout/Layout'
 import {
   Typography,
   Paper,
@@ -15,6 +14,7 @@ import {
 import image from '~/assets/img/competion-1.jpg'
 import AddIcon from '@mui/icons-material/Add'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+import Layout from '~/components/layout/Layout'
 function BlogInfo(
   id: number,
   heading: string,
@@ -31,6 +31,7 @@ const Blog = [
 ]
 const Index = (): JSX.Element => {
   return (
+    // eslint-disable-next-line react/react-in-jsx-scope
     <Layout>
       <>
         <Grid container spacing={2}>

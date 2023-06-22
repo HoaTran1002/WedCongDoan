@@ -11,7 +11,7 @@ import MuiAlert from '@mui/material/Alert'
 import { getAll } from '~/api/depApi'
 import { getAllRole } from '~/api/roleApi'
 
-import dayjs from 'dayjs'
+import dayjs, { locale } from 'dayjs'
 
 import Fetch from '~/hook/Fetch'
 import useFetch from '~/hook/useFetch'
@@ -34,20 +34,19 @@ export default function UserTextFields(prop: {
   email: string
   password: string
   userAddress: string
-  roleId: string
-  depId: string
-  onClose: () => void
+  roleId: number
+  depId: number
 }): JSX.Element {
   const [cccd, setCCCD] = React.useState<string>(prop.id || '')
   const [userName, setUserName] = React.useState<string>(prop.userName || '')
   const [pass, setPass] = React.useState<string>(prop.password || '')
   const [gmail, setGmail] = React.useState(prop.email || '')
+  const [address, setAddress] = React.useState<string>(prop.userAddress || '')
+  const [birthDay, setBirthDay] = React.useState<string>(prop.dateOfBirth || '')
+  const [dep, setDep] = React.useState<number>(prop.depId || 0)
+  const [role, setRole] = React.useState<number>(prop.roleId || 0)
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
-  // const [address, setAddress] = React.useState<string>('')
-  const [birthDay, setBirthDay] = React.useState<string>(prop.dateOfBirth || '')
-  const [dep, setDep] = React.useState<string>(prop.depId || '0')
-  const [role, setRole] = React.useState<string>(prop.roleId || '0')
 
   const [depData, ,] = Fetch(getAll)
   const [roleData, ,] = Fetch(getAllRole)
@@ -55,11 +54,12 @@ export default function UserTextFields(prop: {
   const Roles = roleData?.data
   const [userInsert, callInsertUser] = useFetch()
   const [EdittUser, callEdittUser] = useFetch()
-  let formattedDateOfBirth: any
-  if (prop.dateOfBirth) {
-    formattedDateOfBirth = dayjs(prop.dateOfBirth).format('MM-DD-YYYY')
+  let formattedDateOfBirth: string | null = null
+  if (birthDay) {
+    formattedDateOfBirth = dayjs(birthDay).format('MM-DD-YYYY')
   }
 
+  console.log('date of birth:' + formattedDateOfBirth)
   const onchangeUserName = function (
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
@@ -75,9 +75,11 @@ export default function UserTextFields(prop: {
   ): void {
     setPass(event.target.value)
   }
-  // const onchangeAddress = function (event: React.ChangeEvent<HTMLInputElement>): void {
-  //   setAddress(event.target.value)
-  // }
+  const onchangeAddress = function (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
+    setAddress(event.target.value)
+  }
   const onchangeGmail = function (
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
@@ -92,12 +94,12 @@ export default function UserTextFields(prop: {
   const onchangeDep = function (
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
-    setDep(event.target.value)
+    setDep(Number(event.target.value))
   }
   const onchangeRole = function (
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
-    setRole(event.target.value)
+    setRole(Number(event.target.value))
   }
   const handleCloseSuccess = (): void => {
     setShowSuccess(false)
@@ -128,8 +130,10 @@ export default function UserTextFields(prop: {
   const onSubmitForm = (): void => {
     callInsertUser(async () => {
       try {
-        insert(requestData)
-        setShowSuccess(true)
+        console.log(requestData)
+        await insert(requestData)
+        await setShowSuccess(true)
+        window.location.reload()
       } catch (error) {
         setShowError(true)
       }
@@ -138,8 +142,9 @@ export default function UserTextFields(prop: {
   const onSubmitFormEdit = (): void => {
     callEdittUser(async () => {
       try {
-        editUser(requestData)
-        setShowSuccess(true)
+        await editUser(requestData)
+        await setShowSuccess(true)
+        window.location.reload()
       } catch (error) {
         setShowError(true)
       }
@@ -193,14 +198,14 @@ export default function UserTextFields(prop: {
             autoComplete='off'
           >
             <TextField
-              defaultValue={prop.id}
+              defaultValue={cccd}
               onChange={onchangeCCCD}
               id='outlined-basic'
               label='CCCD'
               variant='outlined'
             />
             <TextField
-              defaultValue={prop.userName}
+              defaultValue={userName}
               id='filled-basic'
               label='Họ Và Tên'
               onChange={onchangeUserName}
@@ -209,35 +214,39 @@ export default function UserTextFields(prop: {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
-                  defaultValue={
-                    formattedDateOfBirth
-                      ? formattedDateOfBirth.format('YYYY-MM-DD')
-                      : null
-                  }
+                  // defaultValue={formattedDateOfBirth}
+                  // defaultValue={formattedDateOfBirth}
                   onChange={onchangeBirthDay}
                   sx={{ width: '100%' }}
-                  label='Ngày Sinh'
+                  label='Ngày Sinh '
                 />
               </DemoContainer>
             </LocalizationProvider>
+
             <TextField
-              defaultValue={prop.email}
+              defaultValue={gmail}
               onChange={onchangeGmail}
               id='outlined-basic'
               label='Gmail'
               variant='outlined'
             />
             <TextField
-              defaultValue={prop.password}
+              defaultValue={pass}
               onChange={onchangePass}
               id='filled-basic'
               label='Mật Khẩu'
               variant='outlined'
             />
-            {/* <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' /> */}
+            <TextField
+              defaultValue={address}
+              onChange={onchangeAddress}
+              id='standard-basic'
+              label='Địa Chỉ'
+              variant='outlined'
+            />
 
             <TextField
-              value={String(prop.roleId)}
+              value={role}
               onChange={onchangeRole}
               id='selectDep'
               label='Chọn Quyền'
@@ -260,7 +269,7 @@ export default function UserTextFields(prop: {
               )}
             </TextField>
             <TextField
-              value={String(prop.depId)}
+              value={dep}
               onChange={onchangeDep}
               id='selectDep'
               label='Chọn Khoa'
