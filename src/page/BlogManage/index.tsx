@@ -4,7 +4,7 @@ import { Typography, Grid, Button, Stack } from '@mui/material'
 import image from '~/assets/img/competion-1.jpg'
 import AddIcon from '@mui/icons-material/Add'
 import useFetch from '~/hook/Fetch'
-import { getAll, getById } from '~/api/blogApi'
+import { getAll } from '~/api/blogApi'
 import { Link,useLocation  } from 'react-router-dom'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';

@@ -1,19 +1,4 @@
-import {
-  Typography,
-  Paper,
-  Grid,
-  TableContainer,
-  Box,
-  TableCell,
-  Table,
-  TableHead,
-  TableRow,
-  Button,
-  Stack
-} from '@mui/material'
-import image from '~/assets/img/competion-1.jpg'
-import AddIcon from '@mui/icons-material/Add'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
+
 import Layout from '~/components/layout/Layout'
 import { Typography, Paper, Grid, TableContainer, Box, TableCell, Table, TableHead, TableRow, Button, Stack } from '@mui/material'
 import image from '~/assets/img/competion-1.jpg';
@@ -38,7 +23,7 @@ const Index = (): JSX.Element => {
   return (
     // eslint-disable-next-line react/react-in-jsx-scope
     <Layout>
-      <>
+      {/* <>
         <Grid container spacing={2}>
           <Grid xs={12}>
             <Stack
@@ -271,7 +256,7 @@ const Index = (): JSX.Element => {
             ))}
           </Grid>
         </Grid>
-      </>
+      </> */}
     </Layout>
   )
 }

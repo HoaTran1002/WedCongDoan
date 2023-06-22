@@ -24,16 +24,11 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { Link, useLocation } from 'react-router-dom';
 import useFetch from '~/hook/useFetch'
-import { getById, Edit ,Delete } from '~/api/blogApi';
+import { getBlogId, editBlog ,deleteBlog} from '~/api/blogApi';
 import Dropzone from 'react-dropzone';
-import axios from 'axios';
-
-axios.defaults.baseURL = 'http://localhost:5237/api'
-
 const Index = (): JSX.Element => {
   let imageFile
   const [age, setAge] = React.useState('')
-  const [blogId, setBlogId] = useState('');
   const [blogName, setBlogName] = useState('');
   const [blogDetai, setBlogDetai] = useState('');
   const [imgName, setImgName] = useState('');
@@ -44,73 +39,93 @@ const Index = (): JSX.Element => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get('id');
-  const [response, err, loader] = useFetch(getById(Number(id)))
-  const [res, error, loading] = useFetch(Delete(Number(id)))
+  const numericId =parseInt(id, 10)
+  const [blogId, setBlogId] = useState<number>(numericId);
+  const [EditBlog, callEditBlog] = useFetch()
+  const [DeleteBlog, callDeleteBlog] = useFetch()
+  const [IdBlog, callIdBlog] = useFetch()
+
+  console.log(blogId)
   const handleChange = (event: SelectChangeEvent): void => {
     setAge(event.target.value)
   }
-  const handleContentChange = (value: any): any => {
+  const handleContentChange = (value:string): any => {
     setBlogDetai(value)
   }
   const handleClickOpen = (): any => {
     setOpen(true)
     console.log(blogName, blogDetai, imgName, imgSrc)
   }
+
+
   const handleClickDelete = (): any => {
-    if (res) {
-      console.log('Xóa thành công')
+    const request: { _id:number } = {
+      _id: blogId
     }
+    callDeleteBlog(async () => {
+      try {
+        await deleteBlog(request)
+      } catch (error) {
+        console.log('thất bại')
+      }
+    })
   }
-  const handleClose = (): any => {
+  const handleClose = (): void => {
     setOpen(false);
   };
-  const handleDeleteOpen = (): any => {
+  const handleDeleteOpen = (): void => {
     setOpenDelete(true);
   };
-  const handleDeleteClose = (): any => {
+  const handleDeleteClose = (): void => {
     setOpenDelete(false);
   };
-  const handleOK = (): any => {
-    setOpen(false)
-    const updateBlog = {
-      blogId: blogId,
-      blogName: blogName,
-      blogDetai: blogDetai,
-      imgName: imgName,
-      imgSrc: imgSrc
-    }
 
-    const requestData = Edit(updateBlog);
-    console.log(requestData);
-    axios.put(requestData.enp, requestData.body, { headers: requestData.headers })
-      .then(response => {
-        console.log('Sửa successful');
-        // Xử lý response
-      })
-      .catch(error => {
-        console.error('sửa failed', error);
-        // Xử lý lỗi
-      })
+  const requestData: {
+    blogId: number
+    blogName: string
+    blogDetai: string
+    imgName: string
+    imgSrc: string
+  } = {
+    blogId: blogId,
+    blogName: blogName,
+    blogDetai: blogDetai,
+    imgName: imgName,
+    imgSrc: imgSrc
+  }
+
+  const handleOK = (): void => {
+    setOpen(false)
+    callEditBlog(async () => {
+      try {
+        await editBlog(requestData)
+      } catch (error) {
+        console.log('Thất bại')
+      }
+    })
     const filePath = `src/assets/img/${imgName}`
     // saveAs(imageFile, filePath);
   }
-  const handleImageDrop = (acceptedFiles: any): any => {
-    if (acceptedFiles && acceptedFiles.length > 0) {
-      imageFile = acceptedFiles[0]
-      // setSelectedImage(URL.createObjectURL(imageFile))
-      setImgName(imageFile.path)
-      setImgSrc(imageFile.path)
-    }
+  // const handleImageDrop = (acceptedFiles: any): any => {
+  //   if (acceptedFiles && acceptedFiles.length > 0) {
+  //     imageFile = acceptedFiles[0]
+  //     // setSelectedImage(URL.createObjectURL(imageFile))
+  //     setImgName(imageFile.path)
+  //     setImgSrc(imageFile.path)
+  //   }
+  // }
+  const res: { _id: number } = {
+    _id: blogId
   }
-  useEffect(() => {
-    if (response && response.data) {
-      setBlogId(response.data.blogId)
-      setBlogName(response.data.blogName)
-      setBlogDetai(response.data.blogDetai)
-      setImgName(response.data.imgName)
-      setImgSrc(response.data.imgSrc)
+  callIdBlog(async () => {
+    try {
+      await getBlogId(res)
+    } catch (error) {
+      console.log('thất bại')
     }
-  }, [response])
+  })
+
+  console.log(IdBlog.payload);
 
   return (
     <>
