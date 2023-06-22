@@ -17,7 +17,7 @@ export const Insert = (body: object): { enp: string; method: string; body: objec
 }
 
 export const getBlogId = async ({ _id }: { _id: number }): Promise<any> => {
-  try {``
+  try {
     const { data } = await server.get(`/Blogs/GetById?id=${_id}`)
     return data
   } catch (error: any) {
