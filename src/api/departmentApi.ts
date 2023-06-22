@@ -1,13 +1,18 @@
 import server from './axios'
 
-export const getAllDep = {
-  enp: '/Departments',
-  method: 'Get',
-  body: {},
-  headers: {}
+export const getAllDep = async (): Promise<any> => {
+  try {
+    const { data } = await server.get('/Departments')
+    return data
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
+  }
 }
 
-export const Insert = (body: object): { enp: string; method: string; body: object; headers: object } => {
+export const Insert = (
+  body: object
+): { enp: string; method: string; body: object; headers: object } => {
   return {
     enp: '/Departments',
     method: 'Post',
@@ -15,23 +20,29 @@ export const Insert = (body: object): { enp: string; method: string; body: objec
     headers: {}
   }
 }
-export const getById = (id: number): { enp: string; method: string; body: object; headers: object } => {
+export const getById = (
+  id: number
+): { enp: string; method: string; body: object; headers: object } => {
   return {
     enp: `/Departments/GetById?id=${id}`,
     method: 'Get',
     body: {},
     headers: {}
-  };
-};
-export const Delete = (id: number): { enp: string; method: string; body: object; headers: object } => {
+  }
+}
+export const Delete = (
+  id: number
+): { enp: string; method: string; body: object; headers: object } => {
   return {
     enp: `/Departments?id=${id}`,
     method: 'Delete',
     body: {},
     headers: {}
-  };
-};
-export const Edit = (body: object): { enp: string; method: string; body: object; headers: object } => {
+  }
+}
+export const Edit = (
+  body: object
+): { enp: string; method: string; body: object; headers: object } => {
   return {
     enp: '/Departments',
     method: 'Put',

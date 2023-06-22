@@ -2,7 +2,6 @@ import * as React from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import { Button, MenuItem } from '@mui/material'
-import axios from 'axios'
 import useFetch from '~/hook/useFetch'
 import { getAll } from '~/api/prizeTypesApi'
 import { getAllPrizes } from '~/api/prizesApi'
@@ -11,7 +10,6 @@ import { editcompPrize, insert } from '~/api/CompetitionsPrizesAPI'
 import { Snackbar } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
 
-axios.defaults.baseURL = 'http://localhost:5237/api'
 interface PrizeType {
   priTid: number
   priTname: string
@@ -34,7 +32,9 @@ export default function TextFields(prop: {
   const [showError, setShowError] = React.useState(false)
   const [priType, setPriType] = React.useState<string>(prop.priTid || '')
   const [number, setNumber] = React.useState<string>(prop.quantity || '')
-  const [detailPrize, setDetailPrize] = React.useState<string>(prop.prizeDetail || '')
+  const [detailPrize, setDetailPrize] = React.useState<string>(
+    prop.prizeDetail || ''
+  )
   const [pri, setPri] = React.useState<string>(prop.priId || '')
   const [prizeTypeState, callPrizeTypes] = useFetch()
   const [prizesState, callPrizes] = useFetch()
@@ -52,16 +52,24 @@ export default function TextFields(prop: {
   const PrizeTypes = prizeTypeState.payload || []
   const Prizes = prizesState.payload || []
 
-  const onchangePriType = function (event: React.ChangeEvent<HTMLInputElement>): void {
+  const onchangePriType = function (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
     setPriType(event.target.value)
   }
-  const onchangeNumber = function (event: React.ChangeEvent<HTMLInputElement>): void {
+  const onchangeNumber = function (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
     setNumber(event.target.value)
   }
-  const onchangeDetailPrize = function (event: React.ChangeEvent<HTMLInputElement>): void {
+  const onchangeDetailPrize = function (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
     setDetailPrize(event.target.value)
   }
-  const onchangePrize = function (event: React.ChangeEvent<HTMLInputElement>): void {
+  const onchangePrize = function (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void {
     setPri(event.target.value)
   }
   const handleCloseSuccess = (): void => {
@@ -71,36 +79,37 @@ export default function TextFields(prop: {
     setShowError(false)
   }
   const requestData: {
-    priId: string
-    comId?: string
-    priTid: string
+    priId: number
+    comId: number
+    priTid: number
     prizeDetail: string
-    quantity: string
-  } = {
-    priId: pri,
-    priTid: priType,
-    prizeDetail: detailPrize,
     quantity: number
+  } = {
+    priId: Number(pri),
+    comId: comId ? Number(comId) : 0,
+    priTid: Number(priType),
+    prizeDetail: detailPrize,
+    quantity: Number(number)
   }
 
   const requestEditData: {
-    cpid: string
-    priId: string
-    comId: string
-    priTid: string
+    cpid: number
+    priId: number
+    comId: number
+    priTid: number
     prizeDetail: string
-    quantity: string
-  } = {
-    cpid: prop.cpid,
-    comId: prop.comId,
-    priId: pri,
-    priTid: priType,
-    prizeDetail: detailPrize,
     quantity: number
+  } = {
+    cpid: Number(prop.cpid),
+    comId: comId ? Number(comId) : 0,
+    priId: Number(pri),
+    priTid: Number(priType),
+    prizeDetail: detailPrize,
+    quantity: Number(number)
   }
   if (comId) {
-    requestData.comId = comId
-    requestEditData.comId = comId
+    requestData.comId = Number(comId)
+    requestEditData.comId = Number(comId)
   }
   const submitAddData = (): void => {
     try {
@@ -126,16 +135,36 @@ export default function TextFields(prop: {
 
   return (
     <>
-      <Snackbar open={showSuccess} autoHideDuration={3000} onClose={handleCloseSuccess}>
-        <MuiAlert onClose={handleCloseSuccess} severity='success' elevation={6} variant='filled'>
-          Acction successful!
-        </MuiAlert>
-      </Snackbar>
-      <Snackbar open={showError} autoHideDuration={3000} onClose={handleCloseSuccess}>
-        <MuiAlert onClose={handleCloseError} severity='error' elevation={6} variant='filled'>
-          Acction Failed!
-        </MuiAlert>
-      </Snackbar>
+      <>
+        <Snackbar
+          open={showSuccess}
+          autoHideDuration={3000}
+          onClose={handleCloseSuccess}
+        >
+          <MuiAlert
+            onClose={handleCloseSuccess}
+            severity='success'
+            elevation={6}
+            variant='filled'
+          >
+            Acction successful!
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={showError}
+          autoHideDuration={3000}
+          onClose={handleCloseSuccess}
+        >
+          <MuiAlert
+            onClose={handleCloseError}
+            severity='error'
+            elevation={6}
+            variant='filled'
+          >
+            Acction Failed!
+          </MuiAlert>
+        </Snackbar>
+      </>
       {prop.edit ? (
         <>
           <Box
@@ -152,7 +181,13 @@ export default function TextFields(prop: {
             noValidate
             autoComplete='off'
           >
-            <TextField value={number} id='filled-basic' label='Số lượng' onChange={onchangeNumber} variant='outlined' />
+            <TextField
+              value={number}
+              id='filled-basic'
+              label='Số lượng'
+              onChange={onchangeNumber}
+              variant='outlined'
+            />
             <TextField
               value={detailPrize}
               id='filled-basic'
@@ -164,36 +199,63 @@ export default function TextFields(prop: {
                 inputMode: 'numeric' // Hiển thị bàn phím số trên thiết bị di động
               }}
             />
-            <TextField value={pri} onChange={onchangePrize} id='selectDep' label='Chọn giải thưởng' select>
+            <TextField
+              value={pri}
+              onChange={onchangePrize}
+              id='selectDep'
+              label='Chọn giải thưởng'
+              select
+            >
               {Prizes == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
               ) : (
                 Prizes.map((item: Prize, index: number): JSX.Element => {
                   return (
-                    <MenuItem sx={{ color: 'black' }} key={index} value={item.priId}>
+                    <MenuItem
+                      sx={{ color: 'black' }}
+                      key={index}
+                      value={item.priId}
+                    >
                       {item.priName}
                     </MenuItem>
                   )
                 })
               )}
             </TextField>
-            <TextField value={priType} onChange={onchangePriType} id='selectDep' label='Loại Giải' select>
+            <TextField
+              value={priType}
+              onChange={onchangePriType}
+              id='selectDep'
+              label='Loại Giải'
+              select
+            >
               {PrizeTypes == null ? (
                 <MenuItem value='0'>Chưa có loại giải</MenuItem>
               ) : (
-                PrizeTypes.map((item: PrizeType, index: number): JSX.Element => {
-                  return (
-                    <MenuItem sx={{ color: 'black' }} key={index} value={item.priTid}>
-                      {item.priTname}
-                    </MenuItem>
-                  )
-                })
+                PrizeTypes.map(
+                  (item: PrizeType, index: number): JSX.Element => {
+                    return (
+                      <MenuItem
+                        sx={{ color: 'black' }}
+                        key={index}
+                        value={item.priTid}
+                      >
+                        {item.priTname}
+                      </MenuItem>
+                    )
+                  }
+                )
               )}
             </TextField>
           </Box>
           <Button
             onClick={submitEditData}
-            sx={{ position: 'relative', left: '45%', right: '20%', marginTop: 2 }}
+            sx={{
+              position: 'relative',
+              left: '45%',
+              right: '20%',
+              marginTop: 2
+            }}
             variant='contained'
           >
             LƯU CHỈNH SỬA
@@ -215,7 +277,12 @@ export default function TextFields(prop: {
             noValidate
             autoComplete='off'
           >
-            <TextField id='filled-basic' label='Số lượng' onChange={onchangeNumber} variant='outlined' />
+            <TextField
+              id='filled-basic'
+              label='Số lượng'
+              onChange={onchangeNumber}
+              variant='outlined'
+            />
             <TextField
               id='filled-basic'
               label='Chi tiết giải thưởng'
@@ -226,36 +293,61 @@ export default function TextFields(prop: {
                 inputMode: 'numeric' // Hiển thị bàn phím số trên thiết bị di động
               }}
             />
-            <TextField onChange={onchangePrize} id='selectDep' label='Chọn giải thưởng' select>
+            <TextField
+              onChange={onchangePrize}
+              id='selectDep'
+              label='Chọn giải thưởng'
+              select
+            >
               {Prizes == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
               ) : (
                 Prizes.map((item: Prize, index: number): JSX.Element => {
                   return (
-                    <MenuItem sx={{ color: 'black' }} key={index} value={item.priId}>
+                    <MenuItem
+                      sx={{ color: 'black' }}
+                      key={index}
+                      value={item.priId}
+                    >
                       {item.priName}
                     </MenuItem>
                   )
                 })
               )}
             </TextField>
-            <TextField onChange={onchangePriType} id='selectDep' label='Loại Giải' select>
+            <TextField
+              onChange={onchangePriType}
+              id='selectDep'
+              label='Loại Giải'
+              select
+            >
               {PrizeTypes == null ? (
                 <MenuItem value='0'>Chưa có loại giải</MenuItem>
               ) : (
-                PrizeTypes.map((item: PrizeType, index: number): JSX.Element => {
-                  return (
-                    <MenuItem sx={{ color: 'black' }} key={index} value={item.priTid}>
-                      {item.priTname}
-                    </MenuItem>
-                  )
-                })
+                PrizeTypes.map(
+                  (item: PrizeType, index: number): JSX.Element => {
+                    return (
+                      <MenuItem
+                        sx={{ color: 'black' }}
+                        key={index}
+                        value={item.priTid}
+                      >
+                        {item.priTname}
+                      </MenuItem>
+                    )
+                  }
+                )
               )}
             </TextField>
           </Box>
           <Button
             onClick={submitAddData}
-            sx={{ position: 'relative', left: '45%', right: '20%', marginTop: 2 }}
+            sx={{
+              position: 'relative',
+              left: '45%',
+              right: '20%',
+              marginTop: 2
+            }}
             variant='contained'
           >
             TẠO MỚI

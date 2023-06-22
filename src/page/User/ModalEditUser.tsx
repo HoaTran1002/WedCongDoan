@@ -15,7 +15,8 @@ const style = {
   bgcolor: 'white',
 
   borderRadius: 2,
-  boxShadow: 'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
+  boxShadow:
+    'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
   p: 4
 }
 interface BasicModalProps {
@@ -64,8 +65,8 @@ export default function BasicModal(prop: BasicModalProps): JSX.Element {
               email={prop.email}
               password={prop.password}
               userAddress={prop.userAddress}
-              roleId={`${prop.roleId}`}
-              depId={`${prop.depId}`}
+              roleId={prop.roleId}
+              depId={prop.depId}
               edit={true}
             />
           </Typography>

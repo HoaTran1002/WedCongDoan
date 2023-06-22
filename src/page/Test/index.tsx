@@ -37,10 +37,14 @@ const Index = (): JSX.Element => {
     setLoading(true)
   }
   useEffect(() => {
-    axios.get<Question[]>('https://626d498a5267c14d56798da4.mockapi.io/api/v1/questions').then((response) => {
-      console.log(Questions)
-      setQuestion(response.data)
-    })
+    axios
+      .get<Question[]>(
+        'https://626d498a5267c14d56798da4.mockapi.io/api/v1/questions'
+      )
+      .then((response) => {
+        console.log(Questions)
+        setQuestion(response.data)
+      })
   }, [])
   return (
     <>
@@ -59,8 +63,8 @@ const Index = (): JSX.Element => {
                   Lizard
                 </Typography>
                 <Typography variant='body2' color='text.secondary'>
-                  Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all
-                  continents except Antarctica
+                  Lizards are a widespread group of squamate reptiles, with over
+                  6,000 species, ranging across all continents except Antarctica
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -70,9 +74,15 @@ const Index = (): JSX.Element => {
               arrStr = q.asw.split('<--->')
               if (q.type == 'Radio') {
                 return (
-                  <Card sx={{ maxWidth: '100%', mt: 4, p: 3, background: blue[50] }} key={index}>
+                  <Card
+                    sx={{ maxWidth: '100%', mt: 4, p: 3, background: blue[50] }}
+                    key={index}
+                  >
                     <FormControl>
-                      <FormLabel id='demo-radio-buttons-group-label' sx={{ color: 'black', fontWeight: 500 }}>
+                      <FormLabel
+                        id='demo-radio-buttons-group-label'
+                        sx={{ color: 'black', fontWeight: 500 }}
+                      >
                         {index + 1}. {q.name} ?
                       </FormLabel>
                       <RadioGroup
@@ -81,32 +91,76 @@ const Index = (): JSX.Element => {
                         name='radio-buttons-group'
                         id={`${index}`}
                       >
-                        <FormControlLabel value='answer1' control={<Radio />} label={'A. ' + arrStr[0]} />
-                        <FormControlLabel value='answer2' control={<Radio />} label={'B. ' + arrStr[1]} />
-                        <FormControlLabel value='answer3' control={<Radio />} label={'C. ' + arrStr[2]} />
-                        <FormControlLabel value='answer4' control={<Radio />} label={'D. ' + arrStr[3]} />
+                        <FormControlLabel
+                          value='answer1'
+                          control={<Radio />}
+                          label={'A. ' + arrStr[0]}
+                        />
+                        <FormControlLabel
+                          value='answer2'
+                          control={<Radio />}
+                          label={'B. ' + arrStr[1]}
+                        />
+                        <FormControlLabel
+                          value='answer3'
+                          control={<Radio />}
+                          label={'C. ' + arrStr[2]}
+                        />
+                        <FormControlLabel
+                          value='answer4'
+                          control={<Radio />}
+                          label={'D. ' + arrStr[3]}
+                        />
                       </RadioGroup>
                     </FormControl>
                   </Card>
                 )
               }
               return (
-                <Card sx={{ maxWidth: '100%', mt: 4, p: 3, background: blue[50] }} key={index}>
+                <Card
+                  sx={{ maxWidth: '100%', mt: 4, p: 3, background: blue[50] }}
+                  key={index}
+                >
                   <FormControl>
-                    <FormLabel id='demo-radio-buttons-group-label' sx={{ color: 'black', fontWeight: 500 }}>
+                    <FormLabel
+                      id='demo-radio-buttons-group-label'
+                      sx={{ color: 'black', fontWeight: 500 }}
+                    >
                       {index + 1}. {q.name} ?
                     </FormLabel>
                     <FormGroup aria-labelledby='demo-radio-buttons-group-label'>
-                      <FormControlLabel value='answer1' control={<Checkbox />} label={'A. ' + arrStr[0]} />
-                      <FormControlLabel value='answer2' control={<Checkbox />} label={'B. ' + arrStr[1]} />
-                      <FormControlLabel value='answer3' control={<Checkbox />} label={'C. ' + arrStr[2]} />
-                      <FormControlLabel value='answer4' control={<Checkbox />} label={'D. ' + arrStr[3]} />
+                      <FormControlLabel
+                        value='answer1'
+                        control={<Checkbox />}
+                        label={'A. ' + arrStr[0]}
+                      />
+                      <FormControlLabel
+                        value='answer2'
+                        control={<Checkbox />}
+                        label={'B. ' + arrStr[1]}
+                      />
+                      <FormControlLabel
+                        value='answer3'
+                        control={<Checkbox />}
+                        label={'C. ' + arrStr[2]}
+                      />
+                      <FormControlLabel
+                        value='answer4'
+                        control={<Checkbox />}
+                        label={'D. ' + arrStr[3]}
+                      />
                     </FormGroup>
                   </FormControl>
                 </Card>
               )
             })}
-            <Grid container spacing={0} direction='column' alignItems='center' justifyContent='center'>
+            <Grid
+              container
+              spacing={0}
+              direction='column'
+              alignItems='center'
+              justifyContent='center'
+            >
               <Grid item xs={3}>
                 <LoadingButton
                   type='submit'

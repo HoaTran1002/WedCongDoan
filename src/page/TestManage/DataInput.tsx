@@ -5,32 +5,89 @@ import useFetch from '~/hook/useFetch'
 import { getAllExam, insertExams } from '~/api/exam'
 import { insertCompExam } from '~/api/competitionExam'
 import { useParams } from 'react-router-dom'
+
+import { Snackbar } from '@mui/material'
+import MuiAlert from '@mui/material/Alert'
+import { Try } from '@mui/icons-material'
 interface Exam {
   examId: string
   examName: string
 }
 const DataInput = (): JSX.Element => {
+  const [showSuccess, setShowSuccess] = React.useState(false)
+  const [showError, setShowError] = React.useState(false)
   const [nameExam, setNameExam] = useState<string>('')
   const [examData, ExamCall] = useFetch()
   const [addExamComp, addExamCompCall] = useFetch()
   const { comId } = useParams()
-  const onChangeNameExam = (event: React.ChangeEvent<HTMLInputElement>): void => {
+  const onChangeNameExam = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     setNameExam(event.target.value)
+    console.log(event.target.value)
   }
   useEffect(() => {
     ExamCall(getAllExam)
   }, [])
-  const reqExamComp: { examId: string; comId: any } = { examId: nameExam, comId: comId }
-  const ExamData = examData.payload || []
-  const handelAddExam = async (): Promise<void> => {
-    addExamCompCall(async () => {
-      insertCompExam(reqExamComp)
-    })
+  const reqExamComp: { examId: number; comId: any } = {
+    examId: Number(nameExam),
+    comId: Number(comId)
   }
 
+  const ExamData = examData.payload || []
+  const handelAddExam = async (): Promise<void> => {
+    try {
+      await addExamCompCall(async () => {
+        insertCompExam(reqExamComp)
+      })
+      setShowSuccess(true)
+    } catch (error) {
+      setShowError(true)
+    }
+  }
+  const handleCloseSuccess = (): void => {
+    setShowSuccess(false)
+  }
+  const handleCloseError = (): void => {
+    setShowError(false)
+  }
   return (
     <>
-      <TextField sx={{ width: 200 }} value={1} onChange={onChangeNameExam} id='selectDep' label='Chọn tên đề' select>
+      <Snackbar
+        open={showSuccess}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+      >
+        <MuiAlert
+          onClose={handleCloseSuccess}
+          severity='success'
+          elevation={6}
+          variant='filled'
+        >
+          Acction successful!
+        </MuiAlert>
+      </Snackbar>
+      <Snackbar
+        open={showError}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+      >
+        <MuiAlert
+          onClose={handleCloseError}
+          severity='error'
+          elevation={6}
+          variant='filled'
+        >
+          Acction Failed!
+        </MuiAlert>
+      </Snackbar>
+      <TextField
+        sx={{ width: 200 }}
+        onChange={onChangeNameExam}
+        id='selectDep'
+        label='Chọn tên đề'
+        select
+      >
         {ExamData == null ? (
           <MenuItem value='1'>Ten</MenuItem>
         ) : (
@@ -43,8 +100,12 @@ const DataInput = (): JSX.Element => {
           })
         )}
       </TextField>
-      <Button onClick={handelAddExam} sx={{ marginLeft: 2, marginTop: 2 }} variant='outlined'>
-        Thêm Bài Thi{''} <CreateNewFolderSharpIcon />
+      <Button
+        onClick={handelAddExam}
+        sx={{ marginLeft: 2, marginTop: 2 }}
+        variant='outlined'
+      >
+        Thêm Đề Thi{''} <CreateNewFolderSharpIcon />
       </Button>
     </>
   )

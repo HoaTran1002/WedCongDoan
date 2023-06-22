@@ -7,9 +7,12 @@ import BasicModal from './ModalEditUser'
 import useFetch from '~/hook/useFetch'
 import Button from '@mui/material/Button'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
-axios.defaults.baseURL = 'http://localhost:5237/api'
+import CircularProgress from '@mui/material/CircularProgress'
+import Box from '@mui/material/Box'
+import { Snackbar } from '@mui/material'
+import MuiAlert from '@mui/material/Alert'
+import base_url from '~/config/env'
+axios.defaults.baseURL = base_url
 
 interface User {
   userId: string
@@ -24,7 +27,10 @@ interface User {
 const TableUser = (): JSX.Element => {
   const [userState, call] = useFetch()
   const [reset, setReset] = React.useState(false)
+  const [showSuccess, setShowSuccess] = React.useState(false)
+  const [showError, setShowError] = React.useState(false)
   const [deleteUserState, callDelete] = useFetch()
+
   React.useEffect(() => {
     call(getAllUser)
   }, [reset])
@@ -46,10 +52,14 @@ const TableUser = (): JSX.Element => {
     const request: { _id: string } = {
       _id: id
     }
-    // Thực hiện xóa hàng dữ liệu với ID tương ứng
-    console.log('Xóa hàng dữ liệu với ID:', id)
     callDelete(async () => {
-      deleteUsers(request)
+      try {
+        await deleteUsers(request)
+        await setShowSuccess(true)
+        window.location.reload()
+      } catch (error) {
+        setShowError(true)
+      }
     })
   }
   const handelReset = (): void => {
@@ -58,6 +68,12 @@ const TableUser = (): JSX.Element => {
     } else {
       setReset(true)
     }
+  }
+  const handleCloseSuccess = (): void => {
+    setShowSuccess(false)
+  }
+  const handleCloseError = (): void => {
+    setShowError(false)
   }
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID Người Dùng', width: 200 },
@@ -125,13 +141,45 @@ const TableUser = (): JSX.Element => {
   ]
   return (
     <>
+      <Snackbar
+        open={showSuccess}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+      >
+        <MuiAlert
+          onClose={handleCloseSuccess}
+          severity='success'
+          elevation={6}
+          variant='filled'
+        >
+          Acction successful!
+        </MuiAlert>
+      </Snackbar>
+      <Snackbar
+        open={showError}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+      >
+        <MuiAlert
+          onClose={handleCloseError}
+          severity='error'
+          elevation={6}
+          variant='filled'
+        >
+          Acction Failed!
+        </MuiAlert>
+      </Snackbar>
       {userState.loading || deleteUserState.loading ? (
         <Box sx={{ display: 'flex' }}>
           <CircularProgress />
         </Box>
       ) : (
         <>
-          <Button onClick={handelReset} variant='contained' startIcon={<FlipCameraAndroidIcon />}>
+          <Button
+            onClick={handelReset}
+            variant='contained'
+            startIcon={<FlipCameraAndroidIcon />}
+          >
             {' '}
             Reset{' '}
           </Button>

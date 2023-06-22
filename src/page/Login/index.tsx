@@ -59,7 +59,9 @@ function Copyright(props: any): JSX.Element {
 const theme = createTheme()
 export default function Login(): JSX.Element {
   const { profile } = useAuth()
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     const body = {
@@ -69,7 +71,8 @@ export default function Login(): JSX.Element {
 
     try {
       await server.post('/users/login', body)
-      location.reload()
+      console.log(body)
+      // location.reload()
     } catch (error) {
       console.log(error)
     }

@@ -6,67 +6,74 @@ import AddIcon from '@mui/icons-material/Add'
 import useFetch from '~/hook/Fetch'
 import { getAll, getById } from '~/api/blogApi'
 import { Link } from 'react-router-dom'
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
-
+import CircularProgress from '@mui/material/CircularProgress'
+import Box from '@mui/material/Box'
 
 const Index = (): JSX.Element => {
-    return (
-        <LayoutAdmin>
-            <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
-                <Grid item xs={3}>
-                    <Box sx={cardStyle} className=''>
-                        <h2 className='color-primary' style={{margin:"0px"}}>Giải thưởng</h2>
-                        <p>Quản lý thông tin giải thưởng</p>
-                        <div>
-                            <Link to={'/PrizeManage'}>
-                                <Button variant='contained'>Quản lý</Button>
-                            </Link>
-                        </div>
-                    </Box>
-                </Grid>
-                <Grid item xs={3}>
-                    <Box sx={cardStyle} className=''>
-                        <h2 className='color-primary' style={{margin:"0px"}} >Loại Giải thưởng</h2>
-                        <p>Quản lý thông tin loại giải thưởng</p>
-                        <div>
-                            <Link to={'/PrizeTypeManage'}>
-                                <Button variant='contained'>Quản lý</Button>
-                            </Link>
-                        </div>
-                    </Box>
-                </Grid>
-                <Grid item xs={3}>
-                    <Box sx={cardStyle} className=''>
-                        <h2 className='color-primary' style={{margin:"0px"}}>Tên đề thi</h2>
-                        <p>Quản lý thông tin đề thi</p>
-                        <div>
-                            <Link to={'/ExamsManage'}>
-                                <Button variant='contained'>Quản lý</Button>
-                            </Link>
-                        </div>
-                    </Box>
-                </Grid>
-                <Grid item xs={3}>
-                    <Box sx={cardStyle} className=''>
-                        <h2 className='color-primary' style={{margin:"0px"}}>Chuyên ngành</h2>
-                        <p>Quản lý thông tin giải thưởng</p>
-                        <div>
-                            <Link to={'/DepartmentManage'}>
-                                <Button variant='contained'>Quản lý</Button>
-                            </Link>
-                        </div>
-                    </Box>
-                </Grid>
-            </Grid>
-        </LayoutAdmin>
-    )
+  return (
+    <LayoutAdmin>
+      <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
+        <Grid item xs={3}>
+          <Box sx={cardStyle} className=''>
+            <h2 className='color-primary' style={{ margin: '0px' }}>
+              Giải thưởng
+            </h2>
+            <p>Quản lý thông tin giải thưởng</p>
+            <div>
+              <Link to={'/PrizeManage'}>
+                <Button variant='contained'>Quản lý</Button>
+              </Link>
+            </div>
+          </Box>
+        </Grid>
+        <Grid item xs={3}>
+          <Box sx={cardStyle} className=''>
+            <h2 className='color-primary' style={{ margin: '0px' }}>
+              Loại Giải thưởng
+            </h2>
+            <p>Thông tin loại giải thưởng</p>
+            <div>
+              <Link to={'/PrizeTypeManage'}>
+                <Button variant='contained'>Quản lý</Button>
+              </Link>
+            </div>
+          </Box>
+        </Grid>
+        <Grid item xs={3}>
+          <Box sx={cardStyle} className=''>
+            <h2 className='color-primary' style={{ margin: '0px' }}>
+              Tên đề thi
+            </h2>
+            <p>Quản lý thông tin đề thi</p>
+            <div>
+              <Link to={'/ExamsManage'}>
+                <Button variant='contained'>Quản lý</Button>
+              </Link>
+            </div>
+          </Box>
+        </Grid>
+        <Grid item xs={3}>
+          <Box sx={cardStyle} className=''>
+            <h2 className='color-primary' style={{ margin: '0px' }}>
+              Chuyên ngành
+            </h2>
+            <p>Quản lý thông tin chuyên ngành</p>
+            <div>
+              <Link to={'/DepartmentManage'}>
+                <Button variant='contained'>Quản lý</Button>
+              </Link>
+            </div>
+          </Box>
+        </Grid>
+      </Grid>
+    </LayoutAdmin>
+  )
 }
 
 export default Index
 
-const cardStyle :SxProps = {
-    padding:"30px 20px",
-    borderRadius:"5px",
-    backgroundColor:"#e9f1ff"
-  }
+const cardStyle: SxProps = {
+  padding: '30px 20px',
+  borderRadius: '5px',
+  backgroundColor: '#e9f1ff'
+}

@@ -37,7 +37,7 @@ const PrizeData = (): JSX.Element => {
 
   const { comId } = useParams()
 
-  const paramId: { id: string | undefined } = { id: comId }
+  const paramId: { id: string } = { id: comId ? comId : '' }
   React.useEffect(() => {
     const fetchData = async (): Promise<void> => {
       if (comId) {
@@ -123,7 +123,14 @@ const PrizeData = (): JSX.Element => {
       headerName: 'Chi Tiết Giải Thưởng',
       width: 300,
       renderCell: (params) => (
-        <div style={{ width: '300px', maxHeight: '100%', overflow: 'visible', whiteSpace: 'pre-wrap' }}>
+        <div
+          style={{
+            width: '300px',
+            maxHeight: '100%',
+            overflow: 'visible',
+            whiteSpace: 'pre-wrap'
+          }}
+        >
           {params.value}
         </div>
       )
@@ -156,13 +163,31 @@ const PrizeData = (): JSX.Element => {
   ]
   return (
     <>
-      <Snackbar open={showSuccess} autoHideDuration={3000} onClose={handleCloseSuccess}>
-        <MuiAlert onClose={handleCloseSuccess} severity='success' elevation={6} variant='filled'>
+      <Snackbar
+        open={showSuccess}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+      >
+        <MuiAlert
+          onClose={handleCloseSuccess}
+          severity='success'
+          elevation={6}
+          variant='filled'
+        >
           Acction successful!
         </MuiAlert>
       </Snackbar>
-      <Snackbar open={showError} autoHideDuration={3000} onClose={handleCloseSuccess}>
-        <MuiAlert onClose={handleCloseError} severity='error' elevation={6} variant='filled'>
+      <Snackbar
+        open={showError}
+        autoHideDuration={3000}
+        onClose={handleCloseSuccess}
+      >
+        <MuiAlert
+          onClose={handleCloseError}
+          severity='error'
+          elevation={6}
+          variant='filled'
+        >
           Acction Failed!
         </MuiAlert>
       </Snackbar>
@@ -182,11 +207,23 @@ const PrizeData = (): JSX.Element => {
                   borderRadius: 1
                 }}
               >
-                <Button onClick={handelReset} variant='contained' startIcon={<FlipCameraAndroidIcon />}>
+                <Button
+                  onClick={handelReset}
+                  variant='contained'
+                  startIcon={<FlipCameraAndroidIcon />}
+                >
                   Reset
                 </Button>
                 <ModalAdd Title='Thêm Giải Thưởng'>
-                  <TextFields edit={false} priId={''} comId={''} priTid={''} quantity={''} prizeDetail={''} />
+                  <TextFields
+                    edit={false}
+                    cpid={''}
+                    priId={''}
+                    comId={''}
+                    priTid={''}
+                    quantity={''}
+                    prizeDetail={''}
+                  />
                 </ModalAdd>
               </Box>
 
