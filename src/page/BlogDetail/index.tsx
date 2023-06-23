@@ -27,8 +27,10 @@ import useFetch from '~/hook/useFetch'
 import { getBlogId, editBlog, deleteBlog, getAllBlog } from '~/api/blogApi'
 import Dropzone from 'react-dropzone'
 const Index = (): JSX.Element => {
+
   let imageFile
   const [age, setAge] = React.useState('')
+  const [data, setData] = React.useState()
   const [blogName, setBlogName] = useState('')
   const [blogDetai, setBlogDetai] = useState('')
   const [imgName, setImgName] = useState('')
@@ -39,12 +41,9 @@ const Index = (): JSX.Element => {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const id = queryParams.get('id')
-
   const [blogId, setBlogId] = useState<number>(Number(id))
   const [EditBlog, callEditBlog] = useFetch()
   const [DeleteBlog, callDeleteBlog] = useFetch()
-  const [IdBlog, callIdBlog] = useFetch()
-
   const [getBlog, callBlogById] = useFetch()
 
   const handleChange = (event: SelectChangeEvent): void => {
@@ -114,19 +113,22 @@ const Index = (): JSX.Element => {
   //     setImgSrc(imageFile.path)
   //   }
   // };
-  const request: { id: number } = { id: blogId }
   useEffect(() => {
-    try {
-      
-    } catch (error) {
-      
-    }
-    callBlogById(getBlogId(request))
-  }, [])
-  console.log('data===>>:' + getBlog.payload)
-  // const data = getBlogId(blogId)
-
-  // console.log(data)
+    const request: { id: number } = { id: blogId };
+    callBlogById(async () => {
+      try {
+        const response = await getBlogId(request);
+        await setBlogName(response.blogName);
+        await setBlogDetai(response.blogDetai);
+        await setImgName(response.imgName);
+        await setImgSrc(response.imgSrc);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  }, []);
+  
+  console.log('data===>>:', blogName,blogDetai,imgName)
   return (
     <>
       <LayoutAdmin>
@@ -153,8 +155,8 @@ const Index = (): JSX.Element => {
                 label='Tên Blog'
                 type='search'
                 variant='outlined'
-                style={{ width: '100%' }}
                 value={blogName}
+                style={{ width: '100%' }}
                 onChange={(e: any): any => {
                   setBlogName(e.target.value)
                 }}
@@ -275,7 +277,7 @@ const Index = (): JSX.Element => {
             <Button
               variant='contained'
               startIcon={<UpdateIcon />}
-              style={{ marginTop: '20px' }}
+              style={{ marginTop: '20px'}}
               onClick={handleClickOpen}
             >
               Cập nhâp blog

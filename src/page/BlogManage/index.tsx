@@ -3,8 +3,8 @@ import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import { Typography, Grid, Button, Stack } from '@mui/material'
 import image from '~/assets/img/competion-1.jpg'
 import AddIcon from '@mui/icons-material/Add'
-import useFetch from '~/hook/Fetch'
-import { getAll } from '~/api/blogApi'
+import useFetch from '~/hook/useFetch'
+import { getAllBlog } from '~/api/blogApi'
 import { Link,useLocation  } from 'react-router-dom'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
@@ -26,14 +26,7 @@ interface Blog {
 
 const Index = (): JSX.Element => {
 
-  const [response, err, loader] = useFetch(getAll)
-  const blogs = response?.data
-  const rows = blogs?.map((blog: Blog) => ({
-    id: blog.blogId,
-    blogName: blog.blogName,
-    imgSrc: blog.imgSrc,
-    imgName: blog.imgName
-  }))
+  const [getBlog, callBlog] = useFetch()
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const openFromUrl = queryParams.get('opensucess') === 'true';
@@ -42,6 +35,7 @@ const Index = (): JSX.Element => {
   const [open, setOpen] = React.useState(openFromUrl);
   const [openDelete, setOpenDelete] = React.useState(deleteFromUrl);
   const [openUpdate, setOpenUpdate] = React.useState(updateFromUrl);
+  const [data, setData] = React.useState();
 
 
 
@@ -50,18 +44,31 @@ const Index = (): JSX.Element => {
     setOpenDelete(false);
     setOpenUpdate(false);
   };
-  if (response) {
-    console.log(response.data)
-  }
-  if (err) {
-    console.log(err)
-  }
-  if (loader) {
-    console.log(loader)
-  }
+
+  
+  useEffect(() => {
+    const fetchData = async () :Promise<any> => {
+      try {
+        const data = await getAllBlog();
+        callBlog(() => Promise.resolve(data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const blogs: Blog[] = getBlog.payload || [];
+  const rows = blogs?.map((blog: Blog) => ({
+    id: blog.blogId,
+    blogName: blog.blogName,
+    imgSrc: blog.imgSrc,
+    imgName: blog.imgName
+  }))
   return (
     <LayoutAdmin>
-      {loader == true ? (
+      {getBlog.loading == true ? (
         <Box sx={{ display: 'flex' }}>
           <CircularProgress />
         </Box>
