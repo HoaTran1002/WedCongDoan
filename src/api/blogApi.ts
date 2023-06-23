@@ -1,6 +1,5 @@
 import server from './axios'
 
-
 export const getAll = {
   enp: '/Blogs',
   method: 'Get',
@@ -8,7 +7,7 @@ export const getAll = {
   headers: {}
 }
 
-export const getAllBlog= async (): Promise<any> => {
+export const getAllBlog = async (): Promise<any> => {
   try {
     const { data } = await server.get('/Blogs')
     return data
@@ -18,7 +17,9 @@ export const getAllBlog= async (): Promise<any> => {
   }
 }
 
-export const Insert = (body: object): { enp: string; method: string; body: object; headers: object } => {
+export const Insert = (
+  body: object
+): { enp: string; method: string; body: object; headers: object } => {
   return {
     enp: '/Blogs',
     method: 'Post',
@@ -27,10 +28,9 @@ export const Insert = (body: object): { enp: string; method: string; body: objec
   }
 }
 
-export const getBlogId = async ( { id }: { id: number | null }): Promise<any> => {
-  console.log(id)
+export const getBlogId = async (): Promise<any> => {
   try {
-    const { data } = await server.get(`/Blogs/GetById?id=${id}`)
+    const { data } = await server.get(`Blogs/GetById?id=${5}`)
     console.log(data)
     return data
   } catch (error: any) {
@@ -38,7 +38,6 @@ export const getBlogId = async ( { id }: { id: number | null }): Promise<any> =>
     throw new Error(message)
   }
 }
-
 
 // export const getBlogId = async (): Promise<any> => {
 //   try {
@@ -50,7 +49,11 @@ export const getBlogId = async ( { id }: { id: number | null }): Promise<any> =>
 //   }
 // }
 
-export const deleteBlog = async ({ _id }: { _id: number | null }): Promise<void> => {
+export const deleteBlog = async ({
+  _id
+}: {
+  _id: number | null
+}): Promise<void> => {
   try {
     await server.delete(`/Blogs?id=${_id}`)
   } catch (error: any) {
@@ -58,7 +61,6 @@ export const deleteBlog = async ({ _id }: { _id: number | null }): Promise<void>
     throw new Error(message)
   }
 }
-
 
 export const editBlog = async ({
   blogId,

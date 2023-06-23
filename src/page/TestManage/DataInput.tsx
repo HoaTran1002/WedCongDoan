@@ -85,7 +85,7 @@ const DataInput = (): JSX.Element => {
         sx={{ width: 200 }}
         onChange={onChangeNameExam}
         id='selectDep'
-        label='Chọn tên đề'
+        label='chọn tên đề'
         select
       >
         {ExamData == null ? (

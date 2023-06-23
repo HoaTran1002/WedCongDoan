@@ -51,7 +51,7 @@ const CompTable = (): JSX.Element => {
   const [deleteComp, deleteCompCall] = useFetch()
   React.useEffect(() => {
     callComp(getAllComp)
-  }, [compState.error])
+  }, [])
   React.useEffect(() => {
     depCall(getAllDep)
   }, [])

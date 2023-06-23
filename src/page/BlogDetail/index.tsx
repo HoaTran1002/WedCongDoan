@@ -20,34 +20,37 @@ import {
 import { SelectChangeEvent } from '@mui/material/Select'
 import React, { useState, useEffect } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import { Link, useLocation } from 'react-router-dom';
+import ReactQuill from 'react-quill'
+import 'react-quill/dist/quill.snow.css'
+import { Link, useLocation } from 'react-router-dom'
 import useFetch from '~/hook/useFetch'
-import { getBlogId, editBlog ,deleteBlog,getAllBlog} from '~/api/blogApi';
-import Dropzone from 'react-dropzone';
+import { getBlogId, editBlog, deleteBlog, getAllBlog } from '~/api/blogApi'
+import Dropzone from 'react-dropzone'
 const Index = (): JSX.Element => {
   let imageFile
   const [age, setAge] = React.useState('')
-  const [blogName, setBlogName] = useState('');
-  const [blogDetai, setBlogDetai] = useState('');
-  const [imgName, setImgName] = useState('');
-  const [imgSrc, setImgSrc] = useState('');
-  const [open, setOpen] = useState(false);
-  const [openDelete, setOpenDelete] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const id = queryParams.get('id');
-  const numericId =parseInt(id, 10)
-  const [blogId, setBlogId] = useState<number>(numericId);
+  const [blogName, setBlogName] = useState('')
+  const [blogDetai, setBlogDetai] = useState('')
+  const [imgName, setImgName] = useState('')
+  const [imgSrc, setImgSrc] = useState('')
+  const [open, setOpen] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false)
+  const [selectedImage, setSelectedImage] = useState(null)
+  const location = useLocation()
+  const queryParams = new URLSearchParams(location.search)
+  const id = queryParams.get('id')
+  const numericId = parseInt(id, 10)
+  const [blogId, setBlogId] = useState<number>(numericId)
   const [EditBlog, callEditBlog] = useFetch()
   const [DeleteBlog, callDeleteBlog] = useFetch()
   const [IdBlog, callIdBlog] = useFetch()
+
+  const [getBlog, callBlogById] = useFetch()
+
   const handleChange = (event: SelectChangeEvent): void => {
     setAge(event.target.value)
   }
-  const handleContentChange = (value:string): any => {
+  const handleContentChange = (value: string): any => {
     setBlogDetai(value)
   }
   const handleClickOpen = (): any => {
@@ -55,9 +58,8 @@ const Index = (): JSX.Element => {
     console.log(blogName, blogDetai, imgName, imgSrc)
   }
 
-
   const handleClickDelete = (): any => {
-    const request: { _id:number } = {
+    const request: { _id: number } = {
       _id: blogId
     }
     callDeleteBlog(async () => {
@@ -69,14 +71,14 @@ const Index = (): JSX.Element => {
     })
   }
   const handleClose = (): void => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
   const handleDeleteOpen = (): void => {
-    setOpenDelete(true);
-  };
+    setOpenDelete(true)
+  }
   const handleDeleteClose = (): void => {
-    setOpenDelete(false);
-  };
+    setOpenDelete(false)
+  }
 
   const requestData: {
     blogId: number
@@ -112,9 +114,14 @@ const Index = (): JSX.Element => {
   //     setImgSrc(imageFile.path)
   //   }
   // };
-  const  data =  getBlogId(blogId)
+  const request: { id: number } = { id: blogId }
+  useEffect(() => {
+    callBlogById(getBlogId)
+  }, [])
+  console.log('data===>>:' + getBlog.payload)
+  // const data = getBlogId(blogId)
 
-  console.log(data)
+  // console.log(data)
   return (
     <>
       <LayoutAdmin>
@@ -201,7 +208,7 @@ const Index = (): JSX.Element => {
           <Grid item xs={12}>
             <div>
               <Dropzone
-                onDrop={handleImageDrop}
+                // onDrop={handleImageDrop}
                 accept={{ image: ['image/*'] }}
                 multiple={false}
               >
@@ -289,20 +296,24 @@ const Index = (): JSX.Element => {
                 <Button onClick={handleClose}>Trở về</Button>
               </DialogActions>
             </Dialog>
-            <Button variant='contained' color='error' startIcon={<DeleteIcon />} style={{ marginTop: '20px' }} onClick={handleDeleteOpen}>
+            <Button
+              variant='contained'
+              color='error'
+              startIcon={<DeleteIcon />}
+              style={{ marginTop: '20px' }}
+              onClick={handleDeleteOpen}
+            >
               Xóa trang blog
             </Button>
             <Dialog
               open={openDelete}
               onClose={handleDeleteClose}
-              aria-labelledby="alert-dialog-title"
-              aria-describedby="alert-dialog-description"
+              aria-labelledby='alert-dialog-title'
+              aria-describedby='alert-dialog-description'
             >
-              <DialogTitle id="alert-dialog-title">
-                {"Thông tin "}
-              </DialogTitle>
+              <DialogTitle id='alert-dialog-title'>{'Thông tin '}</DialogTitle>
               <DialogContent>
-                <DialogContentText id="alert-dialog-description">
+                <DialogContentText id='alert-dialog-description'>
                   Bạn muốn xóa trang Blog ?
                 </DialogContentText>
               </DialogContent>
