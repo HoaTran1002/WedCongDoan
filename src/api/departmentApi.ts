@@ -30,6 +30,18 @@ export const getById = (
     headers: {}
   }
 }
+export const deleteDepartmentsById = async ({
+  _id
+}: {
+  _id: number
+}): Promise<void> => {
+  try {
+    await server.delete(`/Departments?id=${_id}`)
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
+  }
+}
 export const Delete = (
   id: number
 ): { enp: string; method: string; body: object; headers: object } => {
