@@ -28,6 +28,7 @@ import { Insert } from '~/api/blogApi'
 import { saveAs } from 'file-saver'
 import base_url from '~/config/env'
 import { Link } from 'react-router-dom'
+import useFetch from '~/hook/useFetch'
 
 axios.defaults.baseURL = base_url
 
@@ -40,6 +41,8 @@ const Index = (): JSX.Element => {
   const [imgSrc, setImgSrc] = useState('')
   const [open, setOpen] = React.useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
+
+  const [blogInsert, callBlogtInsert] = useFetch()
   const handleChange = (event: SelectChangeEvent): void => {
     setAge(event.target.value)
   }
@@ -65,28 +68,27 @@ const Index = (): JSX.Element => {
   const handleClose = (): void => {
     setOpen(false)
   }
+  const requestData: {
+    blogName: string
+    blogDetai: string
+    imgName: string
+    imgSrc: string
+  } = {
+    blogName: blogName,
+    blogDetai: content,
+    imgName: imgName,
+    imgSrc: imgSrc
+  }
   const handleOK = (): void => {
     setOpen(false)
-
-    const newBlog = {
-      blogName: blogName,
-      blogDetai: content,
-      imgName: imgName,
-      imgSrc: imgSrc
-    }
-
-    const requestData = Insert(newBlog)
-    console.log(requestData)
-    axios
-      .post(requestData.enp, requestData.body, { headers: requestData.headers })
-      .then((response) => {
-        console.log('Insert successful')
-        // Xử lý response
-      })
-      .catch((error) => {
-        console.error('Insert failed', error)
-        // Xử lý lỗi
-      })
+    callBlogtInsert(async () => {
+      try {
+        console.log(requestData)
+        await Insert(requestData)
+      } catch (error) {
+        console.log(error)
+      }
+    })
     const filePath = `src/assets/img/${imgName}`
     saveAs(imageFile, filePath)
   }
