@@ -116,7 +116,12 @@ const Index = (): JSX.Element => {
   // };
   const request: { id: number } = { id: blogId }
   useEffect(() => {
-    callBlogById(getBlogId)
+    try {
+      
+    } catch (error) {
+      
+    }
+    callBlogById(getBlogId(request))
   }, [])
   console.log('data===>>:' + getBlog.payload)
   // const data = getBlogId(blogId)

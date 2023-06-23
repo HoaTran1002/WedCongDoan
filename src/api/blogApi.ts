@@ -28,9 +28,13 @@ export const Insert = (
   }
 }
 
-export const getBlogId = async (): Promise<any> => {
+export const getBlogId = async ({
+  id
+}: {
+  id: number 
+}): Promise<any> => {
   try {
-    const { data } = await server.get(`Blogs/GetById?id=${5}`)
+    const { data } = await server.get(`Blogs/GetById?id=${id}`)
     console.log(data)
     return data
   } catch (error: any) {
