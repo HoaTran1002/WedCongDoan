@@ -39,8 +39,8 @@ const Index = (): JSX.Element => {
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const id = queryParams.get('id')
-  const numericId = parseInt(id, 10)
-  const [blogId, setBlogId] = useState<number>(numericId)
+
+  const [blogId, setBlogId] = useState<number>(Number(id))
   const [EditBlog, callEditBlog] = useFetch()
   const [DeleteBlog, callDeleteBlog] = useFetch()
   const [IdBlog, callIdBlog] = useFetch()
