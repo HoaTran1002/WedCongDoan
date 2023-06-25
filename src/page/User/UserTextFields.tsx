@@ -13,7 +13,7 @@ import { getAllRole } from '~/api/roleApi'
 
 import dayjs, { locale } from 'dayjs'
 
-import Fetch from '~/hook/Fetch'
+import Fetch from '~/hook/useFetch'
 import useFetch from '~/hook/useFetch'
 import { editUser, insert } from '~/api/userApi'
 import base_url from '~/config/env'

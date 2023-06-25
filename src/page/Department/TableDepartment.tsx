@@ -12,40 +12,32 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
 import { deleteDepartmentsById, getAllDep } from '~/api/departmentApi'
-import axios from 'axios'
-// import BasicModal from './ModalEditUser
-// import useFetch from '~/hook/Fetch'
 import useFetch from '~/hook/useFetch'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
 import CircularProgress from '@mui/material/CircularProgress'
 import BasicModal from './ModalEditDep'
-import { Delete } from '~/api/departmentApi'
 
 interface Department {
   depId: number
   depName: string
 }
 const TableDepartment = (): JSX.Element => {
-  // const [response, err, loader] = useFetch(getAllDep)
   const [reset, setReset] = React.useState(false)
   const [id, setId] = React.useState<number>(0)
   const [open, setOpen] = React.useState(false)
   const [depState, getAllDepCall] = useFetch()
   const [depDeleteState, deleteDepByIdCall] = useFetch()
-  React.useEffect(() => {
-    getAllDepCall(getAllDep)
-  }, [])
   const deps = depState.payload
-
+  
   const rows =
-    deps?.map((dep: Department) => ({
-      id: dep.depId,
-      depName: dep.depName
-    })) || []
-
+  deps?.map((dep: Department) => ({
+    id: dep.depId,
+    depName: dep.depName
+  })) || []
+  
   const handleDelete = (id: number): void => {
     setOpen(true)
-    setId(id)
+    setId(id)   
   }
   const handelReset = (): void => {
     if (reset) {
@@ -69,7 +61,10 @@ const TableDepartment = (): JSX.Element => {
       window.location.reload()
     })
   }
-
+  
+  React.useEffect(() => {
+    getAllDepCall(getAllDep)
+  }, [reset])
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID ', width: 200 },
     { field: 'depName', headerName: 'Tên chuyên ngành', width: 200 },
@@ -122,8 +117,7 @@ const TableDepartment = (): JSX.Element => {
             variant='contained'
             startIcon={<FlipCameraAndroidIcon />}
           >
-            {' '}
-            Reset{' '}
+            Reset
           </Button>
           <div style={{ height: 400, width: '100%' }}>
             <DataGrid

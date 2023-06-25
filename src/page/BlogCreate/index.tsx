@@ -29,11 +29,14 @@ import { saveAs } from 'file-saver'
 import base_url from '~/config/env'
 import { Link } from 'react-router-dom'
 import useFetch from '~/hook/useFetch'
+import * as fs from 'fs'
+import * as path from 'path'
+
 
 axios.defaults.baseURL = base_url
 
 const Index = (): JSX.Element => {
-  let imageFile: any
+  const [imageFile, setImageFile] = useState<File>()
   const [age, setAge] = useState('')
   const [blogName, setBlogName] = useState('')
   const [content, setContent] = useState('')
@@ -52,11 +55,11 @@ const Index = (): JSX.Element => {
 
   const handleImageDrop = (acceptedFiles: any): any => {
     if (acceptedFiles && acceptedFiles.length > 0) {
-      const imageFile = acceptedFiles[0]
-      const objectURL = URL.createObjectURL(imageFile)
-      // setSelectedImage(() => objectURL)
-      setImgName(imageFile.path)
-      setImgSrc(imageFile.path)
+      const file = acceptedFiles[0]
+      setSelectedImage(file)
+      setImageFile(file)
+      setImgName(file.path)
+      setImgSrc(file.path)
     }
   }
 
@@ -89,8 +92,21 @@ const Index = (): JSX.Element => {
         console.log(error)
       }
     })
-    const filePath = `src/assets/img/${imgName}`
-    saveAs(imageFile, filePath)
+    if (imageFile) {
+      const reader = new FileReader()
+      reader.onload = ():void => {
+        const buffer = Buffer.from(reader.result as string)
+        const imgPath = path.join(__dirname, '..', 'assets', 'img', imageFile.name)
+        fs.writeFile(imgPath, buffer, {}, (err) => {
+          if (err) {
+            console.error(err)
+          } else {
+            console.log('Image saved to', imgPath)
+          }
+        })
+      }
+      reader.readAsArrayBuffer(imageFile)
+    }
   }
   return (
     <>

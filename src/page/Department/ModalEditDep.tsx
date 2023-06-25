@@ -56,7 +56,6 @@ export default function BasicModal(prop: BasicModalProps): JSX.Element {
               edit={true}
               id={prop.id}
               depName={prop.depName}
-            //   onClose={handleClose}
             />
           </Typography>
         </Box>

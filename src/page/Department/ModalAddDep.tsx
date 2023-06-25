@@ -52,7 +52,6 @@ export default function BasicModal(): JSX.Element {
               edit={false}
               id={0}
               depName={''}
-            //   onClose={handleClose}
             />
           </Typography>
         </Box>

@@ -1,11 +1,10 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import { Button, MenuItem } from '@mui/material'
-
-import axios from 'axios'
-import useFetch from '~/hook/Fetch'
-import { Insert,getById,Edit } from '~/api/departmentApi'
+import { Button } from '@mui/material'
+import useFetch from '~/hook/useFetch'
+import { Insert,getDepId,Edit } from '~/api/departmentApi'
+import { EditCalendarOutlined } from '@mui/icons-material'
 
 export default function DepTextFields(prop: {
   edit: boolean
@@ -13,58 +12,53 @@ export default function DepTextFields(prop: {
   depName: string
 }): JSX.Element {
   const [depName, setDepname] = React.useState<string>(prop.depName|| '')
-  const [response, err, loader] = useFetch(getById(Number(prop.id)))
-  
-//   const [EdittUser, callEdittUser] = useFetch()
-
+  const [getDep, callDepById] = useFetch()
+  const [EditDep, callEditDep] = useFetch()
+  const [depInsert, callDeptInsert] = useFetch()
   const onchangeDepName = function (event: React.ChangeEvent<HTMLInputElement>): void {
     setDepname(event.target.value)
   }
   const requestData: {
+    depId: number
+    depName: string
+  } = {
+    depId: prop.id,
+    depName: depName
+  }
+  const requestDataCreate: {
     depName: string
   } = {
     depName: depName
   }
-
   const onSubmitForm = (): void => {
-    const newDep= {
-        "depName": depName,
-      };
-  
-      const requestData = Insert(newDep );
-      console.log(requestData);
-      axios.post(requestData.enp, requestData.body, { headers: requestData.headers })
-        .then(response => {
-          console.log('Insert successful');
-          // Xử lý response
-        })
-        .catch(error => {
-          console.error('Insert failed', error);
-          // Xử lý lỗi
-        });
+    callDeptInsert(async () => {
+      try {
+        await Insert(requestDataCreate)
+      } catch (error) {
+        console.log(error)
+      }
+    })
   }
   const onSubmitFormEdit = (): void => {
-    const updateDep = {
-        "depId": prop.id,
-        "depName": depName,
-      };
-      const requestData = Edit(updateDep);
-      axios.put(requestData.enp, requestData.body, { headers: requestData.headers })
-        .then(response => {
-          console.log('Insert successful');
-          // Xử lý response
-        })
-        .catch(error => {
-          console.error('Insert failed', error);
-          // Xử lý lỗi
-        });
+    callEditDep(async () => {
+      try {
+        await Edit(requestData)
+      } catch (error) {
+        console.log('Thất bại')
+      }
+    })
   }
   React.useEffect(() => {
-    if (response && response.data) {
-        setDepname(response.data.depName)
-        console.log(depName)
-    }
-  }, [response]);
+    const request: { id: number } = { id: prop.id };
+    callDepById(async () => {
+      try {
+        const response = await getDepId(request);
+        await setDepname(response.depName);
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  }, []);
   return (
     <>
       {prop.edit ? (
