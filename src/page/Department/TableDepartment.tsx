@@ -1,37 +1,42 @@
 import * as React from 'react'
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
-import { Button, Box, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material'
+import {
+  Button,
+  Box,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions
+} from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
-import { getAllDep } from '~/api/departmentApi'
+import { deleteDepartmentsById, getAllDep } from '~/api/departmentApi'
 import axios from 'axios'
-// import BasicModal from './ModalEditUser'
-import useFetch from '~/hook/Fetch'
+// import BasicModal from './ModalEditUser
+// import useFetch from '~/hook/Fetch'
+import useFetch from '~/hook/useFetch'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress'
 import BasicModal from './ModalEditDep'
 import { Delete } from '~/api/departmentApi'
 
 interface Department {
-  depId: number,
+  depId: number
   depName: string
 }
 const TableDepartment = (): JSX.Element => {
-  const [response, err, loader] = useFetch(getAllDep)
+  // const [response, err, loader] = useFetch(getAllDep)
   const [reset, setReset] = React.useState(false)
   const [id, setId] = React.useState<number>(0)
-  const [res, error, loading] = useFetch(Delete(id))
-  const [open, setOpen] = React.useState(false);
-  const deps = response?.data
-  if (response) {
-    console.log(response.data)
-  }
-  if (err) {
-    console.log(err)
-  }
-  if (loader) {
-    console.log(loader)
-  }
+  const [open, setOpen] = React.useState(false)
+  const [depState, getAllDepCall] = useFetch()
+  const [depDeleteState, deleteDepByIdCall] = useFetch()
+  React.useEffect(() => {
+    getAllDepCall(getAllDep)
+  }, [])
+  const deps = depState.payload
+
   const rows =
     deps?.map((dep: Department) => ({
       id: dep.depId,
@@ -40,7 +45,7 @@ const TableDepartment = (): JSX.Element => {
 
   const handleDelete = (id: number): void => {
     setOpen(true)
-    setId(id);
+    setId(id)
   }
   const handelReset = (): void => {
     if (reset) {
@@ -50,30 +55,21 @@ const TableDepartment = (): JSX.Element => {
     }
   }
   const handleClose = (): any => {
-    setOpen(false);
-  };
+    setOpen(false)
+  }
   const handleOK = (): any => {
     if (reset) {
       setReset(false)
     } else {
       setReset(true)
     }
-    axios.delete(`/Departments?id=${id}`)
-      .then((res) => {
-        console.log(res.data);
-        console.log('Xóa thành công');
-        setOpen(false);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-      
+    const request: { _id: number } = { _id: id }
+    deleteDepByIdCall(async () => {
+      await deleteDepartmentsById(request)
+      window.location.reload()
+    })
   }
-  React.useEffect(() => {
-    if (response) {
-      console.log(response.data)
-    }
-  }, [response]);
+
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID ', width: 200 },
     { field: 'depName', headerName: 'Tên chuyên ngành', width: 200 },
@@ -82,11 +78,7 @@ const TableDepartment = (): JSX.Element => {
       type: 'actions',
       width: 100,
       getActions: (params: any) => [
-        <BasicModal
-          key={1}
-          id={params.row.id}
-          depName={params.row.depName}
-        />,
+        <BasicModal key={1} id={params.row.id} depName={params.row.depName} />,
         <>
           <GridActionsCellItem
             key={2}
@@ -97,14 +89,12 @@ const TableDepartment = (): JSX.Element => {
           <Dialog
             open={open}
             onClose={handleClose}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
+            aria-labelledby='alert-dialog-title'
+            aria-describedby='alert-dialog-description'
           >
-            <DialogTitle id="alert-dialog-title">
-              {"Thông tin "}
-            </DialogTitle>
+            <DialogTitle id='alert-dialog-title'>{'Thông tin '}</DialogTitle>
             <DialogContent>
-              <DialogContentText id="alert-dialog-description">
+              <DialogContentText id='alert-dialog-description'>
                 Bạn muốn xóa chuyên ngành này ?
               </DialogContentText>
             </DialogContent>
@@ -121,13 +111,17 @@ const TableDepartment = (): JSX.Element => {
   ]
   return (
     <>
-      {loader == true ? (
+      {depState.loading == true ? (
         <Box sx={{ display: 'flex' }}>
           <CircularProgress />
         </Box>
       ) : (
         <>
-          <Button onClick={handelReset} variant='contained' startIcon={<FlipCameraAndroidIcon />}>
+          <Button
+            onClick={handelReset}
+            variant='contained'
+            startIcon={<FlipCameraAndroidIcon />}
+          >
             {' '}
             Reset{' '}
           </Button>
