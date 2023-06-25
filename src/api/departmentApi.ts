@@ -10,24 +10,27 @@ export const getAllDep = async (): Promise<any> => {
   }
 }
 
-export const Insert = (
-  body: object
-): { enp: string; method: string; body: object; headers: object } => {
-  return {
-    enp: '/Departments',
-    method: 'Post',
-    body: body,
-    headers: {}
+export const Insert = async ({
+  depName,
+}: {
+  depName: string
+}): Promise<void> => {
+  try {
+    await server.post('/Departments', {
+      depName,
+    })
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
   }
 }
-export const getById = (
-  id: number
-): { enp: string; method: string; body: object; headers: object } => {
-  return {
-    enp: `/Departments/GetById?id=${id}`,
-    method: 'Get',
-    body: {},
-    headers: {}
+export const getDepId = async ({ id }: {id: number }): Promise<any> => {
+  try {
+    const { data } = await server.get(`Departments/GetById?id=${id}`)
+    return data
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
   }
 }
 export const deleteDepartmentsById = async ({
@@ -42,23 +45,20 @@ export const deleteDepartmentsById = async ({
     throw new Error(message)
   }
 }
-export const Delete = (
-  id: number
-): { enp: string; method: string; body: object; headers: object } => {
-  return {
-    enp: `/Departments?id=${id}`,
-    method: 'Delete',
-    body: {},
-    headers: {}
-  }
-}
-export const Edit = (
-  body: object
-): { enp: string; method: string; body: object; headers: object } => {
-  return {
-    enp: '/Departments',
-    method: 'Put',
-    body: body,
-    headers: {}
+export const Edit = async ({
+  depId,
+  depName,
+}: {
+  depId: number
+  depName: string
+}): Promise<void> => {
+  try {
+    await server.put(`/Departments`, {
+      depId,
+      depName,
+    })
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
   }
 }
