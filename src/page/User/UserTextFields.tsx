@@ -8,15 +8,12 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { Snackbar } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
-import { getAll } from '~/api/depApi'
+import { getAllDep } from '~/api/departmentApi'
 import { getAllRole } from '~/api/roleApi'
+import dayjs from 'dayjs'
 
-import dayjs, { locale } from 'dayjs'
-
-import Fetch from '~/hook/useFetch'
 import useFetch from '~/hook/useFetch'
 import { editUser, insert } from '~/api/userApi'
-import base_url from '~/config/env'
 
 interface Dep {
   depId: number
@@ -48,18 +45,21 @@ export default function UserTextFields(prop: {
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
 
-  const [depData, ,] = Fetch(getAll)
-  const [roleData, ,] = Fetch(getAllRole)
-  const Deps = depData?.data
-  const Roles = roleData?.data
   const [userInsert, callInsertUser] = useFetch()
   const [EdittUser, callEdittUser] = useFetch()
+  const [departments, callAllDep] = useFetch()
+  const [roles, callAllRole] = useFetch()
   let formattedDateOfBirth: string | null = null
+
+  const Roles: Role[] = roles.payload || [];
+  const Deps: Dep[] = departments.payload || [];
   if (birthDay) {
     formattedDateOfBirth = dayjs(birthDay).format('MM-DD-YYYY')
   }
 
   console.log('date of birth:' + formattedDateOfBirth)
+
+
   const onchangeUserName = function (
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
@@ -150,6 +150,28 @@ export default function UserTextFields(prop: {
       }
     })
   }
+  React.useEffect(() => {
+    const fetchDataDep = async () :Promise<any> => {
+      try {
+        const data = await getAllDep();
+        callAllDep(() => Promise.resolve(data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    const fetchDataRole = async () :Promise<any> => {
+      try {
+        const data = await getAllRole();
+        callAllRole(() => Promise.resolve(data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchDataRole();
+    fetchDataDep();
+  }, []);
+
 
   return (
     <>

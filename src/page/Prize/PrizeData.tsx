@@ -66,7 +66,6 @@ const PrizeData = (): JSX.Element => {
       _id: id
     }
 
-    // Thực hiện xóa hàng dữ liệu với ID tương ứng
 
     try {
       callDelete(async () => {
