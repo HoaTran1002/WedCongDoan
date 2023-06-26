@@ -333,7 +333,6 @@ export default function UserTextFields(prop: {
             component='form'
             sx={{
               '& > :not(style)': { m: 1, width: '45%' },
-
               display: 'flex',
               flexWrap: 'wrap',
               justifyContent: 'center',

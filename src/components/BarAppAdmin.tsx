@@ -97,7 +97,131 @@ export default function Index(): JSX.Element {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position='fixed' open={open}>
+      <Box 
+        sx={{
+          padding:"10px",
+          position:"fixed",
+          top:0,
+          bottom:0,
+          left:0,
+          width:"250px",
+          backgroundColor:"#1976d2",
+          display: { xs: 'none', md:'block'}
+        }}
+      >
+        <Box
+          sx={{
+            display:"flex",
+              alignItems:"center",
+              justifyContent:"center"
+          }}
+        >
+          <Box
+              component='img'
+              sx={{
+                height: 80,
+                
+              }}
+              alt='The house from the offer.'
+              src='https://api.congdoantphochiminh.org.vn/Upload/Multimedia/Images/20221229150859445_logo%20DAI%20HOI%20XII%20CONG%20DOAN%20TP%20-%20png.png'
+          />
+        </Box>
+
+        <Box 
+          sx={{ 
+            flexGrow: 1, 
+            display: { xs: 'none', md: 'flex' },
+            flexDirection:"column"
+            }}
+          >
+            {pages.map((page, index) => (
+              <Link
+                key={index}
+                style={{ color: 'white', textDecoration: 'none' }}
+                to={page.to}
+              >
+                <Button
+                  key={index}
+                  onClick={handleCloseNavMenu}
+                  sx={{
+                    mb:2,
+                    mt:2,
+                    background: 'transparent',
+                    boxShadow: 'none',
+                    display: 'block',
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                      borderRadius: 'none',
+                      boxShadow: 'none'
+                    },
+                    color: '#fff',
+                    textDecoration: 'none',
+                    width:"100%"
+                  }}
+                  style={{ backgroundColor: '#1769ba' }}
+                  variant='contained'
+                >
+                  {page.name}
+                </Button>
+              </Link>
+            ))}
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          width:{md:'calc(100vw - 250px)', xs:'100vw'},
+          position:"fixed",
+          top:0,
+          right:0,
+          height:"60px",
+          backgroundColor:"#1976d2",
+          padding:"10px",
+          display:"flex",
+          alignItems:"center",
+          justifyContent:{xs:'space-between',md:'flex-end'},
+          gap:2
+        }}
+      >
+        <IconButton
+            color='inherit'
+            aria-label='open drawer'
+            onClick={handleDrawerOpen}
+            edge='start'
+            sx={{ mr: 2, display: { xs: 'flex', md: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+        <Box sx={{ flexGrow: 0, display: { md: 'flex' } }}>
+            <Tooltip title='Open settings'>
+              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                <Avatar alt='Remy Sharp' />
+              </IconButton>
+            </Tooltip>
+            <Menu
+              sx={{ mt: '45px' }}
+              id='menu-appbar'
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  <Typography textAlign='center'>{setting}</Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+      </Box>
+      {/* <AppBar position='fixed' open={open}>
         <Toolbar sx={{ display: 'flex' }}>
           <IconButton
             color='inherit'
@@ -181,7 +305,7 @@ export default function Index(): JSX.Element {
             </Menu>
           </Box>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
       <Drawer
         sx={{
           width: drawerWidth,

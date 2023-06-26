@@ -1,4 +1,4 @@
-import { Container } from '@mui/material'
+import { Box, Container } from '@mui/material'
 import React from 'react'
 import BarAppAdmin from '../BarAppAdmin'
 type Props = {
@@ -8,9 +8,16 @@ const LayoutAdmin = ({ children }: Props): JSX.Element => {
   return (
     <>
       <BarAppAdmin />
-      <Container sx={{ mt: 10 }} maxWidth='lg'>
-        {children}
-      </Container>
+      <Box 
+        sx={{
+          ml:{xs : '0',md:'250px'}
+          
+        }}
+      >
+        <Container sx={{ mt: 10 }} maxWidth='lg'>
+          {children}
+        </Container>
+      </Box>
     </>
   )
 }
