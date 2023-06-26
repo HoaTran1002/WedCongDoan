@@ -39,7 +39,7 @@ const Index = (): JSX.Element => {
         <Grid item xs={3}>
           <Box sx={cardStyle} className=''>
             <h2 className='color-primary' style={{ margin: '0px' }}>
-              Tên đề thi
+              Đề thi
             </h2>
             <p>Quản lý thông tin đề thi</p>
             <div>
