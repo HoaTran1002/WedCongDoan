@@ -24,15 +24,19 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
+import GridViewIcon from '@mui/icons-material/GridView';
 import { Link } from 'react-router-dom'
 import { IndeterminateCheckBoxOutlined } from '@mui/icons-material'
+import PersonIcon from '@mui/icons-material/Person';
+import WebIcon from '@mui/icons-material/Web';
+import AppsIcon from '@mui/icons-material/Apps';
 
 const drawerWidth = 250
 const pages = [
-  { name: 'CUỘC THI', to: '/CompetitionManage' },
-  { name: 'USER', to: '/User' },
-  { name: 'BLOG', to: '/BlogManage' },
-  { name: 'QUẢN LÝ THÔNG TIN', to: '/SettingManage' },
+  { name: 'CUỘC THI', to: '/CompetitionManage',icon:<GridViewIcon />},
+  { name: 'USER', to: '/User',icon:<PersonIcon/> },
+  { name: 'BLOG', to: '/BlogManage',icon:<WebIcon/>},
+  { name: 'QUẢN LÝ THÔNG TIN', to: '/SettingManage',icon:<AppsIcon/> },
   { name: 'CLIENT', to: '/' }
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
@@ -95,37 +99,21 @@ export default function Index(): JSX.Element {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex'}}>
       <CssBaseline />
       <Box 
         sx={{
-          padding:"10px",
+          padding:"105px 25px 0 25px",
           position:"fixed",
           top:0,
           bottom:0,
           left:0,
-          width:"250px",
-          backgroundColor:"#1976d2",
+          width:"260px",
+          backgroundColor:"#ffffff",
           display: { xs: 'none', md:'block'}
         }}
       >
-        <Box
-          sx={{
-            display:"flex",
-              alignItems:"center",
-              justifyContent:"center"
-          }}
-        >
-          <Box
-              component='img'
-              sx={{
-                height: 80,
-                
-              }}
-              alt='The house from the offer.'
-              src='https://api.congdoantphochiminh.org.vn/Upload/Multimedia/Images/20221229150859445_logo%20DAI%20HOI%20XII%20CONG%20DOAN%20TP%20-%20png.png'
-          />
-        </Box>
+        
 
         <Box 
           sx={{ 
@@ -143,22 +131,27 @@ export default function Index(): JSX.Element {
                 <Button
                   key={index}
                   onClick={handleCloseNavMenu}
+                  startIcon={page.icon}
                   sx={{
                     mb:2,
                     mt:2,
                     background: 'transparent',
                     boxShadow: 'none',
-                    display: 'block',
+                    display: 'flex',
+                    alignItems:"center",
+                    justifyContent:"flex-start",
+                    flexDirection:"row",
                     '&:hover': {
                       backgroundColor: 'transparent',
                       borderRadius: 'none',
                       boxShadow: 'none'
                     },
-                    color: '#fff',
                     textDecoration: 'none',
-                    width:"100%"
+                    width:"100%",
+                    border:"1px solid #1769ba",
+                    color:"#1769ba"
+
                   }}
-                  style={{ backgroundColor: '#1769ba' }}
                   variant='contained'
                 >
                   {page.name}
@@ -169,19 +162,40 @@ export default function Index(): JSX.Element {
       </Box>
       <Box
         sx={{
-          width:{md:'calc(100vw - 250px)', xs:'100vw'},
+          width:"100vw",
+          zIndex:"10",
           position:"fixed",
           top:0,
           right:0,
-          height:"60px",
-          backgroundColor:"#1976d2",
-          padding:"10px",
+          left:0,
+          height:"75px",
+          backgroundColor:"#1769ba",
           display:"flex",
           alignItems:"center",
-          justifyContent:{xs:'space-between',md:'flex-end'},
+          justifyContent:"space-between",
           gap:2
         }}
       >
+        <Box
+          sx={{
+            display:"inline-flex",
+            width:"295px",
+            height:"100%",
+            justifyContent:"center"
+          }}
+          alignItems={"center"}
+        >
+          <Box
+                component='img'
+                sx={{
+                  height: "50px",
+                  
+                }}
+                alt='The house from the offer.'
+                src='https://api.congdoantphochiminh.org.vn/Upload/Multimedia/Images/20221229150859445_logo%20DAI%20HOI%20XII%20CONG%20DOAN%20TP%20-%20png.png'
+            />
+
+        </Box>
         <IconButton
             color='inherit'
             aria-label='open drawer'
@@ -190,8 +204,8 @@ export default function Index(): JSX.Element {
             sx={{ mr: 2, display: { xs: 'flex', md: 'none' } }}
           >
             <MenuIcon />
-          </IconButton>
-        <Box sx={{ flexGrow: 0, display: { md: 'flex' } }}>
+        </IconButton>
+        <Box sx={{ flexGrow: 0, display: { md: 'flex' },mr:5 }}>
             <Tooltip title='Open settings'>
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt='Remy Sharp' />

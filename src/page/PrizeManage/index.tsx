@@ -262,7 +262,7 @@ const Index = (): JSX.Element => {
                                 </Button>
                             </div> */}
             </Stack>
-            <div style={{ height: 400, width: '100%' }}>
+            <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
               <DataGrid
                 rows={data}
                 columns={columns}

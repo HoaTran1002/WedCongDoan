@@ -226,7 +226,7 @@ const PrizeData = (): JSX.Element => {
                 </ModalAdd>
               </Box>
 
-              <div style={{ height: 400, width: '100%' }}>
+              <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
                 <DataGrid
                   rows={rows}
                   columns={columns}
