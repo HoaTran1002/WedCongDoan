@@ -10,7 +10,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
-
+import EditIcon from '@mui/icons-material/Edit';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref,
@@ -35,8 +37,6 @@ const Index = (): JSX.Element => {
   const [open, setOpen] = React.useState(openFromUrl);
   const [openDelete, setOpenDelete] = React.useState(deleteFromUrl);
   const [openUpdate, setOpenUpdate] = React.useState(updateFromUrl);
-  const [data, setData] = React.useState();
-
 
 
   const handleClose = ():void => {
@@ -87,7 +87,7 @@ const Index = (): JSX.Element => {
               item
               container 
               xs={12} 
-              
+              columnSpacing={4}
               sx={{
                 backgroundColor:"white",
                 pb:"20px",
@@ -97,45 +97,58 @@ const Index = (): JSX.Element => {
               }}
             >
               {rows.map((row: any) => (
-                <Grid 
-                item 
-                xs={6}
-                key={row.id}
-                sx={{
-                  padding:"10px 5px "
-                }}
+                <Grid item xs={6} key={row.id}
+                  sx={{
+                    marginTop: '10px',
+                  }}
                 >
-                  <Stack
-                    direction={'row'}
-                    style={{
-                      border: '1px solid #e7eeff',
+                  <Box
+                    sx={{
+                      padding:"15px",
+                      backgroundColor:"#e2efff",
                       display: 'inline-flex',
-                      marginTop: '10px',
+                      position:"relative",
                       borderRadius: '5px',
                       overflow: 'hidden',
-                      width: '100%'
+                      width: '100%',
+                      gap:"7px"
                     }}
                   >
                     <div
                       className=''
                       style={{
-                        maxHeight: '150px',
-                        width: '140px'
+                        height: '180px',
+                        width: '220px',
+                        flex:"none",
+                        borderRadius:"10px",
+                        overflow:"hidden",
+                        gap:"7px"
                       }}
                     >
-                      <img src={`src/assets/img/${row.imgSrc}`} alt='' style={{ height: '100%', width: '100%' }} />
+                      <img 
+                        src={`data:image/jpeg;base64,${row.imgSrc}`} 
+                        alt={row.imgName}
+                        style={{ 
+                          height: '100%', 
+                          width: '100%',
+                          objectFit:"cover" 
+                        }} 
+                      />
                     </div>
                     <div
                       className=''
                       style={{
-                        backgroundColor: 'rgba(25, 118, 210,0.1)',
+                        backgroundColor: 'white',
+                        borderRadius:"10px",
                         padding: '10px',
-                        width: '100%'
+                        width: '100%',
+                        position:"relative"
                       }}
                     >
+                      <span className='color-primary'>Tiêu đề</span>
                       <Typography
                         style={{
-                          color: '#1976d2',
+                          color: '#6e6e6e',
                           fontWeight: 'bold',
                           fontSize: '22px'
                         }}
@@ -149,28 +162,24 @@ const Index = (): JSX.Element => {
                       >
                         {row.title}
                       </Typography>
+                      <span 
+                        style={{
+                          position:"absolute",
+                          bottom:"7px",
+                          right:"7px",
+
+                        }}
+                      >
+                        <Link to={`/BlogDetail?id=${row.id}`}>
+                          <Tooltip title="Chỉnh sửa blog">
+                            <IconButton sx={{color:"#1976d2"}}>
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                        </Link>
+                      </span>
                     </div>
-                    <Stack
-                      direction={'column'}
-                      alignItems={'center'}
-                      justifyContent={'center'}
-                      gap={1}
-                      style={{
-                        padding: '8px'
-                      }}
-                    >
-                      <Link to={`/BlogDetail?id=${row.id}`}>
-                        <Button
-                          variant='outlined'
-                          style={{
-                            width: '120px'
-                          }}
-                        >
-                          Chỉnh Sủa
-                        </Button>
-                      </Link>
-                    </Stack>
-                  </Stack>
+                  </Box>
                 </Grid>
               ))}
             </Grid>

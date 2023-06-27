@@ -9,9 +9,7 @@ const LayoutDefault = ({ children }: Props): JSX.Element => {
   return (
     <>
       <BarApp/>
-      <Container sx={{ mt: 10,backgroundColor:"#1769ba"  }} maxWidth='md'>
-        {children}
-      </Container>
+      {children}
     </>
   )
 }

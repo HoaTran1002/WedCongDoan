@@ -106,14 +106,14 @@ const Index = (): JSX.Element => {
     const filePath = `src/assets/img/${imgName}`
     // saveAs(imageFile, filePath);
   }
-  // const handleImageDrop = (acceptedFiles: any): any => {
-  //   if (acceptedFiles && acceptedFiles.length > 0) {
-  //     imageFile = acceptedFiles[0]
-  //     // setSelectedImage(URL.createObjectURL(imageFile))
-  //     setImgName(imageFile.path)
-  //     setImgSrc(imageFile.path)
-  //   }
-  // };
+  const handleImageDrop = (acceptedFiles: any): any => {
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      imageFile = acceptedFiles[0]
+      // setSelectedImage(URL.createObjectURL(imageFile))
+      setImgName(imageFile.path)
+      setImgSrc(imageFile.path)
+    }
+  };
   useEffect(() => {
     const request: { id: number } = { id: blogId };
     callBlogById(async () => {
@@ -157,7 +157,6 @@ const Index = (): JSX.Element => {
               <Grid
                 item
                 xs={12}
-
               >
                 <Stack direction={'row'} alignItems='center' gap={5}>
                   <TextField
@@ -195,7 +194,7 @@ const Index = (): JSX.Element => {
               <Grid item xs={12}>
                 <div>
                   <Dropzone
-                    // onDrop={handleImageDrop}
+                    onDrop={handleImageDrop}
                     accept={{ image: ['image/*'] }}
                     multiple={false}
                   >
@@ -224,10 +223,15 @@ const Index = (): JSX.Element => {
                   ) : (
                     <div>
                       <h2 className='color-primary'>Ảnh bìa cho trang blog:</h2>
-                      <img
+                      <img 
+                        src={`data:image/jpeg;base64,${imgSrc}`}
+                        alt='ảnh '
                         className='selectedImage'
-                        src={`src/assets/img/${imgSrc}`}
-                        alt='Selected'
+                        style={{ 
+                          height: '100%', 
+                          width: '100%',
+                          objectFit:"cover" 
+                        }} 
                       />
                     </div>
                   )}
