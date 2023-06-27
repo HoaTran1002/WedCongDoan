@@ -87,76 +87,97 @@ const Index = (): JSX.Element => {
                 </Link>
               </Stack>
             </Grid>
-            {rows.map((row: any) => (
-              <Grid item xs={6} columnSpacing={{ xs: 6, paddingRight: '20px' }} key={row.id}>
-                <Stack
-                  direction={'row'}
-                  style={{
-                    border: '1px solid #e7eeff',
-                    display: 'inline-flex',
-                    marginTop: '10px',
-                    borderRadius: '5px',
-                    overflow: 'hidden',
-                    width: '100%'
-                  }}
+            <Grid 
+              item
+              container 
+              xs={12} 
+              
+              sx={{
+                backgroundColor:"white",
+                pb:"20px",
+                mt:"10px",
+                pl:"0px !important",
+                pt:"0px !important"
+              }}
+            >
+              {rows.map((row: any) => (
+                <Grid 
+                item 
+                xs={6}
+                key={row.id}
+                sx={{
+                  padding:"10px 5px "
+                }}
                 >
-                  <div
-                    className=''
+                  <Stack
+                    direction={'row'}
                     style={{
-                      maxHeight: '150px',
-                      width: '140px'
-                    }}
-                  >
-                    <img src={`src/assets/img/${row.imgSrc}`} alt='' style={{ height: '100%', width: '100%' }} />
-                  </div>
-                  <div
-                    className=''
-                    style={{
-                      backgroundColor: 'rgba(25, 118, 210,0.1)',
-                      padding: '10px',
+                      border: '1px solid #e7eeff',
+                      display: 'inline-flex',
+                      marginTop: '10px',
+                      borderRadius: '5px',
+                      overflow: 'hidden',
                       width: '100%'
                     }}
                   >
-                    <Typography
+                    <div
+                      className=''
                       style={{
-                        color: '#1976d2',
-                        fontWeight: 'bold',
-                        fontSize: '22px'
+                        maxHeight: '150px',
+                        width: '140px'
                       }}
                     >
-                      {row.blogName}
-                    </Typography>
-                    <Typography
+                      <img src={`src/assets/img/${row.imgSrc}`} alt='' style={{ height: '100%', width: '100%' }} />
+                    </div>
+                    <div
+                      className=''
                       style={{
-                        color: '#444'
+                        backgroundColor: 'rgba(25, 118, 210,0.1)',
+                        padding: '10px',
+                        width: '100%'
                       }}
                     >
-                      {row.title}
-                    </Typography>
-                  </div>
-                  <Stack
-                    direction={'column'}
-                    alignItems={'center'}
-                    justifyContent={'center'}
-                    gap={1}
-                    style={{
-                      padding: '8px'
-                    }}
-                  >
-                    <Link to={`/BlogDetail?id=${row.id}`}>
-                      <Button
-                        variant='outlined'
+                      <Typography
                         style={{
-                          width: '120px'
+                          color: '#1976d2',
+                          fontWeight: 'bold',
+                          fontSize: '22px'
                         }}
                       >
-                        Chỉnh Sủa
-                      </Button>
-                    </Link>
+                        {row.blogName}
+                      </Typography>
+                      <Typography
+                        style={{
+                          color: '#444'
+                        }}
+                      >
+                        {row.title}
+                      </Typography>
+                    </div>
+                    <Stack
+                      direction={'column'}
+                      alignItems={'center'}
+                      justifyContent={'center'}
+                      gap={1}
+                      style={{
+                        padding: '8px'
+                      }}
+                    >
+                      <Link to={`/BlogDetail?id=${row.id}`}>
+                        <Button
+                          variant='outlined'
+                          style={{
+                            width: '120px'
+                          }}
+                        >
+                          Chỉnh Sủa
+                        </Button>
+                      </Link>
+                    </Stack>
                   </Stack>
-                </Stack>
-              </Grid>
-            ))}
+                </Grid>
+              ))}
+            </Grid>
             <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
               <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
                 Thêm thành công

@@ -10,8 +10,9 @@ const LayoutAdmin = ({ children }: Props): JSX.Element => {
       <BarAppAdmin />
       <Box 
         sx={{
-          ml:{xs : '0',md:'250px'}
-          
+          ml:{xs : '0',md:'250px'},
+          backgroundColor:"#e7f0f9",
+          height:"100vh"
         }}
       >
         <Container sx={{ mt: 10 }} maxWidth='lg'>

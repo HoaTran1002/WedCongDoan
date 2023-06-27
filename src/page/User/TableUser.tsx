@@ -179,10 +179,9 @@ const TableUser = (): JSX.Element => {
             variant='contained'
             startIcon={<FlipCameraAndroidIcon />}
           >
-            {' '}
-            Reset{' '}
+            Reset
           </Button>
-          <div style={{ height: 400, width: '100%' }}>
+          <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
             <DataGrid
               rows={rows}
               columns={columns}

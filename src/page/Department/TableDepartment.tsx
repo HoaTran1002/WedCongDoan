@@ -119,7 +119,7 @@ const TableDepartment = (): JSX.Element => {
           >
             Reset
           </Button>
-          <div style={{ height: 400, width: '100%' }}>
+          <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
             <DataGrid
               rows={rows}
               columns={columns}
