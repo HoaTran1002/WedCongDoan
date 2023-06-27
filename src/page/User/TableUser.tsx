@@ -2,7 +2,7 @@ import * as React from 'react'
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { deleteUsers, getAllUser } from '~/api/userApi'
-import axios from 'axios'
+import axios from '~/api/axios'
 import BasicModal from './ModalEditUser'
 import useFetch from '~/hook/useFetch'
 import Button from '@mui/material/Button'
@@ -181,7 +181,7 @@ const TableUser = (): JSX.Element => {
           >
             Reset
           </Button>
-          <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
+          <div style={{ height: 400, width: '100%', backgroundColor: 'white' }}>
             <DataGrid
               rows={rows}
               columns={columns}

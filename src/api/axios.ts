@@ -4,7 +4,7 @@ import base_url from '~/config/env'
 const server = axios.create({
   baseURL: base_url,
 
-  withCredentials: false
+  withCredentials: true
 })
 
 export default server

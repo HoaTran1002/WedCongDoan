@@ -20,7 +20,7 @@ import {
 } from '@mui/material'
 import { getAllPrizes } from '~/api/prizesApi'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
+import axios from '~/api/axios'
 import CircularProgress from '@mui/material/CircularProgress'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
 
@@ -262,7 +262,9 @@ const Index = (): JSX.Element => {
                                 </Button>
                             </div> */}
             </Stack>
-            <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
+            <div
+              style={{ height: 400, width: '100%', backgroundColor: 'white' }}
+            >
               <DataGrid
                 rows={data}
                 columns={columns}

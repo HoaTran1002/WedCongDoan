@@ -18,7 +18,7 @@ import LoadingButton from '@mui/lab/LoadingButton'
 import SendIcon from '@mui/icons-material/Send'
 import React, { useEffect, useState } from 'react'
 import Layout from '~/components/layout/Layout'
-import axios from 'axios'
+import axios from '~/api/axios'
 
 interface Question {
   id: number

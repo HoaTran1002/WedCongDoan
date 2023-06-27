@@ -1,112 +1,133 @@
-import { Button, MenuItem, TextField } from '@mui/material'
+import { Button, TextField } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import CreateNewFolderSharpIcon from '@mui/icons-material/CreateNewFolderSharp'
+
+import { Snackbar } from '@mui/material'
+import MuiAlert from '@mui/material/Alert'
 import useFetch from '~/hook/useFetch'
 import { getAllExam, insertExams } from '~/api/exam'
 import { insertCompExam } from '~/api/competitionExam'
 import { useParams } from 'react-router-dom'
 
-import { Snackbar } from '@mui/material'
-import MuiAlert from '@mui/material/Alert'
-import { Try } from '@mui/icons-material'
-interface Exam {
-  examId: string
+interface IExam {
+  examId: number
   examName: string
 }
 const DataInput = (): JSX.Element => {
-  const [showSuccess, setShowSuccess] = React.useState(false)
-  const [showError, setShowError] = React.useState(false)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [showError, setShowError] = useState(false)
   const [nameExam, setNameExam] = useState<string>('')
-  const [examData, ExamCall] = useFetch()
-  const [addExamComp, addExamCompCall] = useFetch()
+  const [nameExamErr, setNameExamErr] = useState<string>('')
+  const [nameExamInsertState, nameExamInsertCall] = useFetch()
+  const [examsState, getExam] = useFetch()
+  const [insertComp, insertCompExamCall] = useFetch()
   const { comId } = useParams()
-  const onChangeNameExam = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void => {
-    setNameExam(event.target.value)
-    console.log(event.target.value)
-  }
-  useEffect(() => {
-    ExamCall(getAllExam)
-  }, [])
-  const reqExamComp: { examId: number; comId: any } = {
-    examId: Number(nameExam),
-    comId: Number(comId)
-  }
 
-  const ExamData = examData.payload || []
-  const handelAddExam = async (): Promise<void> => {
-    try {
-      await addExamCompCall(async () => {
-        insertCompExam(reqExamComp)
-      })
-      setShowSuccess(true)
-    } catch (error) {
-      setShowError(true)
-    }
-  }
+  useEffect(() => {
+    getExam(getAllExam)
+  }, [loading])
+  const exams = examsState.payload || []
+  const exam: IExam = exams[exams.length - 1]
+
   const handleCloseSuccess = (): void => {
     setShowSuccess(false)
   }
   const handleCloseError = (): void => {
     setShowError(false)
   }
+  const onchangeNameExam = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    const value = event.target.value
+    setNameExam(value)
+  }
+  const requesInsertExam: {
+    examName: string
+  } = { examName: nameExam }
+  const requesInsertCompExam: { examId: number; comId?: number } = {
+    examId: 0
+  }
+  if (exam) {
+    requesInsertCompExam.examId = exam.examId + 1
+  }
+
+  if (comId) {
+    requesInsertCompExam.comId = Number(comId)
+  }
+  const handelSubmitCreateExam = (): void => {
+    if (nameExam == '') {
+      setNameExamErr('hãy nhập tên đề')
+    } else {
+      ;(async (): Promise<void> => {
+        try {
+          await nameExamInsertCall(async () => {
+            await insertExams(requesInsertExam)
+          })
+          await setLoading(!loading)
+          insertCompExamCall(async (): Promise<void> => {
+            insertCompExam(requesInsertCompExam)
+          })
+          setShowSuccess(true)
+          console.log('data response:' + nameExamInsertState.payload)
+        } catch (error) {
+          setShowError(true)
+        }
+      })()
+    }
+  }
   return (
     <>
-      <Snackbar
-        open={showSuccess}
-        autoHideDuration={3000}
-        onClose={handleCloseSuccess}
-      >
-        <MuiAlert
-          onClose={handleCloseSuccess}
-          severity='success'
-          elevation={6}
-          variant='filled'
-        >
-          Acction successful!
-        </MuiAlert>
-      </Snackbar>
-      <Snackbar
-        open={showError}
-        autoHideDuration={3000}
-        onClose={handleCloseSuccess}
-      >
-        <MuiAlert
-          onClose={handleCloseError}
-          severity='error'
-          elevation={6}
-          variant='filled'
-        >
-          Acction Failed!
-        </MuiAlert>
-      </Snackbar>
-      <TextField
-        sx={{ width: 200 }}
-        onChange={onChangeNameExam}
-        id='selectDep'
-        label='chọn tên đề'
-        select
-      >
-        {ExamData == null ? (
-          <MenuItem value='1'>Ten</MenuItem>
-        ) : (
-          ExamData.map((item: Exam, index: number): JSX.Element => {
-            return (
-              <MenuItem sx={{ color: 'black' }} key={index} value={item.examId}>
-                {item.examName}
-              </MenuItem>
-            )
-          })
-        )}
-      </TextField>
-      <Button
-        onClick={handelAddExam}
-        sx={{ marginLeft: 2, marginTop: 2 }}
-        variant='outlined'
-      >
-        Thêm Đề Thi{''} <CreateNewFolderSharpIcon />
-      </Button>
+      {examsState.loading ? (
+        <h1>Đang tải dữ liệu...</h1>
+      ) : (
+        <>
+          {' '}
+          <Snackbar
+            open={showSuccess}
+            autoHideDuration={3000}
+            onClose={handleCloseSuccess}
+          >
+            <MuiAlert
+              onClose={handleCloseSuccess}
+              severity='success'
+              elevation={6}
+              variant='filled'
+            >
+              Acction successful!
+            </MuiAlert>
+          </Snackbar>
+          <Snackbar
+            open={showError}
+            autoHideDuration={3000}
+            onClose={handleCloseSuccess}
+          >
+            <MuiAlert
+              onClose={handleCloseError}
+              severity='error'
+              elevation={6}
+              variant='filled'
+            >
+              Acction Failed!
+            </MuiAlert>
+          </Snackbar>
+          <TextField
+            error={Boolean(nameExamErr)}
+            helperText={nameExamErr}
+            onChange={onchangeNameExam}
+            sx={{ width: 200 }}
+            id='selectDep'
+            label='nhập tên đề'
+          ></TextField>
+          <Button
+            sx={{ marginLeft: 2, marginTop: 2 }}
+            variant='outlined'
+            onClick={handelSubmitCreateExam}
+          >
+            Thêm Đề Thi{''} <CreateNewFolderSharpIcon />
+          </Button>
+        </>
+      )}
     </>
   )
 }
