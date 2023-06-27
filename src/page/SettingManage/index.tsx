@@ -72,6 +72,6 @@ export default Index
 const cardStyle: SxProps = {
   padding: '30px 20px',
   borderRadius: '5px',
-  backgroundColor: '#fff',
+  backgroundColor: '#e7f0f9',
   mt:2
 }

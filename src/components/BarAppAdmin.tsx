@@ -109,7 +109,7 @@ export default function Index(): JSX.Element {
           bottom:0,
           left:0,
           width:"260px",
-          backgroundColor:"#ffffff",
+          backgroundColor:"#eef2f7",
           display: { xs: 'none', md:'block'}
         }}
       >
@@ -135,7 +135,7 @@ export default function Index(): JSX.Element {
                   sx={{
                     mb:2,
                     mt:2,
-                    background: 'transparent',
+                    background: 'white',
                     boxShadow: 'none',
                     display: 'flex',
                     alignItems:"center",

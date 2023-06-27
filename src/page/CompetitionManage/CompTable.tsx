@@ -114,7 +114,7 @@ const CompTable = (): JSX.Element => {
         </Snackbar>
       </>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid xs={12}>
+        <Grid item xs={12}>
           <Stack
             direction='row'
             spacing={20}
@@ -131,7 +131,7 @@ const CompTable = (): JSX.Element => {
             </Link>
           </Stack>
         </Grid>
-        <Grid xs={12} style={{ marginTop: '10px' }}>
+        <Grid item xs={12} style={{ marginTop: '10px' }}>
           <TableContainer
             component={Paper}
             sx={{ maxHeight: 400, overflow: 'auto' }}

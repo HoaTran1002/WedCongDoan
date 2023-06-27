@@ -9,6 +9,7 @@ const Index = (): JSX.Element => {
     <>
       <LayoutAdmin>
         <>
+          <h1 className='color-primary'>Quản lý người dùng</h1>
           <BasicModal />
           <TableUser />
         </>

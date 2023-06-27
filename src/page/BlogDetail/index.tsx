@@ -15,7 +15,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogActions
+  DialogActions,
+  Box
 } from '@mui/material'
 import { SelectChangeEvent } from '@mui/material/Select'
 import React, { useState, useEffect } from 'react'
@@ -127,214 +128,196 @@ const Index = (): JSX.Element => {
       }
     });
   }, []);
-  
-  console.log('data===>>:', blogName,blogDetai,imgName)
+
+  console.log('data===>>:', blogName, blogDetai, imgName)
   return (
     <>
       <LayoutAdmin>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid item xs={12}>
-            <Stack
-              direction='row'
-              spacing={20}
-              alignItems='center'
-              sx={{ marginTop: '20px' }}
+        <Box>
+          <Stack
+            direction='row'
+            spacing={20}
+            alignItems='center'
+            sx={{  paddingTop: '20px',paddingBottom:"20px" }}
+          >
+            <Typography
+              variant='h4'
+              sx={{ fontWeight: 500, color: '#1976d2' }}
             >
-              <Typography
-                variant='h4'
-                sx={{ fontWeight: 500, color: '#1976d2' }}
+              Chi tiết blog
+            </Typography>
+          </Stack>
+          <Box
+            sx={{
+              backgroundColor: "white",
+              padding: "0 10px"
+            }}
+          >
+            <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+              <Grid
+                item
+                xs={12}
+
               >
-                Chi tiết blog
-              </Typography>
-            </Stack>
-          </Grid>
-          <Grid item xs={12}>
-            <Stack direction={'row'} alignItems='center' gap={5}>
-              <TextField
-                id='filled-search'
-                label='Tên Blog'
-                type='search'
-                variant='outlined'
-                value={blogName}
-                style={{ width: '100%' }}
-                onChange={(e: any): any => {
-                  setBlogName(e.target.value)
-                }}
-              />
-              <TextField
-                id='filled-search'
-                label='Thanh phụ tiêu đề'
-                type='search'
-                variant='outlined'
-                defaultValue='Thanh phu đề tiêu đề trang blog'
-                style={{ width: '100%' }}
-              />
-            </Stack>
-          </Grid>
-          <Grid item xs={12} style={{ marginTop: '10px' }}>
-            <Stack direction={'row'} alignItems='center' gap={5}>
-              <FormControl
-                sx={{ m: 1, minWidth: 80 }}
-                style={{ width: '100%' }}
-              >
-                <InputLabel id='demo-simple-select-autowidth-label'>
-                  Cuộc thi
-                </InputLabel>
-                <Select
-                  labelId='demo-simple-select-autowidth-label'
-                  id='demo-simple-select-autowidth'
-                  defaultValue={'21'}
-                  onChange={handleChange}
-                  label='Age'
-                >
-                  <MenuItem value={10}>Anh văn đầu vào</MenuItem>
-                  <MenuItem value={21}>An toàn thông tin</MenuItem>
-                  <MenuItem value={22}>Khảo sát</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl
-                sx={{ m: 1, minWidth: 80 }}
-                style={{ width: '100%' }}
-              >
-                <InputLabel id='demo-simple-select-autowidth-label'>
-                  Tình trạng
-                </InputLabel>
-                <Select
-                  labelId='demo-simple-select-autowidth-label'
-                  id='demo-simple-select-autowidth'
-                  defaultValue={'21'}
-                  onChange={handleChange}
-                  label='Age'
-                >
-                  <MenuItem value={10}>Ẩn trang blog</MenuItem>
-                  <MenuItem value={21}>Hiện trang blog</MenuItem>
-                </Select>
-              </FormControl>
-            </Stack>
-          </Grid>
-          <Grid item xs={12}>
-            <div>
-              <Dropzone
-                // onDrop={handleImageDrop}
-                accept={{ image: ['image/*'] }}
-                multiple={false}
-              >
-                {({ getRootProps, getInputProps }): any => (
-                  <div {...getRootProps()}>
-                    <input {...getInputProps()} />
-                    <span style={{ fontStyle: 'italic' }}>
-                      * Lưu ý chỉ chọn được 1 ảnh
-                    </span>
-                    <p className='layout_drag_image'>
-                      <AddIcon />
-                      Kéo thả ảnh, hoặc nhấn vào đây để chọn ảnh
-                    </p>
-                  </div>
-                )}
-              </Dropzone>
-              {selectedImage ? (
-                <div>
-                  <h2 className='color-primary'>Ảnh bìa cho trang blog:</h2>
-                  <img
-                    className='selectedImage'
-                    src={selectedImage}
-                    alt='Selected'
+                <Stack direction={'row'} alignItems='center' gap={5}>
+                  <TextField
+                    id='filled-search'
+                    label='Tên Blog'
+                    type='search'
+                    variant='outlined'
+                    value={blogName}
+                    style={{ width: '100%' }}
+                    onChange={(e: any): any => {
+                      setBlogName(e.target.value)
+                    }}
                   />
-                </div>
-              ) : (
+                  <FormControl
+                    sx={{ m: 1, minWidth: 80 }}
+                    style={{ width: '100%' }}
+                  >
+                    <InputLabel id='demo-simple-select-autowidth-label'>
+                      Cuộc thi
+                    </InputLabel>
+                    <Select
+                      labelId='demo-simple-select-autowidth-label'
+                      id='demo-simple-select-autowidth'
+                      defaultValue={'21'}
+                      onChange={handleChange}
+                      label='Age'
+                    >
+                      <MenuItem value={10}>Anh văn đầu vào</MenuItem>
+                      <MenuItem value={21}>An toàn thông tin</MenuItem>
+                      <MenuItem value={22}>Khảo sát</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Stack>
+              </Grid>
+              <Grid item xs={12}>
                 <div>
-                  <h2 className='color-primary'>Ảnh bìa cho trang blog:</h2>
-                  <img
-                    className='selectedImage'
-                    src={`src/assets/img/${imgSrc}`}
-                    alt='Selected'
-                  />
+                  <Dropzone
+                    // onDrop={handleImageDrop}
+                    accept={{ image: ['image/*'] }}
+                    multiple={false}
+                  >
+                    {({ getRootProps, getInputProps }): any => (
+                      <div {...getRootProps()}>
+                        <input {...getInputProps()} />
+                        <span style={{ fontStyle: 'italic' }}>
+                          * Lưu ý chỉ chọn được 1 ảnh
+                        </span>
+                        <p className='layout_drag_image'>
+                          <AddIcon />
+                          Kéo thả ảnh, hoặc nhấn vào đây để chọn ảnh
+                        </p>
+                      </div>
+                    )}
+                  </Dropzone>
+                  {selectedImage ? (
+                    <div>
+                      <h2 className='color-primary'>Ảnh bìa cho trang blog:</h2>
+                      <img
+                        className='selectedImage'
+                        src={selectedImage}
+                        alt='Selected'
+                      />
+                    </div>
+                  ) : (
+                    <div>
+                      <h2 className='color-primary'>Ảnh bìa cho trang blog:</h2>
+                      <img
+                        className='selectedImage'
+                        src={`src/assets/img/${imgSrc}`}
+                        alt='Selected'
+                      />
+                    </div>
+                  )}
                 </div>
-              )}
-            </div>
-          </Grid>
-          <Grid item xs={12} style={{ marginTop: '10px' }}>
-            <ReactQuill
-              value={blogDetai}
-              onChange={handleContentChange}
-              modules={modules}
-              formats={[
-                'header',
-                'bold',
-                'italic',
-                'underline',
-                'strike',
-                'blockquote',
-                'list',
-                'bullet',
-                'indent',
-                'link',
-                'image'
-              ]}
-            />
-          </Grid>
-          <Grid item xs={12} sx={{ mb: 10 }}>
-            <Button
-              variant='contained'
-              startIcon={<UpdateIcon />}
-              style={{ marginTop: '20px'}}
-              onClick={handleClickOpen}
-            >
-              Cập nhâp blog
-            </Button>
-            <Dialog
-              open={open}
-              onClose={handleClose}
-              aria-labelledby='alert-dialog-title'
-              aria-describedby='alert-dialog-description'
-            >
-              <DialogTitle id='alert-dialog-title'>{'Thông tin '}</DialogTitle>
-              <DialogContent>
-                <DialogContentText id='alert-dialog-description'>
-                  Bạn muốn cập nhập trang Blog ?
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Link to={'/BlogManage?updatesucess=true'}>
-                  <Button onClick={handleOK} variant='contained'>
-                    OK
-                  </Button>
-                </Link>
-                <Button onClick={handleClose}>Trở về</Button>
-              </DialogActions>
-            </Dialog>
-            <Button
-              variant='contained'
-              color='error'
-              startIcon={<DeleteIcon />}
-              style={{ marginTop: '20px' }}
-              onClick={handleDeleteOpen}
-            >
-              Xóa trang blog
-            </Button>
-            <Dialog
-              open={openDelete}
-              onClose={handleDeleteClose}
-              aria-labelledby='alert-dialog-title'
-              aria-describedby='alert-dialog-description'
-            >
-              <DialogTitle id='alert-dialog-title'>{'Thông tin '}</DialogTitle>
-              <DialogContent>
-                <DialogContentText id='alert-dialog-description'>
-                  Bạn muốn xóa trang Blog ?
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Link to={'/BlogManage?deletesucess=true'}>
-                  <Button onClick={handleClickDelete} variant='contained'>
-                    OK
-                  </Button>
-                </Link>
-                <Button onClick={handleDeleteClose}>Trở về</Button>
-              </DialogActions>
-            </Dialog>
-          </Grid>
-        </Grid>
+              </Grid>
+              <Grid item xs={12} style={{ marginTop: '10px' }}>
+                <ReactQuill
+                  value={blogDetai}
+                  onChange={handleContentChange}
+                  modules={modules}
+                  formats={[
+                    'header',
+                    'bold',
+                    'italic',
+                    'underline',
+                    'strike',
+                    'blockquote',
+                    'list',
+                    'bullet',
+                    'indent',
+                    'link',
+                    'image'
+                  ]}
+                />
+              </Grid>
+              <Grid item xs={12} sx={{ mb: 10 }}>
+                <Button
+                  variant='contained'
+                  startIcon={<UpdateIcon />}
+                  style={{ marginTop: '20px' }}
+                  onClick={handleClickOpen}
+                >
+                  Cập nhâp blog
+                </Button>
+                <Dialog
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby='alert-dialog-title'
+                  aria-describedby='alert-dialog-description'
+                >
+                  <DialogTitle id='alert-dialog-title'>{'Thông tin '}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id='alert-dialog-description'>
+                      Bạn muốn cập nhập trang Blog ?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Link to={'/BlogManage?updatesucess=true'}>
+                      <Button onClick={handleOK} variant='contained'>
+                        OK
+                      </Button>
+                    </Link>
+                    <Button onClick={handleClose}>Trở về</Button>
+                  </DialogActions>
+                </Dialog>
+                <Button
+                  variant='contained'
+                  color='error'
+                  startIcon={<DeleteIcon />}
+                  style={{ marginTop: '20px' }}
+                  onClick={handleDeleteOpen}
+                >
+                  Xóa trang blog
+                </Button>
+                <Dialog
+                  open={openDelete}
+                  onClose={handleDeleteClose}
+                  aria-labelledby='alert-dialog-title'
+                  aria-describedby='alert-dialog-description'
+                >
+                  <DialogTitle id='alert-dialog-title'>{'Thông tin '}</DialogTitle>
+                  <DialogContent>
+                    <DialogContentText id='alert-dialog-description'>
+                      Bạn muốn xóa trang Blog ?
+                    </DialogContentText>
+                  </DialogContent>
+                  <DialogActions>
+                    <Link to={'/BlogManage?deletesucess=true'}>
+                      <Button onClick={handleClickDelete} variant='contained'>
+                        OK
+                      </Button>
+                    </Link>
+                    <Button onClick={handleDeleteClose}>Trở về</Button>
+                  </DialogActions>
+                </Dialog>
+              </Grid>
+            </Grid>
+
+          </Box>
+        </Box>
       </LayoutAdmin>
     </>
   )
