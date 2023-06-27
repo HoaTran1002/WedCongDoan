@@ -32,7 +32,6 @@ import useFetch from '~/hook/useFetch'
 import * as fs from 'fs'
 import * as path from 'path'
 
-
 axios.defaults.baseURL = base_url
 
 const Index = (): JSX.Element => {
@@ -56,6 +55,7 @@ const Index = (): JSX.Element => {
   const handleImageDrop = (acceptedFiles: any): any => {
     if (acceptedFiles && acceptedFiles.length > 0) {
       const file = acceptedFiles[0]
+
       setSelectedImage(file)
       setImageFile(file)
       setImgName(file.path)
@@ -94,9 +94,15 @@ const Index = (): JSX.Element => {
     })
     if (imageFile) {
       const reader = new FileReader()
-      reader.onload = ():void => {
+      reader.onload = (): void => {
         const buffer = Buffer.from(reader.result as string)
-        const imgPath = path.join(__dirname, '..', 'assets', 'img', imageFile.name)
+        const imgPath = path.join(
+          __dirname,
+          '..',
+          'assets',
+          'img',
+          imageFile.name
+        )
         fs.writeFile(imgPath, buffer, {}, (err) => {
           if (err) {
             console.error(err)
@@ -264,7 +270,7 @@ const Index = (): JSX.Element => {
               </DialogContent>
               <DialogActions>
                 <Link to={'/BlogManage?opensucess=true'}>
-                  <Button variant="contained" onClick={handleOK}>
+                  <Button variant='contained' onClick={handleOK}>
                     OK
                   </Button>
                 </Link>
