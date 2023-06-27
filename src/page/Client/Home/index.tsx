@@ -60,7 +60,7 @@ const Home = (): JSX.Element => {
   return (
     <>
       <Layout>
-        <div className='carousel-wrapper'>
+        <div className='carousel-wrapper' style={{marginTop:"90px"}}>
           <Carousel
             autoPlay={true}
             infiniteLoop={true}

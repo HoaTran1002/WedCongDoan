@@ -24,10 +24,9 @@ import { SelectChangeEvent } from '@mui/material/Select'
 import axios from '~/api/axios'
 import Dropzone from 'react-dropzone'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
-import { Insert } from '~/api/blogApi'
-import { saveAs } from 'file-saver'
 import base_url from '~/config/env'
 import { Link } from 'react-router-dom'
+import { Insert } from '~/api/blogApi'
 import useFetch from '~/hook/useFetch'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -87,7 +86,20 @@ const Index = (): JSX.Element => {
     callBlogtInsert(async () => {
       try {
         console.log(requestData)
-        await Insert(requestData)
+        if (selectedImage) {
+          const reader = new FileReader()
+          reader.onload = async (): Promise<void> => {
+            const imgSrc = reader.result as string
+            await Insert({
+              ...requestData,
+              imgSrc: imgSrc.split(',')[1]
+            })
+          }
+          console.log('đang chọn ảnh', imgSrc.split(',')[1])
+          reader.readAsDataURL(selectedImage)
+        } else {
+          await Insert(requestData)
+        }
       } catch (error) {
         console.log(error)
       }

@@ -1,5 +1,5 @@
 .carousel-items-banner{
-    height: 230px;
+    height: 400px;
 }
 .carousel-items-banner img{
     height: 100%;
@@ -39,11 +39,11 @@
   }
   
   .carousel-wrapper .carousel .control-arrow.control-next{
-    right: -20px;
+    right: 20px;
     z-index: 10 ;
   }
   .carousel-wrapper .carousel .control-arrow.control-prev{
-    left: -20px;
+    left: 20px;
     z-index: 10 ;
   }
   .carousel-wrapper .carousel .control-arrow.carousel-next:before {
@@ -69,9 +69,15 @@
   }
 
   .selectedImage{
-    height: 250px;
+    height: 250px !important;
+    width: 450px !important;
+    object-fit: cover !important;
   }
 
   .color-primary{
     color: #1976D2;
+  }
+
+  .text-center{
+    text-align: center;
   }

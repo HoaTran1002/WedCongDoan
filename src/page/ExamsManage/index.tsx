@@ -18,7 +18,7 @@ import {
   DialogContentText,
   DialogActions
 } from '@mui/material'
-import { getAllPrizes } from '~/api/prizesApi'
+
 import { Link } from 'react-router-dom'
 import axios from '~/api/axios'
 import CircularProgress from '@mui/material/CircularProgress'

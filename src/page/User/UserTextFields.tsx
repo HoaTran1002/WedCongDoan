@@ -133,7 +133,6 @@ export default function UserTextFields(prop: {
         console.log(requestData)
         await insert(requestData)
         await setShowSuccess(true)
-        window.location.reload()
       } catch (error) {
         setShowError(true)
       }

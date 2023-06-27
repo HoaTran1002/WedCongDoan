@@ -24,19 +24,20 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
-import GridViewIcon from '@mui/icons-material/GridView';
+import GridViewIcon from '@mui/icons-material/GridView'
 import { Link } from 'react-router-dom'
 import { IndeterminateCheckBoxOutlined } from '@mui/icons-material'
-import PersonIcon from '@mui/icons-material/Person';
-import WebIcon from '@mui/icons-material/Web';
-import AppsIcon from '@mui/icons-material/Apps';
+import PersonIcon from '@mui/icons-material/Person'
+import WebIcon from '@mui/icons-material/Web'
+import AppsIcon from '@mui/icons-material/Apps'
+import { blue, yellow } from '@mui/material/colors'
 
 const drawerWidth = 250
 const pages = [
-  { name: 'CUỘC THI', to: '/CompetitionManage',icon:<GridViewIcon />},
-  { name: 'USER', to: '/User',icon:<PersonIcon/> },
-  { name: 'BLOG', to: '/BlogManage',icon:<WebIcon/>},
-  { name: 'QUẢN LÝ THÔNG TIN', to: '/SettingManage',icon:<AppsIcon/> },
+  { name: 'CUỘC THI', to: '/CompetitionManage', icon: <GridViewIcon /> },
+  { name: 'USER', to: '/User', icon: <PersonIcon /> },
+  { name: 'BLOG', to: '/BlogManage', icon: <WebIcon /> },
+  { name: 'QUẢN LÝ THÔNG TIN', to: '/SettingManage', icon: <AppsIcon /> },
   { name: 'CLIENT', to: '/' }
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
@@ -99,141 +100,143 @@ export default function Index(): JSX.Element {
   }
 
   return (
-    <Box sx={{ display: 'flex'}}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <Box 
-        sx={{
-          padding:"105px 25px 0 25px",
-          position:"fixed",
-          top:0,
-          bottom:0,
-          left:0,
-          width:"260px",
-          backgroundColor:"#ffffff",
-          display: { xs: 'none', md:'block'}
-        }}
-      >
-        
-
-        <Box 
-          sx={{ 
-            flexGrow: 1, 
-            display: { xs: 'none', md: 'flex' },
-            flexDirection:"column"
-            }}
-          >
-            {pages.map((page, index) => (
-              <Link
-                key={index}
-                style={{ color: 'white', textDecoration: 'none' }}
-                to={page.to}
-              >
-                <Button
-                  key={index}
-                  onClick={handleCloseNavMenu}
-                  startIcon={page.icon}
-                  sx={{
-                    mb:2,
-                    mt:2,
-                    background: 'transparent',
-                    boxShadow: 'none',
-                    display: 'flex',
-                    alignItems:"center",
-                    justifyContent:"flex-start",
-                    flexDirection:"row",
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                      borderRadius: 'none',
-                      boxShadow: 'none'
-                    },
-                    textDecoration: 'none',
-                    width:"100%",
-                    border:"1px solid #1769ba",
-                    color:"#1769ba"
-
-                  }}
-                  variant='contained'
-                >
-                  {page.name}
-                </Button>
-              </Link>
-            ))}
-        </Box>
-      </Box>
       <Box
         sx={{
-          width:"100vw",
-          zIndex:"10",
-          position:"fixed",
-          top:0,
-          right:0,
-          left:0,
-          height:"75px",
-          backgroundColor:"#1769ba",
-          display:"flex",
-          alignItems:"center",
-          justifyContent:"space-between",
-          gap:2
+          zIndex: 2,
+          paddingTop: '5.5%',
+          position: 'fixed',
+          top: 0,
+          bottom: 0,
+          left: 0,
+          width: '260px',
+          backgroundColor: blue[100],
+          display: { xs: 'none', md: 'block' }
         }}
       >
         <Box
           sx={{
-            display:"inline-flex",
-            width:"295px",
-            height:"100%",
-            justifyContent:"center"
+            flexGrow: 1,
+            display: { xs: 'none', md: 'flex' },
+            flexDirection: 'column'
           }}
-          alignItems={"center"}
+        >
+          {pages.map((page, index) => (
+            <Link
+              key={index}
+              style={{ color: 'white', textDecoration: 'none' }}
+              to={page.to}
+            >
+              <Button
+                key={index}
+                onClick={handleCloseNavMenu}
+                startIcon={page.icon}
+                sx={{
+                  padding: '10px',
+                  background: blue[100],
+                  boxShadow: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  flexDirection: 'row',
+                  '&:hover': {
+                    backgroundColor: 'white',
+                    color: '#1769ba',
+                    borderRadius: 'none',
+                    boxShadow: 'none'
+                  },
+                  borderRadius: '0',
+                  textDecoration: 'none',
+                  width: '100%',
+                  color: blue[900]
+                }}
+                variant='contained'
+              >
+                {page.name}
+              </Button>
+            </Link>
+          ))}
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          width: '100vw',
+          zIndex: '10',
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          left: 0,
+          height: '75px',
+          backgroundColor: blue[400],
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: 2
+        }}
+      >
+        <Box
+          sx={{
+            display: 'inline-flex',
+            width: '260px',
+            height: '100%',
+            justifyContent: 'center',
+            background: blue[400],
+            border: 1.5,
+            borderColor: 'white',
+            borderTop: 0,
+            borderLeft: 0,
+            borderBottom: 0
+          }}
+          alignItems={'center'}
         >
           <Box
-                component='img'
-                sx={{
-                  height: "50px",
-                  
-                }}
-                alt='The house from the offer.'
-                src='https://api.congdoantphochiminh.org.vn/Upload/Multimedia/Images/20221229150859445_logo%20DAI%20HOI%20XII%20CONG%20DOAN%20TP%20-%20png.png'
-            />
-
+            component='img'
+            sx={{
+              height: '50px'
+            }}
+            alt='The house from the offer.'
+            src='https://api.congdoantphochiminh.org.vn/Upload/Multimedia/Images/20221229150859445_logo%20DAI%20HOI%20XII%20CONG%20DOAN%20TP%20-%20png.png'
+          />
         </Box>
         <IconButton
-            color='inherit'
-            aria-label='open drawer'
-            onClick={handleDrawerOpen}
-            edge='start'
-            sx={{ mr: 2, display: { xs: 'flex', md: 'none' } }}
-          >
-            <MenuIcon />
+          color='inherit'
+          aria-label='open drawer'
+          onClick={handleDrawerOpen}
+          edge='start'
+          sx={{ mr: 2, display: { xs: 'flex', md: 'none' } }}
+        >
+          <MenuIcon />
         </IconButton>
-        <Box sx={{ flexGrow: 0, display: { md: 'flex' },mr:5 }}>
-            <Tooltip title='Open settings'>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id='menu-appbar'
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
+        <Box sx={{ flexGrow: 0, display: { md: 'flex' }, mr: 5 }}>
+          <Tooltip title='Open settings'>
+            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+              <Avatar alt='Remy Sharp' />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: '45px' }}
+            id='menu-appbar'
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right'
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right'
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            {settings.map((setting) => (
+              <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <Typography textAlign='center'>{setting}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Box>
       </Box>
       {/* <AppBar position='fixed' open={open}>
         <Toolbar sx={{ display: 'flex' }}>

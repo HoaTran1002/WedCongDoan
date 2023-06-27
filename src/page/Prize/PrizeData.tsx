@@ -7,7 +7,7 @@ import Button from '@mui/material/Button'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import { deleteCompPrizes, getAllByComID } from '~/api/CompetitionsPrizesAPI'
-import { getAll } from '~/api/prizeTypesApi'
+import { getAllPrizeTypes } from '~/api/prizeTypesApi'
 import ModalAdd from '~/components/ModalAdd'
 import { Box } from '@mui/material'
 import TextFields from './TextFields'
@@ -15,7 +15,7 @@ import { useParams } from 'react-router-dom'
 import { Snackbar } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
 import BasicModal from './ModalEdit'
-import { getAllPrizes } from '~/api/prizesApi'
+import { getAllPrize} from '~/api/prizesApi'
 
 interface CompPrizes {
   cpid: number
@@ -51,10 +51,10 @@ const PrizeData = (): JSX.Element => {
   }, [reset, comId])
 
   React.useEffect(() => {
-    callPrizeTypes(getAll)
+    callPrizeTypes(getAllPrizeTypes)
   }, [reset])
   React.useEffect(() => {
-    callPrizes(getAllPrizes)
+    callPrizes(getAllPrize)
   }, [reset])
 
   const CompPrizes = stateCompPri?.payload
