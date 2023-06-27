@@ -14,7 +14,7 @@ export const insertCompExam = async ({
   examId,
   comId
 }: {
-  comId: number
+  comId?: number
   examId: number
 }): Promise<void> => {
   try {

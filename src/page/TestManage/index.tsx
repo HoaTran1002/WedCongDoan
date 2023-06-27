@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import { Box, Button, Grid } from '@mui/material'
@@ -16,30 +16,32 @@ interface CompExam {
   comId: string
 }
 interface Exam {
-  examId: string
+  examId: number
   examName: string
 }
 const Index = (): JSX.Element => {
   const { comId } = useParams()
   const [dataCompExams, compExamsCall] = useFetch()
-  const [dataExams, examsCall] = useFetch()
+  const [exams, setExams] = useState<{ [key: number]: string }>({})
   useEffect(() => {
     compExamsCall(getAllCompExam)
   }, [])
+
   useEffect(() => {
-    examsCall(getAllExam)
+    getAllExam().then((data: { examId: number; examName: string }[]) => {
+      const result = data.reduce(
+        (a, v) => ({ ...a, [v.examId]: v.examName }),
+        {}
+      )
+      setExams(result)
+    })
   }, [])
-  const compExams = dataCompExams.payload || []
-  const exams = dataExams.payload || []
-  const getExamName = (idComExam: string): string => {
-    const exam = exams.find((exam: Exam) => exam.examId === idComExam)
-    return exam ? exam.examName : undefined
-  }
+
   return (
     <>
       <LayoutAdmin>
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-          <ModalAdd Title='THÊM MỚI BÀI THI'>
+          <ModalAdd Title='THÊM MỚI ĐỀ THI'>
             <DataInput />
           </ModalAdd>
 
@@ -47,17 +49,21 @@ const Index = (): JSX.Element => {
             spacing={{ xs: 2, md: 3 }}
             columns={{ xs: 4, sm: 8, md: 12 }}
             sx={{
-              border: 2,
+              border: 1,
               borderColor: blue[300],
               borderRadius: 2,
               width: '85%',
-              height: 550,
+              height: 500,
               display: 'flex',
-              padding: 1,
-              overflowY: 'scroll'
+              flexWrap: 'wrap',
+              justifyContent: 'center',
+              paddingY: 1,
+              gap: 10,
+              overflowY: 'scroll',
+              background: '#fff'
             }}
           >
-            {compExams.map((item: CompExam, index: number) => {
+            {dataCompExams?.payload?.map((item: CompExam, index: number) => {
               if (item.comId == comId) {
                 return (
                   <Grid
@@ -99,7 +105,7 @@ const Index = (): JSX.Element => {
                           border: 'none'
                         }}
                       >
-                        <span>{getExamName(item.ceid)}</span>
+                        <span>{exams[Number(item.examId)]}</span>
                       </Box>
                     </div>
                   </Grid>

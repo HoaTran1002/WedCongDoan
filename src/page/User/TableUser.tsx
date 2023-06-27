@@ -2,7 +2,7 @@ import * as React from 'react'
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import DeleteIcon from '@mui/icons-material/Delete'
 import { deleteUsers, getAllUser } from '~/api/userApi'
-import axios from 'axios'
+import axios from '~/api/axios'
 import BasicModal from './ModalEditUser'
 import useFetch from '~/hook/useFetch'
 import Button from '@mui/material/Button'
@@ -98,20 +98,19 @@ const TableUser = (): JSX.Element => {
       type: 'string',
       width: 200
     },
-    {
-      field: 'roleId',
-      headerName: 'Mã Quyền',
-      type: 'number',
-      width: 80,
-      hideable: true
-    },
-    {
-      field: 'depId',
-      headerName: 'Mã Phòng',
-      type: 'number',
-      width: 80,
-      hideable: true
-    },
+    // },
+    // {
+    //   field: 'roleId',
+    //   headerName: 'Mã Quyền',
+    //   type: 'number',
+    //   width: 0
+    // },
+    // {
+    //   field: 'depId',
+    //   headerName: 'Mã Phòng',
+    //   type: 'number',
+    //   width: 0
+    // },
     {
       field: 'actions',
       type: 'actions',
@@ -192,5 +191,4 @@ const TableUser = (): JSX.Element => {
     </>
   )
 }
-
 export default TableUser
