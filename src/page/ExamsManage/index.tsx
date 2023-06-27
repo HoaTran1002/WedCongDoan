@@ -7,27 +7,37 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import TextField from '@mui/material/TextField'
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import { Button, SxProps, Stack, Grid, Box, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material'
-import { getAllPrizes } from '~/api/prizesApi'
+import { getAllExam, EditExam, DeleteExam} from '~/api/exam'
+import useFetch from '~/hook/useFetch'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import CircularProgress from '@mui/material/CircularProgress';
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
 
 //================================
-interface Prize {
+interface Exam {
     examId: number,
     examName: string
 }
 //===================================
 
 const Index = (): JSX.Element => {
-    const [load, setLoad] = React.useState<boolean>(true)
-    const [data, setData] = React.useState<any>()
-    const [examName, setExamName] = React.useState<string>()
-    const [examId, setExamId] = React.useState<number>()
+    const [examName, setExamName] = React.useState<string>('')
+    const [examId, setExamId] = React.useState<number>(0)
     const [addOpen, setAddOpen] = React.useState(false)
     const [editOpen, setEditOpen] = React.useState<boolean>(false)
     const [deleteOpen, setDeleteOpen] = React.useState(false)
+    const [allExam,callAllExam] = useFetch();
+    const [editExam,callEditExam] = useFetch();
+    const [deleteExam,callDeleteExam] = useFetch();
+
+    const requestData: {
+        examId: number 
+        examName: string
+      } = {
+        examId: examId,
+        examName: examName
+    }
 
     // ==========================================
     const onchangeExamName = function (event: React.ChangeEvent<HTMLInputElement>): void {
@@ -64,13 +74,16 @@ const Index = (): JSX.Element => {
 
     };
     const handleDeleteOK= (): void => {
-        axios.delete(`/Exams?id=${examId}`)
-            .then((res) => {
-            console.log(res.data);
-            })
-            .catch((error) => {
-            console.log(error);
-            });
+        const request: { _id: number } = {
+            _id: examId
+          }
+          callDeleteExam(async () => {
+            try {
+              await DeleteExam(request)
+            } catch (error) {
+              console.log('thất bại')
+            }
+          })
         setDeleteOpen(false)
     }
     //=========================================
@@ -81,42 +94,49 @@ const Index = (): JSX.Element => {
     }
 
     const handelEditOk = (): void => {
-        const newData = {
-            examId:examId,
-            examName: examName
-        }
-        console.log(newData)
-        axios.put('/Exams', newData)
-            .then((res) => {
-                console.log(res.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        callEditExam(async () => {
+            try {
+                await EditExam(requestData)
+            } catch (error) {
+                console.log('Thất bại')
+            }
+        })
         setEditOpen(false)
     }
     const handelEditClose = (): void => {
         if(editOpen){
             setEditOpen(false)
-
         }
     }
+
+    
+
+
     React.useEffect(() => {
-        axios.get(`/Exams`)
-            .then((res) => {
-                console.log(res.data);
-                const rows =
-                    res.data?.map((prize: Prize) => ({
-                        id: prize.examId,
-                        examName: prize.examName
-                    })) || []
-                setData(rows)
-                setLoad(false)
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        const fetchData = async () :Promise<any> => {
+            try {
+              const data = await getAllExam();
+              callAllExam(() => Promise.resolve(data));
+            } catch (error) {
+              console.log(error);
+            }
+          };
+          fetchData();
     }, [addOpen,editOpen,deleteOpen]);
+    React.useEffect(() => {
+        const fetchData = async () :Promise<any> => {
+            try {
+              await callAllExam(getAllExam)
+            } catch (error) {
+              console.log(error);
+            }
+          };
+          fetchData();
+    }, []);
+    const exams: Exam[] = allExam.payload?.map((exam: Exam) => ({
+        id: exam.examId,
+        examName: exam.examName
+      })) || []
     const columns: GridColDef[] = [
         { field: 'id', headerName: 'ID ', width: 200 },
         { field: 'examName', headerName: 'Tên đề thi', width: 200 },
@@ -130,7 +150,7 @@ const Index = (): JSX.Element => {
                         key={1}
                         icon={<EditIcon />}
                         label='Edit'
-                        onClick={(): any => handleEditOpen(params.row.id,params.row.priName)}
+                        onClick={(): any => handleEditOpen(params.row.id,params.row.examName)}
                     />
                     <Dialog
                         open={editOpen}
@@ -192,17 +212,18 @@ const Index = (): JSX.Element => {
             ]
         }
     ]
+    
     return (
         <LayoutAdmin>
             <>
-                {load == true ? (
+                {allExam.loading == true ? (
                     <Box sx={{ display: 'flex' }}>
                         <CircularProgress />
                     </Box>
                 ) : (
                     <>
+                    <h1 className='color-primary text-center'>Quản lý đề thi</h1>
                         <Stack direction={'row'} alignItems={'center'} gap={'20px'}>
-                            <h1 className='color-primary'>Quản lý đề thi</h1>
                             <div>
                                 <Button onClick={handelOpenAdd} variant='contained' startIcon={<AddIcon />}>
                                     Thêm đề thi
@@ -238,7 +259,7 @@ const Index = (): JSX.Element => {
                         </Stack>
                         <div style={{ height: 400, width: '100%' }}>
                             <DataGrid
-                                rows={data}
+                                rows={exams}
                                 columns={columns}
                                 initialState={{
                                     pagination: {

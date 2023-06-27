@@ -83,7 +83,6 @@ const CompTable = (): JSX.Element => {
   return (
     <>
       <>
-        {' '}
         <Snackbar
           open={showSuccess}
           autoHideDuration={3000}
@@ -113,23 +112,14 @@ const CompTable = (): JSX.Element => {
           </MuiAlert>
         </Snackbar>
       </>
+      <h1 className='text-center color-primary'>Danh sách cuộc thi</h1>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
         <Grid item xs={12}>
-          <Stack
-            direction='row'
-            spacing={20}
-            alignItems='center'
-            sx={{ marginTop: '20px' }}
-          >
-            <Typography variant='h4' sx={{ fontWeight: 500, color: '#1976d2' }}>
-              Danh sách cuộc thi
-            </Typography>
-            <Link to={'/CompetitionCreate'} style={{ textDecoration: 'none' }}>
-              <Button variant='contained' startIcon={<AddIcon />}>
-                Thêm cuộc thi mới
-              </Button>
-            </Link>
-          </Stack>
+          <Link to={'/CompetitionCreate'} style={{ textDecoration: 'none' }}>
+            <Button variant='contained' startIcon={<AddIcon />}>
+              Thêm cuộc thi mới
+            </Button>
+          </Link>
         </Grid>
         <Grid item xs={12} style={{ marginTop: '10px' }}>
           <TableContainer

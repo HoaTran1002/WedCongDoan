@@ -74,18 +74,14 @@ const Index = (): JSX.Element => {
         </Box>
       ) : (
         <>
+          <h1 className='color-primary text-center'>Quản lý trang blog</h1>
           <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
             <Grid item xs={12}>
-              <Stack direction='row' spacing={20} alignItems='center' sx={{ marginTop: '20px' }}>
-                <Typography variant='h4' sx={{ fontWeight: 500, color: '#1976d2' }}>
-                  Quản lý trang blog
-                </Typography>
-                <Link to={'/BlogCreate'} style={{ textDecoration: 'none' }}>
-                  <Button href='/BlogCreate' variant='contained' startIcon={<AddIcon />}>
-                    Thêm một blog mới
-                  </Button>
-                </Link>
-              </Stack>
+              <Link to={'/BlogCreate'} style={{ textDecoration: 'none' }}>
+                <Button href='/BlogCreate' variant='contained' startIcon={<AddIcon />}>
+                  Thêm một blog mới
+                </Button>
+              </Link>
             </Grid>
             <Grid 
               item

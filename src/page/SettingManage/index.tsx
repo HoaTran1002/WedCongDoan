@@ -52,9 +52,9 @@ const Index = (): JSX.Element => {
         <Grid item xs={3}>
           <Box sx={cardStyle} className=''>
             <h2 className='color-primary' style={{ margin: '0px' }}>
-              Chuyên ngành
+              Khoa
             </h2>
-            <p>Quản lý thông tin chuyên ngành</p>
+            <p>Quản lý thông tin khoa</p>
             <div>
               <Link to={'/DepartmentManage'}>
                 <Button variant='contained'>Quản lý</Button>

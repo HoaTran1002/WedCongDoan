@@ -103,7 +103,7 @@ export default function Index(): JSX.Element {
       <CssBaseline />
       <Box 
         sx={{
-          padding:"105px 25px 0 25px",
+          paddingTop:"105px",
           position:"fixed",
           top:0,
           bottom:0,
@@ -133,8 +133,7 @@ export default function Index(): JSX.Element {
                   onClick={handleCloseNavMenu}
                   startIcon={page.icon}
                   sx={{
-                    mb:2,
-                    mt:2,
+                    padding:"10px",
                     background: 'white',
                     boxShadow: 'none',
                     display: 'flex',
@@ -142,13 +141,14 @@ export default function Index(): JSX.Element {
                     justifyContent:"flex-start",
                     flexDirection:"row",
                     '&:hover': {
-                      backgroundColor: 'transparent',
+                      backgroundColor: '#1769ba',
+                      color:"white",
                       borderRadius: 'none',
                       boxShadow: 'none'
                     },
+                    borderRadius: '0',
                     textDecoration: 'none',
                     width:"100%",
-                    border:"1px solid #1769ba",
                     color:"#1769ba"
 
                   }}

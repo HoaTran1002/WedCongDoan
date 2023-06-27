@@ -18,27 +18,44 @@ import {
   DialogContentText,
   DialogActions
 } from '@mui/material'
-import { getAllPrizes } from '~/api/prizesApi'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
 import CircularProgress from '@mui/material/CircularProgress'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
+import useFetch from '~/hook/useFetch'
+import { getAllPrizeTypes, InsertPrizeTypes,DeletePrizeTypes,EditPrizeTypes} from '~/api/prizeTypesApi'
 
 //================================
-interface Prize {
+interface PrizeType {
   priTid: number
   priTname: string
 }
 //===================================
 
 const Index = (): JSX.Element => {
-  const [load, setLoad] = React.useState<boolean>(true)
-  const [data, setData] = React.useState<any>()
-  const [prizeTName, setPrizeTName] = React.useState<string>()
-  const [prizeTId, setPrizeTId] = React.useState<number>()
+  const [prizeTName, setPrizeTName] = React.useState<string>('')
+  const [prizeTId, setPrizeTId] = React.useState<number>(0)
   const [addOpen, setAddOpen] = React.useState(false)
   const [editOpen, setEditOpen] = React.useState<boolean>(false)
   const [deleteOpen, setDeleteOpen] = React.useState(false)
+  const [allPrizeT, callAllPrizeT] = useFetch()
+  const [editPrizeT, callEditPrizeT] = useFetch()
+  const [deletePrizeT, callDeletePrizeT] = useFetch()
+  const [insertPrizeT, callInsertPrizeT] = useFetch()
+
+  const requestDataEdit: {
+    priTid: number
+    priTname: string
+  } = {
+    priTid: prizeTId,
+    priTname: prizeTName
+  }
+
+  const requestDataInsert: {
+    priTname: string
+  } = {
+    priTname: prizeTName
+  }
 
   // ==========================================
   const onchangePriName = function (
@@ -52,17 +69,13 @@ const Index = (): JSX.Element => {
     setPrizeTName('')
   }
   const handelAddOk = (): void => {
-    const newData = {
-      priTname: prizeTName
-    }
-    axios
-      .post('/PrizeTypes', newData)
-      .then((res) => {
-        console.log(res.data)
-      })
-      .catch((error) => {
+    callInsertPrizeT(async () => {
+      try {
+        await InsertPrizeTypes(requestDataInsert)
+      } catch (error) {
         console.log(error)
-      })
+      }
+    })
     setAddOpen(false)
   }
   const handelAddClose = (): void => {
@@ -77,14 +90,16 @@ const Index = (): JSX.Element => {
     setDeleteOpen(false)
   }
   const handleDeleteOK = (): void => {
-    axios
-      .delete(`/PrizeTypes?id=${prizeTId}`)
-      .then((res) => {
-        console.log(res.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    const request: { _id: number } = {
+      _id: prizeTId
+    }
+    callDeletePrizeT(async () => {
+      try {
+        await DeletePrizeTypes(request)
+      } catch (error) {
+        console.log('thất bại')
+      }
+    })
     setDeleteOpen(false)
   }
   //=========================================
@@ -95,19 +110,13 @@ const Index = (): JSX.Element => {
   }
 
   const handelEditOk = (): void => {
-    const newData = {
-      priTid: prizeTId,
-      priTname: prizeTName
-    }
-    console.log(newData)
-    axios
-      .put('/PrizeTypes', newData)
-      .then((res) => {
-        console.log(res.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    callEditPrizeT(async () => {
+      try {
+          await EditPrizeTypes(requestDataEdit)
+      } catch (error) {
+          console.log('Thất bại')
+      }
+  })
     setEditOpen(false)
   }
   const handelEditClose = (): void => {
@@ -116,25 +125,33 @@ const Index = (): JSX.Element => {
     }
   }
   React.useEffect(() => {
-    axios
-      .get(`/PrizeTypes`)
-      .then((res) => {
-        console.log(res.data)
-        const rows =
-          res.data?.map((prize: Prize) => ({
-            id: prize.priTid,
-            priName: prize.priTname
-          })) || []
-        setData(rows)
-        setLoad(false)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }, [addOpen, editOpen, deleteOpen])
+    const fetchData = async (): Promise<any> => {
+      try {
+        const data = await getAllPrizeTypes();
+        callAllPrizeT(() => Promise.resolve(data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, [addOpen, editOpen, deleteOpen]);
+  React.useEffect(() => {
+    const fetchData = async (): Promise<any> => {
+      try {
+        await callAllPrizeT(getAllPrizeTypes)
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+  const prizesT: PrizeType[] = allPrizeT.payload?.map((prizeT: PrizeType) => ({
+    id: prizeT.priTid,
+    priTname: prizeT.priTname
+  })) || []
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID ', width: 200 },
-    { field: 'priName', headerName: 'Tên giải thưởng', width: 200 },
+    { field: 'priTname', headerName: 'Tên giải thưởng', width: 200 },
     {
       field: 'actions',
       type: 'actions',
@@ -146,7 +163,7 @@ const Index = (): JSX.Element => {
             icon={<EditIcon />}
             label='Edit'
             onClick={(): any =>
-              handleEditOpen(params.row.id, params.row.priName)
+              handleEditOpen(params.row.id, params.row.priTname)
             }
           />
           <Dialog
@@ -210,14 +227,14 @@ const Index = (): JSX.Element => {
   return (
     <LayoutAdmin>
       <>
-        {load == true ? (
+        {allPrizeT.loading== true ? (
           <Box sx={{ display: 'flex' }}>
             <CircularProgress />
           </Box>
         ) : (
           <>
+            <h1 className='color-primary text-center'>Quản lý loại giải thưởng</h1>
             <Stack direction={'row'} alignItems={'center'} gap={'20px'}>
-              <h1 className='color-primary'>Quản lý loại giải thưởng</h1>
               <div>
                 <Button
                   onClick={handelOpenAdd}
@@ -259,9 +276,9 @@ const Index = (): JSX.Element => {
                                 </Button>
                             </div> */}
             </Stack>
-            <div style={{ height: 400, width: '100%',backgroundColor:"white"}}>
+            <div style={{ height: 400, width: '100%', backgroundColor: "white" }}>
               <DataGrid
-                rows={data}
+                rows={prizesT}
                 columns={columns}
                 initialState={{
                   pagination: {

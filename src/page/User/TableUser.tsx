@@ -33,7 +33,7 @@ const TableUser = (): JSX.Element => {
 
   React.useEffect(() => {
     call(getAllUser)
-  }, [reset])
+  }, [showSuccess])
 
   const users = userState?.payload
   const rows =
@@ -175,13 +175,6 @@ const TableUser = (): JSX.Element => {
         </Box>
       ) : (
         <>
-          <Button
-            onClick={handelReset}
-            variant='contained'
-            startIcon={<FlipCameraAndroidIcon />}
-          >
-            Reset
-          </Button>
           <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
             <DataGrid
               rows={rows}

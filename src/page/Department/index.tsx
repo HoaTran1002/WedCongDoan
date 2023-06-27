@@ -9,6 +9,7 @@ const Index = (): JSX.Element => {
     <>
       <LayoutAdmin>
         <>
+          <h1 className='color-primary text-center'>Quản lý khoa</h1>
           <BasicModal />
           <TableDepartment/>
         </>

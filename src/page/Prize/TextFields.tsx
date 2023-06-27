@@ -3,8 +3,8 @@ import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
 import { Button, MenuItem } from '@mui/material'
 import useFetch from '~/hook/useFetch'
-import { getAll } from '~/api/prizeTypesApi'
-import { getAllPrizes } from '~/api/prizesApi'
+import { getAllPrizeTypes } from '~/api/prizeTypesApi'
+import { getAllPrize } from '~/api/prizesApi'
 import { useParams } from 'react-router-dom'
 import { editcompPrize, insert } from '~/api/CompetitionsPrizesAPI'
 import { Snackbar } from '@mui/material'
@@ -43,10 +43,10 @@ export default function TextFields(prop: {
 
   const { comId } = useParams()
   React.useEffect(() => {
-    callPrizeTypes(getAll)
+    callPrizeTypes(getAllPrizeTypes)
   }, [])
   React.useEffect(() => {
-    callPrizes(getAllPrizes)
+    callPrizes(getAllPrize)
   }, [])
 
   const PrizeTypes = prizeTypeState.payload || []

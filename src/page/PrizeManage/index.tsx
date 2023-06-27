@@ -18,11 +18,11 @@ import {
   DialogContentText,
   DialogActions
 } from '@mui/material'
-import { getAllPrizes } from '~/api/prizesApi'
+import { getAllPrize,EditPrize,InsertPrize,DeletePrize } from '~/api/prizesApi'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 import CircularProgress from '@mui/material/CircularProgress'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
+import useFetch from '~/hook/useFetch'
 
 //================================
 interface Prize {
@@ -32,13 +32,29 @@ interface Prize {
 //===================================
 
 const Index = (): JSX.Element => {
-  const [load, setLoad] = React.useState<boolean>(true)
-  const [data, setData] = React.useState<any>()
-  const [prizeName, setPrizeName] = React.useState<string>()
-  const [prizeId, setPrizeId] = React.useState<number>()
+  const [prizeName, setPrizeName] = React.useState<string>('')
+  const [prizeId, setPrizeId] = React.useState<number>(0)
   const [addOpen, setAddOpen] = React.useState(false)
   const [editOpen, setEditOpen] = React.useState<boolean>(false)
   const [deleteOpen, setDeleteOpen] = React.useState(false)
+  const [allPrize,callAllPrize] = useFetch()
+  const [editPrize,callEditPrize] = useFetch()
+  const [deletePrize,callDeletePrize] = useFetch()
+  const [insertPrize,callInsertPrize] = useFetch()
+
+  const requestDataEdit: {
+    priId: number 
+    priName: string
+  } = {
+    priId: prizeId,
+    priName: prizeName
+  }
+
+  const requestDataInsert: {
+    priName: string
+  } = {
+    priName: prizeName
+  }
 
   // ==========================================
   const onchangePriName = function (
@@ -53,17 +69,13 @@ const Index = (): JSX.Element => {
     setPrizeName('')
   }
   const handelAddOk = (): void => {
-    const newData = {
-      priName: prizeName
-    }
-    axios
-      .post('/Prizes', newData)
-      .then((res) => {
-        console.log(res.data)
-      })
-      .catch((error) => {
+    callInsertPrize(async () => {
+      try {
+        await InsertPrize(requestDataInsert)
+      } catch (error) {
         console.log(error)
-      })
+      }
+    })
     setAddOpen(false)
   }
   const handelAddClose = (): void => {
@@ -78,14 +90,16 @@ const Index = (): JSX.Element => {
     setDeleteOpen(false)
   }
   const handleDeleteOK = (): void => {
-    axios
-      .delete(`/Prizes?id=${prizeId}`)
-      .then((res) => {
-        console.log(res.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    const request: { _id: number } = {
+      _id: prizeId
+    }
+    callDeletePrize(async () => {
+      try {
+        await DeletePrize(request)
+      } catch (error) {
+        console.log('thất bại')
+      }
+    })
     setDeleteOpen(false)
   }
   //=========================================
@@ -96,19 +110,13 @@ const Index = (): JSX.Element => {
   }
 
   const handelEditOk = (): void => {
-    const newData = {
-      priId: prizeId,
-      priName: prizeName
-    }
-    console.log(newData)
-    axios
-      .put('/Prizes', newData)
-      .then((res) => {
-        console.log(res.data)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    callEditPrize(async () => {
+      try {
+          await EditPrize(requestDataEdit)
+      } catch (error) {
+          console.log('Thất bại')
+      }
+  })
     setEditOpen(false)
   }
   const handelEditClose = (): void => {
@@ -117,22 +125,30 @@ const Index = (): JSX.Element => {
     }
   }
   React.useEffect(() => {
-    axios
-      .get(`/Prizes`)
-      .then((res) => {
-        console.log(res.data)
-        const rows =
-          res.data?.map((prize: Prize) => ({
-            id: prize.priId,
-            priName: prize.priName
-          })) || []
-        setData(rows)
-        setLoad(false)
-      })
-      .catch((error) => {
-        console.log(error)
-      })
-  }, [addOpen, editOpen, deleteOpen])
+      const fetchData = async () :Promise<any> => {
+          try {
+            const data = await getAllPrize();
+            callAllPrize(() => Promise.resolve(data));
+          } catch (error) {
+            console.log(error);
+          }
+        };
+        fetchData();
+  }, [addOpen,editOpen,deleteOpen]);
+  React.useEffect(() => {
+      const fetchData = async () :Promise<any> => {
+          try {
+            await callAllPrize(getAllPrize)
+          } catch (error) {
+            console.log(error);
+          }
+        };
+        fetchData();
+  }, []);
+  const prizes: Prize[] = allPrize.payload?.map((prize: Prize) => ({
+    id: prize.priId,
+    priName: prize.priName
+  })) || []
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID ', width: 200 },
     { field: 'priName', headerName: 'Tên giải thưởng', width: 200 },
@@ -213,14 +229,14 @@ const Index = (): JSX.Element => {
   return (
     <LayoutAdmin>
       <>
-        {load == true ? (
+        {allPrize.loading == true ? (
           <Box sx={{ display: 'flex' }}>
             <CircularProgress />
           </Box>
         ) : (
           <>
+            <h1 className='color-primary text-center'>Quản lý giải thưởng</h1>
             <Stack direction={'row'} alignItems={'center'} gap={'20px'}>
-              <h1 className='color-primary'>Quản lý giải thưởng</h1>
               <div>
                 <Button
                   onClick={handelOpenAdd}
@@ -264,7 +280,7 @@ const Index = (): JSX.Element => {
             </Stack>
             <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
               <DataGrid
-                rows={data}
+                rows={prizes}
                 columns={columns}
                 initialState={{
                   pagination: {
