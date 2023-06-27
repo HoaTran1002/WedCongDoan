@@ -114,6 +114,28 @@ const Index = (): JSX.Element => {
       setImgSrc(imageFile.path)
     }
   };
+
+  // callBlogtInsert(async () => {
+  //   try {
+  //     console.log(requestData)
+  //     if (selectedImage) {
+  //       const reader = new FileReader();
+  //       reader.onload = async (): Promise<void> => {
+  //         const imgSrc = reader.result as string;
+  //         await Insert({
+  //           ...requestData,
+  //           imgSrc: imgSrc.split(',')[1],
+  //         });
+  //       };
+  //       console.log('đang chọn ảnh',imgSrc.split(',')[1])
+  //       reader.readAsDataURL(selectedImage);
+  //     } else {
+  //       await Insert(requestData);
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+  // })
   useEffect(() => {
     const request: { id: number } = { id: blogId };
     callBlogById(async () => {
