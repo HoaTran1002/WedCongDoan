@@ -142,24 +142,54 @@ const Index = (): JSX.Element => {
       setErrUserQuan('')
     }
   }
+
   const submitAddComp = (): void => {
-    if (errStartDate == null && errEndDate == null) {
-      setErrEndDate('chọn ngày kết thúc')
-      setErrStartDate('chọn ngày bắt đầu')
-      setShowError(true)
+    const errorConditions = [
+      {
+        condition: dep === '',
+        setError: setErrDep,
+        errorMessage: 'Chọn khoa tổ chức'
+      },
+      {
+        condition: comNameValue === '',
+        setError: setErrComName,
+        errorMessage: 'Nhập tên cuộc thi'
+      },
+      {
+        condition: examTimesValue === '',
+        setError: setErrExamTimes,
+        errorMessage: 'Nhập thời gian thi'
+      },
+      {
+        condition: startDateValue === null,
+        setError: setErrStartDate,
+        errorMessage: 'Chọn ngày bắt đầu'
+      },
+      {
+        condition: endDateValue === null,
+        setError: setErrEndDate,
+        errorMessage: 'Chọn ngày kết thúc'
+      },
+      {
+        condition: userQuanValue === '',
+        setError: setErrUserQuan,
+        errorMessage: 'Nhập số lượng thí sinh'
+      }
+    ]
+
+    for (const condition of errorConditions) {
+      if (condition.condition) {
+        condition.setError(condition.errorMessage)
+      }
+    }
+
+    const hasError = errorConditions.some((condition) => condition.condition)
+
+    if (hasError) {
       return
     }
-    if (errEndDate == null) {
-      setErrEndDate('chọn ngày kết thúc')
 
-      setShowError(true)
-      return
-    } else if (errStartDate == null) {
-      setErrStartDate('chọn ngày bắt đầu')
-
-      setShowError(true)
-      return
-    }
+    // Tiếp tục xử lý khi không có lỗi
     callComp(async () => {
       try {
         await insert(request)

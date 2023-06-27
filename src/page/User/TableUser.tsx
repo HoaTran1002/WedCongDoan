@@ -98,20 +98,19 @@ const TableUser = (): JSX.Element => {
       type: 'string',
       width: 200
     },
-    {
-      field: 'roleId',
-      headerName: 'Mã Quyền',
-      type: 'number',
-      width: 80,
-      hideable: true
-    },
-    {
-      field: 'depId',
-      headerName: 'Mã Phòng',
-      type: 'number',
-      width: 80,
-      hideable: true
-    },
+    // },
+    // {
+    //   field: 'roleId',
+    //   headerName: 'Mã Quyền',
+    //   type: 'number',
+    //   width: 0
+    // },
+    // {
+    //   field: 'depId',
+    //   headerName: 'Mã Phòng',
+    //   type: 'number',
+    //   width: 0
+    // },
     {
       field: 'actions',
       type: 'actions',
@@ -200,5 +199,4 @@ const TableUser = (): JSX.Element => {
     </>
   )
 }
-
 export default TableUser
