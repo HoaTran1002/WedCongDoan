@@ -23,7 +23,12 @@ import axios from '~/api/axios'
 import CircularProgress from '@mui/material/CircularProgress'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
 import useFetch from '~/hook/useFetch'
-import { getAllPrizeTypes, InsertPrizeTypes,DeletePrizeTypes,EditPrizeTypes} from '~/api/prizeTypesApi'
+import {
+  getAllPrizeTypes,
+  InsertPrizeTypes,
+  DeletePrizeTypes,
+  EditPrizeTypes
+} from '~/api/prizeTypesApi'
 
 //================================
 interface PrizeType {
@@ -112,11 +117,11 @@ const Index = (): JSX.Element => {
   const handelEditOk = (): void => {
     callEditPrizeT(async () => {
       try {
-          await EditPrizeTypes(requestDataEdit)
+        await EditPrizeTypes(requestDataEdit)
       } catch (error) {
-          console.log('Thất bại')
+        console.log('Thất bại')
       }
-  })
+    })
     setEditOpen(false)
   }
   const handelEditClose = (): void => {
@@ -127,28 +132,29 @@ const Index = (): JSX.Element => {
   React.useEffect(() => {
     const fetchData = async (): Promise<any> => {
       try {
-        const data = await getAllPrizeTypes();
-        callAllPrizeT(() => Promise.resolve(data));
+        const data = await getAllPrizeTypes()
+        callAllPrizeT(() => Promise.resolve(data))
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-    };
-    fetchData();
-  }, [addOpen, editOpen, deleteOpen]);
+    }
+    fetchData()
+  }, [addOpen, editOpen, deleteOpen])
   React.useEffect(() => {
     const fetchData = async (): Promise<any> => {
       try {
         await callAllPrizeT(getAllPrizeTypes)
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-    };
-    fetchData();
-  }, []);
-  const prizesT: PrizeType[] = allPrizeT.payload?.map((prizeT: PrizeType) => ({
-    id: prizeT.priTid,
-    priTname: prizeT.priTname
-  })) || []
+    }
+    fetchData()
+  }, [])
+  const prizesT: PrizeType[] =
+    allPrizeT.payload?.map((prizeT: PrizeType) => ({
+      id: prizeT.priTid,
+      priTname: prizeT.priTname
+    })) || []
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID ', width: 200 },
     { field: 'priTname', headerName: 'Tên giải thưởng', width: 200 },
@@ -227,13 +233,15 @@ const Index = (): JSX.Element => {
   return (
     <LayoutAdmin>
       <>
-        {allPrizeT.loading== true ? (
+        {allPrizeT.loading == true ? (
           <Box sx={{ display: 'flex' }}>
             <CircularProgress />
           </Box>
         ) : (
           <>
-            <h1 className='color-primary text-center'>Quản lý loại giải thưởng</h1>
+            <h1 className='color-primary text-center'>
+              Quản lý loại giải thưởng
+            </h1>
             <Stack direction={'row'} alignItems={'center'} gap={'20px'}>
               <div>
                 <Button

@@ -174,7 +174,7 @@ const TableUser = (): JSX.Element => {
         </Box>
       ) : (
         <>
-          <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
+          <div style={{ height: 400, width: '100%', backgroundColor: 'white' }}>
             <DataGrid
               rows={rows}
               columns={columns}

@@ -29,8 +29,6 @@ import { Insert } from '~/api/blogApi'
 import useFetch from '~/hook/useFetch'
 import * as fs from 'fs'
 import * as path from 'path'
-
-
 const Index = (): JSX.Element => {
   const [imageFile, setImageFile] = useState<File>()
   const [age, setAge] = useState('')
@@ -85,18 +83,18 @@ const Index = (): JSX.Element => {
       try {
         console.log(requestData)
         if (selectedImage) {
-          const reader = new FileReader();
+          const reader = new FileReader()
           reader.onload = async (): Promise<void> => {
-            const imgSrc = reader.result as string;
+            const imgSrc = reader.result as string
             await Insert({
               ...requestData,
-              imgSrc: imgSrc.split(',')[1],
-            });
-          };
-          console.log('đang chọn ảnh',imgSrc.split(',')[1])
-          reader.readAsDataURL(selectedImage);
+              imgSrc: imgSrc.split(',')[1]
+            })
+          }
+          console.log('đang chọn ảnh', imgSrc.split(',')[1])
+          reader.readAsDataURL(selectedImage)
         } else {
-          await Insert(requestData);
+          await Insert(requestData)
         }
       } catch (error) {
         console.log(error)

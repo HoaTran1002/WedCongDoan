@@ -71,7 +71,6 @@ const Index = (): JSX.Element => {
     }
     const handleClose = (): any => {
         setDeleteOpen(false);
-
     };
     const handleDeleteOK= (): void => {
         const request: { _id: number } = {

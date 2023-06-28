@@ -5,14 +5,18 @@ import image from '~/assets/img/competion-1.jpg'
 import { Link } from 'react-router-dom'
 import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
+import { blue, green } from '@mui/material/colors'
 
 const Index = (): JSX.Element => {
   return (
     <LayoutAdmin>
       <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
-        <Grid item xs={3}>
+        <Grid item xs={6}>
           <Box sx={cardStyle} className=''>
-            <h2 className='color-primary' style={{ margin: '0px' }}>
+            <h2
+              className='color-primary'
+              style={{ margin: '0px', color: 'white' }}
+            >
               Giải thưởng
             </h2>
             <p>Quản lý thông tin giải thưởng</p>
@@ -23,9 +27,12 @@ const Index = (): JSX.Element => {
             </div>
           </Box>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={6}>
           <Box sx={cardStyle} className=''>
-            <h2 className='color-primary' style={{ margin: '0px' }}>
+            <h2
+              className='color-primary'
+              style={{ margin: '0px', color: 'white' }}
+            >
               Loại Giải thưởng
             </h2>
             <p>Thông tin loại giải thưởng</p>
@@ -36,9 +43,12 @@ const Index = (): JSX.Element => {
             </div>
           </Box>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={6}>
           <Box sx={cardStyle} className=''>
-            <h2 className='color-primary' style={{ margin: '0px' }}>
+            <h2
+              className='color-primary'
+              style={{ margin: '0px', color: 'white' }}
+            >
               Đề thi
             </h2>
             <p>Quản lý thông tin đề thi</p>
@@ -49,9 +59,12 @@ const Index = (): JSX.Element => {
             </div>
           </Box>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={6}>
           <Box sx={cardStyle} className=''>
-            <h2 className='color-primary' style={{ margin: '0px' }}>
+            <h2
+              className='color-primary'
+              style={{ margin: '0px', color: 'white' }}
+            >
               Khoa
             </h2>
             <p>Quản lý thông tin khoa</p>
@@ -72,6 +85,6 @@ export default Index
 const cardStyle: SxProps = {
   padding: '30px 20px',
   borderRadius: '5px',
-  backgroundColor: '#e7f0f9',
-  mt:2
+  backgroundColor: blue[300],
+  mt: 2
 }

@@ -1,5 +1,7 @@
+import { AxiosResponse } from 'axios'
 import { useEffect, useState } from 'react'
-import axios, { AxiosResponse } from '~/api/axios'
+import axios from '~/api/axios'
+
 import base_url from '~/config/env'
 
 interface UseAxiosProps {

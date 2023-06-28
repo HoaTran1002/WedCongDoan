@@ -18,7 +18,12 @@ import {
   DialogContentText,
   DialogActions
 } from '@mui/material'
-import { getAllPrize,EditPrize,InsertPrize,DeletePrize } from '~/api/prizesApi'
+import {
+  getAllPrize,
+  EditPrize,
+  InsertPrize,
+  DeletePrize
+} from '~/api/prizesApi'
 import { Link } from 'react-router-dom'
 import CircularProgress from '@mui/material/CircularProgress'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
@@ -37,13 +42,13 @@ const Index = (): JSX.Element => {
   const [addOpen, setAddOpen] = React.useState(false)
   const [editOpen, setEditOpen] = React.useState<boolean>(false)
   const [deleteOpen, setDeleteOpen] = React.useState(false)
-  const [allPrize,callAllPrize] = useFetch()
-  const [editPrize,callEditPrize] = useFetch()
-  const [deletePrize,callDeletePrize] = useFetch()
-  const [insertPrize,callInsertPrize] = useFetch()
+  const [allPrize, callAllPrize] = useFetch()
+  const [editPrize, callEditPrize] = useFetch()
+  const [deletePrize, callDeletePrize] = useFetch()
+  const [insertPrize, callInsertPrize] = useFetch()
 
   const requestDataEdit: {
-    priId: number 
+    priId: number
     priName: string
   } = {
     priId: prizeId,
@@ -112,11 +117,11 @@ const Index = (): JSX.Element => {
   const handelEditOk = (): void => {
     callEditPrize(async () => {
       try {
-          await EditPrize(requestDataEdit)
+        await EditPrize(requestDataEdit)
       } catch (error) {
-          console.log('Thất bại')
+        console.log('Thất bại')
       }
-  })
+    })
     setEditOpen(false)
   }
   const handelEditClose = (): void => {
@@ -125,30 +130,31 @@ const Index = (): JSX.Element => {
     }
   }
   React.useEffect(() => {
-      const fetchData = async () :Promise<any> => {
-          try {
-            const data = await getAllPrize();
-            callAllPrize(() => Promise.resolve(data));
-          } catch (error) {
-            console.log(error);
-          }
-        };
-        fetchData();
-  }, [addOpen,editOpen,deleteOpen]);
+    const fetchData = async (): Promise<any> => {
+      try {
+        const data = await getAllPrize()
+        callAllPrize(() => Promise.resolve(data))
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchData()
+  }, [addOpen, editOpen, deleteOpen])
   React.useEffect(() => {
-      const fetchData = async () :Promise<any> => {
-          try {
-            await callAllPrize(getAllPrize)
-          } catch (error) {
-            console.log(error);
-          }
-        };
-        fetchData();
-  }, []);
-  const prizes: Prize[] = allPrize.payload?.map((prize: Prize) => ({
-    id: prize.priId,
-    priName: prize.priName
-  })) || []
+    const fetchData = async (): Promise<any> => {
+      try {
+        await callAllPrize(getAllPrize)
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    fetchData()
+  }, [])
+  const prizes: Prize[] =
+    allPrize.payload?.map((prize: Prize) => ({
+      id: prize.priId,
+      priName: prize.priName
+    })) || []
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID ', width: 200 },
     { field: 'priName', headerName: 'Tên giải thưởng', width: 200 },
