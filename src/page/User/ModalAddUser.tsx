@@ -6,6 +6,8 @@ import Modal from '@mui/material/Modal'
 import Stack from '@mui/material/Stack'
 import UserTextFields from './UserTextFields'
 import AddIcon from '@mui/icons-material/Add'
+import useFetch from '~/hook/useFetch'
+import { getAllUser } from '~/api/userApi'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -23,13 +25,23 @@ export default function BasicModal(): JSX.Element {
   const [open, setOpen] = React.useState(false)
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
+  const [userState, call] = useFetch()
+
+  React.useEffect(() => {
+    call(getAllUser)
+  }, [])
+
   return (
     <div>
-      <Stack direction={'row'} gap={'20px'} sx={{ mt: '15px', mb: '15px' }}>
-        <Button variant='contained' onClick={handleOpen} startIcon={<AddIcon />}>
-          Thêm Người Dùng
-        </Button>
-      </Stack>
+      {
+        !userState.loading ? (
+          <Stack direction={'row'} gap={'20px'} sx={{ mt: '15px', mb: '15px' }}>
+            <Button variant='contained' onClick={handleOpen} startIcon={<AddIcon />}>
+              Thêm Người Dùng
+            </Button>
+          </Stack>
+        ):(null)
+      }
       <Modal
         open={open}
         onClose={handleClose}

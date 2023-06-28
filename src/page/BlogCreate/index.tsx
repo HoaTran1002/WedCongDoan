@@ -21,6 +21,7 @@ import AddIcon from '@mui/icons-material/Add'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { SelectChangeEvent } from '@mui/material/Select'
+import axios from 'axios'
 import Dropzone from 'react-dropzone'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import base_url from '~/config/env'
@@ -29,8 +30,10 @@ import { Insert } from '~/api/blogApi'
 import useFetch from '~/hook/useFetch'
 import * as fs from 'fs'
 import * as path from 'path'
+
+
 const Index = (): JSX.Element => {
-  const [imageFile, setImageFile] = useState<File>()
+  const [imageFile, setImageFile] = useState<string | null>();
   const [age, setAge] = useState('')
   const [blogName, setBlogName] = useState('')
   const [content, setContent] = useState('')
@@ -50,9 +53,8 @@ const Index = (): JSX.Element => {
   const handleImageDrop = (acceptedFiles: any): any => {
     if (acceptedFiles && acceptedFiles.length > 0) {
       const file = acceptedFiles[0]
-
       setSelectedImage(file)
-      setImageFile(file)
+      setImageFile(URL.createObjectURL(file))
       setImgName(file.path)
       setImgSrc(file.path)
     }
@@ -83,25 +85,25 @@ const Index = (): JSX.Element => {
       try {
         console.log(requestData)
         if (selectedImage) {
-          const reader = new FileReader()
+          const reader = new FileReader();
           reader.onload = async (): Promise<void> => {
-            const imgSrc = reader.result as string
+            const imgSrc = reader.result as string;
             await Insert({
               ...requestData,
-              imgSrc: imgSrc.split(',')[1]
-            })
-          }
-          console.log('đang chọn ảnh', imgSrc.split(',')[1])
-          reader.readAsDataURL(selectedImage)
+              imgSrc: imgSrc.split(',')[1],
+            });
+          };
+          console.log('đang chọn ảnh',imgSrc.split(',')[1])
+          reader.readAsDataURL(selectedImage);
         } else {
-          await Insert(requestData)
+          await Insert(requestData);
         }
       } catch (error) {
         console.log(error)
       }
     })
+    
   }
-  
   return (
     <>
       <LayoutAdmin>
@@ -133,17 +135,6 @@ const Index = (): JSX.Element => {
                   setBlogName(e.target.value)
                 }}
               />
-              <TextField
-                id='filled-search'
-                label='Thanh phụ tiêu đề'
-                type='search'
-                variant='outlined'
-                style={{ width: '100%' }}
-              />
-            </Stack>
-          </Grid>
-          <Grid item xs={12} style={{ marginTop: '10px' }}>
-            <Stack direction={'row'} alignItems='center' gap={5}>
               <FormControl
                 sx={{ m: 1, minWidth: 80 }}
                 style={{ width: '100%' }}
@@ -163,26 +154,9 @@ const Index = (): JSX.Element => {
                   <MenuItem value={22}>Khảo sát</MenuItem>
                 </Select>
               </FormControl>
-              <FormControl
-                sx={{ m: 1, minWidth: 80 }}
-                style={{ width: '100%' }}
-              >
-                <InputLabel id='demo-simple-select-autowidth-label'>
-                  Tình trạng
-                </InputLabel>
-                <Select
-                  labelId='demo-simple-select-autowidth-label'
-                  id='demo-simple-select-autowidth'
-                  value={age}
-                  onChange={handleChange}
-                  label='Age'
-                >
-                  <MenuItem value={10}>Ẩn trang blog</MenuItem>
-                  <MenuItem value={21}>Hiện trang blog</MenuItem>
-                </Select>
-              </FormControl>
             </Stack>
           </Grid>
+          
           <Grid item xs={12}>
             <div>
               <Dropzone
@@ -203,12 +177,12 @@ const Index = (): JSX.Element => {
                   </div>
                 )}
               </Dropzone>
-              {selectedImage && (
+              {imageFile && (
                 <div>
                   <h2 className='color-primary'>Ảnh bìa cho trang blog:</h2>
                   <img
                     className='selectedImage'
-                    src={selectedImage}
+                    src={imageFile}
                     alt='Selected'
                   />
                 </div>
@@ -258,7 +232,7 @@ const Index = (): JSX.Element => {
               </DialogContent>
               <DialogActions>
                 <Link to={'/BlogManage?opensucess=true'}>
-                  <Button variant='contained' onClick={handleOK}>
+                  <Button variant="contained" onClick={handleOK}>
                     OK
                   </Button>
                 </Link>

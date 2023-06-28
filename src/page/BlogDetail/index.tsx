@@ -28,8 +28,6 @@ import useFetch from '~/hook/useFetch'
 import { getBlogId, editBlog, deleteBlog, getAllBlog } from '~/api/blogApi'
 import Dropzone from 'react-dropzone'
 const Index = (): JSX.Element => {
-
-  let imageFile
   const [age, setAge] = React.useState('')
   const [data, setData] = React.useState()
   const [blogName, setBlogName] = useState('')
@@ -38,6 +36,7 @@ const Index = (): JSX.Element => {
   const [imgSrc, setImgSrc] = useState('')
   const [open, setOpen] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
+  const [imageFile, setImageFile] = useState<string | null>();
   const [selectedImage, setSelectedImage] = useState(null)
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
@@ -98,44 +97,36 @@ const Index = (): JSX.Element => {
     setOpen(false)
     callEditBlog(async () => {
       try {
-        await editBlog(requestData)
+        console.log(requestData)
+        if (selectedImage) {
+          const reader = new FileReader();
+          reader.onload = async (): Promise<void> => {
+            const imgSrc = reader.result as string;
+            await editBlog({
+              ...requestData,
+              imgSrc: imgSrc.split(',')[1],
+            });
+          };
+          console.log('đang chọn ảnh',imgSrc.split(',')[1])
+          reader.readAsDataURL(selectedImage);
+        } else {
+          await editBlog(requestData);
+        }
       } catch (error) {
         console.log('Thất bại')
       }
     })
-    const filePath = `src/assets/img/${imgName}`
-    // saveAs(imageFile, filePath);
   }
   const handleImageDrop = (acceptedFiles: any): any => {
     if (acceptedFiles && acceptedFiles.length > 0) {
-      imageFile = acceptedFiles[0]
-      // setSelectedImage(URL.createObjectURL(imageFile))
+      const imageFile = acceptedFiles[0]
+      setSelectedImage(imageFile)
+      setImageFile(URL.createObjectURL(imageFile))
       setImgName(imageFile.path)
       setImgSrc(imageFile.path)
     }
   };
 
-  // callBlogtInsert(async () => {
-  //   try {
-  //     console.log(requestData)
-  //     if (selectedImage) {
-  //       const reader = new FileReader();
-  //       reader.onload = async (): Promise<void> => {
-  //         const imgSrc = reader.result as string;
-  //         await Insert({
-  //           ...requestData,
-  //           imgSrc: imgSrc.split(',')[1],
-  //         });
-  //       };
-  //       console.log('đang chọn ảnh',imgSrc.split(',')[1])
-  //       reader.readAsDataURL(selectedImage);
-  //     } else {
-  //       await Insert(requestData);
-  //     }
-  //   } catch (error) {
-  //     console.log(error)
-  //   }
-  // })
   useEffect(() => {
     const request: { id: number } = { id: blogId };
     callBlogById(async () => {
@@ -233,12 +224,12 @@ const Index = (): JSX.Element => {
                       </div>
                     )}
                   </Dropzone>
-                  {selectedImage ? (
+                  {imageFile ? (
                     <div>
                       <h2 className='color-primary'>Ảnh bìa cho trang blog:</h2>
                       <img
                         className='selectedImage'
-                        src={selectedImage}
+                        src={imageFile}
                         alt='Selected'
                       />
                     </div>
@@ -280,14 +271,28 @@ const Index = (): JSX.Element => {
                 />
               </Grid>
               <Grid item xs={12} sx={{ mb: 10 }}>
-                <Button
-                  variant='contained'
-                  startIcon={<UpdateIcon />}
-                  style={{ marginTop: '20px' }}
-                  onClick={handleClickOpen}
+                <Stack 
+                  gap={2}
+                  direction={'row'}
                 >
-                  Cập nhâp blog
-                </Button>
+                  <Button
+                    variant='contained'
+                    startIcon={<UpdateIcon />}
+                    style={{ marginTop: '20px' }}
+                    onClick={handleClickOpen}
+                  >
+                    Cập nhâp blog
+                  </Button>
+                  <Button
+                    variant='contained'
+                    color='error'
+                    startIcon={<DeleteIcon />}
+                    style={{ marginTop: '20px' }}
+                    onClick={handleDeleteOpen}
+                  >
+                    Xóa trang blog
+                  </Button>
+                </Stack>
                 <Dialog
                   open={open}
                   onClose={handleClose}
@@ -309,15 +314,6 @@ const Index = (): JSX.Element => {
                     <Button onClick={handleClose}>Trở về</Button>
                   </DialogActions>
                 </Dialog>
-                <Button
-                  variant='contained'
-                  color='error'
-                  startIcon={<DeleteIcon />}
-                  style={{ marginTop: '20px' }}
-                  onClick={handleDeleteOpen}
-                >
-                  Xóa trang blog
-                </Button>
                 <Dialog
                   open={openDelete}
                   onClose={handleDeleteClose}

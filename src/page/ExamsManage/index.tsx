@@ -7,7 +7,7 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import TextField from '@mui/material/TextField'
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import { Button, SxProps, Stack, Grid, Box, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from '@mui/material'
-import { getAllExam, EditExam, DeleteExam} from '~/api/exam'
+import { getAllExam, EditExam, DeleteExam,insertExams} from '~/api/exam'
 import useFetch from '~/hook/useFetch'
 import { Link } from 'react-router-dom'
 import axios from 'axios'
@@ -30,6 +30,7 @@ const Index = (): JSX.Element => {
     const [allExam,callAllExam] = useFetch();
     const [editExam,callEditExam] = useFetch();
     const [deleteExam,callDeleteExam] = useFetch();
+    const [insertExam,callInsertExam] = useFetch();
 
     const requestData: {
         examId: number 
@@ -38,7 +39,11 @@ const Index = (): JSX.Element => {
         examId: examId,
         examName: examName
     }
-
+    const requestDataInsert: {
+      examName: string
+    } = {
+      examName: examName
+  }
     // ==========================================
     const onchangeExamName = function (event: React.ChangeEvent<HTMLInputElement>): void {
         setExamName(event.target.value)
@@ -49,17 +54,14 @@ const Index = (): JSX.Element => {
         setExamName('')
     }
     const handelAddOk = (): void => {
-        const newData = {
-            examName: examName
+      callInsertExam(async () => {
+        try {
+          await insertExams(requestDataInsert)
+        } catch (error) {
+          console.log(error)
         }
-        axios.post('/Exams', newData)
-            .then((res) => {
-                console.log(res.data);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-        setAddOpen(false)
+      })
+      setAddOpen(false)
     }
     const handelAddClose = (): void => {
         setAddOpen(false)

@@ -235,71 +235,79 @@ const Index = (): JSX.Element => {
   return (
     <LayoutAdmin>
       <>
-        {allPrize.loading == true ? (
-          <Box sx={{ display: 'flex' }}>
-            <CircularProgress />
-          </Box>
-        ) : (
-          <>
-            <h1 className='color-primary text-center'>Quản lý giải thưởng</h1>
-            <Stack direction={'row'} alignItems={'center'} gap={'20px'}>
-              <div>
-                <Button
-                  onClick={handelOpenAdd}
-                  variant='contained'
-                  startIcon={<AddIcon />}
-                >
-                  Thêm giải
-                </Button>
-                <Dialog
-                  open={addOpen}
-                  onClose={handleClose}
-                  aria-labelledby='alert-dialog-title'
-                  aria-describedby='alert-dialog-description'
-                >
-                  <DialogTitle id='alert-dialog-title'>
-                    {'Thêm chuyên ngành '}
-                  </DialogTitle>
-                  <DialogContent>
-                    <div style={{ margin: '10px 0' }}>
-                      <TextField
-                        onChange={onchangePriName}
-                        id='outlined-basic'
-                        label='Tên chuyên ngành'
-                        variant='outlined'
-                      />
-                    </div>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handelAddOk} variant='contained'>
-                      OK
-                    </Button>
-                    <Button onClick={handelAddClose}>Trở về</Button>
-                  </DialogActions>
-                </Dialog>
-              </div>
-              {/* <div>
-                                <Button onClick={handelReset} variant='contained' startIcon={<FlipCameraAndroidIcon />}>
-                                    Reset
-                                </Button>
-                            </div> */}
-            </Stack>
-            <div
-              style={{ height: 400, width: '100%', backgroundColor: 'white' }}
+        <>
+          <h1 className='color-primary text-center'>Quản lý giải thưởng</h1>
+          {allPrize.loading == true ? (
+            <Box 
+              sx={{
+                 display: 'flex',
+                 width:"100%",
+                 height:"500px",
+                 justifyContent:"center",
+                 alignItems:"center"
+              }}
             >
-              <DataGrid
-                rows={prizes}
-                columns={columns}
-                initialState={{
-                  pagination: {
-                    paginationModel: { page: 0, pageSize: 6 }
-                  }
-                }}
-                pageSizeOptions={[5, 10]}
-              />
-            </div>
-          </>
-        )}
+              <CircularProgress />
+            </Box>
+          ) : (
+            <>
+              <Stack direction={'row'} alignItems={'center'} gap={'20px'}>
+                <div>
+                  <Button
+                    onClick={handelOpenAdd}
+                    variant='contained'
+                    startIcon={<AddIcon />}
+                    sx={{
+                      margin:"10px 0"
+                    }}
+                  >
+                    Thêm giải
+                  </Button>
+                  <Dialog
+                    open={addOpen}
+                    onClose={handleClose}
+                    aria-labelledby='alert-dialog-title'
+                    aria-describedby='alert-dialog-description'
+                  >
+                    <DialogTitle id='alert-dialog-title'>
+                      {'Thêm chuyên ngành '}
+                    </DialogTitle>
+                    <DialogContent>
+                      <div style={{ margin: '10px 0' }}>
+                        <TextField
+                          onChange={onchangePriName}
+                          id='outlined-basic'
+                          label='Tên chuyên ngành'
+                          variant='outlined'
+                        />
+                      </div>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handelAddOk} variant='contained'>
+                        OK
+                      </Button>
+                      <Button onClick={handelAddClose}>Trở về</Button>
+                    </DialogActions>
+                  </Dialog>
+                </div>
+              </Stack>
+              <div
+                style={{ height: 400, width: '100%', backgroundColor: 'white' }}
+              >
+                <DataGrid
+                  rows={prizes}
+                  columns={columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 6 }
+                    }
+                  }}
+                  pageSizeOptions={[5, 10]}
+                />
+              </div>
+            </>
+          )}
+        </>
       </>
     </LayoutAdmin>
   )

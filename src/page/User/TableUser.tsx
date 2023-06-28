@@ -25,10 +25,10 @@ interface User {
   depId: number
 }
 const TableUser = (): JSX.Element => {
-  const [userState, call] = useFetch()
   const [reset, setReset] = React.useState(false)
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
+  const [userState, call] = useFetch()
   const [deleteUserState, callDelete] = useFetch()
 
   React.useEffect(() => {
@@ -92,12 +92,12 @@ const TableUser = (): JSX.Element => {
       sortable: false,
       width: 200
     },
-    {
-      field: 'useraddress',
-      headerName: 'Địa Chỉ',
-      type: 'string',
-      width: 200
-    },
+    // {
+    //   field: 'useraddress',
+    //   headerName: 'Địa Chỉ',
+    //   type: 'string',
+    //   width: 200
+    // },
     // },
     // {
     //   field: 'roleId',
@@ -116,8 +116,6 @@ const TableUser = (): JSX.Element => {
       type: 'actions',
       width: 100,
       getActions: (params: any) => [
-        // <GridActionsCellItem key={1} icon={<EditIcon />} label='Edit' />,
-        // eslint-disable-next-line react/jsx-key
         <BasicModal
           key={1}
           id={params.row.id}
@@ -169,7 +167,14 @@ const TableUser = (): JSX.Element => {
         </MuiAlert>
       </Snackbar>
       {userState.loading || deleteUserState.loading ? (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ 
+          display: 'flex',
+          width:"100%",
+          height:"500px",
+          alignItems:"center",
+          justifyContent:"center"
+         }}
+        >
           <CircularProgress />
         </Box>
       ) : (
