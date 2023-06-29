@@ -15,11 +15,11 @@ const Index = (): JSX.Element => {
           <Box sx={cardStyle} className=''>
             <h2
               className='color-primary'
-              style={{ margin: '0px', color: 'white' }}
+              style={{ margin: '0px', color: '#1565c0' }}
             >
               Giải thưởng
             </h2>
-            <p>Quản lý thông tin giải thưởng</p>
+            <p style={{color:"#676767",fontSize:"20px"}}>Quản lý thông tin giải thưởng</p>
             <div>
               <Link to={'/PrizeManage'}>
                 <Button variant='contained'>Quản lý</Button>
@@ -31,11 +31,11 @@ const Index = (): JSX.Element => {
           <Box sx={cardStyle} className=''>
             <h2
               className='color-primary'
-              style={{ margin: '0px', color: 'white' }}
+              style={{ margin: '0px', color: '#1565c0' }}
             >
               Loại Giải thưởng
             </h2>
-            <p>Thông tin loại giải thưởng</p>
+            <p style={{color:"#676767",fontSize:"20px"}}>Thông tin loại giải thưởng</p>
             <div>
               <Link to={'/PrizeTypeManage'}>
                 <Button variant='contained'>Quản lý</Button>
@@ -47,11 +47,11 @@ const Index = (): JSX.Element => {
           <Box sx={cardStyle} className=''>
             <h2
               className='color-primary'
-              style={{ margin: '0px', color: 'white' }}
+              style={{ margin: '0px', color: '#1565c0' }}
             >
               Đề thi
             </h2>
-            <p>Quản lý thông tin đề thi</p>
+            <p style={{color:"#676767",fontSize:"20px"}}>Quản lý thông tin đề thi</p>
             <div>
               <Link to={'/ExamsManage'}>
                 <Button variant='contained'>Quản lý</Button>
@@ -63,11 +63,11 @@ const Index = (): JSX.Element => {
           <Box sx={cardStyle} className=''>
             <h2
               className='color-primary'
-              style={{ margin: '0px', color: 'white' }}
+              style={{ margin: '0px', color: '#1565c0' }}
             >
               Khoa
             </h2>
-            <p>Quản lý thông tin khoa</p>
+            <p style={{color:"#676767",fontSize:"20px"}}>Quản lý thông tin khoa</p>
             <div>
               <Link to={'/DepartmentManage'}>
                 <Button variant='contained'>Quản lý</Button>
@@ -85,6 +85,6 @@ export default Index
 const cardStyle: SxProps = {
   padding: '30px 20px',
   borderRadius: '5px',
-  backgroundColor: '#89caff',
+  backgroundColor: '#d4ecff',
   mt: 2
 }

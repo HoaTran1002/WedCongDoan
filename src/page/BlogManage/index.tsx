@@ -1,7 +1,6 @@
 import React, { useState,useEffect } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import { Typography, Grid, Button, Stack } from '@mui/material'
-import image from '~/assets/img/competion-1.jpg'
 import AddIcon from '@mui/icons-material/Add'
 import useFetch from '~/hook/useFetch'
 import { getAllBlog } from '~/api/blogApi'

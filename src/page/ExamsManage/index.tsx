@@ -217,61 +217,70 @@ const Index = (): JSX.Element => {
     return (
         <LayoutAdmin>
             <>
+                <h1 className='color-primary text-center'>Quản lý đề thi</h1>
                 {allExam.loading == true ? (
-                    <Box sx={{ display: 'flex' }}>
+                    <Box 
+                        sx={{
+                        display: 'flex',
+                        width:"100%",
+                        height:"500px",
+                        justifyContent:"center",
+                        alignItems:"center"
+                        }}
+                    >
                         <CircularProgress />
                     </Box>
-                ) : (
-                    <>
-                    <h1 className='color-primary text-center'>Quản lý đề thi</h1>
-                        <Stack direction={'row'} alignItems={'center'} gap={'20px'}>
-                            <div>
-                                <Button onClick={handelOpenAdd} variant='contained' startIcon={<AddIcon />}>
-                                    Thêm đề thi
-                                </Button>
-                                <Dialog
-                                    open={addOpen}
-                                    onClose={handleClose}
-                                    aria-labelledby="alert-dialog-title"
-                                    aria-describedby="alert-dialog-description"
-                                >
-                                    <DialogTitle id="alert-dialog-title">
-                                        {"Đề thi mới"}
-                                    </DialogTitle>
-                                    <DialogContent>
-                                        <div style={{margin:"10px 0"}}>
-                                            <TextField
-                                                onChange={onchangeExamName}
-                                                id='outlined-basic'
-                                                label='Tên đề thi'
-                                                variant='outlined'
-                                            />
+                    ) : (
+                        <>
+                            <Stack direction={'row'} alignItems={'center'} gap={'20px'}>
+                                <div>
+                                    <Button onClick={handelOpenAdd} variant='contained' startIcon={<AddIcon />}>
+                                        Thêm đề thi
+                                    </Button>
+                                    <Dialog
+                                        open={addOpen}
+                                        onClose={handleClose}
+                                        aria-labelledby="alert-dialog-title"
+                                        aria-describedby="alert-dialog-description"
+                                    >
+                                        <DialogTitle id="alert-dialog-title">
+                                            {"Đề thi mới"}
+                                        </DialogTitle>
+                                        <DialogContent>
+                                            <div style={{margin:"10px 0"}}>
+                                                <TextField
+                                                    onChange={onchangeExamName}
+                                                    id='outlined-basic'
+                                                    label='Tên đề thi'
+                                                    variant='outlined'
+                                                />
 
-                                        </div>
-                                    </DialogContent>
-                                    <DialogActions>
-                                        <Button onClick={handelAddOk} variant='contained'>
-                                            OK
-                                        </Button>
-                                        <Button onClick={handelAddClose}>Trở về</Button>
-                                    </DialogActions>
-                                </Dialog>
+                                            </div>
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={handelAddOk} variant='contained'>
+                                                OK
+                                            </Button>
+                                            <Button onClick={handelAddClose}>Trở về</Button>
+                                        </DialogActions>
+                                    </Dialog>
+                                </div>
+                            </Stack>
+                            <div style={{ height: 400, width: '100%' }}>
+                                <DataGrid
+                                    rows={exams}
+                                    columns={columns}
+                                    initialState={{
+                                        pagination: {
+                                            paginationModel: { page: 0, pageSize: 6 }
+                                        }
+                                    }}
+                                    pageSizeOptions={[5, 10]}
+                                />
                             </div>
-                        </Stack>
-                        <div style={{ height: 400, width: '100%' }}>
-                            <DataGrid
-                                rows={exams}
-                                columns={columns}
-                                initialState={{
-                                    pagination: {
-                                        paginationModel: { page: 0, pageSize: 6 }
-                                    }
-                                }}
-                                pageSizeOptions={[5, 10]}
-                            />
-                        </div>
-                    </>
-                )}
+                        </>
+                    )
+                }
             </>
         </LayoutAdmin>
     )

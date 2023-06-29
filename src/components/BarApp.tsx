@@ -1,12 +1,9 @@
 import * as React from 'react'
 import { styled, useTheme } from '@mui/material/styles'
-import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
 import CssBaseline from '@mui/material/CssBaseline'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
 import List from '@mui/material/List'
-import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -20,23 +17,29 @@ import InboxIcon from '@mui/icons-material/MoveToInbox'
 import MailIcon from '@mui/icons-material/Mail'
 import Menu from '@mui/material/Menu'
 import Avatar from '@mui/material/Avatar'
-import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
 import { Image } from '@mui/icons-material'
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
 import { ButtonGroup, Stack } from '@mui/material'
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth'
 import { Link } from 'react-router-dom'
 import Index from '~/page'
-
-
+import { Grid, Box, Typography, SxProps, Container, Button } from '@mui/material'
+import FacebookIcon from '@mui/icons-material/Facebook';
+import YouTubeIcon from '@mui/icons-material/YouTube';
+import logo from '../assets/img/logo_CongDoan.png'
+import bannerExam from '../assets/img/cuoc_thi_cong_doan_banner.png'
+import HomeIcon from '@mui/icons-material/Home';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 const drawerWidth = 250
 const pages = [
-  { name: 'TRANG CHỦ', to: '/' },
-  { name: 'DANH SÁCH CUỘC THI', to: '/Listcompetition' },
-  { name: 'GIẢI THƯỞNG', to: '/blog' },
+  { name: 'TRANG CHỦ', to: '/', iconComponent: <HomeIcon /> },
+  { name: 'DANH SÁCH CUỘC THI', to: '/Listcompetition', iconComponent: <FormatListBulletedIcon /> },
+  { name: 'GIẢI THƯỞNG', to: '/blog', iconComponent: <MilitaryTechIcon /> },
+  { name: 'LỊCH THI', to: '/TestSchedule', iconComponent: <CalendarMonthIcon /> },
   { name: 'ADMIN', to: '/CompetitionManage' }
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
@@ -66,7 +69,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: 'flex-end'
 }))
@@ -97,140 +99,300 @@ export default function SideBar(): JSX.Element {
   }
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position='fixed' open={open}>
-        <Toolbar sx={{ display: 'flex' }}>
-          <IconButton
-            color='inherit'
-            aria-label='open drawer'
-            onClick={handleDrawerOpen}
-            edge='start'
-            sx={{ mr: 2, display: { xs: 'flex', md: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-
+    <>
+      <Box
+        sx={{
+          display: { xs: 'none', md: 'flex' },
+          alignItems: "center",
+          padding: "5px 10px",
+          backgroundColor: "#eeeeee",
+          justifyContent: "space-between",
+          height: "40px"
+        }}
+      >
+        <span>
+          <span style={{ fontWeight: "500" }}>Email: &nbsp;</span>
+          vanphongcongdoantphcm@gmail.com - ldld@tphcm.gov.vn
+        </span>
+        <span style={{ display: "flex", gap: "10px" }}>
           <Box
-            component='img'
+            component='a'
+            href='https://www.facebook.com/congdoanthanhphohochiminh'
+            target='_blank'
             sx={{
-              height: 50,
-              width: 70
+              color: "#0e91f3",
+              display: "flex",
+              alignItems: "center"
             }}
-            alt='The house from the offer.'
-            src='https://api.congdoantphochiminh.org.vn/Upload/Multimedia/Images/20221229150859445_logo%20DAI%20HOI%20XII%20CONG%20DOAN%20TP%20-%20png.png'
-          />
+          >
+            <FacebookIcon />
+          </Box>
+          <Box
+            component='a'
+            href='https://www.youtube.com/c/C%C3%B4ng%C4%91o%C3%A0nTh%C3%A0nhph%E1%BB%91H%E1%BB%93Ch%C3%ADMinh/featured'
+            target='_blank'
+            sx={{
+              color: "red",
+              display: "flex",
+              alignItems: "center"
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+            }}
+          >
+            <YouTubeIcon />
+          </Box>
+        </span>
+      </Box>
+      <Box
+        sx={{
+          height: { xs: '150px', md: '120px' },
+          display: "flex",
+          backgroundColor: "#fbfbfb"
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            padding: '10px',
+            alignItems: "center",
+            gap: "10px"
+          }}
+
+        >
+          <Box
+            sx={{
+              height: '80px',
+              width: '80px',
+            }}
+          >
+            <Box
+              component='img'
+              src={logo}
+              sx={{
+                height: "100%"
+              }}
+            />
+          </Box>
+          <Box>
+            <Box
+              component='span'
+              sx={{
+                fontWeight: "500",
+                color: "#1565c0",
+                fontSize: "16px",
+                textAlign: { xs: "center", md: "left" },
+                display: { xs: "block", md: "block" }
+              }}
+            >
+              Trang thông tin điện tử
+            </Box>
+            <Box
+              component='p'
+              sx={{
+                margin: "4px 0",
+                fontWeight: "600",
+                color: "#1565c0",
+                textAlign: { xs: "center", md: "left" },
+                display: { xs: "block", md: "block" }
+              }}
+            >
+              CÔNG ĐOÀN <br /> THÀNH PHỐ HỒ CHÍ MINH
+            </Box>
+            <Box
+              component='span'
+              sx={{
+                color: "#ff0000",
+                fontSize: "14px",
+                textAlign: { xs: "center", md: "left" },
+                display: { xs: "block", md: "block" }
+              }}
+            >
+              HO CHI MINH CITY FEDERATION OF LABOUR
+            </Box>
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            width: "100%",
+            display: { xs: 'none', md: 'flex' },
+            justifyContent: "end",
+            flex: "1"
+          }}
+        >
+          <Link
+            to={'/'}
+          >
+            <Box
+              sx={{
+                display: "inline-block",
+                height: "100%"
+              }}
+            >
+              <Box
+                component='img'
+                src={bannerExam}
+                sx={{
+                  height: "100%",
+                  objectFit: "cover"
+                }}
+              />
+            </Box>
+          </Link>
+        </Box>
+      </Box>
+      <Box
+        sx={headerNavigate}
+      >
+        <Box
+          onClick={handleDrawerOpen}
+          sx={{
+            backgroundColor: "white",
+            height: "100%",
+            width: "50px",
+            display: { xs: 'flex', md: 'none' },
+            alignItems: "center",
+            justifyContent: "center"
+          }}
+        >
+          <MenuIcon sx={{ color: "#1769ba" }} />
+        </Box>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: { xs: 'none', md: 'flex' },
+            height: "100%"
+          }}>
+          <Box
+            component='ul'
+            sx={{
+              listStyleType: "none",
+              padding: 0,
+              display: "flex",
+              m: 0,
+              pl: 2
+            }}
+          >
             {pages.map((page, index) => (
-              <Link key={index} style={{ color: 'white', textDecoration: 'none' }} to={page.to}>
-                <Button
-                  key={index}
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    ml: 1,
-                    mr: 1,
-                    my: 2,
-                    background: 'transparent',
-                    boxShadow: 'none',
-                    display: 'block',
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                      borderRadius: 'none',
-                      boxShadow: 'none'
-                    },
-                    color: '#fff',
-                    textDecoration: 'none'
-                  }}
-                  style={{ backgroundColor: '#1769ba' }}
-                  variant='contained'
+              <Box
+                key={index}
+                component='li'
+              >
+                <Link
+                  className={
+                    `link_navbar-header ${location.pathname === page.to ? 'active' : ''}`
+                  }
+                  to={page.to}
                 >
                   {page.name}
-                </Button>
-              </Link>
+                </Link>
+
+              </Box>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0, display: { md: 'flex' } }}>
-            <Stack direction='row' spacing={2}>
-              <Button href='/TestSchedule' variant='contained' sx={{ mr: 2, border: '0.5px solid #fff' }}>
-                <CalendarMonthIcon /> <span> </span> LỊCH THI
-              </Button>
-            </Stack>
-            <Tooltip title='Open settings'>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id='menu-appbar'
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
+        </Box>
+        <Box sx={{ flexGrow: 0, display: { md: 'flex' } }}>
+          <Tooltip title='tên user' >
+            <IconButton onClick={handleOpenUserMenu} sx={{ pr: 5 }}>
+              <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
+            </IconButton>
+          </Tooltip>
+          <Menu
+            sx={{ mt: '45px' }}
+            id='menu-appbar'
+            anchorEl={anchorElUser}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right'
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right'
+            }}
+            open={Boolean(anchorElUser)}
+            onClose={handleCloseUserMenu}
+          >
+            {settings.map((setting) => (
+              <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                <Typography textAlign='center'>{setting}</Typography>
+              </MenuItem>
+            ))}
+          </Menu>
+        </Box>
+      </Box>
+      <Box sx={{ display: 'flex' }}>
+        <CssBaseline />
+        <Drawer
+          sx={{
             width: drawerWidth,
-            boxSizing: 'border-box'
-          }
-        }}
-        variant='persistent'
-        anchor='left'
-        open={open}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {pages.map((page, index) => (
-            <ListItem key={index} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText>
-                  <Button variant='contained' href={page.to}>
-                    {page.name}
-                  </Button>
-                </ListItemText>
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-      </Drawer>
-    </Box>
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box'
+            }
+          }}
+          variant='persistent'
+          anchor='left'
+          open={open}
+        >
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            {pages.map((page, index) => (
+              <ListItem 
+                key={index} disablePadding
+                sx={{
+                  ...(location.pathname === page.to && activeItemMobile)
+                }}
+              >
+                <Link
+                  to={page.to}
+                  style={{ width: "100%", textDecoration: "none" }}
+                >
+                  <ListItemButton>
+                    <ListItemIcon>{page.iconComponent}</ListItemIcon>
+                    <ListItemText
+                      sx={{
+                        color: "#333",
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontWeight: "600",
+                          color:"#1769ba"
+                        }}
+                      >
+                        {page.name}
+                      </span>
+                    </ListItemText>
+                  </ListItemButton>
+                </Link>
+              </ListItem>
+            ))}
+          </List>
+        </Drawer>
+      </Box>
+    </>
   )
+}
+
+
+const headerNavigate: SxProps = {
+  position: 'sticky',
+  backgroundColor: "#1565c0",
+  height: "60px",
+  left: 0,
+  right: 0,
+  top: "-1px",
+  zIndex: "50",
+  mt: "-1px",
+  display: "flex",
+  justifyContent: { xs: 'space-between' }
+}
+
+const activeItemMobile:SxProps={
+  backgroundColor:"#b1d7fd"
 }

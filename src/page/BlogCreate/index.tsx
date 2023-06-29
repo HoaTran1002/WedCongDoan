@@ -21,20 +21,25 @@ import AddIcon from '@mui/icons-material/Add'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { SelectChangeEvent } from '@mui/material/Select'
-import axios from 'axios'
 import Dropzone from 'react-dropzone'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
-import base_url from '~/config/env'
 import { Link } from 'react-router-dom'
-import { Insert } from '~/api/blogApi'
+import { Insert ,getAllBlog} from '~/api/blogApi'
+import {getAllDep} from '~/api/departmentApi'
+import {InsertCompetitionBlog} from '~/api/CompetitionBlog'
 import useFetch from '~/hook/useFetch'
-import * as fs from 'fs'
-import * as path from 'path'
 
+interface Department{
+  depId:number,
+  depName:string
+}
 
 const Index = (): JSX.Element => {
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString();
   const [imageFile, setImageFile] = useState<string | null>();
-  const [age, setAge] = useState('')
+  const [comId, setComId] = useState<number>(0)
+  const [blogId, setBlogId] = useState<number>(0)
   const [blogName, setBlogName] = useState('')
   const [content, setContent] = useState('')
   const [imgName, setImgName] = useState('')
@@ -43,8 +48,10 @@ const Index = (): JSX.Element => {
   const [selectedImage, setSelectedImage] = useState(null)
 
   const [blogInsert, callBlogtInsert] = useFetch()
+  const [getDeps, callAllDeps] = useFetch()
+  const [allBlogs, callAllBlog] = useFetch()
   const handleChange = (event: SelectChangeEvent): void => {
-    setAge(event.target.value)
+    setComId(parseInt(event.target.value))
   }
   const handleContentChange = (value: any): any => {
     setContent(value)
@@ -79,11 +86,11 @@ const Index = (): JSX.Element => {
     imgName: imgName,
     imgSrc: imgSrc
   }
-  const handleOK = (): void => {
-    setOpen(false)
-    callBlogtInsert(async () => {
-      try {
-        console.log(requestData)
+  const handleOK = async (): Promise<void> => {
+    setOpen(false);
+  
+    try {
+      const blogData = await callBlogtInsert(async () => {
         if (selectedImage) {
           const reader = new FileReader();
           reader.onload = async (): Promise<void> => {
@@ -93,17 +100,51 @@ const Index = (): JSX.Element => {
               imgSrc: imgSrc.split(',')[1],
             });
           };
-          console.log('đang chọn ảnh',imgSrc.split(',')[1])
           reader.readAsDataURL(selectedImage);
         } else {
-          await Insert(requestData);
+          return Insert(requestData);
         }
-      } catch (error) {
-        console.log(error)
+      });
+  
+      const blogNews = await callAllBlog(getAllBlog)
+      const latestBlog = blogNews[blogNews.length - 1];
+      const blogId:number = latestBlog?.blogId;
+      console.log(blogId)
+      if (blogId) {
+        await InsertCompetitionBlog({
+          comId: comId,
+          blogId: blogId,
+          userId: '123',
+          postDate: new Date().toISOString(),
+        });
+        console.log('Thành công', blogId, comId, latestBlog);
+      } else {
+        console.log('Thất bại', blogId, comId, latestBlog);
       }
-    })
-    
-  }
+      // console.log('Thất bại', blogNews,blogNews.length - 1);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  const departments :Department[] =
+  getDeps.payload?.map((dep:Department)=>({
+    depId: dep.depId,
+    depName:dep.depName
+  })) || []
+
+  React.useEffect(() => {
+    const fetchData = async () :Promise<any> => {
+      try {
+        const data = await getAllDep();
+        callAllDeps(() => Promise.resolve(data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <>
       <LayoutAdmin>
@@ -145,13 +186,15 @@ const Index = (): JSX.Element => {
                 <Select
                   labelId='demo-simple-select-autowidth-label'
                   id='demo-simple-select-autowidth'
-                  value={age}
+                  value={comId.toString()}
                   onChange={handleChange}
                   label='Age'
                 >
-                  <MenuItem value={10}>Anh văn đầu vào</MenuItem>
-                  <MenuItem value={21}>An toàn thông tin</MenuItem>
-                  <MenuItem value={22}>Khảo sát</MenuItem>
+                  {
+                    departments.map((row)=>(
+                      <MenuItem key={row.depId} value={row.depId}>{row.depName}</MenuItem>
+                    ))
+                  }
                 </Select>
               </FormControl>
             </Stack>

@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
-import image from '~/assets/img/competion-1.jpg'
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
