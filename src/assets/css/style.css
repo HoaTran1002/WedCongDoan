@@ -170,3 +170,41 @@ body::-webkit-scrollbar-track {
   left: 50%;
   transform: translateX(-50%);
 }
+.BlogCompetition.active{
+  background-color: #e0f6ff;
+  color: #1565c0;
+  position: relative;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+.BlogCompetition.active::before{
+  content: '';
+  position: absolute;
+  height: 100%;
+  top: 0;
+  right:-30px;
+  width: 30px;
+  background-color: #e0f6ff;
+
+}
+
+.BlogCompetition{
+  padding: 6px 10px;
+  background-color: transparent;
+  border-radius: 5px;
+  text-align: center;
+  color: white;
+  font-weight: 500;
+  font-size: 19px;
+  cursor: pointer;
+}
+
+.button-pre-next{
+  background-color: #e0f6ff;
+  border-radius: 5px;
+  color: #1565c0;
+  outline: none;
+  border: none;
+  font-weight: 600;
+  font-size: 15px;
+}

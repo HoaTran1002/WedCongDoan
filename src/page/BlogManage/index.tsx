@@ -12,6 +12,7 @@ import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
+import Pagination from '@mui/material/Pagination';
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref,
@@ -26,7 +27,7 @@ interface Blog {
 }
 
 const Index = (): JSX.Element => {
-
+  const [currentPage, setCurrentPage] = useState(1);
   const [getBlog, callBlog] = useFetch()
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -37,6 +38,9 @@ const Index = (): JSX.Element => {
   const [openDelete, setOpenDelete] = React.useState(deleteFromUrl);
   const [openUpdate, setOpenUpdate] = React.useState(updateFromUrl);
 
+   
+  
+ 
 
   const handleClose = ():void => {
     setOpen(false);
@@ -78,6 +82,15 @@ const Index = (): JSX.Element => {
     imgSrc: blog.imgSrc,
     imgName: blog.imgName
   }))
+  console.log(rows.length)
+  const productsPerPage = 6; 
+  const totalPages = Math.ceil(rows.length / productsPerPage);
+  const startIndex = (currentPage - 1) * productsPerPage;
+  const endIndex = startIndex + productsPerPage;
+  const currentProducts = rows.slice(startIndex, endIndex);
+  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number):void => {
+    setCurrentPage(page);
+  };
   return (
     <LayoutAdmin>
       <>
@@ -119,7 +132,7 @@ const Index = (): JSX.Element => {
                     pt:"0px !important"
                   }}
                 >
-                  {rows.map((row: any) => (
+                  {currentProducts.map((row: any) => (
                     <Grid item xs={6} key={row.id}
                       sx={{
                         marginTop: '10px',
@@ -204,6 +217,22 @@ const Index = (): JSX.Element => {
                       </Box>
                     </Grid>
                   ))}
+                  <Box 
+                    sx={{
+                      padding:"15px 0",
+                      width:'100%',
+                      display:"flex",
+                      alignItems:"center",
+                      justifyContent:"center"
+                    }}
+                  >
+                    <Pagination
+                      count={totalPages}
+                      color="primary"
+                      page={currentPage}
+                      onChange={handlePageChange}
+                    />
+                  </Box>
                 </Grid>
               </>
             )

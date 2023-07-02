@@ -390,7 +390,8 @@ const headerNavigate: SxProps = {
   zIndex: "50",
   mt: "-1px",
   display: "flex",
-  justifyContent: { xs: 'space-between' }
+  justifyContent: { xs: 'space-between' },
+  boxShadow: "rgba(0, 0, 0, 0.2) -3px 4px 14px 0px",
 }
 
 const activeItemMobile:SxProps={

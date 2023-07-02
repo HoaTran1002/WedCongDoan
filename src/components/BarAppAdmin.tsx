@@ -108,7 +108,7 @@ export default function Index(): JSX.Element {
       <Box
         sx={{
           zIndex: 2,
-          paddingTop: '5.5%',
+          paddingTop: '75px',
           position: 'fixed',
           top: 0,
           bottom: 0,

@@ -130,9 +130,9 @@ const Home = (): JSX.Element => {
                     flexDirection: "column"
                   }}
                 >
-                  <span className='title-home-page_heading'>
+                  <Box component='span' className='title-home-page_heading'>
                     ĐẠI HỘI CÔNG ĐOÀN CÁC CẤP TIẾN TỚI ĐẠI HỘI CÔNG ĐOÀN XII CÔNG ĐOÀN THÀNH PHỐ HỒ CHÍ MINH
-                  </span>
+                  </Box>
                   <span className='line'></span>
                 </Box>
                 <Grid container sx={{ marginTop: '20px' }} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
