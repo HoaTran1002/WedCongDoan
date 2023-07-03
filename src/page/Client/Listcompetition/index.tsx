@@ -177,7 +177,7 @@ export default function Index(): JSX.Element {
   const dataPerPageDeppartment = 10;
   const endIndex = startIndex + dataPerPageListCompetition;
   const endDep = startDep + dataPerPageDeppartment;
-  const totalRows = row.length;
+  const totalRows = row.filter(r => r.depId === depId).length;
   const totalRowsDep = rowDep.length;
   const listCompetition = row.slice(startIndex, endIndex).filter(r => r.depId === depId);
   const listDep = rowDep.slice(startDep, endDep);
@@ -204,7 +204,7 @@ export default function Index(): JSX.Element {
     <Layout>
       <Container maxWidth={'xl'}>
         <Grid container sx={{ mt: 3 }} spacing={1}>
-          <Grid item xs={3}>
+          <Grid item xs={12} md={3}>
             <Box
               sx={{
                 backgroundColor: "#1565c0",
@@ -223,7 +223,7 @@ export default function Index(): JSX.Element {
             <Box
               component='ul'
               sx={{
-                display: "flex",
+                display:{xs:'none',md: "flex"},
                 flexDirection: "column",
                 listStyleType: "none",
                 padding: "30px 10px 10px 10px ",
@@ -275,8 +275,63 @@ export default function Index(): JSX.Element {
                 </Box>
               </Box>
             </Box>
+            <Box
+              component='ul'
+              sx={{
+                display: {xs:"flex",md:"none"},
+                flexDirection: "column",
+                listStyleType: "none",
+                padding: "30px 10px 10px 10px ",
+                margin: 0,
+                height: "500px",
+                mt: 2,
+                backgroundColor: "#1565c0",
+                borderRadius: "3px"
+              }}
+            >
+              {
+                listDep.map((row) => (
+                  <Box
+                    key={row.depId}
+                    component='li'
+                    onClick={(): void => handleChangeDep(row.depId)}
+                    className={`BlogCompetition_mobile ${depId == row.depId ? 'active' : ''}`}
+                  >
+                    {row.depName}
+                  </Box>
+                ))
+              }
+
+              <Box
+                component='li'
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "end",
+                  gap: "10px",
+                  padding: "28px 10px 0px 10px"
+                }}
+              >
+                <Box
+                  component='button'
+                  onClick={handlePreviousDep}
+                  disabled={startDep === 0}
+                  className='button-pre-next'
+                >
+                  <KeyboardArrowLeftIcon />
+                </Box>
+                <Box
+                  component='button'
+                  onClick={handleNextDep}
+                  disabled={startDep + dataPerPageDeppartment >= totalRowsDep}
+                  className='button-pre-next'
+                >
+                  <KeyboardArrowRightIcon />
+                </Box>
+              </Box>
+            </Box>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={12} md={9}>
             <Box
               sx={{
                 backgroundColor: "#1565c0",
@@ -320,7 +375,7 @@ export default function Index(): JSX.Element {
                     >
                       <Box
                         sx={{
-                          height: "400px",
+                          height: {md:"400px",xs:"350px"},
                           width: "100%"
                         }}
                         component='img'
@@ -345,12 +400,19 @@ export default function Index(): JSX.Element {
                       borderRadius: "3px",
                       backgroundColor: "#e0f6ff",
                       height: "440px",
-                      padding: "0 15px"
+                      padding: "0 15px",
+                      overflow: {md:"unset",xs:"scroll"}
                     }}
                   >
-                    <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                    <Table 
+                      sx={{ 
+                        minWidth: {md:"100%",xs:"780px"},
+                      }}
+                      aria-label="simple table"
+                    >
                       <TableHead>
                         <TableRow>
+                          <TableCell align="center">STT</TableCell>
                           <TableCell>Tên cuộc thi</TableCell>
                           <TableCell align="center">Ngày bắt đầu</TableCell>
                           <TableCell align="center">Ngày kết thúc</TableCell>
@@ -363,8 +425,12 @@ export default function Index(): JSX.Element {
                         {listCompetition.map((row, index) => (
                           <TableRow
                             key={index}
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                            sx={{ 
+                              '&:last-child td, &:last-child th': { border: 0 } ,
+                               
+                            }}
                           >
+                            <TableCell align="center">{index + 1}</TableCell>
                             <TableCell component="td" scope="row">
                               {row.nameCom}
                             </TableCell>
@@ -373,7 +439,7 @@ export default function Index(): JSX.Element {
                             <TableCell align="center">{row.timeExam}</TableCell>
                             <TableCell align="center">{row.userQuantity}</TableCell>
                             <TableCell align="center">
-                              <Link to={'/'}>
+                              <Link to={'/ListExamCompetition'}>
                                 <Button>
                                   Xem
                                 </Button>

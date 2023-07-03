@@ -177,6 +177,11 @@ body::-webkit-scrollbar-track {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
+.BlogCompetition_mobile.active{
+  background-color: #e0f6ff;
+  color: #1565c0;
+  position: relative;
+}
 .BlogCompetition.active::before{
   content: '';
   position: absolute;
@@ -188,7 +193,7 @@ body::-webkit-scrollbar-track {
 
 }
 
-.BlogCompetition{
+.BlogCompetition,.BlogCompetition_mobile{
   padding: 6px 10px;
   background-color: transparent;
   border-radius: 5px;

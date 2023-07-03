@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, Routes } from 'react-router-dom'
 import Home from '~/page/Client/Home'
 import HomeBlogDetail from '~/page/Client/BlogDetail'
+import ListExamCompetition from '~/page/Client/ListExamCompetition'
 import Competition from '~/page/Competition'
 import TestCreate from '~/page/TestCreate'
 import Login from '~/page/Login'
@@ -50,6 +51,7 @@ function App(): JSX.Element {
         <Route path='/BlogCreate' element={<BlogCreate />} />
         <Route path='/BlogDetail' element={<BlogDetail />} />
         <Route path='/HomeBlogDetail' element={<HomeBlogDetail />} />
+        <Route path='/ListExamCompetition' element={<ListExamCompetition />} />
 
         <Route path='/Listcompetition' element={<Listcompetition />} />
         <Route path='/TestSchedule' element={<TestSchedule />} />

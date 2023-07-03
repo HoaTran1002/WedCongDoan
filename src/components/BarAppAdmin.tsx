@@ -164,7 +164,7 @@ export default function Index(): JSX.Element {
       >
         <Box
           sx={{
-            display: 'inline-flex',
+            display:{xs:'none', md:"inlineFlex"},
             width: '260px',
             height: '100%',
             justifyContent: 'center',
@@ -176,7 +176,8 @@ export default function Index(): JSX.Element {
           <Box
             component='img'
             sx={{
-              height: '50px'
+              height: '50px',
+              
             }}
             alt='The house from the offer.'
             src='https://api.congdoantphochiminh.org.vn/Upload/Multimedia/Images/20221229150859445_logo%20DAI%20HOI%20XII%20CONG%20DOAN%20TP%20-%20png.png'
@@ -187,9 +188,9 @@ export default function Index(): JSX.Element {
           aria-label='open drawer'
           onClick={handleDrawerOpen}
           edge='start'
-          sx={{ mr: 2, display: { xs: 'flex', md: 'none' } }}
+          sx={{ mr: 2, display: { xs: 'flex', md: 'none' },ml:2 }}
         >
-          <MenuIcon />
+          <MenuIcon sx={{color:"white"}} />
         </IconButton>
         <Box sx={{ flexGrow: 0, display: { md: 'flex' }, mr: 5 }}>
           <Tooltip title='Open settings'>
@@ -245,30 +246,21 @@ export default function Index(): JSX.Element {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
           {pages.map((page, index) => (
-            <ListItem key={index} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText>
-                  <Button href={page.to}>{page.name}</Button>
-                </ListItemText>
-              </ListItemButton>
-            </ListItem>
+            <Link key={index} style={{textDecoration:"none"}} to={page.to}>
+              <ListItem key={index} disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    {page.icon}
+                  </ListItemIcon>
+                  <ListItemText>
+                    <span className='color-primary' style={{fontWeight:"600"}}>
+                      {page.name} 
+                    </span>
+                  </ListItemText>
+                </ListItemButton>
+              </ListItem>
+            </Link>
           ))}
         </List>
       </Drawer>

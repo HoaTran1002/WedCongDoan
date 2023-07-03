@@ -15,7 +15,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogActions
+  DialogActions,
+  Box
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import ReactQuill from 'react-quill'
@@ -23,7 +24,7 @@ import 'react-quill/dist/quill.snow.css'
 import { SelectChangeEvent } from '@mui/material/Select'
 import Dropzone from 'react-dropzone'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate  } from 'react-router-dom'
 import { Insert ,getAllBlog} from '~/api/blogApi'
 import {getAllDep} from '~/api/departmentApi'
 import {InsertCompetitionBlog} from '~/api/CompetitionBlog'
@@ -35,6 +36,7 @@ interface Department{
 }
 
 const Index = (): JSX.Element => {
+  const navigate = useNavigate();
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString();
   const [imageFile, setImageFile] = useState<string | null>();
@@ -44,6 +46,9 @@ const Index = (): JSX.Element => {
   const [content, setContent] = useState('')
   const [imgName, setImgName] = useState('')
   const [imgSrc, setImgSrc] = useState('')
+  const [errorBlogName,setErrorBlogName] = useState('')
+  const [errorBlogDetail,setErrorBlogDetail] = useState('')
+  const [errorBlogImg,setErrorBlogImg] = useState('')
   const [open, setOpen] = React.useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
 
@@ -88,7 +93,38 @@ const Index = (): JSX.Element => {
   }
   const handleOK = async (): Promise<void> => {
     setOpen(false);
-  
+
+    const errorConditions = [
+      {
+        condition: blogName === '',
+        setError: setErrorBlogName,
+        errorMessage: 'Chưa có tiêu đề blog'
+      },
+      {
+        condition: content === '',
+        setError: setErrorBlogDetail,
+        errorMessage: 'Chưa có nội dung cho trang blog'
+      },
+      {
+        condition: imageFile === null || imageFile === undefined,
+        setError: setErrorBlogImg,
+        errorMessage: 'Chưa có hình ảnh cho trang blog'
+      }
+    ]
+
+    for (const condition of errorConditions) {
+      if (condition.condition) {
+        condition.setError(condition.errorMessage)
+      }
+    }
+
+    const hasError = errorConditions.some((condition) => condition.condition)
+
+    if (hasError) {
+      return
+    }
+
+
     try {
       const blogData = await callBlogtInsert(async () => {
         if (selectedImage) {
@@ -125,6 +161,7 @@ const Index = (): JSX.Element => {
     } catch (error) {
       console.log(error);
     }
+    navigate('/BlogManage?opensucess=true');
   };
   
   const departments :Department[] =
@@ -166,16 +203,39 @@ const Index = (): JSX.Element => {
           </Grid>
           <Grid item xs={12}>
             <Stack direction={'row'} alignItems='center' gap={5}>
-              <TextField
-                id='filled-search'
-                label='Tên Blog'
-                type='search'
-                variant='outlined'
-                style={{ width: '100%' }}
-                onChange={(e: any): any => {
-                  setBlogName(e.target.value)
+              <Box
+                sx={{
+                  display:'flex',
+                  flexDirection:"column",
+                  gap:"10px",
+                  width:"100%",
+                  position:"relative"
                 }}
-              />
+              >
+                <TextField
+                  id='filled-search'
+                  label='Tên Blog'
+                  type='search'
+                  variant='outlined'
+                  error={Boolean(errorBlogName)}
+                  style={{ width: '100%' }}
+                  onChange={(e: any): any => {
+                    setBlogName(e.target.value)
+                  }}
+                />
+                {
+                  errorBlogName && (
+                    <span 
+                      style={{
+                        fontStyle:"italic",
+                        color:"red",
+                        position:"absolute",
+                        bottom:"-30px"
+                      }}
+                    >* {errorBlogName}</span>
+                  )
+                }
+              </Box>
               <FormControl
                 sx={{ m: 1, minWidth: 80 }}
                 style={{ width: '100%' }}
@@ -199,9 +259,8 @@ const Index = (): JSX.Element => {
               </FormControl>
             </Stack>
           </Grid>
-          
           <Grid item xs={12}>
-            <div>
+            <div style={{marginTop:20,position:"relative"}}>
               <Dropzone
                 onDrop={handleImageDrop}
                 // accept='image/*'
@@ -230,33 +289,64 @@ const Index = (): JSX.Element => {
                   />
                 </div>
               )}
+              {
+                errorBlogImg && (
+                  <span 
+                    style={{
+                      fontStyle:"italic",
+                      color:"red",
+                      position:"absolute",
+                      bottom:"-30px"
+                    }}
+                  >* {errorBlogImg}</span>
+                )
+              }
             </div>
           </Grid>
           <Grid item xs={12} style={{ marginTop: '10px' }}>
-            <ReactQuill
-              value={content}
-              onChange={handleContentChange}
-              modules={modules}
-              formats={[
-                'header',
-                'bold',
-                'italic',
-                'underline',
-                'strike',
-                'blockquote',
-                'list',
-                'bullet',
-                'indent',
-                'link',
-                'image'
-              ]}
-            />
+            <Box
+              sx={{
+                position:"relative",
+                mt:4
+              }}
+            >
+              <ReactQuill
+                value={content}
+                onChange={handleContentChange}
+                modules={modules}
+                formats={[
+                  'header',
+                  'bold',
+                  'italic',
+                  'underline',
+                  'strike',
+                  'blockquote',
+                  'list',
+                  'bullet',
+                  'indent',
+                  'link',
+                  'image'
+                ]}
+              />
+              {
+                errorBlogDetail && (
+                  <span 
+                    style={{
+                      fontStyle:"italic",
+                      color:"red",
+                      position:"absolute",
+                      bottom:"-30px"
+                    }}
+                  >* {errorBlogDetail}</span>
+                )
+              }
+            </Box>
           </Grid>
-          <Grid item>
+          <Grid item md={12}>
             <Button
               variant='contained'
               startIcon={<AddIcon />}
-              style={{ marginTop: '20px' }}
+              style={{ marginTop: '40px' ,marginBottom:"100px"}}
               onClick={handleClickOpen}
             >
               Thêm blog
@@ -274,11 +364,9 @@ const Index = (): JSX.Element => {
                 </DialogContentText>
               </DialogContent>
               <DialogActions>
-                <Link to={'/BlogManage?opensucess=true'}>
                   <Button variant="contained" onClick={handleOK}>
                     OK
                   </Button>
-                </Link>
                 <Button onClick={handleClose}>Trở về</Button>
               </DialogActions>
             </Dialog>

@@ -38,8 +38,6 @@ const drawerWidth = 250
 const pages = [
   { name: 'TRANG CHỦ', to: '/', iconComponent: <HomeIcon /> },
   { name: 'DANH SÁCH CUỘC THI', to: '/Listcompetition', iconComponent: <FormatListBulletedIcon /> },
-  { name: 'GIẢI THƯỞNG', to: '/blog', iconComponent: <MilitaryTechIcon /> },
-  { name: 'LỊCH THI', to: '/TestSchedule', iconComponent: <CalendarMonthIcon /> },
   { name: 'ADMIN', to: '/CompetitionManage' }
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']

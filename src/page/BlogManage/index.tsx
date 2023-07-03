@@ -133,7 +133,7 @@ const Index = (): JSX.Element => {
                   }}
                 >
                   {currentProducts.map((row: any) => (
-                    <Grid item xs={6} key={row.id}
+                    <Grid item xs={12} md={6} key={row.id}
                       sx={{
                         marginTop: '10px',
                       }}
@@ -147,10 +147,10 @@ const Index = (): JSX.Element => {
                           overflow:"hidden"
                         }}
                       >
-                        <div
-                          style={{
+                        <Box
+                          sx={{
                             height: '180px',
-                            width: '220px',
+                            width:{md: '220px',xs:"100px"},
                             flex:"none",
                           }}
                         >
@@ -163,7 +163,7 @@ const Index = (): JSX.Element => {
                               objectFit:"cover" 
                             }} 
                           />
-                        </div>
+                        </Box>
                         <div
                           style={{
                             backgroundColor:"#ecf5ff",

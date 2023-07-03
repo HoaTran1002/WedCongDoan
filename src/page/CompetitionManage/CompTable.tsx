@@ -48,7 +48,6 @@ const CompTable = (): JSX.Element => {
   }
   const handelDeleteComp = (idComp: number): void => {
     const requestDelete: { _id: number } = { _id: idComp }
-
     deleteCompCall(async () => {
       try {
         await deleteCompetitions(requestDelete)
