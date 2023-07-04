@@ -8,7 +8,7 @@ import image3 from '~/assets/img/bg_home_page_2.png'
 import image4 from '~/assets/img/bg_home_page_3.jpg'
 import imageItemBlog from '~/assets/img/blog_item_img.jpg'
 import { Grid, Box, Typography, SxProps, Container, Button } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -25,6 +25,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import InfoIcon from '@mui/icons-material/Info';
 export default function Index(): JSX.Element {
+    const navigate = useNavigate();
     const [open, setOpen] = React.useState(true);
     const [openExam, setOpenExam] = React.useState(false);
 
@@ -46,6 +47,7 @@ export default function Index(): JSX.Element {
 
     const handleOkExam =():void =>{
         setOpenExam(false)
+        navigate('/ExamStart');
     }
 
     return (
@@ -274,7 +276,6 @@ export default function Index(): JSX.Element {
                             </Box>
                         </Grid>
                     </Grid>
-
                     <Dialog
                         open={open}
                         onClose={handleClose}

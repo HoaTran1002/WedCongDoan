@@ -213,3 +213,10 @@ body::-webkit-scrollbar-track {
   font-weight: 600;
   font-size: 15px;
 }
+
+.button-exam-ques-active{
+  background-color: #1565c0 !important;
+  color:white !important;
+  font-weight: 600;
+  transition: 0.2s all linear;
+}
