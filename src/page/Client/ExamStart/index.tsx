@@ -22,6 +22,13 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import FormGroup from '@mui/material/FormGroup';
 import Checkbox from '@mui/material/Checkbox';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import CloseIcon from '@mui/icons-material/Close';
+import MenuIcon from '@mui/icons-material/Menu';
 interface Question{
     idQues:number,
     contentQues:string,
@@ -182,12 +189,86 @@ const listQuestion: Question[]=[
       },
 ]
 const ExamStart = (): JSX.Element => {
+    const navigate = useNavigate();
+    const [openSubmitExam,setOpenSubmitExam] = React.useState(false)
+    const [openExitExam,setOpenExitExam] = React.useState(false)
+    const [openNavbar,setOpenNavbar] = React.useState(false)
     const [quesitionCheck,setQuesitionCheck] = React.useState<number>(listQuestion[0].idQues)
     const [quesContain,setQuesContain] = React.useState(listQuestion.find(r=>r.idQues === listQuestion[0].idQues))
+    const [timeLeft, setTimeLeft] = React.useState<number>(() => {
+        const startTime = localStorage.getItem("startTime");
+        if (startTime) {
+          const timePassed = (Date.now() - Number(startTime)) / 1000;
+          const timeRemaining = Math.max(60 * 60 - timePassed, 0);
+          return timeRemaining;
+        }
+        return 60 * 60;
+    });
+
+    const formatTime = (time:number):string => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes.toString().padStart(2, "0")} : ${seconds.toString().padStart(2, "0")}`;
+    };
 
     const changeQuestion= (id:number):void=>{
         setQuesitionCheck(id)
     }
+
+    const handelPrevQues= (id:number):void=>{
+        setQuesitionCheck(id - 1)
+    }
+    const handelNextQues= (id:number):void=>{
+        setQuesitionCheck(id + 1)
+    }
+
+    const handleCloseSubmitExam =():void=>{
+        setOpenSubmitExam(false)
+    }
+
+    const handleOpenSubmitExam =():void=>{
+        setOpenSubmitExam(true)
+    }
+
+    const handleOKSubmitExam =():void=>{
+        setOpenSubmitExam(false)
+    }
+
+    const handleCloseExitExam =():void=>{
+        setOpenExitExam(false)
+    }
+
+    const handleOpenExitExam =():void=>{
+        setOpenExitExam(true)
+    }
+
+    const handleOKExitExam =():void=>{
+        setOpenExitExam(false)
+        navigate('/ListExamCompetition')
+    }
+    const handelCloseNavbar=():void=>{
+        setOpenNavbar(false)
+    }
+    const handelOpenNavbar=():void=>{
+        setOpenNavbar(true)
+    }
+    React.useEffect(() => {
+        if (!localStorage.getItem("startTime")) {
+          localStorage.setItem("startTime", Date.now().toString());
+        }
+        
+        const intervalId = setInterval(() => {
+            setTimeLeft((timeLeft) => {
+                if (timeLeft === 0) {
+                  localStorage.removeItem("startTime");
+                  return 0;
+                }
+                return Math.max(timeLeft - 1, 0);
+              });
+        }, 1000);
+        
+        return () => clearInterval(intervalId);
+      }, []);
 
     React.useEffect(() => {
         setQuesContain(listQuestion.find(r=>r.idQues === quesitionCheck))
@@ -198,46 +279,236 @@ const ExamStart = (): JSX.Element => {
                 sx={{
                     display:"flex",
                     alignItems:"center",
-                    justifyContent:"space-between"
+                    justifyContent:"space-between",
+                    padding:'10px',
+                    backgroundColor:"#e1eef4"
                 }}
             >
                 <Box
                     sx={{
+                        display:{xs:'flex',md:"none"},
+                        alignItems:"center",
+                        justifyContent:"center"
+                    }}
+                    onClick={handelOpenNavbar}
+                >
+                    <MenuIcon className='color-primary' sx={{fontSize:"30px"}}/>
+                </Box>
+                <Box
+                    sx={{
                         display:"flex",
                         alignItems:"center",
-                        justifyContent:"space-between"
+                        justifyContent:"space-between",
+                        gap:"50px"
                     }}
                 >
                     <Box 
                         sx={{
-                            width:"100%"
+                            display:{xs:"none",md:"block"},
+                            width:"100%",
+                            flex:"1"
                         }}
                     >
                         <Box>
-                            <span>Cuộc thi: &nbsp;</span>
-                            <span >Công nghệ chuyển đổi số</span>
+                            <span 
+                                style={{
+                                    color:"#666",
+                                    fontWeight:"600",
+                                    fontSize:"17px"
+                                }}
+                            >
+                                Khoa: &nbsp;
+                            </span>
+                            <span style={{color:"#1160ba",fontWeight:"600",fontSize:"18px"}}>Công nghệ Thông tin</span>
                         </Box>
                         <Box>
-                            <span>Đề thi: &nbsp;</span>
-                            <span >1</span>
+                            <span 
+                                style={{
+                                    color:"#666",
+                                    fontWeight:"600",
+                                    fontSize:"17px"
+                                }}
+                            >
+                                Cuộc thi: &nbsp;
+                            </span>
+                            <span style={{color:"#1160ba",fontWeight:"600",fontSize:"18px"}}>Công nghệ chuyển đổi số</span>
+                        </Box>
+                        <Box>
+                            <span 
+                                style={{
+                                    color:"#666",
+                                    fontWeight:"600",
+                                    fontSize:"17px"
+                                }}
+                            >
+                                Đề thi: &nbsp;
+                            </span>
+                            <span style={{color:"#1160ba",fontWeight:"600",fontSize:"18px"}}>1</span>
                         </Box>
                         
                     </Box>
                     <Box>
-                        <span>Thời gian còn lại: &nbsp;</span>
-                        <span >90 : 00 </span>
+                        <Box
+                            component='span'
+                            sx={{
+                                display:{xs:"none",md:"inline"},
+                                color:"#666",
+                                fontWeight:"600",
+                                fontSize:"17px"
+                            }}
+                        >
+                            Thời gian còn lại: &nbsp;
+                        </Box>
+                        <div style={{color:"#1160ba",fontWeight:"600",fontSize:"30px"}}>{formatTime(timeLeft)}</div>
                     </Box>
                 </Box>
-                <Box>
-                    <Box>
-                        <Button variant='contained'>Nộp bài</Button>
-                        <Button>Thoát</Button>
+                <Box
+                    sx={{
+                        display:"flex",
+                        gap:{xs:'10px',md:"20px"},
+                        flexDirection:'row',
+                        mr:{xs:0,md:5}
+                    }}
+                >
+                    <Button variant='contained' onClick={handleOpenSubmitExam}>Nộp bài</Button>
+                    <Button variant='outlined' onClick={handleOpenExitExam}>Thoát</Button>
+                </Box>
+            </Box>
+            <Box
+                className={`${openNavbar ? 'active_open_navbar_mobile_Exam':''}`}
+                sx={navbarMoblie}
+            >
+                <Box 
+                    sx={{
+                        position:"absolute",
+                        right:0,
+                        top:0,
+                        padding:"10px"
+                    }}
+                    onClick={handelCloseNavbar}
+                >
+                    <CloseIcon sx={{color:"red",fontSize:"30px"}}/>
+                </Box>
+                <Box 
+                    sx={{
+                        mt:6
+                    }}
+                >
+                    <Box
+                        sx={{
+                            backgroundColor:"#e0f6ff",
+                            display:"flex",
+                            alignItems:"center",
+                            flexDirection:"column",
+                            borderRadius:"5px",
+                            padding:"10px",
+                            gap:"10px",
+                            height:"70vh"
+                        }}
+                    >
+                        <Box
+                            component='span'
+                            sx={{
+                                display:"block",
+                                color:"#1565c0",
+                                fontSize:"19px",
+                                fontWeight:"600"
+                            }}
+                        >
+                            Số câu hỏi
+                        </Box>
+                        <Box
+                            sx={{
+                                backgroundColor:"white",
+                                borderRadius:"5px",
+                                width:"100%",
+                                height:"100%",
+                                padding:"8px",
+                                display:"flex",
+                                alignItems:"flex-start",
+                                alignContent:"flex-start",
+                                justifyContent:"space-evenly",
+                                flexWrap:"wrap",
+                                gap:'15px',
+                                overflowY:"scroll"
+                            }}
+                        >
+                            {
+                                listQuestion.map((row,index)=>(
+                                    <Box
+                                        key={index}
+                                        className={row.idQues === quesitionCheck ? 'button-exam-ques-active' : ''}
+                                        component='button'
+                                        onClick={():void=>changeQuestion(row.idQues)}
+                                        sx={{
+                                            borderRadius:"5px",
+                                            border:"2px solid #1565c0",
+                                            backgroundColor:"#e0f6ff",
+                                            fontSize:"16px",
+                                            width:"40px",
+                                            height:"40px",
+                                            color:"#1565c0",
+                                            cursor:"pointer",
+                                            display:"flex",
+                                            alignItems:"center",
+                                            justifyContent:"center"
+                                        }}
+                                    >
+                                        {row.idQues}
+                                    </Box>
+                                ))
+                            }
+                        </Box>
+                    </Box>
+                    <Box 
+                        sx={{
+                            width:"100%",
+                            padding:'10px'
+                        }}
+                    >
+                        <Box>
+                            <span 
+                                style={{
+                                    color:"#666",
+                                    fontWeight:"600",
+                                    fontSize:"17px"
+                                }}
+                            >
+                                Khoa: &nbsp;
+                            </span>
+                            <span style={{color:"#1160ba",fontWeight:"600",fontSize:"18px"}}>Công nghệ Thông tin</span>
+                        </Box>
+                        <Box>
+                            <span 
+                                style={{
+                                    color:"#666",
+                                    fontWeight:"600",
+                                    fontSize:"17px"
+                                }}
+                            >
+                                Cuộc thi: &nbsp;
+                            </span>
+                            <span style={{color:"#1160ba",fontWeight:"600",fontSize:"18px"}}>Công nghệ chuyển đổi số</span>
+                        </Box>
+                        <Box>
+                            <span 
+                                style={{
+                                    color:"#666",
+                                    fontWeight:"600",
+                                    fontSize:"17px"
+                                }}
+                            >
+                                Đề thi: &nbsp;
+                            </span>
+                            <span style={{color:"#1160ba",fontWeight:"600",fontSize:"18px"}}>1</span>
+                        </Box>
+                        
                     </Box>
                 </Box>
             </Box>
             <Container maxWidth={'xl'}>
-                <Grid container spacing={2} sx={{mt:3}}>
-                    <Grid item md={3}>
+                <Grid container spacing={2} sx={{mt:1}}>
+                    <Grid item md={3} sx={{display:{xs:"none",md:"block"}}}>
                         <Box
                             sx={{
                                 backgroundColor:"#e0f6ff",
@@ -247,7 +518,11 @@ const ExamStart = (): JSX.Element => {
                                 borderRadius:"5px",
                                 padding:"10px",
                                 gap:"10px",
-                                height:"70vh"
+                                height:"70vh",
+                                overflowY:"scroll",
+                                "&::-webkit-scrollbar":{
+                                    display:"none"
+                                }
                             }}
                         >
                             <Box
@@ -271,6 +546,7 @@ const ExamStart = (): JSX.Element => {
                                     display:"flex",
                                     alignItems:"flex-start",
                                     alignContent:"flex-start",
+                                    justifyContent:"space-evenly",
                                     flexWrap:"wrap",
                                     gap:'15px',
                                 }}
@@ -303,10 +579,10 @@ const ExamStart = (): JSX.Element => {
                             </Box>
                         </Box>
                     </Grid>
-                    <Grid item md={9}>
+                    <Grid item md={9} xs={12}>
                         <Box
                             sx={{
-                                backgroundColor:"#1565c0",
+                                backgroundColor:"#3f89de",
                                 display:"flex",
                                 alignItems:"flex-start",
                                 flexDirection:"column",
@@ -384,25 +660,36 @@ const ExamStart = (): JSX.Element => {
                                 >
                                     <Box
                                         component='button'
-                                        sx={{
-
-                                        }}
+                                        disabled={quesitionCheck === listQuestion[0].idQues}
+                                        sx={btn_next_prev}
+                                        onClick={():void=>handelPrevQues(quesitionCheck)}
                                     >
                                         <KeyboardArrowLeftIcon/> 
                                     </Box>
                                     <Box
                                         component='button'
                                         sx={{
-
+                                            width:"35px",
+                                            height:"35px",
+                                            border:"none",
+                                            outline:"none",
+                                            display:"flex",
+                                            alignItems:"center",
+                                            justifyContent:"center",
+                                            fontSize:"18px",
+                                            fontWeight:"600",
+                                            color:"#3f89de",
+                                            borderRadius:"10px",
+                                            backgroundColor:"#e0f6ff"
                                         }}
                                     >
                                         {quesContain?.idQues}
                                     </Box>
                                     <Box
                                         component='button'
-                                        sx={{
-
-                                        }}
+                                        disabled={quesitionCheck === listQuestion.length}
+                                        sx={btn_next_prev}
+                                        onClick={():void=>handelNextQues(quesitionCheck)}
                                     >
                                         <KeyboardArrowRightIcon/> 
                                     </Box>
@@ -412,8 +699,96 @@ const ExamStart = (): JSX.Element => {
                     </Grid>
                 </Grid>
             </Container>
+            <Dialog
+                open={openSubmitExam}
+                onClose={handleCloseSubmitExam}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                    {"Thông báo"}
+                </DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Bạn muốn nộp bài thi của mình ? 
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant='contained' onClick={handleOKSubmitExam}>
+                        NỘP BÀI
+                    </Button>
+                    <Button onClick={handleCloseSubmitExam}>THOÁT</Button>
+                </DialogActions>
+            </Dialog>
+            <Dialog
+                open={openExitExam}
+                onClose={handleCloseExitExam}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">
+                {"Cảnh báo"}
+                </DialogTitle>
+                <DialogContent>
+                <DialogContentText id="alert-dialog-description">
+                    Bạn đang thoát phòng thi, bài thi của bạn vẫn sẽ tiếp tục <br/>
+                    Bạn có muốn thoát không ?
+                </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button variant='contained' onClick={handleOKExitExam}>
+                        THOÁT
+                    </Button>
+                    <Button onClick={handleCloseExitExam}>Ở LẠI</Button>
+                </DialogActions>
+            </Dialog>
+            <Box
+                onClick={handelCloseNavbar}
+                sx={{
+                    position:"fixed",
+                    top:0,
+                    right:0,
+                    left:0,
+                    bottom:0,
+                    backgroundColor:"black",
+                    opacity:"0.3",
+                    display: openNavbar ? "block" : "none",
+                    transition:"all 0.2s linear"
+                }}
+            >
+
+            </Box>
         </>
     )
 }
 
 export default ExamStart
+
+const btn_next_prev:SxProps={
+    border:"none",
+    color:"white",
+    backgroundColor:"#3f89de",
+    borderRadius:"50px",
+    display:"flex",
+    alignItems:"center",
+    justifyContent:"center",
+    outline:"none",
+    cursor:"pointer",
+    padding:"5px 15px",
+    '&:disabled':{
+        opacity:"0.6"
+    }
+}
+
+const navbarMoblie:SxProps={
+    position:"fixed",
+    top:0,
+    bottom:0,
+    left:0,
+    width:"300px",
+    backgroundColor:"white",
+    zIndex:"20",
+    transition:"all 0.2s linear",
+    transform:"translateX(-100%)",
+    opacity:"0"
+}

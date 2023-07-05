@@ -220,3 +220,7 @@ body::-webkit-scrollbar-track {
   font-weight: 600;
   transition: 0.2s all linear;
 }
+.active_open_navbar_mobile_Exam{
+  transform: translateX(0) !important;
+  opacity: 1 !important;
+}
