@@ -16,9 +16,9 @@ export const getAllQues = async (): Promise<any> => {
     throw new Error(message)
   }
 }
-export const GetAllByExamID = async (): Promise<any> => {
+export const GetAllByExamID = async ({ id }: { id: number }): Promise<any> => {
   try {
-    const { data } = await server.get(`/GetAllByExamID?id=2`)
+    const { data } = await server.get(`/Questions/GetAllByExamID?id=${id}`)
     return data
   } catch (error: any) {
     const message = error?.response?.data?.message ?? error.message
@@ -40,6 +40,14 @@ export const insertQues = async ({
       examId,
       quesTId
     })
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
+  }
+}
+export const deleteQues = async ({ id }: { id: number }): Promise<void> => {
+  try {
+    await server.delete(`/Questions?id=${id}`)
   } catch (error: any) {
     const message = error?.response?.data?.message ?? error.message
     throw new Error(message)

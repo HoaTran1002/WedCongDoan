@@ -1,12 +1,11 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import { Button, MenuItem } from '@mui/material'
+import { Button, MenuItem, Snackbar } from '@mui/material'
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { Snackbar } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
 import { getAllDep } from '~/api/departmentApi'
 import { getAllRole } from '~/api/roleApi'
@@ -51,14 +50,13 @@ export default function UserTextFields(prop: {
   const [roles, callAllRole] = useFetch()
   let formattedDateOfBirth: string | null = null
 
-  const Roles: Role[] = roles.payload || [];
-  const Deps: Dep[] = departments.payload || [];
+  const Roles: Role[] = roles.payload || []
+  const Deps: Dep[] = departments.payload || []
   if (birthDay) {
     formattedDateOfBirth = dayjs(birthDay).format('MM-DD-YYYY')
   }
 
   console.log('date of birth:' + formattedDateOfBirth)
-
 
   const onchangeUserName = function (
     event: React.ChangeEvent<HTMLInputElement>
@@ -132,7 +130,6 @@ export default function UserTextFields(prop: {
       try {
         console.log(requestData)
         await insert(requestData)
-        await setShowSuccess(true)
       } catch (error) {
         setShowError(true)
       }
@@ -142,7 +139,7 @@ export default function UserTextFields(prop: {
     callEdittUser(async () => {
       try {
         await editUser(requestData)
-        await setShowSuccess(true)
+        setShowSuccess(true)
         window.location.reload()
       } catch (error) {
         setShowError(true)
@@ -150,27 +147,26 @@ export default function UserTextFields(prop: {
     })
   }
   React.useEffect(() => {
-    const fetchDataDep = async () :Promise<any> => {
+    const fetchDataDep = async (): Promise<any> => {
       try {
-        const data = await getAllDep();
-        callAllDep(() => Promise.resolve(data));
+        const data = await getAllDep()
+        callAllDep(() => Promise.resolve(data))
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-    };
-    const fetchDataRole = async () :Promise<any> => {
+    }
+    const fetchDataRole = async (): Promise<any> => {
       try {
-        const data = await getAllRole();
-        callAllRole(() => Promise.resolve(data));
+        const data = await getAllRole()
+        callAllRole(() => Promise.resolve(data))
       } catch (error) {
-        console.log(error);
+        console.log(error)
       }
-    };
+    }
 
-    fetchDataRole();
-    fetchDataDep();
-  }, []);
-
+    fetchDataRole()
+    fetchDataDep()
+  }, [])
 
   return (
     <>

@@ -10,7 +10,7 @@ import {
   Button,
   Stack,
   TextField
-} from '@mui/material'
+, Snackbar } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -22,7 +22,6 @@ import useFetch from '~/hook/useFetch'
 import dayjs from 'dayjs'
 import { insert } from '~/api/competitionApi'
 
-import { Snackbar } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
 import { DateValidationError } from '@mui/x-date-pickers/models'
 

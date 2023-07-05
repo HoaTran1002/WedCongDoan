@@ -77,8 +77,8 @@ export default function Login(): JSX.Element {
       console.log(error)
     }
   }
-
   if (profile) return <Navigate to={'/'} replace={true} />
+
   return (
     <ThemeProvider theme={theme}>
       <Grid container component='main' sx={{ height: '100vh' }}>

@@ -1,13 +1,12 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import { Button, MenuItem } from '@mui/material'
+import { Button, MenuItem , Snackbar } from '@mui/material'
 import useFetch from '~/hook/useFetch'
 import { getAllPrizeTypes } from '~/api/prizeTypesApi'
 import { getAllPrize } from '~/api/prizesApi'
 import { useParams } from 'react-router-dom'
 import { editcompPrize, insert } from '~/api/CompetitionsPrizesAPI'
-import { Snackbar } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
 
 interface PrizeType {

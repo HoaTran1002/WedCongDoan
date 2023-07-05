@@ -1,10 +1,10 @@
+import AddIcon from '@mui/icons-material/Add'
+import { LoadingButton } from '@mui/lab'
 import {
   Box,
   Button,
-  ButtonGroup,
   Card,
   CardActionArea,
-  CardActions,
   CardContent,
   CardMedia,
   Checkbox,
@@ -12,40 +12,38 @@ import {
   FormControlLabel,
   FormGroup,
   FormLabel,
-  Icon,
+  InputLabel,
   MenuItem,
   Modal,
   Radio,
   RadioGroup,
+  Select,
+  SelectChangeEvent,
+  Snackbar,
   Stack,
   TextField,
   Typography
 } from '@mui/material'
-import AddIcon from '@mui/icons-material/Add'
-import React, { ErrorInfo, useEffect, useMemo, useRef, useState } from 'react'
-import LayoutAdmin from '~/components/layout/LayoutAdmin'
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked'
-import CheckBoxIcon from '@mui/icons-material/CheckBox'
-import DeleteIcon from '@mui/icons-material/Delete'
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle'
-import { blue } from '@mui/material/colors'
-import { useParams } from 'react-router-dom'
-import useFetch from '~/hook/useFetch'
-import { getAllQues, insertQues } from '~/api/question'
-import { Snackbar } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
-import { LoadingButton } from '@mui/lab'
-import SaveIcon from '@mui/icons-material/Save'
-import console from 'console'
+import { blue } from '@mui/material/colors'
+import * as React from 'react'
+import { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import { GetAllByExamID, insertQues } from '~/api/question'
 import { getAllQuesTpye } from '~/api/questionTypes'
+import LayoutAdmin from '~/components/layout/LayoutAdmin'
+import useFetch from '~/hook/useFetch'
+import CardData from './CardData'
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 
-interface Question {
-  id: number
-  name: string
-  asw: string
-  correctAsw: string
-  type: string
+interface IQuestion {
+  examId: number
+  quesDetail: string
+  ansOfQues: string
+  trueAnswer: string
+  quesTId: number
 }
+
 interface QuestionData {
   quesId: number
   quesDetail: string
@@ -59,76 +57,146 @@ interface QuestType {
   quesTName: string
 }
 const style = {
+  borderRadius: 1,
   position: 'absolute',
-  top: '50%',
+  top: '40%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   bgcolor: 'background.paper',
-  minWidth: { sm: 250, lg: 700 }
+  width: { xs: 450, sm: 550, lg: 700 },
+  height: 450,
+  overflow: 'scroll'
 }
-const currencies = [
-  {
-    value: 'Checked',
-    label: 'Checked',
-    icon: <CheckBoxIcon />
-  },
-  {
-    value: 'Radio',
-    label: 'Radio',
-    icon: <RadioButtonCheckedIcon />
-  }
-]
+
 const TestCreate = (): JSX.Element => {
-  const [showSuccess, setShowSuccess] = React.useState(false)
-  const [showError, setShowError] = React.useState(false)
+  const [loading, setLoading] = React.useState<boolean>(true)
+  const [showSuccess, setShowSuccess] = React.useState<boolean>(false)
+  const [showError, setShowError] = React.useState<boolean>(false)
   const [open, setOpen] = useState(false)
-  const [anw, setAnw] = useState<string>('')
-  const [anwString, setAnwString] = useState<string>('')
-  const [trueAnwString, setTrueAnwString] = useState('')
-  const [select, setSelect] = useState('')
-  // const [questions, setQuestion] = useState<Question[]>([])
-  const [ques, setQues] = useState('')
-  const [texts, setText] = useState<number[]>([1])
   const [createQuesState, quesCreateCall] = useFetch()
   const [getQuesState, getQuesStateCall] = useFetch()
   const [getQuesTypeState, getQuesTypeStateCall] = useFetch()
   const { examId, comId } = useParams()
+  const [questionType, setQuestionType] = useState<number>(1)
+  const [question, setQuestion] = useState<string>('')
+  const [answerList, setAnswerList] = useState<string[]>([])
+  const [correctAnswerList, setCorrectAnswerList] = useState<string[]>([])
+  const [errQuestion, setErrQuestion] = useState<string>('')
 
+  useEffect((): void => {
+    try {
+      getQuesTypeStateCall(getAllQuesTpye).then((res: QuestType[]) => {
+        if (res.length) setQuestionType(res[0].quesTId)
+      })
+    } catch (error: any) {
+      console.log(error)
+    }
+  }, [getQuesTypeStateCall])
   useEffect(() => {
-    if (anwString == '') {
-      setAnwString('<--->')
-    }
-    setAnwString(anwString + anw + '<--->')
-  }, [texts])
-  const reqQuesBody: {
-    quesDetail: string
-    ansOfQues: string
-    trueAnswer: string
-    examId: number
-    quesTId: number
-  } = {
-    quesDetail: ques,
-    ansOfQues: anwString,
-    trueAnswer: '',
-    examId: Number(examId),
-    quesTId: Number(comId)
-  }
-  useEffect((): void => {
-    try {
-      getQuesTypeStateCall(getAllQuesTpye)
-    } catch (error: any) {
-      console.log(error)
-    }
-  }, [])
-  useEffect((): void => {
-    try {
-      getQuesStateCall(getAllQues)
-    } catch (error: any) {
-      console.log(error)
-    }
-  }, [])
+    getQuesStateCall(async () => {
+      return GetAllByExamID({ id: Number(examId) })
+    })
+  }, [examId, getQuesStateCall, loading])
+
   const questions = getQuesState.payload || []
   const questionTypes = getQuesTypeState.payload || []
+
+  const filteredAnswerList = answerList.filter((item) => item !== '')
+  const fillterCorretAnswerList = correctAnswerList.filter(
+    (item) => item !== ''
+  )
+
+  const bodyQuestion: IQuestion = {
+    quesDetail: question,
+    ansOfQues: filteredAnswerList.join('<====>'),
+    trueAnswer: fillterCorretAnswerList.join('<====>'),
+    quesTId: questionType,
+    examId: Number(examId)
+  }
+  const selectQuestionType = (event: SelectChangeEvent<string>): void => {
+    const value = event.target.value
+    setQuestionType(Number(value))
+  }
+
+  const selectAnswer = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ): void => {
+    const isChecked = event.target.checked
+
+    if (isChecked && answerList[index] !== '') {
+      const newValueIndex = answerList[index]
+      setCorrectAnswerList((prevCorrectAnswerList) => {
+        const updatedList = [...prevCorrectAnswerList]
+        updatedList[index] = newValueIndex
+        return updatedList
+      })
+    } else {
+      setCorrectAnswerList((prevCorrectAnswerList) => {
+        const updatedList = [...prevCorrectAnswerList]
+        updatedList[index] = ''
+        return updatedList
+      })
+    }
+  }
+
+  const onChangeQuestion = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ): void => {
+    setQuestion(event.target.value)
+  }
+  const onchangeAnswer = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+    index: number
+  ): Promise<void> => {
+    setAnswerList((prevAnswerList) =>
+      prevAnswerList.map((value, ind) =>
+        ind === index ? event.target.value : value
+      )
+    )
+    if (correctAnswerList[index] !== '') {
+      setCorrectAnswerList((prevCorrectAnswerList) => {
+        const newValueIndex = event.target.value
+        const updatedList = [...prevCorrectAnswerList]
+        updatedList[index] = newValueIndex
+        return updatedList
+      })
+    }
+  }
+
+  const addRow = (): void => {
+    setAnswerList((prevAnswerList) => [...prevAnswerList, ''])
+    setCorrectAnswerList((pre) => [...pre, ''])
+  }
+  const deleteRow = ({ index }: { index: number }): void => {
+    const updatedAnswerList = [...answerList]
+    updatedAnswerList.splice(index, 1)
+    setAnswerList(updatedAnswerList)
+    const updatedCorrectAnswerList = [...correctAnswerList]
+    updatedCorrectAnswerList.splice(index, 1)
+    setCorrectAnswerList(updatedCorrectAnswerList)
+  }
+
+  const submitQuestion = (): void => {
+    console.log('data trả lời:' + bodyQuestion.ansOfQues)
+    console.log('data trả lời đúng:' + bodyQuestion.trueAnswer)
+    console.log('data câu hỏi:' + bodyQuestion.quesDetail)
+    console.log('data loại đap án:' + bodyQuestion.quesTId)
+    console.log('data Id :' + bodyQuestion.examId)
+    if (bodyQuestion.quesDetail === '') {
+      setErrQuestion('hãy nhập câu hỏi')
+    } else {
+      quesCreateCall(async (): Promise<void> => {
+        try {
+          insertQues(bodyQuestion)
+          setShowSuccess(true)
+        } catch (error) {
+          setShowError(true)
+        }
+      })
+    }
+  }
+
   const handleCloseSuccess = (): void => {
     setShowSuccess(false)
   }
@@ -140,61 +208,19 @@ const TestCreate = (): JSX.Element => {
   }
   const handleClose = (): void => setOpen(false)
 
-  const handelAddAnw = (): void => {
-    setText([...texts, 1])
-  }
-
   const getNameTypeQues = (idTQuestion: number): string => {
     const quesType = questionTypes?.find(
       (item: QuestType) => item.quesTId === idTQuestion
     )
     return quesType?.quesTName || 'chưa có loại câu hỏi'
   }
-  function handelonchangeTextFiel(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ): void {
-    setAnw(event.target.value)
-  }
-  function handelOnChangeSelect(
-    event: React.ChangeEvent<HTMLTextAreaElement>
-  ): void {
-    setSelect(event.target.value)
-    console.log(event.target.value)
-  }
-  function onChangeQues(event: React.ChangeEvent<HTMLTextAreaElement>): void {
-    setQues(event.target.value)
-  }
-  const [loading, setLoading] = React.useState(true)
+
   function handleClick(): void {
     setLoading(true)
   }
-  const handelSubmitCreate = (): void => {
-    quesCreateCall(async () => {
-      try {
-        await insertQues(reqQuesBody)
-        setShowSuccess(true)
-      } catch (error) {
-        setShowError(true)
-      }
-    })
-    const lisIndex = questions.length
-    const idQuestion = lisIndex + 1
-    const newQuestion = {
-      id: idQuestion,
-      correctAsw: '',
-      name: ques,
-      asw: anwString,
-      type: select
-    }
-    setText([1])
-    // setQuestion([...questions, newQuestion])
-    setAnw('')
-    setAnwString('')
-    handleClose()
-    console.log('câu hỏi:' + ques)
-    console.log('câu trả lời:' + anwString)
+  function cancelModal(): void {
+    setOpen(false)
   }
-
   return (
     <>
       <LayoutAdmin>
@@ -251,42 +277,97 @@ const TestCreate = (): JSX.Element => {
               aria-describedby='modal-modal-description'
             >
               <Box sx={style}>
-                <Card sx={{ Width: '100%' }}>
+                <Card sx={{ Width: '100%', overflowY: 'scroll' }}>
                   <CardContent>
-                    <Typography variant='body2'>
+                    <Typography variant='subtitle1'>
                       <FormGroup>
                         <TextField
-                          onChange={onChangeQues}
+                          error={Boolean(errQuestion)}
+                          helperText={errQuestion}
+                          onChange={onChangeQuestion}
                           id='standard-basic'
                           label='nhập câu hỏi'
                           variant='standard'
                         />
                       </FormGroup>
                     </Typography>
-                    <Typography variant='body2' color='text.secondary'>
+                    <Typography variant='h6' color='text.secondary'>
                       <>
-                        {texts.map((t, key): JSX.Element => {
+                        {answerList.map((t, index): JSX.Element => {
                           return (
-                            <FormGroup key={key}>
-                              <TextField
-                                id='standard-basic'
-                                variant='standard'
-                                label='nhập đáp án'
-                                onChange={handelonchangeTextFiel}
-                              />
+                            <FormGroup key={index}>
+                              <Box
+                                sx={{
+                                  display: 'flex',
+                                  alignItems: 'center'
+                                }}
+                              >
+                                <Box
+                                  sx={{
+                                    flex: 1,
+                                    width: '100%'
+                                  }}
+                                >
+                                  <TextField
+                                    value={t}
+                                    id='standard-basic'
+                                    variant='standard'
+                                    label='Nhập đáp án'
+                                    onChange={(
+                                      event: React.ChangeEvent<HTMLInputElement>
+                                    ): void => {
+                                      onchangeAnswer(event, index)
+                                    }}
+                                    sx={{ width: '100%' }}
+                                  />
+                                </Box>
+                                <Box>
+                                  <FormControlLabel
+                                    control={
+                                      <Checkbox
+                                        checked={
+                                          answerList[index] !== '' &&
+                                          correctAnswerList.includes(
+                                            answerList[index]
+                                          )
+                                        }
+                                        onChange={(
+                                          event: React.ChangeEvent<HTMLInputElement>
+                                        ): void => {
+                                          selectAnswer(event, index)
+                                        }}
+                                      />
+                                    }
+                                    label='Đáp án đúng'
+                                  />
+                                </Box>
+                                <Button
+                                  onClick={(): void => {
+                                    deleteRow({ index })
+                                  }}
+                                  startIcon={
+                                    <RemoveCircleOutlineIcon color='error' />
+                                  }
+                                  variant='outlined'
+                                >
+                                  {' '}
+                                  xoá hàng
+                                </Button>
+                              </Box>
                             </FormGroup>
                           )
                         })}
                       </>
+
                       <Button
-                        onClick={handelAddAnw}
+                        onClick={addRow}
                         sx={{ mt: 1 }}
                         size='small'
-                        variant='contained'
+                        variant='outlined'
                         color='primary'
                         endIcon={<AddIcon />}
                       >
-                        Xác Nhận
+                        Tạo hàng
                       </Button>
                     </Typography>
                   </CardContent>
@@ -298,23 +379,29 @@ const TestCreate = (): JSX.Element => {
                     noValidate
                     autoComplete='off'
                   >
-                    <div>
-                      <TextField
-                        id='standard-select-currency'
-                        select
-                        label='Chọn Trả lời'
-                        value={select}
-                        helperText='Hãy chọn kiểu Trả lời'
-                        variant='standard'
-                        onChange={handelOnChangeSelect}
-                      >
-                        {questionTypes.map((option: QuestType) => (
-                          <MenuItem key={option.quesTId} value={option.quesTId}>
-                            {option.quesTName}
-                          </MenuItem>
-                        ))}
-                      </TextField>
-                    </div>
+                    <Box>
+                      <FormControl fullWidth>
+                        <InputLabel id='demo-simple-select-label'>
+                          Chọn loại đáp án
+                        </InputLabel>
+                        <Select
+                          labelId='demo-simple-select-label'
+                          id='demo-simple-select'
+                          label='Chọn loại đáp án'
+                          value={questionType.toString()}
+                          onChange={selectQuestionType}
+                        >
+                          {questionTypes.map((option: QuestType) => (
+                            <MenuItem
+                              key={option.quesTId}
+                              value={option.quesTId}
+                            >
+                              {option.quesTName}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Box>
                   </Box>
 
                   {createQuesState.loading ? (
@@ -329,13 +416,22 @@ const TestCreate = (): JSX.Element => {
                     </LoadingButton>
                   ) : (
                     <Button
-                      onClick={handelSubmitCreate}
+                      onClick={submitQuestion}
                       size='small'
                       color='primary'
+                      variant='outlined'
                     >
                       Thêm câu hỏi
                     </Button>
                   )}
+                  <Button
+                    onClick={cancelModal}
+                    size='small'
+                    color='primary'
+                    variant='outlined'
+                  >
+                    thoát
+                  </Button>
                 </Card>
               </Box>
             </Modal>
@@ -361,86 +457,21 @@ const TestCreate = (): JSX.Element => {
           </Card>
           {questions.map((q: QuestionData, index: number) => {
             const arrStr = q.ansOfQues
-              .split('<--->')
+              .split('<====>')
               .filter((item) => item !== '')
             const type = getNameTypeQues(q.quesTId)
-            if (type == 'Radio') {
-              return (
-                <Card
-                  sx={{
-                    maxWidth: '100%',
-                    mt: 4,
-                    mb: 2,
-                    p: 3,
-                    background: blue[50]
-                  }}
-                  key={index}
-                >
-                  <FormControl>
-                    <FormLabel
-                      id='demo-radio-buttons-group-label'
-                      sx={{ color: 'black', fontWeight: 500 }}
-                    >
-                      {index + 1}. {q.quesDetail} ?
-                    </FormLabel>
-                    <RadioGroup
-                      aria-labelledby='demo-radio-buttons-group-label'
-                      defaultValue='female'
-                      name='radio-buttons-group'
-                      id={`${index}`}
-                    >
-                      <>
-                        {arrStr.map((str, index) => {
-                          return (
-                            <FormControlLabel
-                              key={index}
-                              value={`answer${index}`}
-                              control={<Radio />}
-                              label={str}
-                            />
-                          )
-                        })}
-                      </>
-                    </RadioGroup>
-                  </FormControl>
-                </Card>
-              )
-            }
             return (
-              <Card
-                sx={{
-                  maxWidth: '100%',
-                  mt: 2,
-                  mb: 2,
-                  p: 3,
-                  background: blue[50]
+              <CardData
+                callBack={(): void => {
+                  setLoading(!loading)
                 }}
+                quesId={q.quesId}
+                index={index}
+                quesDetail={q.quesDetail}
+                arrStr={arrStr}
+                typeAnswer={type}
                 key={index}
-              >
-                <FormControl>
-                  <FormLabel
-                    id='demo-radio-buttons-group-label'
-                    sx={{ color: 'black', fontWeight: 500 }}
-                  >
-                    {index + 1}. {q.quesDetail} ?
-                  </FormLabel>
-                  <FormGroup aria-labelledby='demo-radio-buttons-group-label'>
-                    <>
-                      {arrStr.map((str, index) => {
-                        return (
-                          <FormControlLabel
-                            key={index}
-                            value={`answer1${index}`}
-                            control={<Checkbox />}
-                            label={str}
-                          />
-                        )
-                      })}
-                    </>
-                  </FormGroup>
-                </FormControl>
-                <Button></Button>
-              </Card>
+              />
             )
           })}
         </>

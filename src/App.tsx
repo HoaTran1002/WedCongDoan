@@ -26,6 +26,7 @@ import PrivateRoute from './routes/PrivateRoute'
 import SettingManage from '~/page/SettingManage'
 import DepartmentManage from '~/page/Department'
 import ExamsManage from '~/page/ExamsManage'
+import Error from './page/404'
 function App(): JSX.Element {
   return (
     <Routes>
@@ -48,7 +49,6 @@ function App(): JSX.Element {
         <Route path='/blogManage' element={<BlogManage />} />
         <Route path='/BlogCreate' element={<BlogCreate />} />
         <Route path='/BlogDetail' element={<BlogDetail />} />
-
         <Route path='/Listcompetition' element={<Listcompetition />} />
         <Route path='/TestSchedule' element={<TestSchedule />} />
         <Route path='/ExamResult/:id' element={<ExamResult />} />
@@ -58,7 +58,9 @@ function App(): JSX.Element {
           path='/TestCreate/Test/:examId/Competition/:comId'
           element={<TestCreate />}
         />
+        <Route path='*' element={<Error />} />
       </Route>
+
       <Route path='/Login' element={<Login />} />
     </Routes>
   )

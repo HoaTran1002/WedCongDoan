@@ -1,3 +1,4 @@
+import React from 'react'
 import useAuth from '~/hook/useAuth'
 import { Outlet, Navigate } from 'react-router-dom'
 type Props = {

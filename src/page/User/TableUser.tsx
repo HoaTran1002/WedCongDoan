@@ -1,17 +1,15 @@
-import * as React from 'react'
-import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { deleteUsers, getAllUser } from '~/api/userApi'
-import axios from '~/api/axios'
-import BasicModal from './ModalEditUser'
-import useFetch from '~/hook/useFetch'
-import Button from '@mui/material/Button'
-import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
-import CircularProgress from '@mui/material/CircularProgress'
-import Box from '@mui/material/Box'
 import { Snackbar } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
+import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid'
+import * as React from 'react'
+import axios from '~/api/axios'
+import { deleteUsers, getAllUser } from '~/api/userApi'
 import base_url from '~/config/env'
+import useFetch from '~/hook/useFetch'
+import BasicModal from './ModalEditUser'
 axios.defaults.baseURL = base_url
 
 interface User {
@@ -36,6 +34,7 @@ const TableUser = (): JSX.Element => {
   }, [showSuccess])
 
   const users = userState?.payload
+
   const rows =
     users?.map((user: User) => ({
       id: user.userId,
