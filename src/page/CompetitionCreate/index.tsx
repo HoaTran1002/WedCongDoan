@@ -188,7 +188,6 @@ const Index = (): JSX.Element => {
       return
     }
 
-    // Tiếp tục xử lý khi không có lỗi
     callComp(async () => {
       try {
         await insert(request)

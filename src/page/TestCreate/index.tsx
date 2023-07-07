@@ -82,7 +82,8 @@ const TestCreate = (): JSX.Element => {
   const [answerList, setAnswerList] = useState<string[]>([])
   const [correctAnswerList, setCorrectAnswerList] = useState<string[]>([])
   const [errQuestion, setErrQuestion] = useState<string>('')
-
+  const questions = getQuesState.payload || []
+  const questionTypes = getQuesTypeState.payload || []
   useEffect((): void => {
     try {
       getQuesTypeStateCall(getAllQuesTpye).then((res: QuestType[]) => {
@@ -97,9 +98,12 @@ const TestCreate = (): JSX.Element => {
       return GetAllByExamID({ id: Number(examId) })
     })
   }, [examId, getQuesStateCall, loading])
-
-  const questions = getQuesState.payload || []
-  const questionTypes = getQuesTypeState.payload || []
+  // Sử dụng useEffect để gọi lại API khi chiều dài của "questions" thay đổi
+  // useEffect(() => {
+  //   getQuesStateCall(async () => {
+  //     return GetAllByExamID({ id: Number(examId) })
+  //   })
+  // }, [questions.length])
 
   const filteredAnswerList = answerList.filter((item) => item !== '')
   const fillterCorretAnswerList = correctAnswerList.filter(
@@ -178,11 +182,11 @@ const TestCreate = (): JSX.Element => {
   }
 
   const submitQuestion = (): void => {
-    console.log('data trả lời:' + bodyQuestion.ansOfQues)
-    console.log('data trả lời đúng:' + bodyQuestion.trueAnswer)
-    console.log('data câu hỏi:' + bodyQuestion.quesDetail)
-    console.log('data loại đap án:' + bodyQuestion.quesTId)
-    console.log('data Id :' + bodyQuestion.examId)
+    // console.log('data trả lời:' + bodyQuestion.ansOfQues)
+    // console.log('data trả lời đúng:' + bodyQuestion.trueAnswer)
+    // console.log('data câu hỏi:' + bodyQuestion.quesDetail)
+    // console.log('data loại đap án:' + bodyQuestion.quesTId)
+    // console.log('data Id :' + bodyQuestion.examId)
     if (bodyQuestion.quesDetail === '') {
       setErrQuestion('hãy nhập câu hỏi')
     } else {
@@ -190,6 +194,7 @@ const TestCreate = (): JSX.Element => {
         try {
           insertQues(bodyQuestion)
           setShowSuccess(true)
+          window.location.reload()
         } catch (error) {
           setShowError(true)
         }
@@ -220,6 +225,7 @@ const TestCreate = (): JSX.Element => {
   }
   function cancelModal(): void {
     setOpen(false)
+    window.location.reload()
   }
   return (
     <>
@@ -462,9 +468,6 @@ const TestCreate = (): JSX.Element => {
             const type = getNameTypeQues(q.quesTId)
             return (
               <CardData
-                callBack={(): void => {
-                  setLoading(!loading)
-                }}
                 quesId={q.quesId}
                 index={index}
                 quesDetail={q.quesDetail}

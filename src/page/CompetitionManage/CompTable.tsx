@@ -24,25 +24,8 @@ import { color } from '@mui/system'
 import { getAllDep } from '~/api/depApi'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import MuiAlert from '@mui/material/Alert'
-import base_url from '~/config/env'
-import { Console } from 'console'
-function createData(
-  comName: string,
-  examTimes: string,
-  starDay: string,
-  endDay: string,
-  userQuan: string,
-  dep: string
-): {
-  comName: string
-  examTimes: string
-  starDay: string
-  endDay: string
-  userQuan: string
-  dep: string
-} {
-  return { comName, examTimes, starDay, endDay, userQuan, dep }
-}
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 
 const CompTable = (): JSX.Element => {
   const [showSuccess, setShowSuccess] = React.useState(false)
@@ -65,7 +48,6 @@ const CompTable = (): JSX.Element => {
   }
   const handelDeleteComp = (idComp: number): void => {
     const requestDelete: { _id: number } = { _id: idComp }
-
     deleteCompCall(async () => {
       try {
         await deleteCompetitions(requestDelete)
@@ -87,179 +69,192 @@ const CompTable = (): JSX.Element => {
 
   return (
     <>
-      {compState.loading || deps.loading ? (
-        <h1>Đang tải dữ liệu...</h1>
-      ) : (
-        <>
-          <>
-            {' '}
-            <Snackbar
-              open={showSuccess}
-              autoHideDuration={3000}
-              onClose={handleCloseSuccess}
-            >
-              <MuiAlert
-                onClose={handleCloseSuccess}
-                severity='success'
-                elevation={6}
-                variant='filled'
-              >
-                Acction successful!
-              </MuiAlert>
-            </Snackbar>
-            <Snackbar
-              open={showError}
-              autoHideDuration={3000}
-              onClose={handleCloseSuccess}
-            >
-              <MuiAlert
-                onClose={handleCloseError}
-                severity='error'
-                elevation={6}
-                variant='filled'
-              >
-                Acction Failed!
-              </MuiAlert>
-            </Snackbar>
-          </>
-          <Grid
-            container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+      <>
+        <Snackbar
+          open={showSuccess}
+          autoHideDuration={3000}
+          onClose={handleCloseSuccess}
+        >
+          <MuiAlert
+            onClose={handleCloseSuccess}
+            severity='success'
+            elevation={6}
+            variant='filled'
           >
-            <Grid xs={12}>
-              <Stack
-              // direction='row'
-              // spacing={20}
-              // alignItems='center'
-              // sx={{ marginTop: '20px' }}
-              >
-                <Typography
-                  variant='h4'
-                  sx={{
-                    fontWeight: 500,
-                    color: '#1976d2',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginTop: 2
-                  }}
-                >
-                  Danh sách cuộc thi
-                </Typography>
-                <Link
-                  to={'/CompetitionCreate'}
-                  style={{ textDecoration: 'none', marginLeft: 20 }}
-                >
-                  <Button variant='contained' startIcon={<AddIcon />}>
-                    Thêm cuộc thi mới
-                  </Button>
-                </Link>
-              </Stack>
-            </Grid>
-            <Grid xs={12} style={{ margin: 10 }}>
-              <TableContainer
-                component={Paper}
+            Thao tác thành công 
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={showError}
+          autoHideDuration={3000}
+          onClose={handleCloseSuccess}
+        >
+          <MuiAlert
+            onClose={handleCloseError}
+            severity='error'
+            elevation={6}
+            variant='filled'
+          >
+            Thao tác thất bại
+          </MuiAlert>
+        </Snackbar>
+      </>
+      <Grid
+        container
+        rowSpacing={1}
+        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+      >
+        <Grid item xs={12}>
+          <Stack>
+            <Typography
+              variant='h4'
+              sx={{
+                fontWeight: 500,
+                color: '#1976d2',
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: 2
+              }}
+            >
+              Danh sách cuộc thi
+            </Typography>
+          </Stack>
+        </Grid>
+        {
+          compState.loading || deps.loading ? (
+            <Grid item xs={12} style={{ margin: 10 }}>
+              <Box 
                 sx={{
-                  maxHeight: 400,
-                  overflow: 'auto',
-
-                  marginLeft: '10px'
+                  width:"100%",
+                  height:"500px",
+                  display:"flex",
+                  alignItems:"center",
+                  justifyContent:"center"
                 }}
               >
-                <Table
-                  sx={{ Width: '100%', overflow: 'scroll' }}
-                  aria-label='simple table'
-                >
-                  <TableHead
-                    sx={{
-                      position: 'sticky',
-                      top: 0,
-                      zIndex: 1,
-                      background: '#fff',
-                      width: '100%'
-                    }}
-                  >
-                    <TableRow>
-                      <TableCell sx={{ minWidth: 300 }}>
-                        Tên cuộc thi{' '}
-                      </TableCell>
-                      <TableCell sx={{ minWidth: 200 }}>Ngày bắt đầu</TableCell>
-                      <TableCell sx={{ minWidth: 200 }}>
-                        Ngày kết thúc
-                      </TableCell>
-                      <TableCell sx={{ minWidth: 200 }}>
-                        Thời gian làm bài
-                      </TableCell>
-                      <TableCell sx={{ minWidth: 200 }}>
-                        Số lượng thí sinh
-                      </TableCell>
-                      <TableCell sx={{ minWidth: 200 }}>
-                        Đơn vị tổ chức
-                      </TableCell>
-                      <TableCell
-                        sx={{ position: 'sticky', top: 0, zIndex: 1 }}
-                      ></TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {rows.map((row: any) => (
-                      <TableRow
-                        key={row.comName}
-                        sx={{
-                          '&:last-child td, &:last-child th': { border: 0 }
-                        }}
-                      >
-                        <TableCell component='th' scope='row'>
-                          {row.comName}
-                        </TableCell>
-                        <TableCell align='left'>{row.startDate}</TableCell>
-                        <TableCell align='left'>{row.endDate}</TableCell>
-                        <TableCell align='left'>{row.examTimes}</TableCell>
-                        <TableCell align='left'>{row.userQuan}</TableCell>
-                        <TableCell align='left'>
-                          {getNameDep(row.depId)}
-                        </TableCell>
-                        <TableCell align='left'>
-                          <Tooltip title='Xem đề thi' placement='top-start'>
-                            <Link to={`/Tests/Competition/${row.comId}`}>
-                              <Button style={{ width: 50 }} variant='outlined'>
-                                <ArticleOutlinedIcon />
-                              </Button>
-                            </Link>
-                          </Tooltip>
-                        </TableCell>
-                        <TableCell align='left'>
-                          <Tooltip
-                            title='Xem giải thưởng'
-                            placement='top-start'
-                          >
-                            <Link to={`/Prize/Competition/${row.comId}`}>
-                              <Button style={{ width: 50 }} variant='outlined'>
-                                <MilitaryTechOutlinedIcon />
-                              </Button>
-                            </Link>
-                          </Tooltip>
-                        </TableCell>
-                        <TableCell align='left'>
-                          <Tooltip title='xoá cuộc thi' placement='top-start'>
-                            <Button
-                              onClick={(): void => handelDeleteComp(row.comId)}
-                              style={{ width: 50 }}
-                              variant='outlined'
-                            >
-                              <DeleteOutlinedIcon />
-                            </Button>
-                          </Tooltip>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+                <CircularProgress />
+              </Box>
             </Grid>
-          </Grid>
-        </>
-      )}
+          ):(
+            <>
+              <Link
+                to={'/CompetitionCreate'}
+                style={{ 
+                  textDecoration: 'none',
+                    marginLeft: 40 ,
+                    display:"inline-block"
+                }}
+              >
+                <Button variant='contained' startIcon={<AddIcon />}>
+                  Thêm cuộc thi mới
+                </Button>
+              </Link>
+              <Grid item xs={12} style={{ margin: 10 }}>
+                <TableContainer
+                  component={Paper}
+                  sx={{
+                    maxHeight: 400,
+                    overflow: 'auto',
+
+                    marginLeft: '10px'
+                  }}
+                >
+                  <Table
+                    sx={{ Width: '100%', overflow: 'scroll' }}
+                    aria-label='simple table'
+                  >
+                    <TableHead
+                      sx={{
+                        position: 'sticky',
+                        top: 0,
+                        zIndex: 1,
+                        background: '#fff',
+                        width: '100%'
+                      }}
+                    >
+                      <TableRow>
+                        <TableCell sx={{ minWidth: 300 }}>
+                          Tên cuộc thi
+                        </TableCell>
+                        <TableCell sx={{ minWidth: 200 }}>Ngày bắt đầu</TableCell>
+                        <TableCell sx={{ minWidth: 200 }}>
+                          Ngày kết thúc
+                        </TableCell>
+                        <TableCell sx={{ minWidth: 200 }}>
+                          Thời gian làm bài
+                        </TableCell>
+                        <TableCell sx={{ minWidth: 200 }}>
+                          Số lượng thí sinh
+                        </TableCell>
+                        <TableCell sx={{ minWidth: 200 }}>
+                          Đơn vị tổ chức
+                        </TableCell>
+                        <TableCell
+                          sx={{ position: 'sticky', top: 0, zIndex: 1 }}
+                        ></TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {rows.map((row: any) => (
+                        <TableRow
+                          key={row.comName}
+                          sx={{
+                            '&:last-child td, &:last-child th': { border: 0 }
+                          }}
+                        >
+                          <TableCell component='th' scope='row'>
+                            {row.comName}
+                          </TableCell>
+                          <TableCell align='left'>{row.startDate}</TableCell>
+                          <TableCell align='left'>{row.endDate}</TableCell>
+                          <TableCell align='left'>{row.examTimes}</TableCell>
+                          <TableCell align='left'>{row.userQuan}</TableCell>
+                          <TableCell align='left'>
+                            {getNameDep(row.depId)}
+                          </TableCell>
+                          <TableCell align='left'>
+                            <Tooltip title='Xem đề thi' placement='top-start'>
+                              <Link to={`/Tests/Competition/${row.comId}`}>
+                                <Button style={{ width: 50 }} variant='outlined'>
+                                  <ArticleOutlinedIcon />
+                                </Button>
+                              </Link>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell align='left'>
+                            <Tooltip
+                              title='Xem giải thưởng'
+                              placement='top-start'
+                            >
+                              <Link to={`/Prize/Competition/${row.comId}`}>
+                                <Button style={{ width: 50 }} variant='outlined'>
+                                  <MilitaryTechOutlinedIcon />
+                                </Button>
+                              </Link>
+                            </Tooltip>
+                          </TableCell>
+                          <TableCell align='left'>
+                            <Tooltip title='xoá cuộc thi' placement='top-start'>
+                              <Button
+                                onClick={(): void => handelDeleteComp(row.comId)}
+                                style={{ width: 50 }}
+                                variant='outlined'
+                              >
+                                <DeleteOutlinedIcon />
+                              </Button>
+                            </Tooltip>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Grid>
+            </>
+          )
+        }
+        
+      </Grid>
     </>
   )
 }

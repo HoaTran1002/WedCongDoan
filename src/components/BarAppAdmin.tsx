@@ -5,6 +5,7 @@ import Drawer from '@mui/material/Drawer'
 import CssBaseline from '@mui/material/CssBaseline'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
+import { useLocation } from 'react-router-dom';
 import List from '@mui/material/List'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
@@ -31,6 +32,7 @@ import PersonIcon from '@mui/icons-material/Person'
 import WebIcon from '@mui/icons-material/Web'
 import AppsIcon from '@mui/icons-material/Apps'
 import { blue, yellow } from '@mui/material/colors'
+import { SxProps } from '@mui/material'
 
 const drawerWidth = 250
 const pages = [
@@ -73,6 +75,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }))
 
 export default function Index(): JSX.Element {
+  const location = useLocation();
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
@@ -105,7 +108,7 @@ export default function Index(): JSX.Element {
       <Box
         sx={{
           zIndex: 2,
-          paddingTop: '5.5%',
+          paddingTop: '75px',
           position: 'fixed',
           top: 0,
           bottom: 0,
@@ -133,23 +136,8 @@ export default function Index(): JSX.Element {
                 onClick={handleCloseNavMenu}
                 startIcon={page.icon}
                 sx={{
-                  padding: '10px',
-                  background: blue[100],
-                  boxShadow: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'flex-start',
-                  flexDirection: 'row',
-                  '&:hover': {
-                    backgroundColor: 'white',
-                    color: '#1769ba',
-                    borderRadius: 'none',
-                    boxShadow: 'none'
-                  },
-                  borderRadius: '0',
-                  textDecoration: 'none',
-                  width: '100%',
-                  color: blue[900]
+                  ...buttonStyles,
+                  ...(location.pathname === page.to && activeButtonStyles)
                 }}
                 variant='contained'
               >
@@ -172,28 +160,24 @@ export default function Index(): JSX.Element {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          gap: 2
         }}
       >
         <Box
           sx={{
-            display: 'inline-flex',
+            display:{xs:'none', md:"inlineFlex"},
             width: '260px',
             height: '100%',
             justifyContent: 'center',
-            background: blue[400],
-            border: 1.5,
-            borderColor: 'white',
-            borderTop: 0,
-            borderLeft: 0,
-            borderBottom: 0
+            alignItems:"center",
+            background: 'transparent',
           }}
           alignItems={'center'}
         >
           <Box
             component='img'
             sx={{
-              height: '50px'
+              height: '50px',
+              
             }}
             alt='The house from the offer.'
             src='https://api.congdoantphochiminh.org.vn/Upload/Multimedia/Images/20221229150859445_logo%20DAI%20HOI%20XII%20CONG%20DOAN%20TP%20-%20png.png'
@@ -204,9 +188,9 @@ export default function Index(): JSX.Element {
           aria-label='open drawer'
           onClick={handleDrawerOpen}
           edge='start'
-          sx={{ mr: 2, display: { xs: 'flex', md: 'none' } }}
+          sx={{ mr: 2, display: { xs: 'flex', md: 'none' },ml:2 }}
         >
-          <MenuIcon />
+          <MenuIcon sx={{color:"white"}} />
         </IconButton>
         <Box sx={{ flexGrow: 0, display: { md: 'flex' }, mr: 5 }}>
           <Tooltip title='Open settings'>
@@ -238,91 +222,6 @@ export default function Index(): JSX.Element {
           </Menu>
         </Box>
       </Box>
-      {/* <AppBar position='fixed' open={open}>
-        <Toolbar sx={{ display: 'flex' }}>
-          <IconButton
-            color='inherit'
-            aria-label='open drawer'
-            onClick={handleDrawerOpen}
-            edge='start'
-            sx={{ mr: 2, display: { xs: 'flex', md: 'none' } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Box
-            component='img'
-            sx={{
-              height: 50,
-              width: 70
-            }}
-            alt='The house from the offer.'
-            src='https://api.congdoantphochiminh.org.vn/Upload/Multimedia/Images/20221229150859445_logo%20DAI%20HOI%20XII%20CONG%20DOAN%20TP%20-%20png.png'
-          />
-
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page, index) => (
-              <Link
-                key={index}
-                style={{ color: 'white', textDecoration: 'none' }}
-                to={page.to}
-              >
-                <Button
-                  key={index}
-                  onClick={handleCloseNavMenu}
-                  sx={{
-                    ml: 1,
-                    mr: 1,
-                    my: 2,
-                    background: 'transparent',
-                    boxShadow: 'none',
-                    display: 'block',
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                      borderRadius: 'none',
-                      boxShadow: 'none'
-                    },
-                    color: '#fff',
-                    textDecoration: 'none'
-                  }}
-                  style={{ backgroundColor: '#1769ba' }}
-                  variant='contained'
-                >
-                  {page.name}
-                </Button>
-              </Link>
-            ))}
-          </Box>
-          <Box sx={{ flexGrow: 0, display: { md: 'flex' } }}>
-            <Tooltip title='Open settings'>
-              <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt='Remy Sharp' />
-              </IconButton>
-            </Tooltip>
-            <Menu
-              sx={{ mt: '45px' }}
-              id='menu-appbar'
-              anchorEl={anchorElUser}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right'
-              }}
-              open={Boolean(anchorElUser)}
-              onClose={handleCloseUserMenu}
-            >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
-                </MenuItem>
-              ))}
-            </Menu>
-          </Box>
-        </Toolbar>
-      </AppBar> */}
       <Drawer
         sx={{
           width: drawerWidth,
@@ -347,33 +246,52 @@ export default function Index(): JSX.Element {
         </DrawerHeader>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
           {pages.map((page, index) => (
-            <ListItem key={index} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText>
-                  <Button href={page.to}>{page.name}</Button>
-                </ListItemText>
-              </ListItemButton>
-            </ListItem>
+            <Link key={index} style={{textDecoration:"none"}} to={page.to}>
+              <ListItem key={index} disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    {page.icon}
+                  </ListItemIcon>
+                  <ListItemText>
+                    <span className='color-primary' style={{fontWeight:"600"}}>
+                      {page.name} 
+                    </span>
+                  </ListItemText>
+                </ListItemButton>
+              </ListItem>
+            </Link>
           ))}
         </List>
       </Drawer>
     </Box>
   )
 }
+
+
+const buttonStyles = {
+  padding: '10px',
+  background: blue[100],
+  boxShadow: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  flexDirection: 'row',
+  '&:hover': {
+    backgroundColor: 'white',
+    color: '#1769ba',
+    borderRadius: 'none',
+    boxShadow: 'none'
+  },
+  borderRadius: '0',
+  textDecoration: 'none',
+  width: '100%',
+  color: blue[900]
+};
+
+const activeButtonStyles = {
+  backgroundColor: 'white',
+  color: '#1769ba',
+  borderRadius: '0px !important',
+  boxShadow: 'none'
+};

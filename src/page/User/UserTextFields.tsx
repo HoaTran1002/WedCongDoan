@@ -181,7 +181,7 @@ export default function UserTextFields(prop: {
           elevation={6}
           variant='filled'
         >
-          Acction successful!
+          Thao tác thành công
         </MuiAlert>
       </Snackbar>
       <Snackbar
@@ -195,7 +195,7 @@ export default function UserTextFields(prop: {
           elevation={6}
           variant='filled'
         >
-          Acction Failed!
+          Thao tác thất bại
         </MuiAlert>
       </Snackbar>
       {prop.edit ? (

@@ -16,12 +16,14 @@ import {
   TooltipProps
 } from '@mui/material'
 import { blue, red } from '@mui/material/colors'
-import React, { MouseEventHandler, useState } from 'react'
-import HighlightOffIcon from '@mui/icons-material/HighlightOff'
+import React, { useState } from 'react'
+
 import EditCalendarIcon from '@mui/icons-material/EditCalendar'
 import useFetch from '~/hook/useFetch'
 import { deleteQues } from '~/api/question'
 import MessageAlert from '~/components/MessageAlert'
+import ModalDelete from '~/components/ModalDelete'
+import ModalEdit from './ModalEdit'
 
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -33,43 +35,44 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
     fontSize: 11
   }
 }))
-const Index = ({
-  callBack,
-  quesId,
-  index,
-  quesDetail,
-  arrStr,
-  typeAnswer
-}: {
-  callBack: () => void
+interface IQuestion {
   quesId: number
   index: number
   quesDetail: string
   arrStr: string[]
   typeAnswer: string
-}): JSX.Element => {
+  quesTId: number
+}
+const Index = ({
+  quesId,
+  index,
+  quesDetail,
+  arrStr,
+  typeAnswer,
+  quesTId
+}: IQuestion): JSX.Element => {
   const [deleteQuestionState, deleteQuestionCall] = useFetch()
   const [message, setMessage] = useState<string>('')
   const [severity, setSeverity] = useState<string>('')
+  const [isDeleteValue, setIsDeleteValue] = useState<boolean>(false)
 
   const TypeSelect = typeAnswer === 'Radio' ? Radio : Checkbox
   const LayoutSelect = typeAnswer === 'Radio' ? RadioGroup : FormGroup
-  const deleteQuestion = (
-    quesId: number
-  ): MouseEventHandler<HTMLButtonElement> => {
-    return (event) => {
-      const id = quesId
-      try {
-        deleteQuestionCall(async () => {
-          return deleteQues({ id })
-        })
-        setMessage('đã xoá thành công')
-        setSeverity('info')
-        callBack
-      } catch (error) {
-        setMessage('xoá thất bại')
-        setSeverity('error')
-      }
+
+  const deleteQuestion = (): void => {
+    const id = quesId
+
+    try {
+      console.log('excute')
+      deleteQuestionCall(async () => {
+        return deleteQues({ id })
+      })
+      setMessage('đã xoá thành công')
+      setSeverity('info')
+      window.location.reload()
+    } catch (error) {
+      setMessage('xoá thất bại')
+      setSeverity('error')
     }
   }
 
@@ -118,29 +121,19 @@ const Index = ({
         </FormControl>
         <Box sx={{ display: 'flex', flexDirection: 'column' }}>
           <LightTooltip placement='left' title='xoá câu hỏi'>
-            <Button
-              sx={{
-                background: 'white',
-                border: 1,
-                borderRadius: 1,
-                margin: 0.2
-              }}
-              onClick={deleteQuestion(quesId)}
-            >
-              <HighlightOffIcon sx={{ color: red[400] }} />
-            </Button>
+            <ModalDelete
+              callBack={deleteQuestion}
+              // setIsDeleteValue={setIsDeleteValue}
+            />
           </LightTooltip>
           <LightTooltip placement='left' title='chỉnh sửa câu hỏi'>
-            <Button
-              sx={{
-                background: 'white',
-                border: 1,
-                borderRadius: 1,
-                margin: 0.2
-              }}
-            >
-              <EditCalendarIcon />
-            </Button>
+            <ModalEdit
+              quesId={quesId}
+              quesDetail={quesDetail}
+              arrStr={arrStr}
+              typeAnswer={typeAnswer}
+              quesTId={quesTId}
+            />
           </LightTooltip>
         </Box>
       </Card>
