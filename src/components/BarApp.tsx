@@ -287,7 +287,21 @@ export default function SideBar(): JSX.Element {
             ))}
           </Box>
         </Box>
-        <Box sx={{ flexGrow: 0, display: { md: 'flex' } }}>
+        <Box sx={{ flexGrow: 0, display: { md: 'flex',gap:"10px" } }}>
+          <Link to={'/TestSchedule'} style={{height:"100%",display:"flex",alignItems:"center",justifyContent:"center",textDecoration:"none"}}>
+            <Button 
+              sx={{
+                color:"white",
+                borderColor:"white",
+                '&:hover':{
+                  borderColor:"white"
+                }
+              }} 
+              variant='outlined' startIcon={<CalendarMonthIcon/>}
+            >
+              LỊCH THI
+            </Button>
+          </Link>
           <Tooltip title='tên user' >
             <IconButton onClick={handleOpenUserMenu} sx={{ pr: 5 }}>
               <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />

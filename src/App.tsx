@@ -18,7 +18,7 @@ import CompetitionTest from '~/page/CompetitionTest'
 import Register from '~/page/Register'
 import Listcompetition from '~/page/Client/Listcompetition'
 import ExamStart from '~/page/Client/ExamStart'
-import TestSchedule from '~/page/TestSchedule'
+import TestSchedule from '~/page/Client/TestSchedule'
 import ExamResult from '~/page/ExamResult'
 import PrizeManage from '~/page/PrizeManage'
 import PrizeTypeManage from '~/page/PrizeTypeManage'
@@ -67,8 +67,6 @@ function App(): JSX.Element {
 
         <Route path='*' element={<Error />} />
       </Route>
-
-      {/* </Route> */}
 
       <Route path='/Login' element={<Login />} />
     </Routes>

@@ -7,8 +7,6 @@ interface IMessage {
   severity: string
 }
 const StyledSnackbar = styled(Snackbar)(({ theme }) => ({
-  // Custom styles for Snackbar
-  // Example: Setting the position to bottom right
   position: 'fixed',
   bottom: theme.spacing(2),
   right: theme.spacing(2)
