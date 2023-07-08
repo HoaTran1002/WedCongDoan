@@ -15,7 +15,7 @@ import {
   tooltipClasses,
   TooltipProps
 } from '@mui/material'
-import { blue, red } from '@mui/material/colors'
+import { blue, green, red } from '@mui/material/colors'
 import React, { useState } from 'react'
 
 import EditCalendarIcon from '@mui/icons-material/EditCalendar'
@@ -40,11 +40,13 @@ interface IQuestion {
   index: number
   quesDetail: string
   arrStr: string[]
+  trueAnswer: string[]
   typeAnswer: string
   quesTId: number
 }
 const Index = ({
   quesId,
+  trueAnswer,
   index,
   quesDetail,
   arrStr,
@@ -91,28 +93,51 @@ const Index = ({
         }}
         key={index}
       >
-        <FormControl>
+        <FormControl sx={{ width: '100%' }}>
           <FormLabel
             id='demo-radio-buttons-group-label'
             sx={{ color: 'black', fontWeight: 500 }}
           >
             {index + 1}. {quesDetail} ?
           </FormLabel>
-          <FormGroup aria-labelledby='demo-radio-buttons-group-label'>
+          <FormGroup
+            aria-labelledby='demo-radio-buttons-group-label'
+            sx={{ width: '100%' }}
+          >
             <LayoutSelect
               defaultValue='female'
               aria-labelledby='demo-customized-radios'
               name='customized-radios'
+              sx={{ width: '100%' }}
             >
               <>
                 {arrStr.map((str, index) => {
                   return (
-                    <FormControlLabel
-                      key={index}
-                      value={`answer1${index}`}
-                      control={<TypeSelect />}
-                      label={str}
-                    />
+                    <>
+                      {trueAnswer.includes(str) ? (
+                        <FormControlLabel
+                          key={index}
+                          value={`answer1${index}`}
+                          control={<TypeSelect />}
+                          label={str}
+                          sx={{
+                            background: blue[300],
+                            color: 'white',
+                            width: '100%',
+                            height: 30,
+                            marginTop: 1
+                          }}
+                          checked
+                        />
+                      ) : (
+                        <FormControlLabel
+                          key={index}
+                          value={`answer1${index}`}
+                          control={<TypeSelect />}
+                          label={str}
+                        />
+                      )}
+                    </>
                   )
                 })}
               </>
@@ -128,6 +153,7 @@ const Index = ({
           </LightTooltip>
           <LightTooltip placement='left' title='chỉnh sửa câu hỏi'>
             <ModalEdit
+              trueAnswer={trueAnswer}
               quesId={quesId}
               quesDetail={quesDetail}
               arrStr={arrStr}
