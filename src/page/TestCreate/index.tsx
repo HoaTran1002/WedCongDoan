@@ -36,6 +36,7 @@ import useFetch from '~/hook/useFetch'
 import CardData from './CardData'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { padding } from '@mui/system'
+import { Margin } from '@mui/icons-material'
 
 interface IQuestion {
   examId: number
@@ -84,9 +85,9 @@ const TestCreate = (): JSX.Element => {
   const [answerList, setAnswerList] = useState<string[]>([])
   const [correctAnswerList, setCorrectAnswerList] = useState<string[]>([])
   const [errQuestion, setErrQuestion] = useState<string>('')
-  const [errCorret, setErrCorret] = useState<boolean>(false)
-  const [errNumberCorret, setErrNumberCorret] = useState<boolean>(false)
-  const [errNullCorret, setErrNullCorret] = useState<boolean>(false)
+  const [errCorret, setErrCorret] = useState<string>('')
+  const [errNumberCorret, setErrNumberCorret] = useState<string>('')
+  const [errNullCorret, setErrNullCorret] = useState<string>('')
 
   const questions = getQuesState.payload || []
   const questionTypes = getQuesTypeState.payload || []
@@ -124,20 +125,7 @@ const TestCreate = (): JSX.Element => {
     quesTId: questionType,
     examId: Number(examId)
   }
-  const errorMessages = [
-    {
-      condition: errCorret,
-      message: 'hãy nhập đáp án'
-    },
-    {
-      condition: errNullCorret,
-      message: 'chưa có đáp án đúng'
-    },
-    {
-      condition: errNumberCorret,
-      message: 'chọn một đáp án đối với Radio'
-    }
-  ]
+
   const selectQuestionType = (event: SelectChangeEvent<string>): void => {
     const value = event.target.value
     setQuestionType(Number(value))
@@ -208,8 +196,32 @@ const TestCreate = (): JSX.Element => {
     // console.log('data câu hỏi:' + bodyQuestion.quesDetail)
     // console.log('data loại đap án:' + bodyQuestion.quesTId)
     // console.log('data Id :' + bodyQuestion.examId)
-    if (bodyQuestion.quesDetail === '') {
-      setErrQuestion('hãy nhập câu hỏi')
+    const errorConditions = [
+      {
+        condition: bodyQuestion.ansOfQues === '',
+        setError: setErrCorret,
+        errorMessage: 'Hãy nhập đáp án'
+      },
+      {
+        condition: bodyQuestion.trueAnswer === '',
+        setError: setErrNullCorret,
+        errorMessage: 'Chưa có đáp án đúng'
+      },
+      {
+        condition: bodyQuestion.quesDetail === '',
+        setError: setErrQuestion,
+        errorMessage: 'hãy nhập câu hỏi'
+      }
+    ]
+    for (const condition of errorConditions) {
+      if (condition.condition) {
+        condition.setError(condition.errorMessage)
+      }
+    }
+    const hasError = errorConditions.some((condition) => condition.condition)
+    console.log(hasError)
+    if (hasError) {
+      return
     } else {
       quesCreateCall(async (): Promise<void> => {
         try {
@@ -412,7 +424,7 @@ const TestCreate = (): JSX.Element => {
                     noValidate
                     autoComplete='off'
                   >
-                    <Box>
+                    <Box sx={{ margin: 2 }}>
                       <FormControl fullWidth>
                         <InputLabel id='demo-simple-select-label'>
                           Chọn loại đáp án
@@ -440,49 +452,75 @@ const TestCreate = (): JSX.Element => {
                     sx={{
                       color: red[300],
                       display: 'flex',
-                      justifyContent: 'flex-start',
-                      alignItems: 'center',
+                      justifyContent: 'center',
+                      alignItems: 'flex-start',
                       flexDirection: 'column'
                     }}
                   >
-                    <Box>
-                      <span>hãy nhập đáp án</span>
-                    </Box>
-                    <Box>
-                      <span>chưa có đáp án đúng</span>
-                    </Box>
-                    <Box>
-                      <span>chọn một đáp án đối với Radio</span>
-                    </Box>
+                    {errCorret && (
+                      <Box
+                        sx={{
+                          color: 'white',
+                          backgroundColor: red[300],
+                          fontSize: 13,
+                          borderRadius: 2,
+                          padding: 0.3,
+                          margin: 0.2
+                        }}
+                      >
+                        <span>hãy nhập đáp án</span>
+                      </Box>
+                    )}
+                    {errNullCorret && (
+                      <Box
+                        sx={{
+                          color: 'white',
+                          backgroundColor: red[300],
+                          fontSize: 13,
+                          borderRadius: 2,
+                          padding: 0.3,
+                          margin: 0.2
+                        }}
+                      >
+                        <span>chưa có đáp án đúng</span>
+                      </Box>
+                    )}
                   </Box>
-                  {createQuesState.loading ? (
-                    <LoadingButton
-                      size='small'
-                      onClick={handleClick}
-                      loading={loading}
-                      variant='outlined'
-                      disabled
-                    >
-                      <span>disabled</span>
-                    </LoadingButton>
-                  ) : (
+                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                    <Box>
+                      {createQuesState.loading ? (
+                        <LoadingButton
+                          size='small'
+                          onClick={handleClick}
+                          loading={loading}
+                          variant='outlined'
+                          sx={{ marginLeft: 2, marginRight: 2 }}
+                          disabled
+                        >
+                          <span>disabled</span>
+                        </LoadingButton>
+                      ) : (
+                        <Button
+                          onClick={submitQuestion}
+                          size='small'
+                          color='primary'
+                          variant='outlined'
+                          sx={{ marginLeft: 2, marginRight: 2 }}
+                        >
+                          Thêm câu hỏi
+                        </Button>
+                      )}
+                    </Box>
                     <Button
-                      onClick={submitQuestion}
+                      onClick={cancelModal}
                       size='small'
                       color='primary'
                       variant='outlined'
+                      sx={{ marginLeft: 2, marginRight: 2 }}
                     >
-                      Thêm câu hỏi
+                      thoát
                     </Button>
-                  )}
-                  <Button
-                    onClick={cancelModal}
-                    size='small'
-                    color='primary'
-                    variant='outlined'
-                  >
-                    thoát
-                  </Button>
+                  </Box>
                 </Card>
               </Box>
             </Modal>
