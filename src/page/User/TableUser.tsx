@@ -34,12 +34,20 @@ const TableUser = (): JSX.Element => {
   }, [showSuccess])
 
   const users = userState?.payload
+  const formatDay = (dayOrigin: string): string => {
+    const dateObj = new Date(dayOrigin);
 
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+
+    return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
+  }
   const rows =
     users?.map((user: User) => ({
       id: user.userId,
       username: user.userName,
-      dateofbirth: user.dateOfBirth,
+      dateofbirth:formatDay(user.dateOfBirth),
       email: user.email,
       password: user.password,
       useraddress: user.userAddress,
@@ -74,6 +82,7 @@ const TableUser = (): JSX.Element => {
   const handleCloseError = (): void => {
     setShowError(false)
   }
+  
   const columns: GridColDef[] = [
     { field: 'id', headerName: 'ID Người Dùng', width: 200 },
     { field: 'username', headerName: 'Họ và tên', width: 200 },
@@ -91,25 +100,6 @@ const TableUser = (): JSX.Element => {
       sortable: false,
       width: 200
     },
-    // {
-    //   field: 'useraddress',
-    //   headerName: 'Địa Chỉ',
-    //   type: 'string',
-    //   width: 200
-    // },
-    // },
-    // {
-    //   field: 'roleId',
-    //   headerName: 'Mã Quyền',
-    //   type: 'number',
-    //   width: 0
-    // },
-    // {
-    //   field: 'depId',
-    //   headerName: 'Mã Phòng',
-    //   type: 'number',
-    //   width: 0
-    // },
     {
       field: 'actions',
       type: 'actions',
