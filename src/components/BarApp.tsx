@@ -304,7 +304,7 @@ export default function SideBar(): JSX.Element {
           </Link>
           <Tooltip title='tên user' >
             <IconButton onClick={handleOpenUserMenu} sx={{ pr: 5 }}>
-              <Avatar alt='Remy Sharp' src='/static/images/avatar/2.jpg' />
+              sd
             </IconButton>
           </Tooltip>
           <Menu

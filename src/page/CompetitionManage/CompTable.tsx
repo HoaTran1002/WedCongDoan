@@ -64,6 +64,17 @@ const CompTable = (): JSX.Element => {
   const handleCloseError = (): void => {
     setShowError(false)
   }
+
+  const formatDay = (dayOrigin: string): string => {
+    const dateObj = new Date(dayOrigin);
+
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+
+    return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
+  }
+
   const depList = deps.payload || []
   const rows = compState.payload || []
 
@@ -81,7 +92,7 @@ const CompTable = (): JSX.Element => {
             elevation={6}
             variant='filled'
           >
-            Thao tác thành công 
+            Thao tác thành công
           </MuiAlert>
         </Snackbar>
         <Snackbar
@@ -123,26 +134,26 @@ const CompTable = (): JSX.Element => {
         {
           compState.loading || deps.loading ? (
             <Grid item xs={12} style={{ margin: 10 }}>
-              <Box 
+              <Box
                 sx={{
-                  width:"100%",
-                  height:"500px",
-                  display:"flex",
-                  alignItems:"center",
-                  justifyContent:"center"
+                  width: "100%",
+                  height: "500px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
                 }}
               >
                 <CircularProgress />
               </Box>
             </Grid>
-          ):(
+          ) : (
             <>
               <Link
                 to={'/CompetitionCreate'}
-                style={{ 
+                style={{
                   textDecoration: 'none',
-                    marginLeft: 40 ,
-                    display:"inline-block"
+                  marginLeft: 40,
+                  display: "inline-block"
                 }}
               >
                 <Button variant='contained' startIcon={<AddIcon />}>
@@ -195,9 +206,9 @@ const CompTable = (): JSX.Element => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {rows.map((row: any) => (
+                      {rows.map((row: any, index: any) => (
                         <TableRow
-                          key={row.comName}
+                          key={index}
                           sx={{
                             '&:last-child td, &:last-child th': { border: 0 }
                           }}
@@ -205,8 +216,8 @@ const CompTable = (): JSX.Element => {
                           <TableCell component='th' scope='row'>
                             {row.comName}
                           </TableCell>
-                          <TableCell align='left'>{row.startDate}</TableCell>
-                          <TableCell align='left'>{row.endDate}</TableCell>
+                          <TableCell align='left'>{formatDay(row.startDate)}</TableCell>
+                          <TableCell align='left'>{formatDay(row.endDate)}</TableCell>
                           <TableCell align='left'>{row.examTimes}</TableCell>
                           <TableCell align='left'>{row.userQuan}</TableCell>
                           <TableCell align='left'>
@@ -253,7 +264,7 @@ const CompTable = (): JSX.Element => {
             </>
           )
         }
-        
+
       </Grid>
     </>
   )

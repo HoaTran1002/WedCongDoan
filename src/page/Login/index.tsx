@@ -68,10 +68,8 @@ export default function Login(): JSX.Element {
       email: data.get('email'),
       password: data.get('password')
     }
-
     try {
       await server.post('/users/login', body)
-
       location.reload()
     } catch (error) {
       console.log(error)
