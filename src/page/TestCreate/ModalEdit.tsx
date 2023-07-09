@@ -25,16 +25,18 @@ import {
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
-import { GetAllByExamID, insertQues } from '~/api/question'
+import { GetAllByExamID, insertQues, updateQues } from '~/api/question'
 import { getAllQuesTpye } from '~/api/questionTypes'
 import useFetch from '~/hook/useFetch'
 import EditCalendarIcon from '@mui/icons-material/EditCalendar'
+import MessageAlert from '~/components/MessageAlert'
 
 interface QuestType {
   quesTId: number
   quesTName: string
 }
 interface IQuestion {
+  quesId: number
   examId: number
   quesDetail: string
   ansOfQues: string
@@ -46,6 +48,7 @@ interface IDataQuestion {
   index?: number
   quesDetail: string
   arrStr: string[]
+  trueAnswer: string[]
   typeAnswer: string
   quesTId: number
 }
@@ -75,12 +78,13 @@ const ModalEdit = ({
   index,
   quesDetail,
   arrStr,
+  trueAnswer,
   typeAnswer,
   quesTId
 }: IDataQuestion): JSX.Element => {
   const [loading, setLoading] = React.useState<boolean>(true)
   const [open, setOpen] = useState(false)
-  const [createQuesState, quesCreateCall] = useFetch()
+  const [updateQuesState, updateQuesCall] = useFetch()
   const [getQuesState, getQuesStateCall] = useFetch()
   const [getQuesTypeState, getQuesTypeStateCall] = useFetch()
   const { examId, comId } = useParams()
@@ -89,8 +93,50 @@ const ModalEdit = ({
   const [answerList, setAnswerList] = useState<string[]>([])
   const [correctAnswerList, setCorrectAnswerList] = useState<string[]>([])
   const [errQuestion, setErrQuestion] = useState<string>('')
+  const [mesagge, setMesagge] = useState<string>('')
+  const [severity, setSeverity] = useState<string>('')
+
   const questions = getQuesState.payload || []
   const questionTypes = getQuesTypeState.payload || []
+
+  React.useEffect((): void => {
+    try {
+      getQuesTypeStateCall(getAllQuesTpye).then((res: QuestType[]) => {
+        if (res.length) setQuestionType(res[0].quesTId)
+      })
+    } catch (error: any) {
+      console.log(error)
+    }
+  }, [getQuesTypeStateCall])
+  const arrrCorretAnswer = (
+    arrStr: string[],
+    trueAnswer: string[]
+  ): string[] => {
+    const result: string[] = []
+
+    for (let i = 0; i < arrStr.length; i++) {
+      if (trueAnswer.indexOf(arrStr[i]) === -1) {
+        result.push('')
+      } else {
+        result.push(arrStr[i])
+      }
+    }
+
+    return result
+  }
+
+  React.useEffect(() => {
+    const fetchData = async (): Promise<void> => {
+      await setAnswerList(arrStr)
+      await setQuestion(quesDetail)
+
+      const trueAns = await arrrCorretAnswer(arrStr, trueAnswer)
+
+      await setCorrectAnswerList(trueAns)
+    }
+
+    fetchData()
+  }, [])
 
   const filteredAnswerList = answerList.filter((item) => item !== '')
   const fillterCorretAnswerList = correctAnswerList.filter(
@@ -98,6 +144,7 @@ const ModalEdit = ({
   )
 
   const bodyQuestion: IQuestion = {
+    quesId: quesId,
     quesDetail: question,
     ansOfQues: filteredAnswerList.join('<====>'),
     trueAnswer: fillterCorretAnswerList.join('<====>'),
@@ -169,21 +216,24 @@ const ModalEdit = ({
   }
 
   const submitQuestion = (): void => {
-    // console.log('data trả lời:' + bodyQuestion.ansOfQues)
-    // console.log('data trả lời đúng:' + bodyQuestion.trueAnswer)
-    // console.log('data câu hỏi:' + bodyQuestion.quesDetail)
-    // console.log('data loại đap án:' + bodyQuestion.quesTId)
-    // console.log('data Id :' + bodyQuestion.examId)
+    console.log('data trả lời:' + bodyQuestion.ansOfQues)
+    console.log('data trả lời đúng:' + bodyQuestion.trueAnswer)
+    console.log('data câu hỏi:' + bodyQuestion.quesDetail)
+    console.log('data loại đap án:' + bodyQuestion.quesTId)
+    console.log('data Id :' + bodyQuestion.examId)
+    console.log('data quesId :' + bodyQuestion.examId)
     if (bodyQuestion.quesDetail === '') {
       setErrQuestion('hãy nhập câu hỏi')
     } else {
-      quesCreateCall(async (): Promise<void> => {
+      updateQuesCall(async (): Promise<void> => {
         try {
-          insertQues(bodyQuestion)
-          //   setShowSuccess(true)
+          await updateQues(bodyQuestion)
+          await setMesagge('cập nhật thành công')
+          await setSeverity('success')
           window.location.reload()
         } catch (error) {
-          //   setShowError(true)
+          setMesagge('cập nhật thất bại')
+          setSeverity('error')
         }
       })
     }
@@ -200,6 +250,7 @@ const ModalEdit = ({
   }
   return (
     <>
+      {mesagge && <MessageAlert mesagge={mesagge} severity={severity} />}
       <LightTooltip placement='left' title='chỉnh sửa câu hỏi'>
         <Button
           sx={{
@@ -231,6 +282,7 @@ const ModalEdit = ({
                     id='standard-basic'
                     label='nhập câu hỏi'
                     variant='standard'
+                    value={question}
                   />
                 </FormGroup>
               </Typography>
@@ -331,7 +383,7 @@ const ModalEdit = ({
                     labelId='demo-simple-select-label'
                     id='demo-simple-select'
                     label='Chọn loại đáp án'
-                    value={questionTypes.toString()}
+                    value={quesTId.toString()}
                     onChange={selectQuestionType}
                   >
                     {questionTypes.map((option: QuestType) => (
@@ -344,7 +396,7 @@ const ModalEdit = ({
               </Box>
             </Box>
 
-            {createQuesState.loading ? (
+            {updateQuesState.loading ? (
               <LoadingButton
                 size='small'
                 onClick={handleClick}
@@ -361,7 +413,7 @@ const ModalEdit = ({
                 color='primary'
                 variant='outlined'
               >
-                Thêm câu hỏi
+                Lưu thay đổi
               </Button>
             )}
             <Button

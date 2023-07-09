@@ -7,6 +7,14 @@ interface QuestionDataAdd {
   examId: number
   quesTId: number
 }
+interface IQuestionDataUpdate {
+  quesId: number
+  quesDetail: string
+  ansOfQues: string
+  trueAnswer: string
+  examId: number
+  quesTId: number
+}
 export const getAllQues = async (): Promise<any> => {
   try {
     const { data } = await server.get('/Questions')
@@ -48,6 +56,28 @@ export const insertQues = async ({
 export const deleteQues = async ({ id }: { id: number }): Promise<void> => {
   try {
     await server.delete(`/Questions?id=${id}`)
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
+  }
+}
+export const updateQues = async ({
+  quesId,
+  quesDetail,
+  ansOfQues,
+  trueAnswer,
+  examId,
+  quesTId
+}: IQuestionDataUpdate): Promise<void> => {
+  try {
+    await server.put('/Questions', {
+      quesId,
+      quesDetail,
+      ansOfQues,
+      trueAnswer,
+      examId,
+      quesTId
+    })
   } catch (error: any) {
     const message = error?.response?.data?.message ?? error.message
     throw new Error(message)

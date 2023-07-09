@@ -25,7 +25,7 @@ import {
   Typography
 } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
-import { blue } from '@mui/material/colors'
+import { blue, red } from '@mui/material/colors'
 import * as React from 'react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -35,6 +35,7 @@ import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import useFetch from '~/hook/useFetch'
 import CardData from './CardData'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
+import { padding } from '@mui/system'
 
 interface IQuestion {
   examId: number
@@ -65,7 +66,8 @@ const style = {
   bgcolor: 'background.paper',
   width: { xs: 450, sm: 550, lg: 700 },
   height: 450,
-  overflow: 'scroll'
+  overflow: 'scroll',
+  padding: 2
 }
 
 const TestCreate = (): JSX.Element => {
@@ -82,8 +84,13 @@ const TestCreate = (): JSX.Element => {
   const [answerList, setAnswerList] = useState<string[]>([])
   const [correctAnswerList, setCorrectAnswerList] = useState<string[]>([])
   const [errQuestion, setErrQuestion] = useState<string>('')
+  const [errCorret, setErrCorret] = useState<boolean>(false)
+  const [errNumberCorret, setErrNumberCorret] = useState<boolean>(false)
+  const [errNullCorret, setErrNullCorret] = useState<boolean>(false)
+
   const questions = getQuesState.payload || []
   const questionTypes = getQuesTypeState.payload || []
+
   useEffect((): void => {
     try {
       getQuesTypeStateCall(getAllQuesTpye).then((res: QuestType[]) => {
@@ -117,6 +124,20 @@ const TestCreate = (): JSX.Element => {
     quesTId: questionType,
     examId: Number(examId)
   }
+  const errorMessages = [
+    {
+      condition: errCorret,
+      message: 'hãy nhập đáp án'
+    },
+    {
+      condition: errNullCorret,
+      message: 'chưa có đáp án đúng'
+    },
+    {
+      condition: errNumberCorret,
+      message: 'chọn một đáp án đối với Radio'
+    }
+  ]
   const selectQuestionType = (event: SelectChangeEvent<string>): void => {
     const value = event.target.value
     setQuestionType(Number(value))
@@ -283,7 +304,13 @@ const TestCreate = (): JSX.Element => {
               aria-describedby='modal-modal-description'
             >
               <Box sx={style}>
-                <Card sx={{ Width: '100%', overflowY: 'scroll' }}>
+                <Card
+                  sx={{
+                    Width: '100%',
+                    overflowY: 'scroll',
+                    boxShadow: 'none'
+                  }}
+                >
                   <CardContent>
                     <Typography variant='subtitle1'>
                       <FormGroup>
@@ -409,7 +436,25 @@ const TestCreate = (): JSX.Element => {
                       </FormControl>
                     </Box>
                   </Box>
-
+                  <Box
+                    sx={{
+                      color: red[300],
+                      display: 'flex',
+                      justifyContent: 'flex-start',
+                      alignItems: 'center',
+                      flexDirection: 'column'
+                    }}
+                  >
+                    <Box>
+                      <span>hãy nhập đáp án</span>
+                    </Box>
+                    <Box>
+                      <span>chưa có đáp án đúng</span>
+                    </Box>
+                    <Box>
+                      <span>chọn một đáp án đối với Radio</span>
+                    </Box>
+                  </Box>
                   {createQuesState.loading ? (
                     <LoadingButton
                       size='small'
@@ -462,17 +507,20 @@ const TestCreate = (): JSX.Element => {
             </CardActionArea>
           </Card>
           {questions.map((q: QuestionData, index: number) => {
+            const correctAnswers = q.trueAnswer.split('<====>')
             const arrStr = q.ansOfQues
               .split('<====>')
               .filter((item) => item !== '')
             const type = getNameTypeQues(q.quesTId)
             return (
               <CardData
+                trueAnswer={correctAnswers}
                 quesId={q.quesId}
                 index={index}
                 quesDetail={q.quesDetail}
                 arrStr={arrStr}
                 typeAnswer={type}
+                quesTId={q.quesTId}
                 key={index}
               />
             )
