@@ -45,6 +45,7 @@ const Index = (): JSX.Element => {
   const [editPrize, callEditPrize] = useFetch()
   const [deletePrize, callDeletePrize] = useFetch()
   const [insertPrize, callInsertPrize] = useFetch()
+  const [loading, setLoading] = useState<boolean>(false)
 
   const requestDataEdit: {
     priId: number
@@ -74,11 +75,8 @@ const Index = (): JSX.Element => {
   }
   const handelAddOk = (): void => {
     callInsertPrize(async () => {
-      try {
-        await InsertPrize(requestDataInsert)
-      } catch (error) {
-        console.log(error)
-      }
+      await InsertPrize(requestDataInsert)
+      setLoading(!loading)
     })
     setAddOpen(false)
   }
@@ -138,7 +136,7 @@ const Index = (): JSX.Element => {
       }
     }
     fetchData()
-  }, [addOpen, editOpen, deleteOpen])
+  }, [addOpen, editOpen, deleteOpen, loading])
   React.useEffect(() => {
     const fetchData = async (): Promise<any> => {
       try {
@@ -237,13 +235,13 @@ const Index = (): JSX.Element => {
         <>
           <h1 className='color-primary text-center'>Quản lý giải thưởng</h1>
           {allPrize.loading == true ? (
-            <Box 
+            <Box
               sx={{
-                 display: 'flex',
-                 width:"100%",
-                 height:"500px",
-                 justifyContent:"center",
-                 alignItems:"center"
+                display: 'flex',
+                width: '100%',
+                height: '500px',
+                justifyContent: 'center',
+                alignItems: 'center'
               }}
             >
               <CircularProgress />
@@ -257,7 +255,7 @@ const Index = (): JSX.Element => {
                     variant='contained'
                     startIcon={<AddIcon />}
                     sx={{
-                      margin:"10px 0"
+                      margin: '10px 0'
                     }}
                   >
                     Thêm giải

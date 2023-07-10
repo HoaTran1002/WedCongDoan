@@ -8,8 +8,7 @@ import ModalAdd from './ModalAdd'
 import DataInput from './DataInput'
 import useFetch from '~/hook/useFetch'
 import { deleteCompetitionsExams, getAllCompExam } from '~/api/competitionExam'
-import { DeleteExam, getAllExam } from '~/api/exam'
-
+import { DeleteExam, EditExam, getAllExam } from '~/api/exam'
 import ModalEdit from '~/page/TestManage/ModalEdit'
 import ModalDelete from '~/components/ModalDelete'
 import MessageAlert from '~/components/MessageAlert'
@@ -18,6 +17,10 @@ interface CompExam {
   ceid: string
   examId: string
   comId: string
+}
+interface IRequesExam {
+  examId: number
+  examName: string
 }
 interface Exam {
   examId: number
@@ -31,6 +34,8 @@ const Index = (): JSX.Element => {
   const [mesagge, setMesagge] = useState<string>('')
   const [severity, setSeverity] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
+  const [nameExam, setNameExam] = useState<string>('')
+  const [editExamState, setEditExamState] = useFetch()
 
   useEffect(() => {
     compExamsCall(getAllCompExam)
@@ -44,7 +49,7 @@ const Index = (): JSX.Element => {
       )
       setExams(result)
     })
-  }, [])
+  }, [loading])
   const submitDeleteCompExam = async ({
     ceid
   }: {
@@ -61,6 +66,27 @@ const Index = (): JSX.Element => {
     await setMesagge('Xoá thành công!')
     await setSeverity('info')
     await setLoading(!loading)
+  }
+  const submitEditExamName = async ({
+    examId
+  }: {
+    examId: number
+  }): Promise<void> => {
+    const reques: IRequesExam = {
+      examId: examId,
+      examName: nameExam
+    }
+    console.log(reques)
+    await setEditExamState(async (): Promise<void> => {
+      await EditExam(reques)
+    })
+    await setMesagge('sửa thành công!')
+    await setSeverity('info')
+    setLoading(!loading)
+  }
+  if (editExamState.error) {
+    setMesagge('sửa thất bại!')
+    setSeverity('error')
   }
 
   return (
@@ -169,7 +195,20 @@ const Index = (): JSX.Element => {
                               submitDeleteCompExam({ ceid })
                             }}
                           />
-                          <ModalEdit />
+                          <ModalEdit
+                            nameExam={exams[Number(item.examId)]}
+                            callBack={(): void => {
+                              const examId = Number(item.examId)
+                              submitEditExamName({ examId })
+                            }}
+                            setNameExam={({
+                              value
+                            }: {
+                              value: string
+                            }): void => {
+                              setNameExam(value)
+                            }}
+                          />
                         </>
                       </Box>
                     </Box>
