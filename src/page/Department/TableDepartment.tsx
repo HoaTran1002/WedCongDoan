@@ -16,6 +16,7 @@ import useFetch from '~/hook/useFetch'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
 import CircularProgress from '@mui/material/CircularProgress'
 import BasicModal from './ModalEditDep'
+import Loader from '~/components/loader'
 
 interface Department {
   depId: number
@@ -107,17 +108,7 @@ const TableDepartment = (): JSX.Element => {
   return (
     <>
       {depState.loading == true ? (
-          <Box 
-          sx={{
-            display: 'flex',
-            width:"100%",
-            height:"500px",
-            justifyContent:"center",
-            alignItems:"center"
-          }}
-        >
-          <CircularProgress />
-        </Box>
+        <Loader />
       ) : (
         <>
           <Button
