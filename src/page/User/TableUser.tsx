@@ -1,17 +1,12 @@
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Snackbar } from '@mui/material'
+import { Snackbar,Box,Tooltip,IconButton } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
-import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
-import { DataGrid, GridActionsCellItem, GridColDef } from '@mui/x-data-grid'
 import * as React from 'react'
-import axios from '~/api/axios'
 import { deleteUsers, getAllUser } from '~/api/userApi'
-import base_url from '~/config/env'
 import useFetch from '~/hook/useFetch'
 import BasicModal from './ModalEditUser'
-axios.defaults.baseURL = base_url
-
+import { TableWithFixedColumn, ColumnsProps } from '~/components/TableFixed'
 interface User {
   userId: string
   userName: string
@@ -29,18 +24,13 @@ const TableUser = (): JSX.Element => {
   const [userState, call] = useFetch()
   const [deleteUserState, callDelete] = useFetch()
 
-  React.useEffect(() => {
-    call(getAllUser)
-  }, [showSuccess])
+  const users = userState?.payload 
 
-  const users = userState?.payload
   const formatDay = (dayOrigin: string): string => {
     const dateObj = new Date(dayOrigin);
-
     const month = dateObj.getMonth() + 1;
     const day = dateObj.getDate();
     const year = dateObj.getFullYear();
-
     return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
   }
   const rows =
@@ -83,48 +73,52 @@ const TableUser = (): JSX.Element => {
     setShowError(false)
   }
   
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID Người Dùng', width: 200 },
-    { field: 'username', headerName: 'Họ và tên', width: 200 },
-    { field: 'dateofbirth', headerName: 'Ngày Sinh', width: 200 },
+  const columns: ColumnsProps[] = [
+    { field: 'id', headerName: 'ID Người Dùng', },
+    { field: 'username', headerName: 'Họ và tên', },
+    { field: 'dateofbirth', headerName: 'Ngày Sinh', },
     {
       field: 'email',
       headerName: 'Gmail',
       type: 'string',
-      width: 200
+    
     },
     {
       field: 'password',
       headerName: 'Mật Khẩu',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
-      width: 200
+    
     },
     {
       field: 'actions',
       type: 'actions',
-      width: 100,
       getActions: (params: any) => [
         <BasicModal
-          key={1}
-          id={params.row.id}
-          userName={params.row.username}
-          dateOfBirth={params.row.dateofbirth}
-          email={params.row.email}
-          password={params.row.password}
-          userAddress={params.row.useraddress}
-          roleId={params.row.roleId}
-          depId={params.row.depId}
+          key='edit'
+          id={params.id}
+          userName={params.username}
+          dateOfBirth={params.dateofbirth}
+          email={params.email}
+          password={params.password}
+          userAddress={params.useraddress}
+          roleId={params.roleId}
+          depId={params.depId}
         />,
-        <GridActionsCellItem
-          key={2}
-          icon={<DeleteIcon />}
-          label='Delete'
-          onClick={(): void => handleDelete(params.id)}
-        />
+        <Tooltip key='delete' title="Xóa">
+          <IconButton onClick={(): void => handleDelete(params.id)}>
+            <DeleteIcon color='error' />
+          </IconButton>
+        </Tooltip>
       ]
     }
   ]
+
+
+
+  React.useEffect(() => {
+    call(getAllUser)
+  }, [showSuccess])
   return (
     <>
       <Snackbar
@@ -138,7 +132,7 @@ const TableUser = (): JSX.Element => {
           elevation={6}
           variant='filled'
         >
-          Acction successful!
+          Thao tác thành công 
         </MuiAlert>
       </Snackbar>
       <Snackbar
@@ -152,7 +146,7 @@ const TableUser = (): JSX.Element => {
           elevation={6}
           variant='filled'
         >
-          Acction Failed!
+          Thao tác thất bại
         </MuiAlert>
       </Snackbar>
       {userState.loading || deleteUserState.loading ? (
@@ -169,18 +163,18 @@ const TableUser = (): JSX.Element => {
         </Box>
       ) : (
         <>
-          <div style={{ height: 400, width: '100%', backgroundColor: 'white' }}>
-            <DataGrid
+          <Box
+            sx={{
+              display:"flex",
+              justifyContent:"center"
+            }}
+          >
+            <TableWithFixedColumn
               rows={rows}
               columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 6 }
-                }
-              }}
-              pageSizeOptions={[5, 10]}
+              maxWidth={900}
             />
-          </div>
+          </Box>
         </>
       )}
     </>

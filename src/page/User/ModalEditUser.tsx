@@ -1,8 +1,12 @@
 import * as React from 'react'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Typography from '@mui/material/Typography'
-import Modal from '@mui/material/Modal'
+import {
+  Box,
+  Button,
+  Typography,
+  Modal,
+  Tooltip,
+  IconButton
+} from '@mui/material'
 import UserTextFields from './UserTextFields'
 import EditIcon from '@mui/icons-material/Edit'
 const style = {
@@ -36,12 +40,11 @@ export default function BasicModal(prop: BasicModalProps): JSX.Element {
 
   return (
     <div>
-      <Button onClick={handleOpen} sx={{ width: 30, height: 30, fontSize: 21 }}>
-        <EditIcon />
-      </Button>
-      {/* <Button variant='contained' onClick={handleOpen}>
-        Thêm Người Dùng
-      </Button> */}
+      <Tooltip title="Sửa">
+          <IconButton onClick={handleOpen}>
+            <EditIcon color='primary' />
+          </IconButton>
+      </Tooltip>
       <Modal
         open={open}
         onClose={handleClose}

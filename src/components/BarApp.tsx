@@ -288,7 +288,7 @@ export default function SideBar(): JSX.Element {
           </Box>
         </Box>
         <Box sx={{ flexGrow: 0, display: { md: 'flex',gap:"10px" } }}>
-          <Link to={'/TestSchedule'} style={{height:"100%",display:"flex",alignItems:"center",justifyContent:"center",textDecoration:"none"}}>
+          {/* <Link to={'/TestSchedule'} style={{height:"100%",display:"flex",alignItems:"center",justifyContent:"center",textDecoration:"none"}}>
             <Button 
               sx={{
                 color:"white",
@@ -301,7 +301,7 @@ export default function SideBar(): JSX.Element {
             >
               LỊCH THI
             </Button>
-          </Link>
+          </Link> */}
           <Tooltip title='tên user' >
             <IconButton onClick={handleOpenUserMenu} sx={{ pr: 5 }}>
               sd

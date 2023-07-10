@@ -26,41 +26,33 @@ const Loader = (): JSX.Element => {
         {
             field: 'id',
             headerName: 'Id',
-            width: 300
         },
         {
             field: 'username',
             headerName: 'User name',
-            width: 300
         },
         {
             field: 'dateofbirth',
             headerName: 'Ngày sinh',
-            width: 300
         },
         {
             field: 'email',
             headerName: 'Email',
-            width: 300
         },
         {
             field: 'password',
             headerName: 'Mật khẩu',
-            width: 300
         },
         {
             field: 'roleId',
             headerName: 'roleId',
-            width: 300
         },
         {
             field: 'depId',
             headerName: 'depId',
-            width: 300
         },
         {
             field: 'actions',
-            width: 300,
             type:'actions',
             getActions: (params:any) => [
                 <button key='delete' onClick={():void=>show(params.id)}>Xóa</button>,
@@ -104,6 +96,8 @@ const Loader = (): JSX.Element => {
                 <TableWithFixedColumn
                     columns={columns}
                     rows={rows}
+                    maxWidth={800}
+                    numberItems={1}
                 />
 
             </Box>

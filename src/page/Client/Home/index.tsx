@@ -15,64 +15,100 @@ import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
-function Blogs(
-  id: number,
-  blogName: string,
-  imgName: string,
-  imgSrc: string,
-  author: string,
-  postDay: string,
-  blogDetail: string,
-): any { return { id, blogName, imgName, imgSrc, author, postDay, blogDetail } }
+import { getAllCompetitionBlog } from '~/api/CompetitionBlog'
+import { getAllBlog } from '~/api/blogApi'
+import { getAllUser } from '~/api/userApi'
+import useFetch from '~/hook/useFetch'
 
-const row = [
-  Blogs(1, 'An toàn thông tin An toàn thông tin An toàn thông tin An toàn thông tin An toàn thông tin', 'Ảnh thi trắc nghiệm an toàn thông tin', `${imageItemBlog}`, 'Công đoàn', '20-04-2023',
-    'loreamsad sajdhfa l akjshdf s hdaskjdh  kajhsgd kj askjhd  akshjd kljashdoiqw   duoasydoqa ouayshd ioasudioasu asoi; duaiosu dasoidyu iouwqs ahdo; oisayhd ioasudf í hasouyhd hoiasyhiod sh oiashid ioaaosihfd oiafhasquoighh absfjib oiashf'),
-  Blogs(2, 'Chuyển đổi số IDX', 'Ảnh thi trắc nghiệm an toàn thông tin', `${imageItemBlog}`, 'Công đoàn', '20-04-2023',
-    'loreamsad sajdhfa l akjshdf s hdaskjdh  kajhsgd kj askjhd  akshjd kljashdoiqw   duoasydoqa ouayshd ioasudioasu asoi; duaiosu dasoidyu iouwqs ahdo; oisayhd ioasudf í hasouyhd hoiasyhiod sh oiashid ioaaosihfd oiafhasquoighh absfjib oiashf'),
-  Blogs(
-    3,
-    'Tuyên truyền phòng chống ma túy',
-    'Ảnh thi trắc nghiệm an toàn thông tin',
-    `${imageItemBlog}`,
-    'Công đoàn',
-    '20-04-2023',
-    'loreamsad sajdhfa l akjshdf s hdaskjdh  kajhsgd kj askjhd  akshjd kljashdoiqw   duoasydoqa ouayshd ioasudioasu asoi; duaiosu dasoidyu iouwqs ahdo; oisayhd ioasudf í hasouyhd hoiasyhiod sh oiashid ioaaosihfd oiafhasquoighh absfjib oiashf'
-  ),
-  Blogs(
-    4,
-    'Bảo vệ trẻ em khỏi người xấu',
-    'Ảnh thi trắc nghiệm an toàn thông tin',
-    `${imageItemBlog}`,
-    'Công đoàn',
-    '20-04-2023',
-    'loreamsad sajdhfa l akjshdf s hdaskjdh  kajhsgd kj askjhd  akshjd kljashdoiqw   duoasydoqa ouayshd ioasudioasu asoi; duaiosu dasoidyu iouwqs ahdo; oisayhd ioasudf í hasouyhd hoiasyhiod sh oiashid ioaaosihfd oiafhasquoighh absfjib oiashf'
-  ),
-  Blogs(
-    5,
-    'Tôi Yêu Thiên Nhiên sologan Doanh nghiệp xanh ',
-    'Ảnh thi trắc nghiệm an toàn thông tin',
-    `${imageItemBlog}`,
-    'Công đoàn',
-    '20-04-2023',
-    'loreamsad sajdhfa l akjshdf s hdaskjdh  kajhsgd kj askjhd  akshjd kljashdoiqw   duoasydoqa ouayshd ioasudioasu asoi; duaiosu dasoidyu iouwqs ahdo; oisayhd ioasudf í hasouyhd hoiasyhiod sh oiashid ioaaosihfd oiafhasquoighh absfjib oiashf'
-  ),
-  Blogs(
-    6,
-    'Báo Cáo hệ thống chuyên ngành công nghệ thông tin Báo Cáo hệ thống chuyên ngành công nghệ thông tinBáo Cáo hệ thống chuyên ngành công nghệ thông tin ',
-    'Ảnh thi trắc nghiệm an toàn thông tin',
-    `${imageItemBlog}`,
-    'Công đoàn',
-    '20-04-2023',
-    'loreamsad sajdhfa l akjshdf s hdaskjdh  kajhsgd kj askjhd  akshjd kljashdoiqw   duoasydoqa ouayshd ioasudioasu asoi; duaiosu dasoidyu iouwqs ahdo; oisayhd ioasudf í hasouyhd hoiasyhiod sh oiashid ioaaosihfd oiafhasquoighh absfjib oiashf'
-  )
-]
+interface Blog {
+  blogId: number,
+  blogName: string,
+  imgSrc: string,
+  imgName: string,
+}
+
+
+interface CompetitionBlog extends Blog {
+  id: number,
+  comId: number,
+  useId: string,
+  postDate: string,
+  blog: Blog
+}
+
+
+
 const Home = (): JSX.Element => {
   const [startIndex, setStartIndex] = React.useState(0);
+  const [allUser, callAllUser] = useFetch()
+  const [allBlog, callAllBlogs] = useFetch()
+  const [allBlogCompetition, callAllBlogCompetition] = useFetch()
+  const listUser = allUser?.payload
   const dataPerPage = 4;
   const endIndex = startIndex + dataPerPage;
-  const totalRows = row.length;
-  const visibleRows = row.slice(startIndex, endIndex);
+
+
+  React.useEffect((): void => {
+    callAllBlogs(getAllBlog)
+  }, [allBlog.error])
+  React.useEffect(() => {
+    const fetchData = async (): Promise<any> => {
+      try {
+        const data = await getAllUser();
+        callAllUser(() => Promise.resolve(data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [])
+
+
+  React.useEffect(() => {
+    const fetchData = async (): Promise<any> => {
+      try {
+        const data = await getAllCompetitionBlog();
+        callAllBlogCompetition(() => Promise.resolve(data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, [])
+
+  const blogs = allBlog.payload || [];
+  const itemBlogs = allBlogCompetition.payload || [];
+
+  const itemBlogsCompetition = itemBlogs.map((item:any) => ({
+    ...item,
+    ...blogs.find((elem:any) => elem.blogId === item.blogId)
+  }));
+
+
+  //console.log('đây là hàm kết hợp',itemBlogsCompetition,blogs,itemBlogs)
+  // const mappedBlogs: Blog[] = blogs?.map((blog: Blog) => ({
+  //   blogId: blog.blogId,
+  //   blogName: blog.blogName,
+  //   imgSrc: blog.imgSrc,
+  //   imgName: blog.imgName
+  // })) || [];
+
+  // const mappedComBlogs: CompetitionBlog[] = comBlogs?.map((comBlog: CompetitionBlog) => ({
+  //   id: comBlog.id,
+  //   comId: comBlog.comId,
+  //   useId: comBlog.useId,
+  //   postDate: comBlog.postDate,
+  //   blog: {
+  //     blogId: comBlog.blog.blogId,
+  //     blogName: comBlog.blog.blogName,
+  //     imgSrc: comBlog.blog.imgSrc,
+  //     imgName: comBlog.blog.imgName
+  //   }
+  // })) || [];
+  // const totalRows = mappedComBlogs.length;
+  // const visibleRows = mappedComBlogs.slice(startIndex, endIndex);
 
 
   const handleNext = (): void => {
@@ -83,330 +119,357 @@ const Home = (): JSX.Element => {
     setStartIndex(prevIndex => prevIndex - dataPerPage);
   };
 
-  return (
-    <>
-      <Layout>
-        <Box 
-          className='carousel-wrapper'
-          sx={{
-            display:{xs:'none',md:'block'}
-          }}
-        >
-          <Carousel
-            autoPlay={true}
-            infiniteLoop={true}
-            showStatus={false}
-            showThumbs={false}
-            stopOnHover={false}
-            interval={2000}
-          >
-            <div className='carousel-items-banner'>
-              <img src={image1} alt="Image1" />
-            </div>
-            <div className='carousel-items-banner'>
-              <img src={image2} alt="Image2" />
-            </div>
-            <div className='carousel-items-banner'>
-              <img src={image3} alt="Image3" />
-            </div>
-            <div className='carousel-items-banner'>
-              <img src={image4} alt="Image3" />
-            </div>
-          </Carousel>
-        </Box>
-        <div className='banner_home_page_info' >
-          <Container maxWidth="lg">
-            <Grid
-              container
-              sx={{ marginTop: '20px' }}
-              rowSpacing={1}
-              columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-            >
-              <Grid item md={8} xs={12}>
-                <Box
-                  sx={{
-                    padding: "10px 0",
-                    display: "flex",
-                    flexDirection: "column"
-                  }}
-                >
-                  <Box component='span' className='title-home-page_heading'>
-                    ĐẠI HỘI CÔNG ĐOÀN CÁC CẤP TIẾN TỚI ĐẠI HỘI CÔNG ĐOÀN XII CÔNG ĐOÀN THÀNH PHỐ HỒ CHÍ MINH
-                  </Box>
-                  <span className='line'></span>
-                </Box>
-                <Grid container sx={{ marginTop: '20px' }} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                  {row.map((row, index) => (
-                    <Grid key={index} item xs={12} md={6}>
-                      <Box sx={styleBlogWarp}>
-                        <Box
-                          sx={{
-                            position: 'relative',
-                            height: "170px"
-                          }}
-                        >
-                          <img
-                            src={row.imgSrc}
-                            alt='img page'
-                            style={{
-                              width: '100%',
-                              height: "100%",
-                              objectFit: "cover"
-                            }}
-                          />
-                        </Box>
-                        <Box sx={{ padding: '10px' }}>
-                          <Link
-                            to={'/HomeBlogDetail'}
-                            style={{
-                              textDecoration: "none",
-                              display: "inline-block",
+  const getUserName = (userId: string): string => {
+    const user = listUser?.find((r: any) => r.userId === userId)
+    return user.userName
+  }
 
-                            }}
-                          >
-                            <BlogName>{row.blogName}</ BlogName>
-                          </Link>
-                          <Box
-                            sx={{
-                              margin: "5px 0"
-                            }}
-                          >
-                            <span style={{ display: 'block', fontSize: '13px', color: '#999' }}>
-                              Ngày đăng: <span style={{ color: 'black', fontSize: '16px' }}>{row.postDay}</span>
-                            </span>
-                            <span style={{ display: 'block', fontSize: '13px', color: '#999' }}>
-                              Tác giả:
-                              <span style={{ color: 'black', fontSize: '16px' }}>
-                                {row.author}
-                              </span>
-                            </span>
-                          </Box>
-                        </Box>
-                      </Box>
-                    </Grid>
-                  ))}
-                </Grid>
-              </Grid>
-              <Grid item md={4} xs={12}>
-                <Box
-                  sx={{
-                    padding: '10px',
-                    backgroundColor: '#1976D2',
-                    display: "flex",
-                    justifyContent: "space-between"
-                  }}
-                >
-                  <Typography variant='h6' sx={{ color: 'white', fontSize: '16px' }}>
-                    VĂN BẢN MỚI
-                  </Typography>
+  const formatDay = (dayOrigin: string): string => {
+    const dateObj = new Date(dayOrigin);
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
+  }
+  
+  return (
+
+    <Layout>
+    <>
+      {
+        allUser.loading ||
+          allBlog.loading || allBlogCompetition.loading ? (
+
+          <h1>Đang tải....</h1>
+        ) : (
+          <>
+          
+          <Box
+            className='carousel-wrapper'
+            sx={{
+              display: { xs: 'none', md: 'block' }
+            }}
+          >
+            <Carousel
+              autoPlay={true}
+              infiniteLoop={true}
+              showStatus={false}
+              showThumbs={false}
+              stopOnHover={false}
+              interval={2000}
+            >
+              <div className='carousel-items-banner'>
+                <img src={image1} alt="Image1" />
+              </div>
+              <div className='carousel-items-banner'>
+                <img src={image2} alt="Image2" />
+              </div>
+              <div className='carousel-items-banner'>
+                <img src={image3} alt="Image3" />
+              </div>
+              <div className='carousel-items-banner'>
+                <img src={image4} alt="Image3" />
+              </div>
+            </Carousel>
+          </Box>
+          <div className='banner_home_page_info' >
+            <Container maxWidth="lg">
+              <Grid
+                container
+                sx={{ marginTop: '20px' }}
+                rowSpacing={1}
+                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+              >
+                <Grid item md={8} xs={12}>
                   <Box
                     sx={{
+                      padding: "10px 0",
                       display: "flex",
-                      justifyContent: "space-between",
-                      gap: "10px"
+                      flexDirection: "column"
                     }}
                   >
-                    <Box
-                      onClick={handlePrevious}
-                      component='button'
-                      disabled={startIndex === 0}
-                      sx={buttonPreNext}
-                    >
-                      <KeyboardArrowLeftIcon />
+                    <Box component='span' className='title-home-page_heading'>
+                      ĐẠI HỘI CÔNG ĐOÀN CÁC CẤP TIẾN TỚI ĐẠI HỘI CÔNG ĐOÀN XII CÔNG ĐOÀN THÀNH PHỐ HỒ CHÍ MINH
                     </Box>
+                    <span className='line'></span>
+                  </Box>
+                  <Grid container sx={{ marginTop: '20px' }} rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                    {itemBlogsCompetition.map((row: any, index: any) => (
+                      <Grid key={index} item xs={12} md={6}>
+                        <Box sx={styleBlogWarp}>
+                          <Box
+                            sx={{
+                              position: 'relative',
+                              height: "170px"
+                            }}
+                          >
+                            <img
+                               src={`data:image/jpeg;base64,${row.imgSrc}`}
+                              alt='img page'
+                              style={{
+                                width: '100%',
+                                height: "100%",
+                                objectFit: "cover"
+                              }}
+                            />
+                          </Box>
+                          <Box sx={{ padding: '10px' }}>
+                            <Link
+                              to={`/HomeBlogDetail?id=${row.blogId}`}
+                              style={{
+                                textDecoration: "none",
+                                display: "inline-block",
+
+                              }}
+                            >
+                              <BlogName>{row.blogName}</ BlogName>
+                            </Link>
+                            <Box
+                              sx={{
+                                margin: "5px 0"
+                              }}
+                            >
+                              <span style={{ display: 'block', fontSize: '13px', color: '#999' }}>
+                                Ngày đăng: <span style={{ color: 'black', fontSize: '16px' }}>{formatDay(row.postDate)}</span>
+                              </span>
+                              <span style={{ display: 'block', fontSize: '13px', color: '#999' }}>
+                                Tác giả:
+                                <span style={{ color: 'black', fontSize: '16px' }}>
+                                  {getUserName(row.userId)}
+                                </span>
+                              </span>
+                            </Box>
+                          </Box>
+                        </Box>
+                      </Grid>
+                    ))}
+                  </Grid>
+                </Grid>
+                <Grid item md={4} xs={12}>
+                  <Box
+                    sx={{
+                      padding: '10px',
+                      backgroundColor: '#1976D2',
+                      display: "flex",
+                      justifyContent: "space-between"
+                    }}
+                  >
+                    <Typography variant='h6' sx={{ color: 'white', fontSize: '16px' }}>
+                      VĂN BẢN MỚI
+                    </Typography>
                     <Box
-                      onClick={handleNext}
-                      component='button'
-                      disabled={startIndex + dataPerPage >= totalRows}
-                      sx={buttonPreNext}
+                      sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        gap: "10px"
+                      }}
                     >
-                      <KeyboardArrowRightIcon />
+                      <Box
+                        onClick={handlePrevious}
+                        component='button'
+                        disabled={startIndex === 0}
+                        sx={buttonPreNext}
+                      >
+                        <KeyboardArrowLeftIcon />
+                      </Box>
+                      <Box
+                        onClick={handleNext}
+                        component='button'
+                        // disabled={startIndex + dataPerPage >= totalRows}
+                        sx={buttonPreNext}
+                      >
+                        <KeyboardArrowRightIcon />
+                      </Box>
                     </Box>
                   </Box>
-                </Box>
-                <Grid container sx={{ marginTop: '20px' }} rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                  {visibleRows.map((row, index) => (
-                    <Grid key={index} item xs={12}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: '10px'
-                        }}
-                      >
+                  <Grid container sx={{ marginTop: '20px' }} rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                    {/* {visibleRows.map((row, index) => (
+                      <Grid key={index} item xs={12}>
                         <Box
                           sx={{
-                            height: "90px",
-                            width: "120px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: '10px'
                           }}
                         >
                           <Box
                             sx={{
-                              height: "100%",
-                              width: '100%',
-                              objectFit: "cover"
-                            }}
-                            component='img'
-                            src={row.imgSrc}
-                          />
-                        </Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            flex: 1
-                          }}
-                        >
-                          <span
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: '20px',
-                              color: "#999"
+                              height: "90px",
+                              width: "120px",
                             }}
                           >
-                            <span>
-                              {row.author}
-                            </span>
-
+                            <Box
+                              sx={{
+                                height: "100%",
+                                width: '100%',
+                                objectFit: "cover"
+                              }}
+                              component='img'
+                              src={row.imgSrc}
+                            />
+                          </Box>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              flex: 1
+                            }}
+                          >
                             <span
                               style={{
                                 display: "flex",
-                                alignItems: "center"
+                                alignItems: "center",
+                                gap: '20px',
+                                color: "#999"
                               }}
                             >
-                              <AccessTimeFilledIcon sx={{ fontSize: "14px" }} />&nbsp;{row.postDay}
+                              <span>
+                                {getUserName(row.useId)}
+                              </span>
+
+                              <span
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center"
+                                }}
+                              >
+                                <AccessTimeFilledIcon sx={{ fontSize: "14px" }} />&nbsp;{row.postDate}
+                              </span>
                             </span>
-                          </span>
-                          <Link
-                            to={'/HomeBlogDetail'}
-                            style={{
-                              textDecoration: "none",
-                              display: "inline-block",
+                            <Link
+                              to={'/HomeBlogDetail'}
+                              style={{
+                                textDecoration: "none",
+                                display: "inline-block",
 
-                            }}
-                          >
-                            <BlogName>{row.blogName}</ BlogName>
-                          </Link>
+                              }}
+                            >
+                              <BlogName>{row.blogName}</ BlogName>
+                            </Link>
+                          </Box>
                         </Box>
-                      </Box>
-                    </Grid>
-                  ))}
-                </Grid>
+                      </Grid>
+                    ))} */}
+                  </Grid>
 
-                <Box
-                  sx={{
-                    padding: "10px 0",
-                    display: "flex",
-                    flexDirection: "column",
-                    mt:"30px"
-                  }}
-                >
-                  <span className='title-home-page_heading'>
-                    CÁC CUỘC THI ĐANG DIỄN RA 
-                  </span>
-                  <span className='line'></span>
-                </Box>
-                <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                  {visibleRows.map((row, index) => (
-                    <Grid key={index} item xs={12}>
-                      <Box
-                        sx={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: '10px'
-                        }}
-                      >
+                  <Box
+                    sx={{
+                      padding: "10px 0",
+                      display: "flex",
+                      flexDirection: "column",
+                      mt: "30px"
+                    }}
+                  >
+                    <span className='title-home-page_heading'>
+                      CÁC CUỘC THI ĐANG DIỄN RA
+                    </span>
+                    <span className='line'></span>
+                  </Box>
+                  <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+                    {/* {visibleRows.map((row, index) => (
+                      <Grid key={index} item xs={12}>
                         <Box
                           sx={{
-                            height: "90px",
-                            width: "120px",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: '10px'
                           }}
                         >
                           <Box
                             sx={{
-                              height: "100%",
-                              width: '100%',
-                              objectFit: "cover"
-                            }}
-                            component='img'
-                            src={row.imgSrc}
-                          />
-                        </Box>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            flexDirection: "column",
-                            flex: 1
-                          }}
-                        >
-                          <span
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: '20px',
-                              color: "#999"
+                              height: "90px",
+                              width: "120px",
                             }}
                           >
-                            <span>
-                              {row.author}
-                            </span>
-
+                            <Box
+                              sx={{
+                                height: "100%",
+                                width: '100%',
+                                objectFit: "cover"
+                              }}
+                              component='img'
+                              src={row.imgSrc}
+                            />
+                          </Box>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              flexDirection: "column",
+                              flex: 1
+                            }}
+                          >
                             <span
                               style={{
                                 display: "flex",
-                                alignItems: "center"
+                                alignItems: "center",
+                                gap: '20px',
+                                color: "#999"
                               }}
                             >
-                              <AccessTimeFilledIcon sx={{ fontSize: "14px" }} />&nbsp;{row.postDay}
-                            </span>
-                          </span>
-                          <Link
-                            to={'#'}
-                            style={{
-                              textDecoration: "none",
-                              display: "inline-block",
+                              <span>
+                                {getUserName(row.useId)}
+                              </span>
 
-                            }}
-                          >
-                            <BlogName>{row.blogName}</ BlogName>
-                          </Link>
+                              <span
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center"
+                                }}
+                              >
+                                <AccessTimeFilledIcon sx={{ fontSize: "14px" }} />&nbsp;{formatDay(row.postDate)}
+                              </span>
+                            </span>
+                            <Link
+                              to={'#'}
+                              style={{
+                                textDecoration: "none",
+                                display: "inline-block",
+
+                              }}
+                            >
+                              <BlogName>{row.blogName}</ BlogName>
+                            </Link>
+                          </Box>
                         </Box>
-                      </Box>
-                    </Grid>
-                  ))}
+                      </Grid>
+                    ))} */}
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-          </Container>
-        </div>
-      </Layout>
-      <div
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          right: "20px"
-        }}
-      >
-        <Button
-          href="#"
-          sx={{
-            backgroundColor: "#d2e6fd",
-            color: "#1976d2",
-            borderRadius: "50%",
-            padding: "0",
-            width: "50px",
-            height: "50px",
-            minWidth: "auto",
-            '&:hover': {
-              backgroundColor: "#d2e6fd"
-            }
-          }}
-        >
-          <KeyboardDoubleArrowUpIcon />
-        </Button>
-      </div>
+            </Container>
+          </div>
+        
+          <div
+            style={{
+              position: "fixed",
+              bottom: "20px",
+              right: "20px"
+            }}
+          >
+            <Button
+              href="#"
+              sx={{
+                backgroundColor: "#d2e6fd",
+                color: "#1976d2",
+                borderRadius: "50%",
+                padding: "0",
+                width: "50px",
+                height: "50px",
+                minWidth: "auto",
+                '&:hover': {
+                  backgroundColor: "#d2e6fd"
+                }
+              }}
+            >
+              <KeyboardDoubleArrowUpIcon />
+            </Button>
+          </div>
+        </>
+      )
+    }
+        
     </>
+    </Layout>
   )
 }
 const BlogName = styled.h2`

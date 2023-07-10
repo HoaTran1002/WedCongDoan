@@ -24,13 +24,29 @@ import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { Link, useLocation } from 'react-router-dom'
-import useFetch from '~/hook/useFetch'
 import { getBlogId, editBlog, deleteBlog, getAllBlog } from '~/api/blogApi'
+import {getAllComp} from '~/api/competitionApi'
+import {getAllCompetitionBlog,EditCompetitionBlog} from '~/api/CompetitionBlog'
 import Dropzone from 'react-dropzone'
+import useFetch from '~/hook/useFetch'
+interface Competition{
+  comId:number,
+  comName:string
+}
+
 const Index = (): JSX.Element => {
-  const [age, setAge] = React.useState('')
-  const [data, setData] = React.useState()
+  useEffect(()=>{
+    const listCompetitionBlog = getComBlogs?.payload || [];
+    const competitionBlog = listCompetitionBlog.find((r:any)=>r.blogId === blogId)
+    setComId(competitionBlog?.comId)
+    setComBlogUserId(competitionBlog?.id)
+    setUserId(competitionBlog?.userId)
+    setPostDate(competitionBlog?.postDate)
+  },[])
   const [blogName, setBlogName] = useState('')
+  const [comBlogUserId, setComBlogUserId] = useState(0)
+  const [userId, setUserId] = useState('')
+  const [postDate, setPostDate] = useState('')
   const [blogDetai, setBlogDetai] = useState('')
   const [imgName, setImgName] = useState('')
   const [imgSrc, setImgSrc] = useState('')
@@ -38,6 +54,7 @@ const Index = (): JSX.Element => {
   const [openDelete, setOpenDelete] = useState(false)
   const [imageFile, setImageFile] = useState<string | null>();
   const [selectedImage, setSelectedImage] = useState(null)
+  const [comId,setComId] = useState<string>('');
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const id = queryParams.get('id')
@@ -45,9 +62,11 @@ const Index = (): JSX.Element => {
   const [EditBlog, callEditBlog] = useFetch()
   const [DeleteBlog, callDeleteBlog] = useFetch()
   const [getBlog, callBlogById] = useFetch()
-
+  const [getComs, callAllComs] = useFetch()
+  const [getComBlogs, callAllComBlogs] = useFetch()
+  
   const handleChange = (event: SelectChangeEvent): void => {
-    setAge(event.target.value)
+    setComId(event.target.value)
   }
   const handleContentChange = (value: string): any => {
     setBlogDetai(value)
@@ -93,6 +112,7 @@ const Index = (): JSX.Element => {
     imgSrc: imgSrc
   }
 
+
   const handleOK = (): void => {
     setOpen(false)
     callEditBlog(async () => {
@@ -112,6 +132,19 @@ const Index = (): JSX.Element => {
         } else {
           await editBlog(requestData);
         }
+
+        if (blogId) {
+          await EditCompetitionBlog({
+            id:comBlogUserId,
+            comId: parseInt(comId),
+            blogId: blogId,
+            userId:userId,
+            postDate: postDate
+          });
+          console.log('Thành công');
+        } else {
+          console.log('Thất bại');
+        }
       } catch (error) {
         console.log('Thất bại')
       }
@@ -127,6 +160,15 @@ const Index = (): JSX.Element => {
     }
   };
 
+  const competitions :Competition[] =
+  getComs.payload?.map((com:Competition)=>({
+    comId: com.comId,
+    comName:com.comName
+  })) || []
+
+  
+
+  
   useEffect(() => {
     const request: { id: number } = { id: blogId };
     callBlogById(async () => {
@@ -142,7 +184,35 @@ const Index = (): JSX.Element => {
     });
   }, []);
 
-  console.log('data===>>:', blogName, blogDetai, imgName)
+
+  useEffect(() => {
+    const fetchData = async () :Promise<any> => {
+      try {
+        const data = await getAllComp();
+        callAllComs(() => Promise.resolve(data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () :Promise<any> => {
+      try {
+        const data = await getAllCompetitionBlog();
+        callAllComBlogs(() => Promise.resolve(data));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
+
   return (
     <>
       <LayoutAdmin>
@@ -190,16 +260,19 @@ const Index = (): JSX.Element => {
                     <InputLabel id='demo-simple-select-autowidth-label'>
                       Cuộc thi
                     </InputLabel>
+                    
                     <Select
                       labelId='demo-simple-select-autowidth-label'
                       id='demo-simple-select-autowidth'
-                      defaultValue={'21'}
                       onChange={handleChange}
                       label='Age'
+                      value={comId}
                     >
-                      <MenuItem value={10}>Anh văn đầu vào</MenuItem>
-                      <MenuItem value={21}>An toàn thông tin</MenuItem>
-                      <MenuItem value={22}>Khảo sát</MenuItem>
+                      {
+                        competitions.map((row)=>(
+                          <MenuItem key={row.comId} value={row.comId}>{row.comName}</MenuItem>
+                        ))
+                      }
                     </Select>
                   </FormControl>
                 </Stack>

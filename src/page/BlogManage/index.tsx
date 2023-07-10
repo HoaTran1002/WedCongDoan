@@ -14,6 +14,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import Pagination from '@mui/material/Pagination';
 import styled from 'styled-components'
+
 const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
   props,
   ref,
@@ -38,7 +39,6 @@ const Index = (): JSX.Element => {
   const [open, setOpen] = React.useState(openFromUrl);
   const [openDelete, setOpenDelete] = React.useState(deleteFromUrl);
   const [openUpdate, setOpenUpdate] = React.useState(updateFromUrl);
-
 
 
 

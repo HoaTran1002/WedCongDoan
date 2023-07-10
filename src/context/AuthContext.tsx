@@ -34,9 +34,10 @@ export default function AuthProvider({ children, ...props }: any): JSX.Element {
 
   const getProfile = useCallback(async () => {
     try {
-      const { data } = await server.get<IUserDetails>('/users/')
+      const { data } = await server.get<IUserDetails>('/Users/profile')
       setProfile(data)
     } catch (error) {
+      // console.log(error,'lỗi')
       setProfile(undefined)
     }
   }, [])

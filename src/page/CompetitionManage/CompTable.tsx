@@ -1,14 +1,7 @@
 import React from 'react'
 import {
   Typography,
-  Paper,
   Grid,
-  TableContainer,
-  TableBody,
-  TableCell,
-  Table,
-  TableHead,
-  TableRow,
   Button,
   Stack,
   Tooltip,
@@ -26,6 +19,18 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import MuiAlert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
+import { TableWithFixedColumn, ColumnsProps } from '~/components/TableFixed'
+
+//interface
+interface Competition {
+  comId:number,
+  comName: string,
+  startDate: string,
+  endDate: string,
+  examTimes: number,
+  userQuan: number,
+  depId:number
+}
 
 const CompTable = (): JSX.Element => {
   const [showSuccess, setShowSuccess] = React.useState(false)
@@ -33,18 +38,24 @@ const CompTable = (): JSX.Element => {
   const [compState, callComp] = useFetch()
   const [deps, depCall] = useFetch()
   const [deleteComp, deleteCompCall] = useFetch()
-
-  React.useEffect(() => {
-    callComp(getAllComp)
-  }, [])
-
-  React.useEffect(() => {
-    depCall(getAllDep)
-  }, [])
-
+  const depList = deps.payload || []
+  
   const getNameDep = (idDep: number): string => {
     const dep = depList?.find((item: any) => item.depId == idDep)
     return dep.depName || 'chưa có đơn vị nào'
+  }
+  const handleCloseSuccess = (): void => {
+    setShowSuccess(false)
+  }
+  const handleCloseError = (): void => {
+    setShowError(false)
+  }
+  const formatDay = (dayOrigin: string): string => {
+    const dateObj = new Date(dayOrigin);
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
   }
   const handelDeleteComp = (idComp: number): void => {
     const requestDelete: { _id: number } = { _id: idComp }
@@ -57,26 +68,91 @@ const CompTable = (): JSX.Element => {
       }
     })
   }
+  const columns: ColumnsProps[] = [
+    {
+      field: 'comId',
+      headerName: 'Id',
+    },
+    {
+      field: 'comName',
+      headerName: 'Tên cuộc thi',
+    },
+    {
+      field: 'startDate',
+      headerName: 'Ngày bắt đầu',
+    },
+    {
+      field: 'endDate',
+      headerName: 'Ngày kết thúc',
+    },
+    {
+      field: 'examTimes',
+      headerName: 'Thời gian làm bài',
+    },
+    {
+      field: 'userQuan',
+      headerName: 'Số lượng thí sinh',
+    },
+    {
+      field: 'depName',
+      headerName: 'Đơn vị tổ chức',
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      getActions: (params: any) => [
+        <Tooltip key='detailExam' title='Xem đề thi' placement='top-start'>
+          <Link to={`/Tests/Competition/${params.comId}`}>
+            <Button style={{ width: 50 }} variant='outlined'>
+              <ArticleOutlinedIcon />
+            </Button>
+          </Link>
+        </Tooltip>,
+        <Tooltip
+          key='detailPrize'
+          title='Xem giải thưởng'
+          placement='top-start'
+        >
+          <Link to={`/Prize/Competition/${params.comId}`}>
+            <Button style={{ width: 50 }} variant='outlined'>
+              <MilitaryTechOutlinedIcon />
+            </Button>
+          </Link>
+        </Tooltip>,
+        <Tooltip key='delete' title='xoá cuộc thi' placement='top-start'>
+          <Button
+            onClick={(): void => handelDeleteComp(params.comId)}
+            style={{ width: 50 }}
+            variant='outlined'
+          >
+            <DeleteOutlinedIcon />
+          </Button>
+        </Tooltip>,
+      ],
+    },
 
-  const handleCloseSuccess = (): void => {
-    setShowSuccess(false)
-  }
-  const handleCloseError = (): void => {
-    setShowError(false)
-  }
+  ]
 
-  const formatDay = (dayOrigin: string): string => {
-    const dateObj = new Date(dayOrigin);
+  const rows =
+    compState.payload?.map((item: Competition) => ({
+        comId: item.comId,
+        comName: item.comName,
+        startDate: formatDay(item.startDate),
+        endDate: formatDay(item.endDate),
+        examTimes: item.examTimes,
+        userQuan: item.userQuan,
+        depName:getNameDep(item.depId + 0)
+  })) || []
 
-    const month = dateObj.getMonth() + 1;
-    const day = dateObj.getDate();
-    const year = dateObj.getFullYear();
 
-    return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
-  }
+  
+  React.useEffect(() => {
+    depCall(getAllDep)
+  }, [])
+  React.useEffect(() => {
+    callComp(getAllComp)
+  }, [])
 
-  const depList = deps.payload || []
-  const rows = compState.payload || []
 
   return (
     <>
@@ -161,105 +237,19 @@ const CompTable = (): JSX.Element => {
                 </Button>
               </Link>
               <Grid item xs={12} style={{ margin: 10 }}>
-                <TableContainer
-                  component={Paper}
+                <Box
                   sx={{
-                    maxHeight: 400,
-                    overflow: 'auto',
-
-                    marginLeft: '10px'
+                    display:"flex",
+                    justifyContent:"center"
                   }}
                 >
-                  <Table
-                    sx={{ Width: '100%', overflow: 'scroll' }}
-                    aria-label='simple table'
-                  >
-                    <TableHead
-                      sx={{
-                        position: 'sticky',
-                        top: 0,
-                        zIndex: 1,
-                        background: '#fff',
-                        width: '100%'
-                      }}
-                    >
-                      <TableRow>
-                        <TableCell sx={{ minWidth: 300 }}>
-                          Tên cuộc thi
-                        </TableCell>
-                        <TableCell sx={{ minWidth: 200 }}>Ngày bắt đầu</TableCell>
-                        <TableCell sx={{ minWidth: 200 }}>
-                          Ngày kết thúc
-                        </TableCell>
-                        <TableCell sx={{ minWidth: 200 }}>
-                          Thời gian làm bài
-                        </TableCell>
-                        <TableCell sx={{ minWidth: 200 }}>
-                          Số lượng thí sinh
-                        </TableCell>
-                        <TableCell sx={{ minWidth: 200 }}>
-                          Đơn vị tổ chức
-                        </TableCell>
-                        <TableCell
-                          sx={{ position: 'sticky', top: 0, zIndex: 1 }}
-                        ></TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      {rows.map((row: any, index: any) => (
-                        <TableRow
-                          key={index}
-                          sx={{
-                            '&:last-child td, &:last-child th': { border: 0 }
-                          }}
-                        >
-                          <TableCell component='th' scope='row'>
-                            {row.comName}
-                          </TableCell>
-                          <TableCell align='left'>{formatDay(row.startDate)}</TableCell>
-                          <TableCell align='left'>{formatDay(row.endDate)}</TableCell>
-                          <TableCell align='left'>{row.examTimes}</TableCell>
-                          <TableCell align='left'>{row.userQuan}</TableCell>
-                          <TableCell align='left'>
-                            {getNameDep(row.depId)}
-                          </TableCell>
-                          <TableCell align='left'>
-                            <Tooltip title='Xem đề thi' placement='top-start'>
-                              <Link to={`/Tests/Competition/${row.comId}`}>
-                                <Button style={{ width: 50 }} variant='outlined'>
-                                  <ArticleOutlinedIcon />
-                                </Button>
-                              </Link>
-                            </Tooltip>
-                          </TableCell>
-                          <TableCell align='left'>
-                            <Tooltip
-                              title='Xem giải thưởng'
-                              placement='top-start'
-                            >
-                              <Link to={`/Prize/Competition/${row.comId}`}>
-                                <Button style={{ width: 50 }} variant='outlined'>
-                                  <MilitaryTechOutlinedIcon />
-                                </Button>
-                              </Link>
-                            </Tooltip>
-                          </TableCell>
-                          <TableCell align='left'>
-                            <Tooltip title='xoá cuộc thi' placement='top-start'>
-                              <Button
-                                onClick={(): void => handelDeleteComp(row.comId)}
-                                style={{ width: 50 }}
-                                variant='outlined'
-                              >
-                                <DeleteOutlinedIcon />
-                              </Button>
-                            </Tooltip>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </TableContainer>
+                  <TableWithFixedColumn
+                    rows={rows}
+                    columns={columns}
+                    maxWidth={1100}
+                    maxHeight={500}
+                  />
+                </Box>
               </Grid>
             </>
           )
