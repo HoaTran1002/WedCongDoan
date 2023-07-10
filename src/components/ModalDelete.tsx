@@ -9,7 +9,7 @@ import {
   Typography
 } from '@mui/material'
 import React from 'react'
-import HighlightOffIcon from '@mui/icons-material/HighlightOff'
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep'
 import { blue, red } from '@mui/material/colors'
 const style = {
   position: 'absolute',
@@ -28,6 +28,8 @@ const style = {
   alignItems: 'center'
 }
 interface IModal {
+  question?: string
+  content?: string
   setIsDeleteValue?: (value: boolean) => void
   id?: number
   callBack?: () => void
@@ -43,6 +45,8 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 }))
 const ModalDelete = ({
+  question,
+  content,
   setIsDeleteValue,
   id,
   callBack
@@ -69,7 +73,7 @@ const ModalDelete = ({
           }}
           onClick={handleOpen}
         >
-          <HighlightOffIcon sx={{ color: red[400] }} />
+          <DeleteSweepIcon sx={{ color: red[400] }} />
         </Button>
       </LightTooltip>
 
@@ -87,9 +91,11 @@ const ModalDelete = ({
               component='h2'
               sx={{ padding: 2 }}
             >
-              Bạn muốn xoá trắc nghiệm?
+              {question ? question : 'Bạn muốn xoá trắc nghiệm?'}
               <Typography id='modal-modal-description'>
-                câu trắc nghiệm này sẽ hoàn toàn bị xoá khỏi đề thi!
+                {content
+                  ? content
+                  : 'câu trắc nghiệm này sẽ hoàn toàn bị xoá khỏi đề thi!'}
               </Typography>
               <Button variant='contained' onClick={callDelete}>
                 Đồng ý

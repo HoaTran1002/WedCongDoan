@@ -68,8 +68,6 @@ function App(): JSX.Element {
         <Route path='*' element={<Error />} />
       </Route>
 
-      {/* </Route> */}
-
       <Route path='/Login' element={<Login />} />
     </Routes>
   )

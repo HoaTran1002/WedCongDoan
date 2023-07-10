@@ -28,3 +28,15 @@ export const insertCompExam = async ({
     throw new Error(message)
   }
 }
+export const deleteCompetitionsExams = async ({
+  _id
+}: {
+  _id: number
+}): Promise<void> => {
+  try {
+    await server.delete(`/CompetitionsExams?id=${_id}`)
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
+  }
+}

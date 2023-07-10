@@ -552,6 +552,9 @@ const TestCreate = (): JSX.Element => {
             const type = getNameTypeQues(q.quesTId)
             return (
               <CardData
+                callBack={(): void => {
+                  setLoading(!loading)
+                }}
                 trueAnswer={correctAnswers}
                 quesId={q.quesId}
                 index={index}

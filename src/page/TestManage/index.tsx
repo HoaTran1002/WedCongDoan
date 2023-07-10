@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import { Box, Button, Grid } from '@mui/material'
-import { blue, yellow } from '@mui/material/colors'
+import { blue } from '@mui/material/colors'
 import { Link, useParams } from 'react-router-dom'
 import ModalAdd from './ModalAdd'
 import DataInput from './DataInput'
 import useFetch from '~/hook/useFetch'
-import { getAllCompExam } from '~/api/competitionExam'
-import { getAllExam } from '~/api/exam'
+import { deleteCompetitionsExams, getAllCompExam } from '~/api/competitionExam'
+import { DeleteExam, getAllExam } from '~/api/exam'
+
+import ModalEdit from '~/page/TestManage/ModalEdit'
+import ModalDelete from '~/components/ModalDelete'
+import MessageAlert from '~/components/MessageAlert'
 
 interface CompExam {
   ceid: string
@@ -23,9 +27,14 @@ const Index = (): JSX.Element => {
   const { comId } = useParams()
   const [dataCompExams, compExamsCall] = useFetch()
   const [exams, setExams] = useState<{ [key: number]: string }>({})
+  const [deleteCompExam, callDeleteCompExam] = useFetch()
+  const [mesagge, setMesagge] = useState<string>('')
+  const [severity, setSeverity] = useState<string>('')
+  const [loading, setLoading] = useState<boolean>(false)
+
   useEffect(() => {
     compExamsCall(getAllCompExam)
-  }, [])
+  }, [loading])
 
   useEffect(() => {
     getAllExam().then((data: { examId: number; examName: string }[]) => {
@@ -36,9 +45,27 @@ const Index = (): JSX.Element => {
       setExams(result)
     })
   }, [])
+  const submitDeleteCompExam = async ({
+    ceid
+  }: {
+    ceid: number
+  }): Promise<void> => {
+    const request: { _id: number } = {
+      _id: ceid
+    }
+    console.log(' _id: ' + request._id)
+
+    callDeleteCompExam(async (): Promise<void> => {
+      await deleteCompetitionsExams(request)
+    })
+    await setMesagge('Xoá thành công!')
+    await setSeverity('info')
+    await setLoading(!loading)
+  }
 
   return (
     <>
+      {mesagge && <MessageAlert mesagge={mesagge} severity={severity} />}
       <LayoutAdmin>
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
           <ModalAdd Title='THÊM MỚI ĐỀ THI'>
@@ -52,7 +79,7 @@ const Index = (): JSX.Element => {
               border: 1,
               borderColor: blue[300],
               borderRadius: 2,
-              width: '85%',
+              width: '88%',
               height: 500,
               display: 'flex',
               flexWrap: 'wrap',
@@ -66,49 +93,87 @@ const Index = (): JSX.Element => {
             {dataCompExams?.payload?.map((item: CompExam, index: number) => {
               if (item.comId == comId) {
                 return (
-                  <Grid
-                    item
-                    xs={2}
-                    sm={4}
-                    md={4}
-                    key={index}
-                    sx={{
-                      background: blue[100],
-                      width: 100,
-                      height: 120,
-                      borderTopLeftRadius: 4,
-                      borderTopRightRadius: 4,
-                      marginRight: 2
-                    }}
-                  >
-                    <div>
-                      {' '}
-                      <Link
-                        to={`/TestCreate/Test/${item.examId}/Competition/${comId}`}
-                      >
-                        <Button>
-                          <DescriptionOutlinedIcon
-                            sx={{ width: '100%', height: '100%' }}
-                          />
-                        </Button>
-                      </Link>
-                      {/* <Button>
-                  <PostAddSharpIcon sx={{ width: '100%', height: '100%' }} />
-                </Button> */}
-                      <Box
+                  <>
+                    <Box
+                      sx={{
+                        position: 'relative',
+                        '&:hover .hover-content': {
+                          display: 'block'
+                        }
+                      }}
+                    >
+                      <Grid
+                        item
+                        xs={2}
+                        sm={4}
+                        md={4}
+                        key={index}
                         sx={{
-                          background: blue[700],
-                          color: '#fff',
-                          display: 'flex',
-                          justifyContent: 'center',
-                          textDecoration: 'none',
-                          border: 'none'
+                          background: blue[100],
+                          width: 100,
+                          height: 120,
+                          borderTopLeftRadius: 4,
+                          borderTopRightRadius: 4,
+                          marginRight: 2
                         }}
                       >
-                        <span>{exams[Number(item.examId)]}</span>
+                        <div>
+                          {' '}
+                          <Link
+                            to={`/TestCreate/Test/${item.examId}/Competition/${comId}`}
+                          >
+                            <Button>
+                              <DescriptionOutlinedIcon
+                                sx={{ width: '100%', height: '100%' }}
+                              />
+                            </Button>
+                          </Link>
+                          <Box
+                            sx={{
+                              background: blue[700],
+                              color: '#fff',
+                              display: 'flex',
+                              justifyContent: 'center',
+                              textDecoration: 'none',
+                              border: 'none'
+                            }}
+                          >
+                            <span>{exams[Number(item.examId)]}</span>
+                          </Box>
+                        </div>
+                      </Grid>
+                      <Box
+                        className='hover-content'
+                        sx={{
+                          position: 'absolute',
+                          display: 'none',
+                          // transition: 'width 4s ease-out',
+                          width: '80%',
+                          // background: red[500],
+                          paddingTop: 1,
+                          top: 5,
+                          left: '86%',
+                          zIndex: 100,
+                          right: 10,
+                          height: '100%'
+                        }}
+                      >
+                        <>
+                          <ModalDelete
+                            question={'Bạn muốn xoá đề thi?'}
+                            content={
+                              'sẽ xoá đề thi và tất cả câu hỏi trong đề thi!'
+                            }
+                            callBack={(): void => {
+                              const ceid = Number(item.ceid)
+                              submitDeleteCompExam({ ceid })
+                            }}
+                          />
+                          <ModalEdit />
+                        </>
                       </Box>
-                    </div>
-                  </Grid>
+                    </Box>
+                  </>
                 )
               }
             })}

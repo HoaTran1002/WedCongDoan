@@ -301,7 +301,7 @@ const ModalEdit = ({
         aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
-          <Card sx={{ Width: '100%', overflowY: 'scroll' }}>
+          <Card sx={{ Width: '100%', overflowY: 'scroll', boxShadow: 'none' }}>
             <CardContent>
               <Typography variant='subtitle1'>
                 <FormGroup>
