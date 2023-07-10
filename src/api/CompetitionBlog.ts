@@ -18,7 +18,7 @@ export const InsertCompetitionBlog = async({
 }: {
     comId: number
     blogId: number
-    userId: string
+    userId?: string
     postDate: string
 }): Promise<void> => {
   try {

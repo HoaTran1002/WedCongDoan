@@ -68,10 +68,9 @@ export default function Login(): JSX.Element {
       email: data.get('email'),
       password: data.get('password')
     }
-
     try {
-      await server.post('/users/login', body)
-
+      await server.post('/Users/Login', body)
+      console.log('thành công')
       location.reload()
     } catch (error) {
       console.log(error)

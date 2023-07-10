@@ -27,6 +27,8 @@ const blog = {
     dayPost:'24-03-2023'
 }
 const Index = (): JSX.Element => {
+    const queryParams = new URLSearchParams(location.search)
+    const id = queryParams.get('id')
     return(
         <>
             <Layout>

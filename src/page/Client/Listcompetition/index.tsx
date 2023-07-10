@@ -1,8 +1,9 @@
 import * as React from 'react'
-import { styled } from '@mui/material/styles'
+import styled from 'styled-components'
 import Paper from '@mui/material/Paper'
 import Layout from '~/components/layout/Layout'
 import notFoundCompetition from '~/assets/img/players-competing-in-a-game-tournament.png'
+import img_competition from '~/assets/img/competition_item.png'
 import {
   Grid,
   Box,
@@ -12,7 +13,8 @@ import {
   Divider,
   List,
   ListItem,
-  ListItemText
+  ListItemText,
+  Tooltip
 } from '@mui/material'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -23,7 +25,8 @@ import TableRow from '@mui/material/TableRow';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Link } from 'react-router-dom'
-
+import useMediaQuery from '@mui/material/useMediaQuery';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 interface ListCompetition {
   nameCom: string,
   dayStart: string,
@@ -173,20 +176,23 @@ export default function Index(): JSX.Element {
   const [startDep, setStartDep] = React.useState(0);
   const [depId, setDepId] = React.useState(1);
 
-  const dataPerPageListCompetition = 7;
+  const isMobile = useMediaQuery('(max-width: 600px)');
+  const dataPerPageListCompetition = isMobile ? 2 : 4;
+
   const dataPerPageDeppartment = 10;
   const endIndex = startIndex + dataPerPageListCompetition;
   const endDep = startDep + dataPerPageDeppartment;
-  const totalRows = row.filter(r => r.depId === depId).length;
+  const totalRows = row.filter(r => r.depId == depId).length;
   const totalRowsDep = rowDep.length;
-  const listCompetition = row.slice(startIndex, endIndex).filter(r => r.depId === depId);
+  const listCompetition = row.filter(r => r.depId === depId).slice(startIndex, endIndex);
   const listDep = rowDep.slice(startDep, endDep);
+  // console.log(dataPerPageListCompetition,listCompetition,startIndex,endIndex,depId)
   const handleNext = (): void => {
     setStartIndex(prevIndex => prevIndex + dataPerPageListCompetition);
   };
 
   const handlePrevious = (): void => {
-    setStartDep(prevIndex => prevIndex - dataPerPageListCompetition);
+    setStartIndex(prevIndex => prevIndex - dataPerPageListCompetition);
   };
 
   const handleNextDep = (): void => {
@@ -198,6 +204,7 @@ export default function Index(): JSX.Element {
   };
 
   const handleChangeDep = (id: number): void => {
+    setStartIndex(0);
     setDepId(id);
   }
   return (
@@ -376,7 +383,7 @@ export default function Index(): JSX.Element {
                       <Box
                         sx={{
                           height: {md:"400px",xs:"350px"},
-                          width: "100%"
+                          width: "90%"
                         }}
                         component='img'
                         src={notFoundCompetition}
@@ -400,55 +407,64 @@ export default function Index(): JSX.Element {
                       borderRadius: "3px",
                       backgroundColor: "#e0f6ff",
                       height: "440px",
-                      padding: "0 15px",
+                      padding: "10px 15px",
                       overflow: {md:"unset",xs:"scroll"}
                     }}
                   >
-                    <Table 
-                      sx={{ 
-                        minWidth: {md:"100%",xs:"780px"},
-                      }}
-                      aria-label="simple table"
-                    >
-                      <TableHead>
-                        <TableRow>
-                          <TableCell align="center">STT</TableCell>
-                          <TableCell>Tên cuộc thi</TableCell>
-                          <TableCell align="center">Ngày bắt đầu</TableCell>
-                          <TableCell align="center">Ngày kết thúc</TableCell>
-                          <TableCell align="center">Thời gian làm bài</TableCell>
-                          <TableCell align="center">Số lượng</TableCell>
-                          <TableCell align="center"></TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        {listCompetition.map((row, index) => (
-                          <TableRow
-                            key={index}
-                            sx={{ 
-                              '&:last-child td, &:last-child th': { border: 0 } ,
-                               
+                    <Grid container spacing={1} sx={{height:"100%"}}>
+                      {listCompetition.map((row, index) => (
+                        <Grid key={index} item md={3} xs={12}>
+                          <Box
+                            sx={{
+                              backgroundColor:"white",
+                              borderRadius:"5px",
+                              height:{md:"100%",xs:"auto"},
+                              padding:"10px",
+                              display:"flex",
+                              gap:"20px",
+                              flexDirection:{md:"column",xs:"column"}
                             }}
                           >
-                            <TableCell align="center">{index + 1}</TableCell>
-                            <TableCell component="td" scope="row">
-                              {row.nameCom}
-                            </TableCell>
-                            <TableCell align="center">{row.dayStart}</TableCell>
-                            <TableCell align="center">{row.dayEnd}</TableCell>
-                            <TableCell align="center">{row.timeExam}</TableCell>
-                            <TableCell align="center">{row.userQuantity}</TableCell>
-                            <TableCell align="center">
-                              <Link to={'/ListExamCompetition'}>
-                                <Button>
-                                  Xem
-                                </Button>
-                              </Link>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                            <Box
+                              component='img'
+                              sx={{
+                                height:{md:"auto",xs:"100%"},
+                                width:{md:"100%",xs:"100%"},
+                                display:{md:"block",xs:"none"}
+                              }}
+                              src={img_competition}
+                            />
+                            <Box
+                              sx={{
+                                display:"flex",
+                                flexDirection:"column"
+                              }}
+                            >
+                              <Box>
+                                <TitleCompetition>Tên cuộc thi</TitleCompetition>
+                                <Tooltip title={row.nameCom}  placement="top-end">
+                                  <NameCompetition>
+                                    {row.nameCom}
+                                  </NameCompetition>
+                                </Tooltip>
+                              </Box>
+                              <Box>
+                                <TitleCompetition>Bắt đầu - Kết thúc</TitleCompetition>
+                                <NameCompetition>
+                                  {row.dayStart} - {row.dayEnd}
+                                </NameCompetition>
+                              </Box>
+                              <Box>
+                                <TitleCompetition>Thời gian thi</TitleCompetition>
+                                <NameCompetition>
+                                  {row.timeExam} phút
+                                </NameCompetition>
+                              </Box>
+                            </Box>
+                          </Box>
+                        </Grid>
+                      ))}
+                    </Grid>
                   </Box>
                 )
               }
@@ -485,3 +501,29 @@ export default function Index(): JSX.Element {
     </Layout>
   )
 }
+
+
+const NameCompetition = styled.span`
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  font-size:18px;
+  line-height: 30px;
+  height: 30px;
+  margin: 0;
+  color:#1976d2;
+  vertical-align: middle;
+  font-weight: 600;
+  text-align: center;
+`
+
+const TitleCompetition = styled.span`
+  font-size:16px;
+  color:#848484;
+  font-weight:600;
+  text-align: center;
+  display: block;
+`

@@ -27,14 +27,15 @@ import { Link,useNavigate  } from 'react-router-dom'
 import { Insert ,getAllBlog} from '~/api/blogApi'
 import {getAllDep} from '~/api/departmentApi'
 import {InsertCompetitionBlog} from '~/api/CompetitionBlog'
+import {getAllComp} from '~/api/competitionApi'
 import useFetch from '~/hook/useFetch'
-
-interface Department{
-  depId:number,
-  depName:string
+import useAuth from '~/hook/useAuth'
+interface Competition{
+  comId:number,
+  comName:string
 }
-
 const Index = (): JSX.Element => {
+  const { profile } = useAuth()
   const navigate = useNavigate();
   const currentDate = new Date();
   const formattedDate = currentDate.toISOString();
@@ -50,11 +51,26 @@ const Index = (): JSX.Element => {
   const [errorBlogImg,setErrorBlogImg] = useState('')
   const [open, setOpen] = React.useState(false)
   const [selectedImage, setSelectedImage] = useState(null)
-
   const [blogInsert, callBlogtInsert] = useFetch()
-  const [getDeps, callAllDeps] = useFetch()
+  const [getComs, callAllComs] = useFetch()
   const [allBlogs, callAllBlog] = useFetch()
+
+
+  const requestData: {
+    blogName: string
+    blogDetai: string
+    imgName: string
+    imgSrc: string
+  } = {
+    blogName: blogName,
+    blogDetai: content,
+    imgName: imgName,
+    imgSrc: imgSrc
+  }
+
+
   const handleChange = (event: SelectChangeEvent): void => {
+    console.log(parseInt(event.target.value),formattedDate,profile?.userId)
     setComId(parseInt(event.target.value))
   }
   const handleContentChange = (value: any): any => {
@@ -79,17 +95,7 @@ const Index = (): JSX.Element => {
   const handleClose = (): void => {
     setOpen(false)
   }
-  const requestData: {
-    blogName: string
-    blogDetai: string
-    imgName: string
-    imgSrc: string
-  } = {
-    blogName: blogName,
-    blogDetai: content,
-    imgName: imgName,
-    imgSrc: imgSrc
-  }
+  
   const handleOK = async (): Promise<void> => {
     setOpen(false);
 
@@ -149,12 +155,12 @@ const Index = (): JSX.Element => {
         await InsertCompetitionBlog({
           comId: comId,
           blogId: blogId,
-          userId: '123',
-          postDate: new Date().toISOString(),
+          userId: profile?.userId,
+          postDate: formattedDate
         });
-        console.log('Thành công', blogId, comId, latestBlog);
+        console.log('Thành công');
       } else {
-        console.log('Thất bại', blogId, comId, latestBlog);
+        console.log('Thất bại');
       }
       // console.log('Thất bại', blogNews,blogNews.length - 1);
     } catch (error) {
@@ -163,17 +169,17 @@ const Index = (): JSX.Element => {
     navigate('/BlogManage?opensucess=true');
   };
   
-  const departments :Department[] =
-  getDeps.payload?.map((dep:Department)=>({
-    depId: dep.depId,
-    depName:dep.depName
+  const competitions :Competition[] =
+  getComs.payload?.map((com:Competition)=>({
+    comId: com.comId,
+    comName:com.comName
   })) || []
 
   React.useEffect(() => {
     const fetchData = async () :Promise<any> => {
       try {
-        const data = await getAllDep();
-        callAllDeps(() => Promise.resolve(data));
+        const data = await getAllComp();
+        callAllComs(() => Promise.resolve(data));
       } catch (error) {
         console.log(error);
       }
@@ -250,8 +256,8 @@ const Index = (): JSX.Element => {
                   label='Age'
                 >
                   {
-                    departments.map((row)=>(
-                      <MenuItem key={row.depId} value={row.depId}>{row.depName}</MenuItem>
+                    competitions.map((row)=>(
+                      <MenuItem key={row.comId} value={row.comId}>{row.comName}</MenuItem>
                     ))
                   }
                 </Select>

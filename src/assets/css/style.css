@@ -165,8 +165,8 @@ body::-webkit-scrollbar-track {
   height: 5px;
   top: 0;
   background-color: #1976D2;
-  border-bottom-right-radius: 5px ;
-  border-bottom-left-radius: 5px ;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -224,4 +224,3 @@ body::-webkit-scrollbar-track {
   transform: translateX(0) !important;
   opacity: 1 !important;
 }
-

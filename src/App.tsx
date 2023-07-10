@@ -18,7 +18,7 @@ import CompetitionTest from '~/page/CompetitionTest'
 import Register from '~/page/Register'
 import Listcompetition from '~/page/Client/Listcompetition'
 import ExamStart from '~/page/Client/ExamStart'
-import TestSchedule from '~/page/TestSchedule'
+import TestSchedule from '~/page/Client/TestSchedule'
 import ExamResult from '~/page/ExamResult'
 import PrizeManage from '~/page/PrizeManage'
 import PrizeTypeManage from '~/page/PrizeTypeManage'
@@ -28,6 +28,7 @@ import SettingManage from '~/page/SettingManage'
 import DepartmentManage from '~/page/Department'
 import ExamsManage from '~/page/ExamsManage'
 import Error from './page/404'
+import Loader from './components/loader'
 function App(): JSX.Element {
   return (
     <Routes>
@@ -54,6 +55,7 @@ function App(): JSX.Element {
         <Route path='/HomeBlogDetail' element={<HomeBlogDetail />} />
         <Route path='/ListExamCompetition' element={<ListExamCompetition />} />
         <Route path='/ExamStart' element={<ExamStart />} />
+        <Route path='/Loader' element={<Loader />} />
 
         <Route path='/Listcompetition' element={<Listcompetition />} />
         <Route path='/TestSchedule' element={<TestSchedule />} />
