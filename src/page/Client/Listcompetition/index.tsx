@@ -24,15 +24,20 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import useMediaQuery from '@mui/material/useMediaQuery';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-interface ListCompetition {
-  nameCom: string,
-  dayStart: string,
-  dayEnd: string,
-  userQuantity: number,
-  timeExam: number,
+
+import {getAllDep} from '~/api/departmentApi'
+import {getAllComp} from '~/api/competitionApi'
+import useFetch from '~/hook/useFetch'
+interface Competition {
+  comId:string,
+  comName: string,
+  startDate: string,
+  endDate: string,
+  userQuan: number,
+  examTimes: number,
   depId: number
 }
 
@@ -41,137 +46,11 @@ interface Department {
   depName: string
 }
 
-const rowDep: Department[] = [
-  {
-    depId: 1,
-    depName: 'Công nghệ thông tin'
-  },
-  {
-    depId: 2,
-    depName: 'Công nghệ hóa học'
-  },
-  {
-    depId: 3,
-    depName: 'Công nghệ thực phẩm'
-  },
-  {
-    depId: 4,
-    depName: 'Công nghệ may'
-  },
-  {
-    depId: 5,
-    depName: 'Du lịch lữ hành'
-  },
-  {
-    depId: 6,
-    depName: 'Quản trị kinh doanh'
-  },
-  {
-    depId: 7,
-    depName: 'Ngân hàng'
-  },
-  {
-    depId: 8,
-    depName: 'Luật'
-  },
-  {
-    depId: 9,
-    depName: 'Khoa học dữ liệu '
-  },
-  {
-    depId: 10,
-    depName: 'An toàn thông tin '
-  },
-  {
-    depId: 11,
-    depName: 'Cơ sở hạ tầng'
-  },
-]
-
-const row: ListCompetition[] = [
-  {
-    nameCom: 'Cuộc thi an toàn thông tin ',
-    dayStart: '12/04/2023',
-    dayEnd: '12/05/2023',
-    userQuantity: 50,
-    timeExam: 90,
-    depId: 1
-  },
-  {
-    nameCom: 'Cuộc thi an toàn chuyển đổi số ',
-    dayStart: '12/04/2023',
-    dayEnd: '12/05/2023',
-    userQuantity: 50,
-    timeExam: 90,
-    depId: 2
-  },
-  {
-    nameCom: 'Cuộc thi dự án mới ',
-    dayStart: '12/04/2023',
-    dayEnd: '12/05/2023',
-    userQuantity: 50,
-    timeExam: 90,
-    depId: 1
-  },
-  {
-    nameCom: 'trắc nghiệm thực tập sinh  ',
-    dayStart: '12/04/2023',
-    dayEnd: '12/05/2023',
-    userQuantity: 50,
-    timeExam: 90,
-    depId: 4
-  },
-  {
-    nameCom: 'thiết kế web ',
-    dayStart: '12/04/2023',
-    dayEnd: '12/05/2023',
-    userQuantity: 50,
-    timeExam: 90,
-    depId: 3
-  },
-  {
-    nameCom: 'Lập trình web online',
-    dayStart: '12/04/2023',
-    dayEnd: '12/05/2023',
-    userQuantity: 50,
-    timeExam: 90,
-    depId: 1
-  },
-  {
-    nameCom: 'Lập trình web online',
-    dayStart: '12/04/2023',
-    dayEnd: '12/05/2023',
-    userQuantity: 50,
-    timeExam: 90,
-    depId: 9
-  },
-  {
-    nameCom: 'Lập trình web online',
-    dayStart: '12/04/2023',
-    dayEnd: '12/05/2023',
-    userQuantity: 50,
-    timeExam: 90,
-    depId: 1
-  },
-  {
-    nameCom: 'Lập trình web online',
-    dayStart: '12/04/2023',
-    dayEnd: '12/05/2023',
-    userQuantity: 50,
-    timeExam: 90,
-    depId: 8
-  },
-  {
-    nameCom: 'Lập trình web online',
-    dayStart: '12/04/2023',
-    dayEnd: '12/05/2023',
-    userQuantity: 50,
-    timeExam: 90,
-    depId: 3
-  }
-]
 
 export default function Index(): JSX.Element {
+  const navigate = useNavigate();
+  const [getAllDeps,callAllDeps] = useFetch();
+  const [getAllComps,callAllComps] = useFetch();
   const [startIndex, setStartIndex] = React.useState(0);
   const [startDep, setStartDep] = React.useState(0);
   const [depId, setDepId] = React.useState(1);
@@ -179,14 +58,42 @@ export default function Index(): JSX.Element {
   const isMobile = useMediaQuery('(max-width: 600px)');
   const dataPerPageListCompetition = isMobile ? 2 : 4;
 
+  
+  React.useEffect(()=>{
+    callAllDeps(getAllDep)
+  },[])
+
+  React.useEffect(()=>{
+    callAllComps(getAllComp)
+  },[])
+  const listComp = getAllComps?.payload;
+  const rowComp = listComp?.map((row:Competition)=>({
+    comId:row.comId,
+    comName: row.comName,
+    startDate: row.startDate,
+    endDate: row.endDate,
+    userQuan: row.userQuan,
+    examTimes: row.examTimes,
+    depId: row.depId
+  }))
+  
+  const rowDep = getAllDeps?.payload;
   const dataPerPageDeppartment = 10;
   const endIndex = startIndex + dataPerPageListCompetition;
   const endDep = startDep + dataPerPageDeppartment;
-  const totalRows = row.filter(r => r.depId == depId).length;
-  const totalRowsDep = rowDep.length;
-  const listCompetition = row.filter(r => r.depId === depId).slice(startIndex, endIndex);
-  const listDep = rowDep.slice(startDep, endDep);
-  // console.log(dataPerPageListCompetition,listCompetition,startIndex,endIndex,depId)
+  const totalRows = rowComp?.filter((r:any) => r.depId == depId).length;
+  const totalRowsDep = rowDep?.length;
+  const listCompetition = rowComp?.filter((r:any) => r.depId === depId).slice(startIndex, endIndex);
+  const listDep = rowDep?.slice(startDep, endDep);
+  // console.log(rowComp)
+
+  const formatDay = (dayOrigin: string): string => {
+    const dateObj = new Date(dayOrigin);
+    const month = dateObj.getMonth() + 1;
+    const day = dateObj.getDate();
+    const year = dateObj.getFullYear();
+    return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
+  }
   const handleNext = (): void => {
     setStartIndex(prevIndex => prevIndex + dataPerPageListCompetition);
   };
@@ -207,6 +114,12 @@ export default function Index(): JSX.Element {
     setStartIndex(0);
     setDepId(id);
   }
+
+  const handleGoToExamComp =(id:number):void =>{
+    navigate(`/ListExamCompetition?id=${id}`)
+  }
+
+  
   return (
     <Layout>
       <Container maxWidth={'xl'}>
@@ -242,7 +155,7 @@ export default function Index(): JSX.Element {
               }}
             >
               {
-                listDep.map((row) => (
+                listDep?.map((row:any) => (
                   <Box
                     key={row.depId}
                     component='li'
@@ -297,7 +210,7 @@ export default function Index(): JSX.Element {
               }}
             >
               {
-                listDep.map((row) => (
+                listDep?.map((row:any) => (
                   <Box
                     key={row.depId}
                     component='li'
@@ -364,7 +277,7 @@ export default function Index(): JSX.Element {
               }}
             >
               {
-                listCompetition.length === 0 ? (
+                listCompetition?.length === 0 ? (
                   <Box
                     sx={{
                       borderRadius: "3px",
@@ -412,7 +325,7 @@ export default function Index(): JSX.Element {
                     }}
                   >
                     <Grid container spacing={1} sx={{height:"100%"}}>
-                      {listCompetition.map((row, index) => (
+                      {listCompetition?.map((row:any, index:any) => (
                         <Grid key={index} item md={3} xs={12}>
                           <Box
                             sx={{
@@ -422,8 +335,11 @@ export default function Index(): JSX.Element {
                               padding:"10px",
                               display:"flex",
                               gap:"20px",
+                              cursor:"pointer",
                               flexDirection:{md:"column",xs:"column"}
                             }}
+                            onClick={():void=>handleGoToExamComp(row.comId)}
+
                           >
                             <Box
                               component='img'
@@ -442,22 +358,22 @@ export default function Index(): JSX.Element {
                             >
                               <Box>
                                 <TitleCompetition>Tên cuộc thi</TitleCompetition>
-                                <Tooltip title={row.nameCom}  placement="top-end">
+                                <Tooltip title={row.comName}  placement="top-end">
                                   <NameCompetition>
-                                    {row.nameCom}
+                                    {row.comName}
                                   </NameCompetition>
                                 </Tooltip>
                               </Box>
                               <Box>
                                 <TitleCompetition>Bắt đầu - Kết thúc</TitleCompetition>
                                 <NameCompetition>
-                                  {row.dayStart} - {row.dayEnd}
+                                  {formatDay(row.startDate)} - {formatDay(row.endDate)}
                                 </NameCompetition>
                               </Box>
                               <Box>
                                 <TitleCompetition>Thời gian thi</TitleCompetition>
                                 <NameCompetition>
-                                  {row.timeExam} phút
+                                  {row.examTimes} phút
                                 </NameCompetition>
                               </Box>
                             </Box>

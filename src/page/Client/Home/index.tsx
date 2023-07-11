@@ -19,12 +19,12 @@ import { getAllCompetitionBlog } from '~/api/CompetitionBlog'
 import { getAllBlog } from '~/api/blogApi'
 import { getAllUser } from '~/api/userApi'
 import useFetch from '~/hook/useFetch'
+import Loader from '~/components/loader'
 
 interface Blog {
   blogId: number,
   blogName: string,
   imgSrc: string,
-  imgName: string,
 }
 
 
@@ -40,12 +40,14 @@ interface CompetitionBlog extends Blog {
 
 const Home = (): JSX.Element => {
   const [startIndex, setStartIndex] = React.useState(0);
+  const dataPerPage = 4;
+  const endIndex = startIndex + dataPerPage;
+  
   const [allUser, callAllUser] = useFetch()
   const [allBlog, callAllBlogs] = useFetch()
   const [allBlogCompetition, callAllBlogCompetition] = useFetch()
   const listUser = allUser?.payload
-  const dataPerPage = 4;
-  const endIndex = startIndex + dataPerPage;
+  
 
 
   React.useEffect((): void => {
@@ -85,32 +87,8 @@ const Home = (): JSX.Element => {
     ...item,
     ...blogs.find((elem:any) => elem.blogId === item.blogId)
   }));
-
-
-  //console.log('đây là hàm kết hợp',itemBlogsCompetition,blogs,itemBlogs)
-  // const mappedBlogs: Blog[] = blogs?.map((blog: Blog) => ({
-  //   blogId: blog.blogId,
-  //   blogName: blog.blogName,
-  //   imgSrc: blog.imgSrc,
-  //   imgName: blog.imgName
-  // })) || [];
-
-  // const mappedComBlogs: CompetitionBlog[] = comBlogs?.map((comBlog: CompetitionBlog) => ({
-  //   id: comBlog.id,
-  //   comId: comBlog.comId,
-  //   useId: comBlog.useId,
-  //   postDate: comBlog.postDate,
-  //   blog: {
-  //     blogId: comBlog.blog.blogId,
-  //     blogName: comBlog.blog.blogName,
-  //     imgSrc: comBlog.blog.imgSrc,
-  //     imgName: comBlog.blog.imgName
-  //   }
-  // })) || [];
-  // const totalRows = mappedComBlogs.length;
-  // const visibleRows = mappedComBlogs.slice(startIndex, endIndex);
-
-
+  const totalRows = itemBlogsCompetition.length;
+  const visibleRows = itemBlogsCompetition.slice(startIndex, endIndex);
   const handleNext = (): void => {
     setStartIndex(prevIndex => prevIndex + dataPerPage);
   };
@@ -121,7 +99,7 @@ const Home = (): JSX.Element => {
 
   const getUserName = (userId: string): string => {
     const user = listUser?.find((r: any) => r.userId === userId)
-    return user.userName
+    return user?.userName
   }
 
   const formatDay = (dayOrigin: string): string => {
@@ -137,10 +115,8 @@ const Home = (): JSX.Element => {
     <Layout>
     <>
       {
-        allUser.loading ||
-          allBlog.loading || allBlogCompetition.loading ? (
-
-          <h1>Đang tải....</h1>
+        allBlog.loading || allBlogCompetition.loading ? (
+          <Loader />
         ) : (
           <>
           
@@ -275,7 +251,7 @@ const Home = (): JSX.Element => {
                       <Box
                         onClick={handleNext}
                         component='button'
-                        // disabled={startIndex + dataPerPage >= totalRows}
+                        disabled={startIndex + dataPerPage >= totalRows}
                         sx={buttonPreNext}
                       >
                         <KeyboardArrowRightIcon />
@@ -283,7 +259,7 @@ const Home = (): JSX.Element => {
                     </Box>
                   </Box>
                   <Grid container sx={{ marginTop: '20px' }} rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    {/* {visibleRows.map((row, index) => (
+                    {visibleRows.map((row:any, index:any) => (
                       <Grid key={index} item xs={12}>
                         <Box
                           sx={{
@@ -305,7 +281,7 @@ const Home = (): JSX.Element => {
                                 objectFit: "cover"
                               }}
                               component='img'
-                              src={row.imgSrc}
+                              src={`data:image/jpeg;base64,${row.imgSrc}`}
                             />
                           </Box>
                           <Box
@@ -319,21 +295,21 @@ const Home = (): JSX.Element => {
                               style={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: '20px',
+                                gap: '10px',
                                 color: "#999"
                               }}
                             >
                               <span>
-                                {getUserName(row.useId)}
+                                {getUserName(row.userId)}
                               </span>
-
                               <span
                                 style={{
                                   display: "flex",
                                   alignItems: "center"
                                 }}
                               >
-                                <AccessTimeFilledIcon sx={{ fontSize: "14px" }} />&nbsp;{row.postDate}
+                                <AccessTimeFilledIcon sx={{ fontSize: "14px" }} />&nbsp;
+                                {formatDay(row.postDate)}
                               </span>
                             </span>
                             <Link
@@ -349,7 +325,7 @@ const Home = (): JSX.Element => {
                           </Box>
                         </Box>
                       </Grid>
-                    ))} */}
+                    ))}
                   </Grid>
 
                   <Box
@@ -366,7 +342,7 @@ const Home = (): JSX.Element => {
                     <span className='line'></span>
                   </Box>
                   <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                    {/* {visibleRows.map((row, index) => (
+                    {visibleRows.map((row:any, index:any) => (
                       <Grid key={index} item xs={12}>
                         <Box
                           sx={{
@@ -388,7 +364,7 @@ const Home = (): JSX.Element => {
                                 objectFit: "cover"
                               }}
                               component='img'
-                              src={row.imgSrc}
+                              src={`data:image/jpeg;base64,${row.imgSrc}`}
                             />
                           </Box>
                           <Box
@@ -402,21 +378,22 @@ const Home = (): JSX.Element => {
                               style={{
                                 display: "flex",
                                 alignItems: "center",
-                                gap: '20px',
+                                gap: '10px',
                                 color: "#999"
                               }}
                             >
                               <span>
-                                {getUserName(row.useId)}
+                                {getUserName(row.userId)}
                               </span>
-
                               <span
                                 style={{
                                   display: "flex",
                                   alignItems: "center"
                                 }}
                               >
-                                <AccessTimeFilledIcon sx={{ fontSize: "14px" }} />&nbsp;{formatDay(row.postDate)}
+                                <AccessTimeFilledIcon sx={{ fontSize: "14px" }} />
+                                &nbsp;
+                                {formatDay(row.postDate)}
                               </span>
                             </span>
                             <Link
@@ -432,7 +409,7 @@ const Home = (): JSX.Element => {
                           </Box>
                         </Box>
                       </Grid>
-                    ))} */}
+                    ))}
                   </Grid>
                 </Grid>
               </Grid>
