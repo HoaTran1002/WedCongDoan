@@ -1,5 +1,5 @@
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Snackbar,Box,Tooltip,IconButton } from '@mui/material'
+import { Snackbar, Box, Tooltip, IconButton } from '@mui/material'
 import MuiAlert from '@mui/material/Alert'
 import CircularProgress from '@mui/material/CircularProgress'
 import * as React from 'react'
@@ -24,20 +24,22 @@ const TableUser = (): JSX.Element => {
   const [userState, call] = useFetch()
   const [deleteUserState, callDelete] = useFetch()
 
-  const users = userState?.payload 
+  const users = userState?.payload
 
   const formatDay = (dayOrigin: string): string => {
-    const dateObj = new Date(dayOrigin);
-    const month = dateObj.getMonth() + 1;
-    const day = dateObj.getDate();
-    const year = dateObj.getFullYear();
-    return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
+    const dateObj = new Date(dayOrigin)
+    const month = dateObj.getMonth() + 1
+    const day = dateObj.getDate()
+    const year = dateObj.getFullYear()
+    return `${month.toString().padStart(2, '0')} / ${day
+      .toString()
+      .padStart(2, '0')} / ${year}`
   }
   const rows =
     users?.map((user: User) => ({
       id: user.userId,
       username: user.userName,
-      dateofbirth:formatDay(user.dateOfBirth),
+      dateofbirth: formatDay(user.dateOfBirth),
       email: user.email,
       password: user.password,
       useraddress: user.userAddress,
@@ -72,23 +74,21 @@ const TableUser = (): JSX.Element => {
   const handleCloseError = (): void => {
     setShowError(false)
   }
-  
+
   const columns: ColumnsProps[] = [
-    { field: 'id', headerName: 'ID Người Dùng', },
-    { field: 'username', headerName: 'Họ và tên', },
-    { field: 'dateofbirth', headerName: 'Ngày Sinh', },
+    { field: 'id', headerName: 'ID Người Dùng' },
+    { field: 'username', headerName: 'Họ và tên' },
+    { field: 'dateofbirth', headerName: 'Ngày Sinh' },
     {
       field: 'email',
       headerName: 'Gmail',
-      type: 'string',
-    
+      type: 'string'
     },
     {
       field: 'password',
-      headerName: 'Mật Khẩu',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-    
+      headerName: 'Mật Khẩu'
+      // description: 'This column has a value getter and is not sortable.',
+      // sortable: false
     },
     {
       field: 'actions',
@@ -105,7 +105,7 @@ const TableUser = (): JSX.Element => {
           roleId={params.roleId}
           depId={params.depId}
         />,
-        <Tooltip key='delete' title="Xóa">
+        <Tooltip key='delete' title='Xóa'>
           <IconButton onClick={(): void => handleDelete(params.id)}>
             <DeleteIcon color='error' />
           </IconButton>
@@ -113,8 +113,6 @@ const TableUser = (): JSX.Element => {
       ]
     }
   ]
-
-
 
   React.useEffect(() => {
     call(getAllUser)
@@ -132,7 +130,7 @@ const TableUser = (): JSX.Element => {
           elevation={6}
           variant='filled'
         >
-          Thao tác thành công 
+          Thao tác thành công
         </MuiAlert>
       </Snackbar>
       <Snackbar
@@ -165,8 +163,8 @@ const TableUser = (): JSX.Element => {
         <>
           <Box
             sx={{
-              display:"flex",
-              justifyContent:"center"
+              display: 'flex',
+              justifyContent: 'center'
             }}
           >
             <TableWithFixedColumn

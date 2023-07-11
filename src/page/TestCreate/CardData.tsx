@@ -36,6 +36,7 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 }))
 interface IQuestion {
+  callBack?: () => void
   quesId: number
   index: number
   quesDetail: string
@@ -45,6 +46,7 @@ interface IQuestion {
   quesTId: number
 }
 const Index = ({
+  callBack,
   quesId,
   trueAnswer,
   index,
@@ -71,7 +73,7 @@ const Index = ({
       })
       setMessage('đã xoá thành công')
       setSeverity('info')
-      window.location.reload()
+      callBack
     } catch (error) {
       setMessage('xoá thất bại')
       setSeverity('error')

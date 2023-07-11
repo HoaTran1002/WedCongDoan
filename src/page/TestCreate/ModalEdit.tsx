@@ -30,6 +30,7 @@ import { getAllQuesTpye } from '~/api/questionTypes'
 import useFetch from '~/hook/useFetch'
 import EditCalendarIcon from '@mui/icons-material/EditCalendar'
 import MessageAlert from '~/components/MessageAlert'
+import { red } from '@mui/material/colors'
 
 interface QuestType {
   quesTId: number
@@ -95,6 +96,10 @@ const ModalEdit = ({
   const [errQuestion, setErrQuestion] = useState<string>('')
   const [mesagge, setMesagge] = useState<string>('')
   const [severity, setSeverity] = useState<string>('')
+
+  const [errCorret, setErrCorret] = useState<string>('')
+  const [errNumberCorret, setErrNumberCorret] = useState<string>('')
+  const [errNullCorret, setErrNullCorret] = useState<string>('')
 
   const questions = getQuesState.payload || []
   const questionTypes = getQuesTypeState.payload || []
@@ -222,8 +227,33 @@ const ModalEdit = ({
     console.log('data loại đap án:' + bodyQuestion.quesTId)
     console.log('data Id :' + bodyQuestion.examId)
     console.log('data quesId :' + bodyQuestion.examId)
-    if (bodyQuestion.quesDetail === '') {
-      setErrQuestion('hãy nhập câu hỏi')
+
+    const errorConditions = [
+      {
+        condition: bodyQuestion.ansOfQues === '',
+        setError: setErrCorret,
+        errorMessage: 'Hãy nhập đáp án'
+      },
+      {
+        condition: bodyQuestion.trueAnswer === '',
+        setError: setErrNullCorret,
+        errorMessage: 'Chưa có đáp án đúng'
+      },
+      {
+        condition: bodyQuestion.quesDetail === '',
+        setError: setErrQuestion,
+        errorMessage: 'hãy nhập câu hỏi'
+      }
+    ]
+    for (const condition of errorConditions) {
+      if (condition.condition) {
+        condition.setError(condition.errorMessage)
+      }
+    }
+    const hasError = errorConditions.some((condition) => condition.condition)
+
+    if (hasError) {
+      return
     } else {
       updateQuesCall(async (): Promise<void> => {
         try {
@@ -271,7 +301,7 @@ const ModalEdit = ({
         aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
-          <Card sx={{ Width: '100%', overflowY: 'scroll' }}>
+          <Card sx={{ Width: '100%', overflowY: 'scroll', boxShadow: 'none' }}>
             <CardContent>
               <Typography variant='subtitle1'>
                 <FormGroup>
@@ -374,7 +404,7 @@ const ModalEdit = ({
               noValidate
               autoComplete='off'
             >
-              <Box>
+              <Box sx={{ margin: 2 }}>
                 <FormControl fullWidth>
                   <InputLabel id='demo-simple-select-label'>
                     Chọn loại đáp án
@@ -395,35 +425,79 @@ const ModalEdit = ({
                 </FormControl>
               </Box>
             </Box>
-
-            {updateQuesState.loading ? (
-              <LoadingButton
-                size='small'
-                onClick={handleClick}
-                loading={loading}
-                variant='outlined'
-                disabled
-              >
-                <span>disabled</span>
-              </LoadingButton>
-            ) : (
+            <Box
+              sx={{
+                color: red[300],
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'flex-start',
+                flexDirection: 'column'
+              }}
+            >
+              {errCorret && (
+                <Box
+                  sx={{
+                    color: 'white',
+                    backgroundColor: red[300],
+                    fontSize: 13,
+                    borderRadius: 2,
+                    padding: 0.3,
+                    margin: 0.2
+                  }}
+                >
+                  <span>hãy nhập đáp án</span>
+                </Box>
+              )}
+              {errNullCorret && (
+                <Box
+                  sx={{
+                    color: 'white',
+                    backgroundColor: red[300],
+                    fontSize: 13,
+                    borderRadius: 2,
+                    padding: 0.3,
+                    margin: 0.2
+                  }}
+                >
+                  <span>chưa có đáp án đúng</span>
+                </Box>
+              )}
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Box>
+                {updateQuesState.loading ? (
+                  <LoadingButton
+                    size='small'
+                    onClick={handleClick}
+                    loading={loading}
+                    variant='outlined'
+                    sx={{ marginLeft: 2, marginRight: 2 }}
+                    disabled
+                  >
+                    <span>disabled</span>
+                  </LoadingButton>
+                ) : (
+                  <Button
+                    onClick={submitQuestion}
+                    size='small'
+                    color='primary'
+                    variant='outlined'
+                    sx={{ marginLeft: 2, marginRight: 2 }}
+                  >
+                    Lưu thay đổi
+                  </Button>
+                )}
+              </Box>
               <Button
-                onClick={submitQuestion}
+                onClick={cancelModal}
                 size='small'
                 color='primary'
                 variant='outlined'
+                sx={{ marginLeft: 2, marginRight: 2 }}
               >
-                Lưu thay đổi
+                thoát
               </Button>
-            )}
-            <Button
-              onClick={cancelModal}
-              size='small'
-              color='primary'
-              variant='outlined'
-            >
-              thoát
-            </Button>
+            </Box>
           </Card>
         </Box>
       </Modal>
