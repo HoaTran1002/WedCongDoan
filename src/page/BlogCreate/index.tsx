@@ -89,7 +89,7 @@ const Index = (): JSX.Element => {
 
   const handleClickOpen = (): void => {
     setOpen(true)
-    console.log(blogName, content, imgName, imgSrc)
+    console.log(comId)
   }
 
   const handleClose = (): void => {
