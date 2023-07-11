@@ -188,8 +188,12 @@ const listQuestion: Question[]=[
         AnsOfQues: 'Lịch sử - Địa lý - Văn học - Khoa học xã hội',
       },
 ]
+
 const ExamStart = (): JSX.Element => {
     const navigate = useNavigate();
+    const queryParams = new URLSearchParams(location.search)
+    const id = queryParams.get('id')
+    const [examId, setExamId] = React.useState<number>(Number(id))
     const [openSubmitExam,setOpenSubmitExam] = React.useState(false)
     const [openExitExam,setOpenExitExam] = React.useState(false)
     const [openNavbar,setOpenNavbar] = React.useState(false)

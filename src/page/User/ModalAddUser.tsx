@@ -33,15 +33,21 @@ export default function BasicModal(): JSX.Element {
 
   return (
     <div>
-      {
-        !userState.loading ? (
-          <Stack direction={'row'} gap={'20px'} sx={{ mt: '15px', mb: '15px' }}>
-            <Button variant='contained' onClick={handleOpen} startIcon={<AddIcon />}>
-              Thêm Người Dùng
-            </Button>
-          </Stack>
-        ):(null)
-      }
+      {!userState.loading ? (
+        <Stack
+          direction={'row'}
+          gap={'20px'}
+          sx={{ ml: 2, mt: '15px', mb: '15px' }}
+        >
+          <Button
+            variant='outlined'
+            onClick={handleOpen}
+            startIcon={<AddIcon />}
+          >
+            Thêm Người Dùng
+          </Button>
+        </Stack>
+      ) : null}
       <Modal
         open={open}
         onClose={handleClose}

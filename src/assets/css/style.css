@@ -224,3 +224,18 @@ body::-webkit-scrollbar-track {
   transform: translateX(0) !important;
   opacity: 1 !important;
 }
+
+
+/* Animate*/
+
+@keyframes grayAnimation {
+  0% {
+    background-color: rgb(183, 183, 183);
+  }
+  50% {
+    background-color: gray;
+  }
+  100% {
+    background-color: rgb(183, 183, 183);
+  }
+}

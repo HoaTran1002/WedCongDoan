@@ -16,7 +16,7 @@ import useFetch from '~/hook/useFetch'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
 import CircularProgress from '@mui/material/CircularProgress'
 import BasicModal from './ModalEditDep'
-import Loader from '~/components/loader'
+import {Loader} from '~/components/loader'
 
 interface Department {
   depId: number

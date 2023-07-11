@@ -171,6 +171,7 @@ const TableUser = (): JSX.Element => {
               rows={rows}
               columns={columns}
               maxWidth={900}
+              maxHeight={400}
             />
           </Box>
         </>

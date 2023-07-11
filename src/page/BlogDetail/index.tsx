@@ -26,7 +26,7 @@ import 'react-quill/dist/quill.snow.css'
 import { Link, useLocation } from 'react-router-dom'
 import { getBlogId, editBlog, deleteBlog, getAllBlog } from '~/api/blogApi'
 import {getAllComp} from '~/api/competitionApi'
-import {getAllCompetitionBlog,EditCompetitionBlog} from '~/api/CompetitionBlog'
+import {getAllCompetitionBlog,EditCompetitionBlog,DeleteCompetitionBlog} from '~/api/CompetitionBlog'
 import Dropzone from 'react-dropzone'
 import useFetch from '~/hook/useFetch'
 interface Competition{
@@ -61,6 +61,7 @@ const Index = (): JSX.Element => {
   const [blogId, setBlogId] = useState<number>(Number(id))
   const [EditBlog, callEditBlog] = useFetch()
   const [DeleteBlog, callDeleteBlog] = useFetch()
+  const [DeleteComBlog, callDeleteComBlog] = useFetch()
   const [getBlog, callBlogById] = useFetch()
   const [getComs, callAllComs] = useFetch()
   const [getComBlogs, callAllComBlogs] = useFetch()
@@ -73,13 +74,24 @@ const Index = (): JSX.Element => {
   }
   const handleClickOpen = (): any => {
     setOpen(true)
-    console.log(blogName, blogDetai, imgName, imgSrc)
+    console.log(comId)
   }
 
   const handleClickDelete = (): any => {
     const request: { _id: number } = {
       _id: blogId
     }
+
+    const requestComBlog: { _id: number } = {
+      _id: comBlogUserId
+    }
+    callDeleteComBlog(async () => {
+      try {
+        await DeleteCompetitionBlog(requestComBlog)
+      } catch (error) {
+        console.log('thất bại')
+      }
+    })
     callDeleteBlog(async () => {
       try {
         await deleteBlog(request)

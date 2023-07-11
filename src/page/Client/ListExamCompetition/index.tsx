@@ -88,7 +88,11 @@ export default function Index(): JSX.Element {
 
     const handleOkExam = (): void => {
         setOpenExam(false)
-        navigate('/ExamStart');
+        const randomIndex = Math.floor(Math.random() * listComExam.length);
+        const randomElement = listComExam[randomIndex];
+        console.log(randomElement?.examId)
+        // navigate(`/ExamStart?id=${randomElement?.examId}`)
+        navigate(`/ExamStart?id=${1014}`)
     }
     const formatDay = (dayOrigin: string): string => {
         const dateObj = new Date(dayOrigin);
@@ -97,6 +101,8 @@ export default function Index(): JSX.Element {
         const year = dateObj.getFullYear();
         return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
       }
+
+    
     return (
         <>
             <Layout>
@@ -266,7 +272,7 @@ export default function Index(): JSX.Element {
                                             fontWeight: "600"
                                         }}
                                     >
-                                        Đề thi
+                                        Quy định
                                     </span>
                                     <Tooltip title="Quy định thi">
                                         <IconButton onClick={handleClickOpen}>
@@ -274,60 +280,25 @@ export default function Index(): JSX.Element {
                                         </IconButton>
                                     </Tooltip>
                                 </Box>
-                                <Box
-                                    sx={{
-                                        backgroundColor: "white",
-                                        display: "flex",
-                                        flexWrap: "wrap",
-                                        padding: "10px",
-                                        justifyContent:"space-evenly",
-                                        gap:'20px'
-                                    }}
-                                >
-                                    {
-                                        listComExam?.map((row: any,index:number) => (
-                                            <Box
-                                                key={index}
-                                                component='div'
-                                                sx={{
-                                                    display: "flex",
-                                                    flexDirection: "column",
-                                                    borderRadius: "3px",
-                                                    overflow: "hidden",
-                                                    width: "120px",
-                                                    cursor: "pointer"
-                                                }}
-                                                onClick={handleClickExamOpen}
-                                            >
-                                                <Box
-                                                    sx={{
-                                                        backgroundColor: "#e0f6ff",
-                                                        padding: "10px"
-                                                    }}
-                                                >
-                                                    <DescriptionOutlinedIcon
-                                                        sx={{
-                                                            width: '100%',
-                                                            height: '100%',
-                                                            color: "#1565c0"
-                                                        }}
-                                                    />
-                                                </Box>
-                                                <span
-                                                    style={{
-                                                        color: "white",
-                                                        backgroundColor: "#1565c0",
-                                                        display: "block",
-                                                        textAlign: "center"
-                                                    }}
-                                                >
-                                                    {getExamName(row.examId)}
-                                                </span>
-                                            </Box>
-                                        ))
-                                    }
 
-                                </Box>
+
+                                
+                            </Box>
+                            <Box
+                                sx={{
+                                    display:"flex",
+                                    justifyContent:"center",
+                                    alignItems:"center",
+                                    height:"300px",
+                                    gap:"30px"
+                                }}
+                            >
+                                <Button onClick={handleClickExamOpen} variant='contained'>
+                                    VÀO THI
+                                </Button>
+                                <Button variant='outlined'>
+                                    TRỞ VỀ
+                                </Button>
                             </Box>
                         </Grid>
                     </Grid>
@@ -365,7 +336,7 @@ export default function Index(): JSX.Element {
                         </DialogTitle>
                         <DialogContent>
                             <DialogContentText id="alert-dialog-description">
-                                Bạn muốn tham gia tại đề thi này
+                                Bạn muốn tham gia cuộc thi này
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>
