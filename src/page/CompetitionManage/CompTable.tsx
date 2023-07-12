@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Typography,
   Grid,
@@ -17,29 +17,31 @@ import { color } from '@mui/system'
 import { getAllDep } from '~/api/depApi'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import MuiAlert from '@mui/material/Alert'
-import CircularProgress from '@mui/material/CircularProgress';
-import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress'
+import Box from '@mui/material/Box'
 import { TableWithFixedColumn, ColumnsProps } from '~/components/TableFixed'
+import { Loader } from '~/components/loader'
 
 //interface
 interface Competition {
-  comId:number,
-  comName: string,
-  startDate: string,
-  endDate: string,
-  examTimes: number,
-  userQuan: number,
-  depId:number
+  comId: number
+  comName: string
+  startDate: string
+  endDate: string
+  examTimes: number
+  userQuan: number
+  depId: number
 }
 
 const CompTable = (): JSX.Element => {
-  const [showSuccess, setShowSuccess] = React.useState(false)
-  const [showError, setShowError] = React.useState(false)
+  const [showSuccess, setShowSuccess] = useState(false)
+  const [showError, setShowError] = useState(false)
   const [compState, callComp] = useFetch()
   const [deps, depCall] = useFetch()
   const [deleteComp, deleteCompCall] = useFetch()
   const depList = deps.payload || []
-  
+  const [loading, setLoading] = useState<boolean>(false)
+
   const getNameDep = (idDep: number): string => {
     const dep = depList?.find((item: any) => item.depId == idDep)
     return dep.depName || 'chưa có đơn vị nào'
@@ -51,11 +53,13 @@ const CompTable = (): JSX.Element => {
     setShowError(false)
   }
   const formatDay = (dayOrigin: string): string => {
-    const dateObj = new Date(dayOrigin);
-    const month = dateObj.getMonth() + 1;
-    const day = dateObj.getDate();
-    const year = dateObj.getFullYear();
-    return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
+    const dateObj = new Date(dayOrigin)
+    const month = dateObj.getMonth() + 1
+    const day = dateObj.getDate()
+    const year = dateObj.getFullYear()
+    return `${month.toString().padStart(2, '0')} / ${day
+      .toString()
+      .padStart(2, '0')} / ${year}`
   }
   const handelDeleteComp = (idComp: number): void => {
     const requestDelete: { _id: number } = { _id: idComp }
@@ -63,6 +67,7 @@ const CompTable = (): JSX.Element => {
       try {
         await deleteCompetitions(requestDelete)
         setShowSuccess(true)
+        setLoading
       } catch (error) {
         setShowError(true)
       }
@@ -71,31 +76,31 @@ const CompTable = (): JSX.Element => {
   const columns: ColumnsProps[] = [
     {
       field: 'comId',
-      headerName: 'Id',
+      headerName: 'Id'
     },
     {
       field: 'comName',
-      headerName: 'Tên cuộc thi',
+      headerName: 'Tên cuộc thi'
     },
     {
       field: 'startDate',
-      headerName: 'Ngày bắt đầu',
+      headerName: 'Ngày bắt đầu'
     },
     {
       field: 'endDate',
-      headerName: 'Ngày kết thúc',
+      headerName: 'Ngày kết thúc'
     },
     {
       field: 'examTimes',
-      headerName: 'Thời gian làm bài',
+      headerName: 'Thời gian làm bài'
     },
     {
       field: 'userQuan',
-      headerName: 'Số lượng thí sinh',
+      headerName: 'Số lượng thí sinh'
     },
     {
       field: 'depName',
-      headerName: 'Đơn vị tổ chức',
+      headerName: 'Đơn vị tổ chức'
     },
     {
       field: 'actions',
@@ -127,135 +132,134 @@ const CompTable = (): JSX.Element => {
           >
             <DeleteOutlinedIcon />
           </Button>
-        </Tooltip>,
-      ],
-    },
-
+        </Tooltip>
+      ]
+    }
   ]
 
   const rows =
     compState.payload?.map((item: Competition) => ({
-        comId: item.comId,
-        comName: item.comName,
-        startDate: formatDay(item.startDate),
-        endDate: formatDay(item.endDate),
-        examTimes: item.examTimes,
-        userQuan: item.userQuan,
-        depName:getNameDep(item.depId + 0)
-  })) || []
+      comId: item.comId,
+      comName: item.comName,
+      startDate: formatDay(item.startDate),
+      endDate: formatDay(item.endDate),
+      examTimes: item.examTimes,
+      userQuan: item.userQuan,
+      depName: getNameDep(item.depId + 0)
+    })) || []
 
-
-  
   React.useEffect(() => {
     depCall(getAllDep)
-  }, [])
+  }, [loading])
   React.useEffect(() => {
     callComp(getAllComp)
-  }, [])
-
+  }, [loading])
 
   return (
     <>
-      <>
-        <Snackbar
-          open={showSuccess}
-          autoHideDuration={3000}
-          onClose={handleCloseSuccess}
-        >
-          <MuiAlert
-            onClose={handleCloseSuccess}
-            severity='success'
-            elevation={6}
-            variant='filled'
-          >
-            Thao tác thành công
-          </MuiAlert>
-        </Snackbar>
-        <Snackbar
-          open={showError}
-          autoHideDuration={3000}
-          onClose={handleCloseSuccess}
-        >
-          <MuiAlert
-            onClose={handleCloseError}
-            severity='error'
-            elevation={6}
-            variant='filled'
-          >
-            Thao tác thất bại
-          </MuiAlert>
-        </Snackbar>
-      </>
-      <Grid
-        container
-        rowSpacing={1}
-        columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-      >
-        <Grid item xs={12}>
-          <Stack>
-            <Typography
-              variant='h4'
-              sx={{
-                fontWeight: 500,
-                color: '#1976d2',
-                display: 'flex',
-                justifyContent: 'center',
-                marginTop: 2
-              }}
+      {compState.loading || deps.loading ? (
+        <Loader />
+      ) : (
+        <>
+          <>
+            <Snackbar
+              open={showSuccess}
+              autoHideDuration={3000}
+              onClose={handleCloseSuccess}
             >
-              Danh sách cuộc thi
-            </Typography>
-          </Stack>
-        </Grid>
-        {
-          compState.loading || deps.loading ? (
-            <Grid item xs={12} style={{ margin: 10 }}>
-              <Box
-                sx={{
-                  width: "100%",
-                  height: "500px",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}
+              <MuiAlert
+                onClose={handleCloseSuccess}
+                severity='success'
+                elevation={6}
+                variant='filled'
               >
-                <CircularProgress />
-              </Box>
+                Thao tác thành công
+              </MuiAlert>
+            </Snackbar>
+            <Snackbar
+              open={showError}
+              autoHideDuration={3000}
+              onClose={handleCloseSuccess}
+            >
+              <MuiAlert
+                onClose={handleCloseError}
+                severity='error'
+                elevation={6}
+                variant='filled'
+              >
+                Thao tác thất bại
+              </MuiAlert>
+            </Snackbar>
+          </>
+          <Grid
+            container
+            rowSpacing={1}
+            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+          >
+            <Grid item xs={12}>
+              <Stack>
+                <Typography
+                  variant='h4'
+                  sx={{
+                    fontWeight: 500,
+                    color: '#1976d2',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: 2
+                  }}
+                >
+                  Danh sách cuộc thi
+                </Typography>
+              </Stack>
             </Grid>
-          ) : (
-            <>
-              <Link
-                to={'/CompetitionCreate'}
-                style={{
-                  textDecoration: 'none',
-                  marginLeft: 40,
-                  display: "inline-block"
-                }}
-              >
-                <Button variant='contained' startIcon={<AddIcon />}>
-                  Thêm cuộc thi mới
-                </Button>
-              </Link>
+            {compState.loading || deps.loading ? (
               <Grid item xs={12} style={{ margin: 10 }}>
                 <Box
                   sx={{
-                    display:"flex",
-                    justifyContent:"center"
+                    width: '100%',
+                    height: '40px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
                   }}
                 >
-                  <TableWithFixedColumn
-                    rows={rows}
-                    columns={columns}
-                    maxWidth={1100}
-                    maxHeight={500}
-                  />
+                  <CircularProgress />
                 </Box>
               </Grid>
-            </>
-          )
-        }
-
-      </Grid>
+            ) : (
+              <>
+                <Link
+                  to={'/CompetitionCreate'}
+                  style={{
+                    textDecoration: 'none',
+                    marginLeft: 40,
+                    display: 'inline-block'
+                  }}
+                >
+                  <Button variant='outlined' startIcon={<AddIcon />}>
+                    Thêm cuộc thi mới
+                  </Button>
+                </Link>
+                <Grid item xs={12} style={{ margin: 10 }}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <TableWithFixedColumn
+                      rows={rows}
+                      columns={columns}
+                      maxWidth={1100}
+                      maxHeight={400}
+                    />
+                  </Box>
+                </Grid>
+              </>
+            )}
+          </Grid>
+        </>
+      )}
     </>
   )
 }
