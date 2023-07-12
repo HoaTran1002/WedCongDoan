@@ -118,22 +118,23 @@ const ExamStart = (): JSX.Element => {
             console.log('thiếu câu hỏi')
             setRemainingQuestion(mergedArr)
         }else{
-            localStorage.removeItem('ansOfQues')
-            callIPickerQuestions(async () => {
-                try {
-                    for (const item of ansOfQues) {
-                        await InsertPickerQuestion({
-                            quesId: item.quesId,
-                            cuid: competitionUserId?.cuid,
-                            answer: item.answer,
-                        });
-                    }
-                    console.log('Thành công');
-                } catch (error) {
-                    console.log(error);
-                }
-            })
-            navigate('/FinishedExam')
+            console.log(ansOfQues);
+            // localStorage.removeItem('ansOfQues')
+            // callIPickerQuestions(async () => {
+            //     try {
+            //         for (const item of ansOfQues) {
+            //             await InsertPickerQuestion({
+            //                 quesId: item.quesId,
+            //                 cuid: competitionUserId?.cuid,
+            //                 answer: item.answer,
+            //             });
+            //         }
+            //         console.log('Thành công');
+            //     } catch (error) {
+            //         console.log(error);
+            //     }
+            // })
+            // navigate('/FinishedExam')
         }
         setOpenSubmitExam(false)
     }

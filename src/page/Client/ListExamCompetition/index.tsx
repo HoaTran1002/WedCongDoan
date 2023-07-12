@@ -115,8 +115,9 @@ export default function Index(): JSX.Element {
                 console.log(error)
             }
         })
-        // navigate(`/ExamStart?id=${1014}&comId=${comId}`)
-        navigate(`/ExamStart?id=${3}&comId=${comId}`)
+        // console.log(randomElement)
+        navigate(`/ExamStart?id=${randomElement.examId}&comId=${comId}`)
+        // navigate(`/ExamStart?id=${3}&comId=${comId}`)
     }
     const formatDay = (dayOrigin: string): string => {
         const dateObj = new Date(dayOrigin);
