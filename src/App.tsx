@@ -27,6 +27,7 @@ import PrivateRoute from './routes/PrivateRoute'
 import SettingManage from '~/page/SettingManage'
 import DepartmentManage from '~/page/Department'
 import ExamsManage from '~/page/ExamsManage'
+import FinishedExam from '~/page/Client/ExamStart'
 import Error from './page/404'
 function App(): JSX.Element {
   return (

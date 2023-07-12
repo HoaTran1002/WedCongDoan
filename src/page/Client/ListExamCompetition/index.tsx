@@ -24,18 +24,22 @@ import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import InfoIcon from '@mui/icons-material/Info';
-
+import useAuth from '~/hook/useAuth'
 import { getAllCompExam } from '~/api/competitionExam'
 import { getAllExam } from '~/api/exam'
 import { getAllComp } from '~/api/competitionApi'
 import { getAllDep } from '~/api/departmentApi'
 import useFetch from '~/hook/useFetch'
+import {getAllCompUser, insertCompUser } from '~/api/CompetitionUser'
 export default function Index(): JSX.Element {
     const navigate = useNavigate();
+    const { profile } = useAuth()
     const [getAllCompExams, callAllCompExams] = useFetch();
     const [getAllExams, callAllExams] = useFetch();
     const [getAllComps,callAllComps] = useFetch();
     const [getAllDeps,callAllDeps] = useFetch();
+    const [getAllInsertCompUsers,callAllInsertCompUsers] = useFetch();
+    const [getAllCompUsers,callAllCompUsers] = useFetch();
     const queryParams = new URLSearchParams(location.search)
     const id = queryParams.get('id')
     const [comId, setComId] = React.useState<number>(Number(id))
@@ -58,7 +62,9 @@ export default function Index(): JSX.Element {
 
     const competition = getAllComps?.payload?.find((r:any)=>r.comId === comId);
     const listExam = getAllExams?.payload;
+    // Thang nay 
     const listComExam = getAllCompExams?.payload?.filter((r: any) => r.comId === comId);
+    
     const listDep = getAllDeps?.payload;
     console.log(competition)
     const getExamName=(id:number):string=>{
@@ -81,18 +87,36 @@ export default function Index(): JSX.Element {
     const handleClickExamOpen = (): void => {
         setOpenExam(true);
     };
-
     const handleCloseExam = (): void => {
         setOpenExam(false);
     };
 
+    const requestData: {
+        comId: number,
+        userId?:string
+      } = {
+        comId: comId,
+        userId: profile?.userId
+      }
+
     const handleOkExam = (): void => {
         setOpenExam(false)
+        // const listCUID = getAllCompUsers?.payload?.find((r:any)=>r.comId === comId )
         const randomIndex = Math.floor(Math.random() * listComExam.length);
         const randomElement = listComExam[randomIndex];
-        console.log(randomElement?.examId)
+        // console.log(randomElement?.examId)
         // navigate(`/ExamStart?id=${randomElement?.examId}`)
-        navigate(`/ExamStart?id=${1014}`)
+        //Đề thi test
+        callAllInsertCompUsers(async () => {
+            try {
+                await insertCompUser(requestData)
+                console.log('thành công')
+            } catch (error) {
+                console.log(error)
+            }
+        })
+        // navigate(`/ExamStart?id=${1014}&comId=${comId}`)
+        navigate(`/ExamStart?id=${3}&comId=${comId}`)
     }
     const formatDay = (dayOrigin: string): string => {
         const dateObj = new Date(dayOrigin);

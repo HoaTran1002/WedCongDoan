@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Layout from '~/components/layout/Layout'
 import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
@@ -29,349 +29,290 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import CloseIcon from '@mui/icons-material/Close';
 import MenuIcon from '@mui/icons-material/Menu';
-interface Question{
-    idQues:number,
-    contentQues:string,
-    typeQues:string,
-    AnsOfQues:string
+import { getAllCompUser } from '~/api/CompetitionUser'
+import { getAllQues } from '~/api/question'
+import { InsertPickerQuestion } from '~/api/PickerQuestions'
+import useFetch from '~/hook/useFetch'
+import TimerCount from './timeCounting'
+import useAuth from '~/hook/useAuth'
+interface Question {
+    idQues: number,
+    contentQues: string,
+    typeQues: string,
+    AnsOfQues: string
 }
 
-const listQuestion: Question[]=[
-    {
-        idQues: 1,
-        contentQues: 'Tôi đi học ngày 12 tháng 5, tôi mấy tuổi?',
-        typeQues: 'radio',
-        AnsOfQues: '15 tuổi - 21 tuổi - 72 tuổi - 99 tuổi',
-      },
-      {
-        idQues: 2,
-        contentQues: 'Hãy cho biết tên địa danh nổi tiếng ở Paris?',
-        typeQues: 'radio',
-        AnsOfQues: 'Eiffel Tower - Louvre Museum - Champs-Élysées - Notre-Dame Cathedral',
-      },
-      {
-        idQues: 3,
-        contentQues: 'Ngôn ngữ chính thức của Brazil là gì?',
-        typeQues: 'radio',
-        AnsOfQues: 'Tiếng Bồ Đào Nha - Tiếng Tây Ban Nha - Tiếng Pháp - Tiếng Anh',
-      },
-      {
-        idQues: 4,
-        contentQues: 'Ai là người đầu tiên bước chân lên Mặt Trăng?',
-        typeQues: 'radio',
-        AnsOfQues: 'Neil Armstrong - Buzz Aldrin - Michael Collins - Alan Shepard',
-      },
-      {
-        idQues: 5,
-        contentQues: 'Thủ đô của Nhật Bản là gì?',
-        typeQues: 'radio',
-        AnsOfQues: 'Tokyo - Osaka - Kyoto - Hiroshima',
-      },
-      {
-        idQues: 6,
-        contentQues: 'Ai là tác giả cuốn tiểu thuyết "Đại gia Gatsby"?',
-        typeQues: 'radio',
-        AnsOfQues: 'F. Scott Fitzgerald - Ernest Hemingway - Harper Lee - J.R.R. Tolkien',
-      },
-      {
-        idQues: 7,
-        contentQues: 'Bộ phim nào là bộ phim đầu tiên trong Vũ trụ Điện ảnh Marvel?',
-        typeQues: 'radio',
-        AnsOfQues: 'Iron Man - Thor - Captain America: The First Avenger - The Incredible Hulk',
-      },
-      {
-        idQues: 8,
-        contentQues: 'Quốc gia nào được biết đến với biệt danh "Đất nước mặt trời mọc"?',
-        typeQues: 'radio',
-        AnsOfQues: 'Nhật Bản - Hàn Quốc - Trung Quốc - Thái Lan',
-      },
-      {
-        idQues: 9,
-        contentQues: 'Ai là vị vua của ngôi trường Iron Throne trong series truyền hình Game of Thrones?',
-        typeQues: 'radio',
-        AnsOfQues: 'Robert Baratheon - Joffrey Baratheon - Tommen Baratheon - Stannis Baratheon',
-      },
-      {
-        idQues: 10,
-        contentQues: 'Điện thoại di động nào được công ty Apple sản xuất?',
-        typeQues: 'radio',
-        AnsOfQues: 'iPhone - Galaxy - Pixel - Xperia',
-      },
-      {
-        idQues: 11,
-        contentQues: 'Loạt phim nào là loạt phim hoàn thành của đạo diễn Christopher Nolan?',
-        typeQues: 'radio',
-        AnsOfQues: 'The Dark Knight Trilogy - The Matrix Trilogy - The Bourne Trilogy - The Lord of the Rings Trilogy',
-      },
-      {
-        idQues: 12,
-        contentQues: 'Ai là người sáng lập công ty Microsoft?',
-        typeQues: 'radio',
-        AnsOfQues: 'Bill Gates - Steve Jobs - Mark Zuckerberg - Larry Page',
-      },
-      {
-        idQues: 13,
-        contentQues: 'Quốc gia nào là chủ nhà của Giải vô địch bóng đá World Cup 2018?',
-        typeQues: 'radio',
-        AnsOfQues: 'Nga - Pháp - Đức - Brazil',
-      },
-      {
-        idQues: 14,
-        contentQues: 'Ai là người thứ 45 giữ chức vụ Tổng thống Hoa Kỳ?',
-        typeQues: 'radio',
-        AnsOfQues: 'Donald Trump - Joe Biden - Barack Obama - George W. Bush',
-      },
-      {
-        idQues: 15,
-        contentQues: 'Quốc gia nào là quê hương của nhà hát La Scala?',
-        typeQues: 'radio',
-        AnsOfQues: 'Ý - Pháp - Đức - Nga',
-      },
-      {
-        idQues: 16,
-        contentQues: 'Tên đầy đủ của tổ chức phi lợi nhuận được viết tắt là "UNICEF" là gì?',
-        typeQues: 'radio',
-        AnsOfQues: 'Fonds des Nations unies pour l\'enfance - United Nations International Children\'s Emergency Fund - Universal Children\'s Fund - Union for Child Education',
-      },
-      {
-        idQues: 17,
-        contentQues: 'Ai là nhà khoa học phát minh ra đèn điện?',
-        typeQues: 'radio',
-        AnsOfQues: 'Thomas Edison - Alexander Graham Bell - Albert Einstein - Isaac Newton',
-      },
-      {
-        idQues: 18,
-        contentQues: 'Quốc gia nào là quê hương của nhà văn người Nga Leo Tolstoy?',
-        typeQues: 'radio',
-        AnsOfQues: 'Nga - Pháp - Đức - Ý',
-      },
-      {
-        idQues: 19,
-        contentQues: 'Ai là tác giả cuốn tiểu thuyết "Harry Potter"?',
-        typeQues: 'radio',
-        AnsOfQues: 'J.K. Rowling - Stephenie Meyer - Suzanne Collins - George R.R. Martin',
-      },
-      {
-        idQues: 20,
-        contentQues: 'Quốc gia nào có diện tích lãnh thổ lớn nhất trên thế giới?',
-        typeQues: 'radio',
-        AnsOfQues: 'Nga - Trung Quốc - Canada - Mỹ',
-      },
-      {
-        idQues: 21,
-        contentQues: 'Các ngôn ngữ lập trình phổ biến là?',
-        typeQues: 'checkbox',
-        AnsOfQues: 'C++ - Java - Python - JavaScript',
-      },
-      {
-        idQues: 22,
-        contentQues: 'Các môn học khoa học gồm?',
-        typeQues: 'checkbox',
-        AnsOfQues: 'Toán học - Hóa học - Vật lý - Sinh học',
-      },
-      {
-        idQues: 23,
-        contentQues: 'Những ngày trong tuần là?',
-        typeQues: 'checkbox',
-        AnsOfQues: 'Thứ Hai - Thứ Ba - Thứ Tư - Thứ Năm - Thứ Sáu - Thứ Bảy - Chủ Nhật',
-      },
-      {
-        idQues: 24,
-        contentQues: 'Những ngôn ngữ lập trình web là?',
-        typeQues: 'checkbox',
-        AnsOfQues: 'HTML - CSS - JavaScript - PHP - Python',
-      },
-      {
-        idQues: 25,
-        contentQues: 'Các môn học xã hội gồm?',
-        typeQues: 'checkbox',
-        AnsOfQues: 'Lịch sử - Địa lý - Văn học - Khoa học xã hội',
-      },
-]
-
 const ExamStart = (): JSX.Element => {
+    // localStorage.setItem('ansOfQues', JSON.stringify([]));
     const navigate = useNavigate();
+    const { profile } = useAuth();
+    // const [getAllComExams,callAllComExams] = useFetch()
     const queryParams = new URLSearchParams(location.search)
     const id = queryParams.get('id')
+    const comId = Number(queryParams.get('comId'))
     const [examId, setExamId] = React.useState<number>(Number(id))
-    const [openSubmitExam,setOpenSubmitExam] = React.useState(false)
-    const [openExitExam,setOpenExitExam] = React.useState(false)
-    const [openNavbar,setOpenNavbar] = React.useState(false)
-    const [quesitionCheck,setQuesitionCheck] = React.useState<number>(listQuestion[0].idQues)
-    const [quesContain,setQuesContain] = React.useState(listQuestion.find(r=>r.idQues === listQuestion[0].idQues))
-    const [timeLeft, setTimeLeft] = React.useState<number>(() => {
-        const startTime = localStorage.getItem("startTime");
-        if (startTime) {
-          const timePassed = (Date.now() - Number(startTime)) / 1000;
-          const timeRemaining = Math.max(60 * 60 - timePassed, 0);
-          return timeRemaining;
-        }
-        return 60 * 60;
-    });
+    const [getAllQue, callAllQue] = useFetch()
+    const [getAllCompUsers, callCompUsers] = useFetch()
+    const [getAllIPickerQuestions, callIPickerQuestions] = useFetch()
+    const [openSubmitExam, setOpenSubmitExam] = React.useState(false)
+    const [openExitExam, setOpenExitExam] = React.useState(false)
+    const [openNavbar, setOpenNavbar] = React.useState(false)
+    const questions = getAllQue?.payload?.filter((r: any) => r.examId === examId)
+    const [remainingQuestion, setRemainingQuestion] = useState<any>([])
+    const competitionUserId = getAllCompUsers?.payload?.find((r: any) => r.comId === comId && r.userId === profile?.userId)
+    const firstElement = questions?.find(() => true);
+    const [idQuesExam, setIdQuesExam] = React.useState<number>(0)
+    const [examIndex, setExamIndex] = React.useState<number>(1)
+    const [quesContain, setQuesContain] = React.useState(firstElement)
+    const [questionActive, setQuestionActive] = React.useState<any>([])
+    const [pickerQuestion, setPickerQuestion] = React.useState<any>([])
+    const [defaultCheck, setDefaultCheck] = React.useState<string>('')
+    const [change, setChange] = React.useState<boolean>(true)
+    // localStorage.setItem('ansOfQues', JSON.stringify(newListQuestions))
+    // console.log(listNewQuestion,questions)
 
-    const formatTime = (time:number):string => {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${minutes.toString().padStart(2, "0")} : ${seconds.toString().padStart(2, "0")}`;
-    };
+    // console.log(getAllQue?.payload)
+    // console.log(getAllQue?.payload?.filter((r:any)=>r.examId === examId))
+    // console.log(questionActive)
 
-    const changeQuestion= (id:number):void=>{
-        setQuesitionCheck(id)
+    //===========================================
+    const changeQuestion = (id: number, index: number): void => {
+        setExamIndex(index + 1)
+        const ques = questions?.find((r: any) => r.quesId === id);
+        setIdQuesExam(id)
+        setQuestionActive(ques)
+        console.log(id, ques)
+    }
+    const handelPrevQues = (id: number, index: number): void => {
+        const ques = questions?.find((r: any) => r.quesId === id);
+        setQuestionActive(ques)
+        setExamIndex(index - 1)
+    }
+    const handelNextQues = (id: number, index: number): void => {
+        const ques = questions?.find((r: any) => r.quesId === id);
+        setQuestionActive(ques)
+        setExamIndex(index + 1)
     }
 
-    const handelPrevQues= (id:number):void=>{
-        setQuesitionCheck(id - 1)
-    }
-    const handelNextQues= (id:number):void=>{
-        setQuesitionCheck(id + 1)
-    }
-
-    const handleCloseSubmitExam =():void=>{
+    //==================================================
+    const handleCloseSubmitExam = (): void => {
         setOpenSubmitExam(false)
     }
 
-    const handleOpenSubmitExam =():void=>{
+    const handleOpenSubmitExam = (): void => {
         setOpenSubmitExam(true)
     }
 
-    const handleOKSubmitExam =():void=>{
+
+
+    const handleOKSubmitExam = (): void => {
+        const localStorageData = localStorage.getItem('ansOfQues');
+        const ansOfQues = localStorageData ? JSON.parse(localStorageData) : [];
+        const mergedArr = [...ansOfQues, ...questions].filter(
+            (item) =>
+                !ansOfQues.some((x:any) => x.quesId === item.quesId) ||
+                !questions.some((x:any) => x.quesId === item.quesId)
+        );
+        console.log(mergedArr)
+        if(mergedArr.length !== 0){
+            console.log('thiếu câu hỏi')
+            setRemainingQuestion(mergedArr)
+        }else{
+            localStorage.removeItem('ansOfQues')
+            callIPickerQuestions(async () => {
+                try {
+                    for (const item of ansOfQues) {
+                        await InsertPickerQuestion({
+                            quesId: item.quesId,
+                            cuid: competitionUserId?.cuid,
+                            answer: item.answer,
+                        });
+                    }
+                    console.log('Thành công');
+                } catch (error) {
+                    console.log(error);
+                }
+            })
+            navigate('/FinishedExam')
+        }
         setOpenSubmitExam(false)
     }
 
-    const handleCloseExitExam =():void=>{
+    const handleCloseExitExam = (): void => {
         setOpenExitExam(false)
     }
 
-    const handleOpenExitExam =():void=>{
+    const handleOpenExitExam = (): void => {
         setOpenExitExam(true)
     }
 
-    const handleOKExitExam =():void=>{
+    const handleOKExitExam = (): void => {
         setOpenExitExam(false)
         navigate('/ListExamCompetition')
     }
-    const handelCloseNavbar=():void=>{
+
+    //=======================================
+    const handelCloseNavbar = (): void => {
         setOpenNavbar(false)
     }
-    const handelOpenNavbar=():void=>{
+    const handelOpenNavbar = (): void => {
         setOpenNavbar(true)
     }
-    React.useEffect(() => {
-        if (!localStorage.getItem("startTime")) {
-          localStorage.setItem("startTime", Date.now().toString());
+    //=======================================
+    const handleChangeAnswerQuestion = (event: React.ChangeEvent<HTMLInputElement>): void => {
+
+        const ansOfQuesString = localStorage.getItem('ansOfQues');
+        const ansOfQues = ansOfQuesString ? JSON.parse(ansOfQuesString) : [];
+        const index = ansOfQues?.findIndex((r: any) => r.quesId === idQuesExam);
+        console.log(ansOfQues, index, idQuesExam)
+        if (ansOfQues.find((r: any) => r.quesId === idQuesExam) !== undefined || index !== -1) {
+            ansOfQues[index] = {
+                quesId: idQuesExam,
+                answer: event.target.value
+            }
+            console.log('trùng')
+        } else {
+            ansOfQues.push({
+                quesId: idQuesExam,
+                answer: event.target.value,
+                checked: true
+            })
+            console.log('không trùng')
         }
-        
-        const intervalId = setInterval(() => {
-            setTimeLeft((timeLeft) => {
-                if (timeLeft === 0) {
-                  localStorage.removeItem("startTime");
-                  return 0;
-                }
-                return Math.max(timeLeft - 1, 0);
-              });
-        }, 1000);
-        
-        return () => clearInterval(intervalId);
-      }, []);
+        console.log(ansOfQues, index, idQuesExam)
+        localStorage.setItem('ansOfQues', JSON.stringify(ansOfQues))
+        setChange(r => !r)
+    }
+
+    // React.useEffect(() => {
+    //     setQuesContain(listQuestion.find(r=>r.idQues === quesitionCheck))
+    // }, [quesitionCheck]);
+    // React.useEffect(()=>{
+    //     callAllComExams(getAllCompExam)
+    // })
+
+
 
     React.useEffect(() => {
-        setQuesContain(listQuestion.find(r=>r.idQues === quesitionCheck))
-    }, [quesitionCheck]);
+        // console.log(questions)
+        setQuestionActive(firstElement)
+        setIdQuesExam(firstElement?.quesId)
+        // localStorage.setItem('ansOfQues',JSON.stringify(questions))
+    }, [getAllQue?.loading])
+    React.useEffect(() => {
+        callCompUsers(getAllCompUser)
+    }, []);
+    React.useEffect(() => {
+        callAllQue(getAllQues)
+    }, []);
+
+    React.useEffect(() => {
+        const ansOfQuesString = localStorage.getItem('ansOfQues');
+        const ansOfQues = ansOfQuesString ? JSON.parse(ansOfQuesString) : [];
+        const itemPicker = ansOfQues.find((r: any) => r.quesId === idQuesExam);
+        if (itemPicker) {
+            setDefaultCheck(itemPicker.answer.trim());
+        } else {
+            setDefaultCheck('');
+        }
+        setPickerQuestion(ansOfQues);
+        // console.log(ansOfQues, idQuesExam, itemPicker, defaultCheck);
+    }, [idQuesExam, change]);
+
+
+
+
+    // React.useEffect(()=>{
+    //     const ansOfQuesString = localStorage.getItem('ansOfQues');
+    //     const ansOfQues = ansOfQuesString ? JSON.parse(ansOfQuesString) : [];
+    //     console.log(ansOfQues)
+    //     setPickerQuestion(ansOfQues)
+    // },[])
+    // React.useEffect(()=>{
+    //     localStorage.setItem('ansOfQues', JSON.stringify([]));
+    // },[])
     return (
         <>
-            <Box 
+            <Box
                 sx={{
-                    display:"flex",
-                    alignItems:"center",
-                    justifyContent:"space-between",
-                    padding:'10px',
-                    backgroundColor:"#e1eef4"
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    padding: '10px',
+                    backgroundColor: "#e1eef4"
                 }}
             >
                 <Box
                     sx={{
-                        display:{xs:'flex',md:"none"},
-                        alignItems:"center",
-                        justifyContent:"center"
+                        display: { xs: 'flex', md: "none" },
+                        alignItems: "center",
+                        justifyContent: "center"
                     }}
                     onClick={handelOpenNavbar}
                 >
-                    <MenuIcon className='color-primary' sx={{fontSize:"30px"}}/>
+                    <MenuIcon className='color-primary' sx={{ fontSize: "30px" }} />
                 </Box>
                 <Box
                     sx={{
-                        display:"flex",
-                        alignItems:"center",
-                        justifyContent:"space-between",
-                        gap:"50px"
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        gap: "50px"
                     }}
                 >
-                    <Box 
+                    <Box
                         sx={{
-                            display:{xs:"none",md:"block"},
-                            width:"100%",
-                            flex:"1"
+                            display: { xs: "none", md: "block" },
+                            width: "100%",
+                            flex: "1"
                         }}
                     >
                         <Box>
-                            <span 
+                            <span
                                 style={{
-                                    color:"#666",
-                                    fontWeight:"600",
-                                    fontSize:"17px"
+                                    color: "#666",
+                                    fontWeight: "600",
+                                    fontSize: "17px"
                                 }}
                             >
                                 Khoa: &nbsp;
                             </span>
-                            <span style={{color:"#1160ba",fontWeight:"600",fontSize:"18px"}}>Công nghệ Thông tin</span>
+                            <span style={{ color: "#1160ba", fontWeight: "600", fontSize: "18px" }}>Công nghệ Thông tin</span>
                         </Box>
                         <Box>
-                            <span 
+                            <span
                                 style={{
-                                    color:"#666",
-                                    fontWeight:"600",
-                                    fontSize:"17px"
+                                    color: "#666",
+                                    fontWeight: "600",
+                                    fontSize: "17px"
                                 }}
                             >
                                 Cuộc thi: &nbsp;
                             </span>
-                            <span style={{color:"#1160ba",fontWeight:"600",fontSize:"18px"}}>Công nghệ chuyển đổi số</span>
+                            <span style={{ color: "#1160ba", fontWeight: "600", fontSize: "18px" }}>Công nghệ chuyển đổi số</span>
                         </Box>
                         <Box>
-                            <span 
+                            <span
                                 style={{
-                                    color:"#666",
-                                    fontWeight:"600",
-                                    fontSize:"17px"
+                                    color: "#666",
+                                    fontWeight: "600",
+                                    fontSize: "17px"
                                 }}
                             >
                                 Đề thi: &nbsp;
                             </span>
-                            <span style={{color:"#1160ba",fontWeight:"600",fontSize:"18px"}}>1</span>
+                            <span style={{ color: "#1160ba", fontWeight: "600", fontSize: "18px" }}>1</span>
                         </Box>
-                        
+
                     </Box>
-                    <Box>
-                        <Box
-                            component='span'
-                            sx={{
-                                display:{xs:"none",md:"inline"},
-                                color:"#666",
-                                fontWeight:"600",
-                                fontSize:"17px"
-                            }}
-                        >
-                            Thời gian còn lại: &nbsp;
-                        </Box>
-                        <div style={{color:"#1160ba",fontWeight:"600",fontSize:"30px"}}>{formatTime(timeLeft)}</div>
-                    </Box>
+                    <TimerCount />
                 </Box>
                 <Box
                     sx={{
-                        display:"flex",
-                        gap:{xs:'10px',md:"20px"},
-                        flexDirection:'row',
-                        mr:{xs:0,md:5}
+                        display: "flex",
+                        gap: { xs: '10px', md: "20px" },
+                        flexDirection: 'row',
+                        mr: { xs: 0, md: 5 }
                     }}
                 >
                     <Button variant='contained' onClick={handleOpenSubmitExam}>Nộp bài</Button>
@@ -379,204 +320,206 @@ const ExamStart = (): JSX.Element => {
                 </Box>
             </Box>
             <Box
-                className={`${openNavbar ? 'active_open_navbar_mobile_Exam':''}`}
+                className={`${openNavbar ? 'active_open_navbar_mobile_Exam' : ''}`}
                 sx={navbarMoblie}
             >
-                <Box 
+                <Box
                     sx={{
-                        position:"absolute",
-                        right:0,
-                        top:0,
-                        padding:"10px"
+                        position: "absolute",
+                        right: 0,
+                        top: 0,
+                        padding: "10px"
                     }}
                     onClick={handelCloseNavbar}
                 >
-                    <CloseIcon sx={{color:"red",fontSize:"30px"}}/>
+                    <CloseIcon sx={{ color: "red", fontSize: "30px" }} />
                 </Box>
-                <Box 
+                <Box
                     sx={{
-                        mt:6
+                        mt: 6
                     }}
                 >
                     <Box
                         sx={{
-                            backgroundColor:"#e0f6ff",
-                            display:"flex",
-                            alignItems:"center",
-                            flexDirection:"column",
-                            borderRadius:"5px",
-                            padding:"10px",
-                            gap:"10px",
-                            height:"70vh"
+                            backgroundColor: "#e0f6ff",
+                            display: "flex",
+                            alignItems: "center",
+                            flexDirection: "column",
+                            borderRadius: "5px",
+                            padding: "10px",
+                            gap: "10px",
+                            height: "70vh"
                         }}
                     >
                         <Box
                             component='span'
                             sx={{
-                                display:"block",
-                                color:"#1565c0",
-                                fontSize:"19px",
-                                fontWeight:"600"
+                                display: "block",
+                                color: "#1565c0",
+                                fontSize: "19px",
+                                fontWeight: "600"
                             }}
                         >
                             Số câu hỏi
                         </Box>
                         <Box
                             sx={{
-                                backgroundColor:"white",
-                                borderRadius:"5px",
-                                width:"100%",
-                                height:"100%",
-                                padding:"8px",
-                                display:"flex",
-                                alignItems:"flex-start",
-                                alignContent:"flex-start",
-                                justifyContent:"space-evenly",
-                                flexWrap:"wrap",
-                                gap:'15px',
-                                overflowY:"scroll"
+                                backgroundColor: "white",
+                                borderRadius: "5px",
+                                width: "100%",
+                                height: "100%",
+                                padding: "8px",
+                                display: "flex",
+                                alignItems: "flex-start",
+                                alignContent: "flex-start",
+                                justifyContent: "flex-start",
+                                flexWrap: "wrap",
+                                gap: '15px',
+                                overflowY: "scroll"
                             }}
                         >
                             {
-                                listQuestion.map((row,index)=>(
+                                questions?.map((row: any, index: any) => (
+
                                     <Box
                                         key={index}
-                                        className={row.idQues === quesitionCheck ? 'button-exam-ques-active' : ''}
+                                        className={index + 1 === examIndex ? 'button-exam-ques-active' : ''}
                                         component='button'
-                                        onClick={():void=>changeQuestion(row.idQues)}
+                                        onClick={(): void => changeQuestion(row.quesId, index)}
                                         sx={{
-                                            borderRadius:"5px",
-                                            border:"2px solid #1565c0",
-                                            backgroundColor:"#e0f6ff",
-                                            fontSize:"16px",
-                                            width:"40px",
-                                            height:"40px",
-                                            color:"#1565c0",
-                                            cursor:"pointer",
-                                            display:"flex",
-                                            alignItems:"center",
-                                            justifyContent:"center"
+                                            borderRadius: "5px",
+                                            border: remainingQuestion.some((x:any)=>x.quesId === row.quesId)?"2px solid red":"2px solid #1565c0",
+                                            backgroundColor:remainingQuestion.some((x:any)=>x.quesId === row.quesId)?'#ffebeb':'#e0f6ff',
+                                            fontSize: "16px",
+                                            width: "40px",
+                                            height: "40px",
+                                            color: remainingQuestion.some((x:any)=>x.quesId === row.quesId)?'red':'#1565c0',
+                                            cursor: "pointer",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center"
+                                            
                                         }}
                                     >
-                                        {row.idQues}
+                                        {index + 1}
                                     </Box>
                                 ))
                             }
                         </Box>
                     </Box>
-                    <Box 
+                    <Box
                         sx={{
-                            width:"100%",
-                            padding:'10px'
+                            width: "100%",
+                            padding: '10px'
                         }}
                     >
                         <Box>
-                            <span 
+                            <span
                                 style={{
-                                    color:"#666",
-                                    fontWeight:"600",
-                                    fontSize:"17px"
+                                    color: "#666",
+                                    fontWeight: "600",
+                                    fontSize: "17px"
                                 }}
                             >
                                 Khoa: &nbsp;
                             </span>
-                            <span style={{color:"#1160ba",fontWeight:"600",fontSize:"18px"}}>Công nghệ Thông tin</span>
+                            <span style={{ color: "#1160ba", fontWeight: "600", fontSize: "18px" }}>Công nghệ Thông tin</span>
                         </Box>
                         <Box>
-                            <span 
+                            <span
                                 style={{
-                                    color:"#666",
-                                    fontWeight:"600",
-                                    fontSize:"17px"
+                                    color: "#666",
+                                    fontWeight: "600",
+                                    fontSize: "17px"
                                 }}
                             >
                                 Cuộc thi: &nbsp;
                             </span>
-                            <span style={{color:"#1160ba",fontWeight:"600",fontSize:"18px"}}>Công nghệ chuyển đổi số</span>
+                            <span style={{ color: "#1160ba", fontWeight: "600", fontSize: "18px" }}>Công nghệ chuyển đổi số</span>
                         </Box>
                         <Box>
-                            <span 
+                            <span
                                 style={{
-                                    color:"#666",
-                                    fontWeight:"600",
-                                    fontSize:"17px"
+                                    color: "#666",
+                                    fontWeight: "600",
+                                    fontSize: "17px"
                                 }}
                             >
                                 Đề thi: &nbsp;
                             </span>
-                            <span style={{color:"#1160ba",fontWeight:"600",fontSize:"18px"}}>1</span>
+                            <span style={{ color: "#1160ba", fontWeight: "600", fontSize: "18px" }}>1</span>
                         </Box>
-                        
+
                     </Box>
                 </Box>
             </Box>
             <Container maxWidth={'xl'}>
-                <Grid container spacing={2} sx={{mt:1}}>
-                    <Grid item md={3} sx={{display:{xs:"none",md:"block"}}}>
+                <Grid container spacing={2} sx={{ mt: 1 }}>
+                    <Grid item md={3} sx={{ display: { xs: "none", md: "block" } }}>
                         <Box
                             sx={{
-                                backgroundColor:"#e0f6ff",
-                                display:"flex",
-                                alignItems:"center",
-                                flexDirection:"column",
-                                borderRadius:"5px",
-                                padding:"10px",
-                                gap:"10px",
-                                height:"70vh",
-                                overflowY:"scroll",
-                                "&::-webkit-scrollbar":{
-                                    display:"none"
+                                backgroundColor: "#e0f6ff",
+                                display: "flex",
+                                alignItems: "center",
+                                flexDirection: "column",
+                                borderRadius: "5px",
+                                padding: "10px",
+                                gap: "10px",
+                                height: "70vh",
+                                overflowY: "scroll",
+                                "&::-webkit-scrollbar": {
+                                    display: "none"
                                 }
                             }}
                         >
                             <Box
                                 component='span'
                                 sx={{
-                                    display:"block",
-                                    color:"#1565c0",
-                                    fontSize:"19px",
-                                    fontWeight:"600"
+                                    display: "block",
+                                    color: "#1565c0",
+                                    fontSize: "19px",
+                                    fontWeight: "600"
                                 }}
                             >
                                 Số câu hỏi
                             </Box>
                             <Box
                                 sx={{
-                                    backgroundColor:"white",
-                                    borderRadius:"5px",
-                                    width:"100%",
-                                    height:"100%",
-                                    padding:"8px",
-                                    display:"flex",
-                                    alignItems:"flex-start",
-                                    alignContent:"flex-start",
-                                    justifyContent:"space-evenly",
-                                    flexWrap:"wrap",
-                                    gap:'15px',
+                                    backgroundColor: "white",
+                                    borderRadius: "5px",
+                                    width: "100%",
+                                    height: "100%",
+                                    padding: "8px",
+                                    display: "flex",
+                                    alignItems: "flex-start",
+                                    alignContent: "flex-start",
+                                    justifyContent: "flex-start",
+                                    flexWrap: "wrap",
+                                    gap: '15px',
                                 }}
                             >
                                 {
-                                    listQuestion.map((row,index)=>(
+                                    questions?.map((row: any, index: number) => (
                                         <Box
                                             key={index}
-                                            className={row.idQues === quesitionCheck ? 'button-exam-ques-active' : ''}
+                                            className={index + 1 === examIndex ? 'button-exam-ques-active' : ''}
                                             component='button'
-                                            onClick={():void=>changeQuestion(row.idQues)}
+                                            onClick={(): void => changeQuestion(row.quesId, index)}
                                             sx={{
-                                                borderRadius:"5px",
-                                                border:"2px solid #1565c0",
-                                                backgroundColor:"#e0f6ff",
-                                                fontSize:"16px",
-                                                width:"40px",
-                                                height:"40px",
-                                                color:"#1565c0",
-                                                cursor:"pointer",
-                                                display:"flex",
-                                                alignItems:"center",
-                                                justifyContent:"center"
+                                                borderRadius: "5px",
+                                                border: "2px solid #1565c0",
+                                                backgroundColor: "#e0f6ff",
+                                                fontSize: "16px",
+                                                width: "40px",
+                                                height: "40px",
+                                                color: "#1565c0",
+                                                cursor: "pointer",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center"
                                             }}
                                         >
-                                            {row.idQues}
+                                            {index + 1}
                                         </Box>
                                     ))
                                 }
@@ -586,51 +529,75 @@ const ExamStart = (): JSX.Element => {
                     <Grid item md={9} xs={12}>
                         <Box
                             sx={{
-                                backgroundColor:"#3f89de",
-                                display:"flex",
-                                alignItems:"flex-start",
-                                flexDirection:"column",
-                                borderRadius:"5px",
-                                padding:"10px",
-                                gap:"10px",
-                                height:"80vh"
+                                backgroundColor: "#3f89de",
+                                display: "flex",
+                                alignItems: "flex-start",
+                                flexDirection: "column",
+                                borderRadius: "5px",
+                                padding: "10px",
+                                gap: "10px",
+                                height: "80vh"
                             }}
                         >
                             <Box
-                                component='span'
+                                component='div'
                                 sx={{
-                                    color:"white",
-                                    fontWeight:"600",
-                                    fontSize:"19px",
-                                    lineHeight:"30px"
+                                    color: "white",
+                                    fontWeight: "600",
+                                    fontSize: "20px",
+                                    lineHeight: "30px",
+                                    width:"100%"
                                 }}
                             >
-                                Câu {quesContain?.idQues}: {quesContain?.contentQues}
+                                <span>Câu {examIndex}: {questionActive?.quesDetail}</span>
+
+                                {
+                                    remainingQuestion?.find((r:any)=>r.quesId === idQuesExam)?
+                                    (
+                                        <Box
+                                            sx={{
+                                                backgroundColor:"#ffebeb",
+                                                color:"red",
+                                                fontWeight:"600",
+                                                width:"100%",
+                                                fontSize:"14px",
+                                                padding:"2px 10px",
+                                                borderRadius:"5px",
+                                                
+                                            }}
+                                        >
+                                            Câu hỏi bắt buộc
+                                        </Box>
+                                    ):(<></>)
+                                }
+                                
                             </Box>
                             <Box
                                 sx={{
-                                    backgroundColor:"white",
-                                    position:"relative",
-                                    borderRadius:"5px",
-                                    width:"100%",
-                                    height:"100%",
-                                    padding:"15px 30px 70px",
-                                    display:"flex",
-                                    flexDirection:"column"
+                                    backgroundColor: "white",
+                                    position: "relative",
+                                    borderRadius: "5px",
+                                    width: "100%",
+                                    height: "100%",
+                                    padding: "15px 30px 70px",
+                                    display: "flex",
+                                    flexDirection: "column"
                                 }}
                             >
                                 {
-                                    quesContain?.typeQues === 'radio'?(
+                                    questionActive?.quesTId === 1 ? (
                                         <FormControl>
                                             <RadioGroup
                                                 aria-labelledby="demo-radio-buttons-group-label"
                                                 name="radio-buttons-group"
+                                                value={defaultCheck}
+                                                onChange={handleChangeAnswerQuestion}
                                             >
                                                 {
-                                                    quesContain?.AnsOfQues.split('-').map((row,index)=>(
+                                                    questionActive?.ansOfQues.split('<====>').map((row: any, index: number) => (
                                                         <FormControlLabel
                                                             key={index}
-                                                            value={row}
+                                                            value={row.trim()}
                                                             control={<Radio />}
                                                             label={row}
                                                         />
@@ -638,14 +605,14 @@ const ExamStart = (): JSX.Element => {
                                                 }
                                             </RadioGroup>
                                         </FormControl>
-                                    ):(
-                                        <FormGroup key={quesContain?.idQues}>
+                                    ) : (
+                                        <FormGroup key={quesContain?.quesId}>
                                             {
-                                                quesContain?.AnsOfQues.split('-').map((row,index)=>(
+                                                questionActive?.ansOfQues?.split('<====>').map((row: any, index: number) => (
                                                     <FormControlLabel
-                                                        key={index} 
-                                                        control={<Checkbox/>} 
-                                                        label={row} 
+                                                        key={index}
+                                                        control={<Checkbox />}
+                                                        label={row.trim()}
                                                     />
                                                 ))
                                             }
@@ -654,48 +621,48 @@ const ExamStart = (): JSX.Element => {
                                 }
                                 <Box
                                     sx={{
-                                        position:"absolute",
-                                        bottom:"20px",
-                                        right:"20px",
-                                        display:"flex",
-                                        alignItems:"center",
-                                        gap:"20px"
+                                        position: "absolute",
+                                        bottom: "20px",
+                                        right: "20px",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "20px"
                                     }}
                                 >
                                     <Box
                                         component='button'
-                                        disabled={quesitionCheck === listQuestion[0].idQues}
+                                        disabled={examIndex === 1}
                                         sx={btn_next_prev}
-                                        onClick={():void=>handelPrevQues(quesitionCheck)}
+                                        onClick={(): void => handelPrevQues(questions, examIndex)}
                                     >
-                                        <KeyboardArrowLeftIcon/> 
+                                        <KeyboardArrowLeftIcon />
                                     </Box>
                                     <Box
                                         component='button'
                                         sx={{
-                                            width:"35px",
-                                            height:"35px",
-                                            border:"none",
-                                            outline:"none",
-                                            display:"flex",
-                                            alignItems:"center",
-                                            justifyContent:"center",
-                                            fontSize:"18px",
-                                            fontWeight:"600",
-                                            color:"#3f89de",
-                                            borderRadius:"10px",
-                                            backgroundColor:"#e0f6ff"
+                                            width: "35px",
+                                            height: "35px",
+                                            border: "none",
+                                            outline: "none",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            fontSize: "18px",
+                                            fontWeight: "600",
+                                            color: "#3f89de",
+                                            borderRadius: "10px",
+                                            backgroundColor: "#e0f6ff"
                                         }}
                                     >
-                                        {quesContain?.idQues}
+                                        {examIndex}
                                     </Box>
                                     <Box
                                         component='button'
-                                        disabled={quesitionCheck === listQuestion.length}
+                                        disabled={examIndex === questions?.length}
                                         sx={btn_next_prev}
-                                        onClick={():void=>handelNextQues(quesitionCheck)}
+                                        onClick={(): void => handelNextQues(idQuesExam, examIndex)}
                                     >
-                                        <KeyboardArrowRightIcon/> 
+                                        <KeyboardArrowRightIcon />
                                     </Box>
                                 </Box>
                             </Box>
@@ -713,9 +680,9 @@ const ExamStart = (): JSX.Element => {
                     {"Thông báo"}
                 </DialogTitle>
                 <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    Bạn muốn nộp bài thi của mình ? 
-                </DialogContentText>
+                    <DialogContentText id="alert-dialog-description">
+                        Bạn muốn nộp bài thi của mình ?
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button variant='contained' onClick={handleOKSubmitExam}>
@@ -731,13 +698,13 @@ const ExamStart = (): JSX.Element => {
                 aria-describedby="alert-dialog-description"
             >
                 <DialogTitle id="alert-dialog-title">
-                {"Cảnh báo"}
+                    {"Cảnh báo"}
                 </DialogTitle>
                 <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                    Bạn đang thoát phòng thi, bài thi của bạn vẫn sẽ tiếp tục <br/>
-                    Bạn có muốn thoát không ?
-                </DialogContentText>
+                    <DialogContentText id="alert-dialog-description">
+                        Bạn đang thoát phòng thi, bài thi của bạn vẫn sẽ tiếp tục <br />
+                        Bạn có muốn thoát không ?
+                    </DialogContentText>
                 </DialogContent>
                 <DialogActions>
                     <Button variant='contained' onClick={handleOKExitExam}>
@@ -749,15 +716,15 @@ const ExamStart = (): JSX.Element => {
             <Box
                 onClick={handelCloseNavbar}
                 sx={{
-                    position:"fixed",
-                    top:0,
-                    right:0,
-                    left:0,
-                    bottom:0,
-                    backgroundColor:"black",
-                    opacity:"0.3",
+                    position: "fixed",
+                    top: 0,
+                    right: 0,
+                    left: 0,
+                    bottom: 0,
+                    backgroundColor: "black",
+                    opacity: "0.3",
                     display: openNavbar ? "block" : "none",
-                    transition:"all 0.2s linear"
+                    transition: "all 0.2s linear"
                 }}
             >
 
@@ -768,31 +735,31 @@ const ExamStart = (): JSX.Element => {
 
 export default ExamStart
 
-const btn_next_prev:SxProps={
-    border:"none",
-    color:"white",
-    backgroundColor:"#3f89de",
-    borderRadius:"50px",
-    display:"flex",
-    alignItems:"center",
-    justifyContent:"center",
-    outline:"none",
-    cursor:"pointer",
-    padding:"5px 15px",
-    '&:disabled':{
-        opacity:"0.6"
+const btn_next_prev: SxProps = {
+    border: "none",
+    color: "white",
+    backgroundColor: "#3f89de",
+    borderRadius: "50px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    outline: "none",
+    cursor: "pointer",
+    padding: "5px 15px",
+    '&:disabled': {
+        opacity: "0.6"
     }
 }
 
-const navbarMoblie:SxProps={
-    position:"fixed",
-    top:0,
-    bottom:0,
-    left:0,
-    width:"300px",
-    backgroundColor:"white",
-    zIndex:"20",
-    transition:"all 0.2s linear",
-    transform:"translateX(-100%)",
-    opacity:"0"
+const navbarMoblie: SxProps = {
+    position: "fixed",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: "300px",
+    backgroundColor: "white",
+    zIndex: "20",
+    transition: "all 0.2s linear",
+    transform: "translateX(-100%)",
+    opacity: "0"
 }
