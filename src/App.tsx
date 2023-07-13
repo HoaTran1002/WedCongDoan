@@ -27,7 +27,7 @@ import PrivateRoute from './routes/PrivateRoute'
 import SettingManage from '~/page/SettingManage'
 import DepartmentManage from '~/page/Department'
 import ExamsManage from '~/page/ExamsManage'
-import FinishedExam from '~/page/Client/ExamStart'
+import FinishedExam from '~/page/Client/FinishedExam'
 import Error from './page/404'
 function App(): JSX.Element {
   return (
@@ -55,6 +55,7 @@ function App(): JSX.Element {
         <Route path='/HomeBlogDetail' element={<HomeBlogDetail />} />
         <Route path='/ListExamCompetition' element={<ListExamCompetition />} />
         <Route path='/ExamStart' element={<ExamStart />} />
+        <Route path='/FinishedExam' element={<FinishedExam />} />
 
         <Route path='/Listcompetition' element={<Listcompetition />} />
         <Route path='/TestSchedule' element={<TestSchedule />} />

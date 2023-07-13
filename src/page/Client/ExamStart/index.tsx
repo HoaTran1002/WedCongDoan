@@ -35,6 +35,8 @@ import { InsertPickerQuestion } from '~/api/PickerQuestions'
 import useFetch from '~/hook/useFetch'
 import TimerCount from './timeCounting'
 import useAuth from '~/hook/useAuth'
+import { getAllComp } from '~/api/competitionApi'
+import {InsertResult} from '~/api/resultApi'
 interface Question {
     idQues: number,
     contentQues: string,
@@ -43,7 +45,6 @@ interface Question {
 }
 
 const ExamStart = (): JSX.Element => {
-    // localStorage.setItem('ansOfQues', JSON.stringify([]));
     const navigate = useNavigate();
     const { profile } = useAuth();
     // const [getAllComExams,callAllComExams] = useFetch()
@@ -54,6 +55,8 @@ const ExamStart = (): JSX.Element => {
     const [getAllQue, callAllQue] = useFetch()
     const [getAllCompUsers, callCompUsers] = useFetch()
     const [getAllIPickerQuestions, callIPickerQuestions] = useFetch()
+    const [getAllIResult, callIResult] = useFetch()
+    const [getAllComps,callAllComps] = useFetch();
     const [openSubmitExam, setOpenSubmitExam] = React.useState(false)
     const [openExitExam, setOpenExitExam] = React.useState(false)
     const [openNavbar, setOpenNavbar] = React.useState(false)
@@ -67,13 +70,14 @@ const ExamStart = (): JSX.Element => {
     const [questionActive, setQuestionActive] = React.useState<any>([])
     const [pickerQuestion, setPickerQuestion] = React.useState<any>([])
     const [defaultCheck, setDefaultCheck] = React.useState<string>('')
+    const [competition,setCompetition] = React.useState<any>([])
     const [change, setChange] = React.useState<boolean>(true)
+    const [examTimes,setExamTimes] = React.useState(isNaN(parseInt(competition?.examTimes)) ? 0 : parseInt(competition?.examTimes));
     // localStorage.setItem('ansOfQues', JSON.stringify(newListQuestions))
     // console.log(listNewQuestion,questions)
 
-    // console.log(getAllQue?.payload)
+    // console.log(examTimes)
     // console.log(getAllQue?.payload?.filter((r:any)=>r.examId === examId))
-    // console.log(questionActive)
 
     //===========================================
     const changeQuestion = (id: number, index: number): void => {
@@ -106,6 +110,8 @@ const ExamStart = (): JSX.Element => {
 
 
     const handleOKSubmitExam = (): void => {
+        const endTime = new Date().toISOString();
+        const beginTime = localStorage.getItem('beginTime')
         const localStorageData = localStorage.getItem('ansOfQues');
         const ansOfQues = localStorageData ? JSON.parse(localStorageData) : [];
         const mergedArr = [...ansOfQues, ...questions].filter(
@@ -118,7 +124,7 @@ const ExamStart = (): JSX.Element => {
             console.log('thiếu câu hỏi')
             setRemainingQuestion(mergedArr)
         }else{
-            console.log(ansOfQues);
+            console.log(ansOfQues,questions);
             // localStorage.removeItem('ansOfQues')
             // callIPickerQuestions(async () => {
             //     try {
@@ -134,6 +140,35 @@ const ExamStart = (): JSX.Element => {
             //         console.log(error);
             //     }
             // })
+
+            const trueAnswer = ansOfQues.reduce((count:number,curr:any)=>{
+                const itemQues = questions.find((r:any)=>r.quesId === curr.quesId)
+                if(curr.answer === itemQues.trueAnswer) count++
+                return count;
+            },0)
+
+            const falseAnswer = ansOfQues.reduce((count:number,curr:any)=>{
+                const itemQues = questions.find((r:any)=>r.quesId === curr.quesId)
+                if(curr.answer !== itemQues.trueAnswer) count++
+                return count;
+            },0)
+
+            callIResult(async () => {
+                try {
+                    await InsertResult({
+                        cuid:competitionUserId?.cuid,
+                        endTimes:String(endTime),
+                        startTimes:String(beginTime),
+                        falseAns:falseAnswer,
+                        trueAns:trueAnswer
+                    });
+                }catch (error) {
+                    console.log(error);
+                }
+            }
+            )
+            // console.log(trueAnswer,falseAnswer,beginTime,endTime,competitionUserId?.cuid)
+
             // navigate('/FinishedExam')
         }
         setOpenSubmitExam(false)
@@ -149,7 +184,7 @@ const ExamStart = (): JSX.Element => {
 
     const handleOKExitExam = (): void => {
         setOpenExitExam(false)
-        navigate('/ListExamCompetition')
+        navigate(`/ListExamCompetition?id=${comId}`)
     }
 
     //=======================================
@@ -161,30 +196,40 @@ const ExamStart = (): JSX.Element => {
     }
     //=======================================
     const handleChangeAnswerQuestion = (event: React.ChangeEvent<HTMLInputElement>): void => {
-
         const ansOfQuesString = localStorage.getItem('ansOfQues');
         const ansOfQues = ansOfQuesString ? JSON.parse(ansOfQuesString) : [];
         const index = ansOfQues?.findIndex((r: any) => r.quesId === idQuesExam);
+        const mergedArr = [...ansOfQues, ...questions].filter(
+            (item) =>
+                !ansOfQues.some((x:any) => x.quesId === item.quesId) ||
+                !questions.some((x:any) => x.quesId === item.quesId)
+        );
         console.log(ansOfQues, index, idQuesExam)
         if (ansOfQues.find((r: any) => r.quesId === idQuesExam) !== undefined || index !== -1) {
             ansOfQues[index] = {
                 quesId: idQuesExam,
                 answer: event.target.value
             }
-            console.log('trùng')
+            // console.log('trùng')
         } else {
             ansOfQues.push({
                 quesId: idQuesExam,
                 answer: event.target.value,
-                checked: true
             })
-            console.log('không trùng')
+            // console.log('không trùng')
         }
-        console.log(ansOfQues, index, idQuesExam)
+        if(mergedArr.length !== 0){
+            setRemainingQuestion(mergedArr)
+        }
+        console.log(remainingQuestion)
         localStorage.setItem('ansOfQues', JSON.stringify(ansOfQues))
         setChange(r => !r)
     }
 
+    React.useEffect(()=>{
+        setExamTimes(isNaN(parseInt(competition?.examTimes)) ? 0 : parseInt(competition?.examTimes))
+    },[competition])
+    // console.log(competition)
     // React.useEffect(() => {
     //     setQuesContain(listQuestion.find(r=>r.idQues === quesitionCheck))
     // }, [quesitionCheck]);
@@ -206,7 +251,6 @@ const ExamStart = (): JSX.Element => {
     React.useEffect(() => {
         callAllQue(getAllQues)
     }, []);
-
     React.useEffect(() => {
         const ansOfQuesString = localStorage.getItem('ansOfQues');
         const ansOfQues = ansOfQuesString ? JSON.parse(ansOfQuesString) : [];
@@ -219,11 +263,18 @@ const ExamStart = (): JSX.Element => {
         setPickerQuestion(ansOfQues);
         // console.log(ansOfQues, idQuesExam, itemPicker, defaultCheck);
     }, [idQuesExam, change]);
-
-
-
-
-    // React.useEffect(()=>{
+    React.useEffect(() => {
+        if(!localStorage.getItem('beginTime')){
+            localStorage.setItem('beginTime', new Date().toISOString());
+        }
+        callAllComps(getAllComp);    
+    }, [])
+    React.useEffect(() => {
+        setCompetition(getAllComps?.payload?.find((r:any)=>r.comId === comId))
+    }, [getAllComps?.payload])
+    // const competition = getAllComps?.payload?.find((r:any)=>r.comId === comId);
+    // console.log(competition)
+     // React.useEffect(()=>{
     //     const ansOfQuesString = localStorage.getItem('ansOfQues');
     //     const ansOfQues = ansOfQuesString ? JSON.parse(ansOfQuesString) : [];
     //     console.log(ansOfQues)
@@ -306,7 +357,16 @@ const ExamStart = (): JSX.Element => {
                         </Box>
 
                     </Box>
-                    <TimerCount />
+                    {
+                        ( examTimes !== 0)?(
+                            <>
+                                <TimerCount examTimes={examTimes} />
+                            </>
+                        ):
+                        (
+                            <TimerCount examTimes={0} />
+                        )
+                    }
                 </Box>
                 <Box
                     sx={{
@@ -559,9 +619,9 @@ const ExamStart = (): JSX.Element => {
                                             sx={{
                                                 backgroundColor:"#ffebeb",
                                                 color:"red",
-                                                fontWeight:"600",
+                                                fontWeight:"500",
                                                 width:"100%",
-                                                fontSize:"14px",
+                                                fontSize:"15px",
                                                 padding:"2px 10px",
                                                 borderRadius:"5px",
                                                 

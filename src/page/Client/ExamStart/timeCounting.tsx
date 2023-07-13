@@ -3,16 +3,23 @@ import { Grid,
      Box, Typography, SxProps, Container, Button } from '@mui/material'
 
 
-const TimerCount = (): JSX.Element => {
+interface TimeCountingProps {
+    examTimes:number
+}
 
+const TimerCount: React.FC<TimeCountingProps> = ({
+    examTimes
+}) => {
+    // console.log(examTimes)
+    const [time,setTime] = React.useState(examTimes)
     const [timeLeft, setTimeLeft] = React.useState<number>(() => {
         const startTime = localStorage.getItem("startTime");
         if (startTime) {
           const timePassed = (Date.now() - Number(startTime)) / 1000;
-          const timeRemaining = Math.max(60 * 60 - timePassed, 0);
+          const timeRemaining = Math.max(time * 60 - timePassed, 0);
           return timeRemaining;
         }
-        return 60 * 60;
+        return time * 60;
     });
 
     const formatTime = (time:number):string => {
@@ -24,7 +31,6 @@ const TimerCount = (): JSX.Element => {
         if (!localStorage.getItem("startTime")) {
           localStorage.setItem("startTime", Date.now().toString());
         }
-        
         const intervalId = setInterval(() => {
             setTimeLeft((timeLeft) => {
                 if (timeLeft === 0) {
@@ -36,7 +42,10 @@ const TimerCount = (): JSX.Element => {
         }, 1000);
         
         return () => clearInterval(intervalId);
-    }, []);
+    }, [examTimes]);
+    React.useEffect(()=>{
+        setTime(examTimes)
+    },[examTimes])
     return (
         <Box>
             <Box
