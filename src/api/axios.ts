@@ -7,4 +7,3 @@ const server = axios.create({
 })
 
 export default server
-// http://103.98.161.6:5050/api'
