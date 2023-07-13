@@ -47,6 +47,9 @@ export default function Index(): JSX.Element {
   React.useEffect(() => {
     callAllComps(getAllComp)
   }, [])
+  React.useEffect(()=>{
+    localStorage.clear();
+  },[])
   const listComp = getAllComps?.payload
   const rowComp = listComp?.map((row: Competition) => ({
     comId: row.comId,
@@ -99,11 +102,10 @@ export default function Index(): JSX.Element {
     setStartIndex(0)
     setDepId(id)
   }
-
   const handleGoToExamComp = (id: number): void => {
+    localStorage.setItem('competitionId',JSON.stringify(id))
     navigate(`/ListExamCompetition?id=${id}`)
   }
-
   return (
     <Layout>
       <Container maxWidth={'xl'}>

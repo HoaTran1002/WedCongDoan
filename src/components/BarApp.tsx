@@ -23,17 +23,19 @@ import AdbIcon from '@mui/icons-material/Adb'
 import { Image } from '@mui/icons-material'
 import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd'
 import { ButtonGroup, Stack } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Index from '~/page'
 import { Grid, Box, Typography, SxProps, Container, Button } from '@mui/material'
 import FacebookIcon from '@mui/icons-material/Facebook';
 import YouTubeIcon from '@mui/icons-material/YouTube';
 import logo from '../assets/img/logo_CongDoan.png'
+import avata from '~/assets/img/avata.jpg'
 import bannerExam from '../assets/img/cuoc_thi_cong_doan_banner.png'
 import HomeIcon from '@mui/icons-material/Home';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import useAuth from '~/hook/useAuth'
 const drawerWidth = 250
 const pages = [
   { name: 'TRANG CHỦ', to: '/', iconComponent: <HomeIcon /> },
@@ -73,6 +75,8 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export default function SideBar(): JSX.Element {
   const theme = useTheme()
+  const navigate = useNavigate()
+  const {profile} = useAuth()
   const [open, setOpen] = React.useState(false)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
@@ -96,6 +100,9 @@ export default function SideBar(): JSX.Element {
     setOpen(false)
   }
 
+  const handleGoToHistoryComp = ():void =>{
+    navigate('/HistoryCompetition')
+  }
   return (
     <>
       <Box
@@ -287,25 +294,27 @@ export default function SideBar(): JSX.Element {
             ))}
           </Box>
         </Box>
-        <Box sx={{ flexGrow: 0, display: { md: 'flex',gap:"10px" } }}>
-          {/* <Link to={'/TestSchedule'} style={{height:"100%",display:"flex",alignItems:"center",justifyContent:"center",textDecoration:"none"}}>
-            <Button 
-              sx={{
-                color:"white",
-                borderColor:"white",
-                '&:hover':{
-                  borderColor:"white"
-                }
-              }} 
-              variant='outlined' startIcon={<CalendarMonthIcon/>}
-            >
-              LỊCH THI
-            </Button>
-          </Link> */}
-          <Tooltip title='tên user' >
-            <IconButton onClick={handleOpenUserMenu} sx={{ pr: 5 }}>
-              sd
-            </IconButton>
+        <Box sx={{ flexGrow: 0, display: { md: 'flex' },gap:"10px",alignItems:"center" }}>
+          <Tooltip title={profile?.userName} >
+            <Box
+              onClick={handleOpenUserMenu} 
+              sx={{ 
+                mr: 5,
+                width:'40px',
+                height:"40px",
+                overflow:"hidden",
+                borderRadius:"50%",
+                cursor:"pointer"
+              }}
+              >
+              <img 
+                src={avata} 
+                style={{
+                  width:'100%',
+                  height:"100%",
+                }}
+                alt="Avata" />
+            </Box>
           </Tooltip>
           <Menu
             sx={{ mt: '45px' }}
@@ -323,11 +332,9 @@ export default function SideBar(): JSX.Element {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign='center'>{setting}</Typography>
-              </MenuItem>
-            ))}
+            <MenuItem onClick={handleGoToHistoryComp}>
+              <Typography textAlign='center'>Lịch sử thi</Typography>
+            </MenuItem>
           </Menu>
         </Box>
       </Box>
