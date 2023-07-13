@@ -62,7 +62,6 @@ export default function Index(): JSX.Element {
 
     const competition = getAllComps?.payload?.find((r:any)=>r.comId === comId);
     const listExam = getAllExams?.payload;
-    // Thang nay 
     const listComExam = getAllCompExams?.payload?.filter((r: any) => r.comId === comId);
     
     const listDep = getAllDeps?.payload;
@@ -104,6 +103,7 @@ export default function Index(): JSX.Element {
         // const listCUID = getAllCompUsers?.payload?.find((r:any)=>r.comId === comId )
         const randomIndex = Math.floor(Math.random() * listComExam.length);
         const randomElement = listComExam[randomIndex];
+        
         // console.log(randomElement?.examId)
         // navigate(`/ExamStart?id=${randomElement?.examId}`)
         //Đề thi test
@@ -116,7 +116,14 @@ export default function Index(): JSX.Element {
             }
         })
         // console.log(randomElement)
-        navigate(`/ExamStart?id=${randomElement.examId}&comId=${comId}`)
+        if(!localStorage.getItem('examIdRD')){
+            localStorage.setItem('examIdRD',JSON.stringify(randomElement.examId))
+            navigate(`/ExamStart?id=${randomElement.examId}&comId=${comId}`)
+        }else{
+            const Id = localStorage.getItem('examIdRD')
+            const currExamId =Id?( Number(JSON.parse(Id))) : 0;
+            navigate(`/ExamStart?id=${currExamId}&comId=${comId}`)
+        }
         // navigate(`/ExamStart?id=${3}&comId=${comId}`)
     }
     const formatDay = (dayOrigin: string): string => {
