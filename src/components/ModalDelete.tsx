@@ -63,7 +63,7 @@ const ModalDelete = ({
 
   return (
     <div>
-      <LightTooltip placement='left' title='xoá câu hỏi'>
+      <LightTooltip placement='left' title='xoá '>
         <Button
           sx={{
             background: 'white',

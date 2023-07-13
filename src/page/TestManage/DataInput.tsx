@@ -12,7 +12,7 @@ interface IExam {
   examId: number
   examName: string
 }
-const DataInput = (): JSX.Element => {
+const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(true)
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
@@ -67,7 +67,8 @@ const DataInput = (): JSX.Element => {
           insertCompExamCall(async (): Promise<void> => {
             insertCompExam(requesInsertCompExam)
           })
-          setShowSuccess(true)
+          await setShowSuccess(true)
+          await setLoad()
           console.log('data response:' + nameExamInsertState.payload)
         } catch (error) {
           setShowError(true)

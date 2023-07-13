@@ -65,7 +65,7 @@ const Index = (): JSX.Element => {
     })
     await setMesagge('Xoá thành công!')
     await setSeverity('info')
-    await setLoading(!loading)
+    setLoading(!loading)
   }
   const submitEditExamName = async ({
     examId
@@ -76,13 +76,13 @@ const Index = (): JSX.Element => {
       examId: examId,
       examName: nameExam
     }
-    console.log(reques)
+
     await setEditExamState(async (): Promise<void> => {
       await EditExam(reques)
     })
     await setMesagge('sửa thành công!')
     await setSeverity('info')
-    setLoading(!loading)
+    await setLoading(!loading)
   }
   if (editExamState.error) {
     setMesagge('sửa thất bại!')
@@ -95,7 +95,11 @@ const Index = (): JSX.Element => {
       <LayoutAdmin>
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
           <ModalAdd Title='THÊM MỚI ĐỀ THI'>
-            <DataInput />
+            <DataInput
+              setLoad={(): void => {
+                setLoading(!loading)
+              }}
+            />
           </ModalAdd>
 
           <Grid
