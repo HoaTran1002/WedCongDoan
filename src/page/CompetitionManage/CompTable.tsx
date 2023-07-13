@@ -32,7 +32,10 @@ interface Competition {
   userQuan: number
   depId: number
 }
-
+interface IDep {
+  depId: number
+  depName: string
+}
 const CompTable = (): JSX.Element => {
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
@@ -41,10 +44,16 @@ const CompTable = (): JSX.Element => {
   const [deleteComp, deleteCompCall] = useFetch()
   const depList = deps.payload || []
   const [loading, setLoading] = useState<boolean>(false)
+  React.useEffect(() => {
+    depCall(getAllDep)
+  }, [loading])
+  React.useEffect(() => {
+    callComp(getAllComp)
+  }, [loading])
 
   const getNameDep = (idDep: number): string => {
-    const dep = depList?.find((item: any) => item.depId == idDep)
-    return dep.depName || 'chưa có đơn vị nào'
+    const dep: IDep = depList?.find((item: any) => item.depId == idDep)
+    return dep.depName || ''
   }
   const handleCloseSuccess = (): void => {
     setShowSuccess(false)
@@ -148,118 +157,114 @@ const CompTable = (): JSX.Element => {
       depName: getNameDep(item.depId + 0)
     })) || []
 
-  React.useEffect(() => {
-    depCall(getAllDep)
-  }, [loading])
-  React.useEffect(() => {
-    callComp(getAllComp)
-  }, [loading])
-
   return (
     <>
-      {compState.loading || deps.loading ? (
-        <Loader />
-      ) : (
+      <Grid item xs={12}>
+        <Stack>
+          <Typography
+            variant='h4'
+            sx={{
+              fontWeight: 500,
+              color: '#1976d2',
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: 2
+            }}
+          >
+            Danh sách cuộc thi
+          </Typography>
+        </Stack>
+      </Grid>
+
+      <>
         <>
-          <>
-            <Snackbar
-              open={showSuccess}
-              autoHideDuration={3000}
+          <Snackbar
+            open={showSuccess}
+            autoHideDuration={3000}
+            onClose={handleCloseSuccess}
+          >
+            <MuiAlert
               onClose={handleCloseSuccess}
+              severity='success'
+              elevation={6}
+              variant='filled'
             >
-              <MuiAlert
-                onClose={handleCloseSuccess}
-                severity='success'
-                elevation={6}
-                variant='filled'
-              >
-                Thao tác thành công
-              </MuiAlert>
-            </Snackbar>
-            <Snackbar
-              open={showError}
-              autoHideDuration={3000}
-              onClose={handleCloseSuccess}
+              Thao tác thành công
+            </MuiAlert>
+          </Snackbar>
+          <Snackbar
+            open={showError}
+            autoHideDuration={3000}
+            onClose={handleCloseSuccess}
+          >
+            <MuiAlert
+              onClose={handleCloseError}
+              severity='error'
+              elevation={6}
+              variant='filled'
             >
-              <MuiAlert
-                onClose={handleCloseError}
-                severity='error'
-                elevation={6}
-                variant='filled'
-              >
-                Thao tác thất bại
-              </MuiAlert>
-            </Snackbar>
-          </>
+              Thao tác thất bại
+            </MuiAlert>
+          </Snackbar>
+        </>
+        {compState.loading || deps.loading ? (
+          <Box
+            sx={{
+              position: 'relative',
+              marginTop: 20,
+              top: '30%',
+              width: '100%',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+              //  background: '#f5f5f5', /* Màu nền (tùy chọn) */
+            }}
+          >
+            <CircularProgress
+            //  sx={{
+            //    color: '#ff4081', /* Màu của phần tử loading (tùy chọn) */
+            //  }}
+            />
+          </Box>
+        ) : (
           <Grid
             container
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
-            <Grid item xs={12}>
-              <Stack>
-                <Typography
-                  variant='h4'
-                  sx={{
-                    fontWeight: 500,
-                    color: '#1976d2',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginTop: 2
-                  }}
-                >
-                  Danh sách cuộc thi
-                </Typography>
-              </Stack>
-            </Grid>
-            {compState.loading || deps.loading ? (
+            <>
+              <Link
+                to={'/CompetitionCreate'}
+                style={{
+                  textDecoration: 'none',
+                  marginLeft: 40,
+                  display: 'inline-block'
+                }}
+              >
+                <Button variant='outlined' startIcon={<AddIcon />}>
+                  Thêm cuộc thi mới
+                </Button>
+              </Link>
               <Grid item xs={12} style={{ margin: 10 }}>
                 <Box
                   sx={{
-                    width: '100%',
-                    height: '40px',
                     display: 'flex',
-                    alignItems: 'center',
                     justifyContent: 'center'
                   }}
                 >
-                  <CircularProgress />
+                  <TableWithFixedColumn
+                    rows={rows}
+                    columns={columns}
+                    maxWidth={1100}
+                    maxHeight={400}
+                  />
                 </Box>
               </Grid>
-            ) : (
-              <>
-                <Link
-                  to={'/CompetitionCreate'}
-                  style={{
-                    textDecoration: 'none',
-                    marginLeft: 40,
-                    display: 'inline-block'
-                  }}
-                >
-                  <Button variant='outlined' startIcon={<AddIcon />}>
-                    Thêm cuộc thi mới
-                  </Button>
-                </Link>
-                <Grid item xs={12} style={{ margin: 10 }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <TableWithFixedColumn
-                      rows={rows}
-                      columns={columns}
-                      maxWidth={1100}
-                      maxHeight={400}
-                    />
-                  </Box>
-                </Grid>
-              </>
-            )}
+            </>
           </Grid>
-        </>
-      )}
+        )}
+      </>
     </>
   )
 }
