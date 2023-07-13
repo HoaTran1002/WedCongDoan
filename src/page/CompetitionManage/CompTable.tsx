@@ -52,8 +52,13 @@ const CompTable = (): JSX.Element => {
   }, [loading])
 
   const getNameDep = (idDep: number): string => {
-    const dep: IDep = depList?.find((item: any) => item.depId == idDep)
-    return dep.depName || ''
+    try {
+      const dep: IDep = depList?.find((item: any) => item.depId == idDep)
+      return dep.depName || 'null'
+    } catch (error) {
+      console.log('lỗi')
+    }
+    return 'null'
   }
   const handleCloseSuccess = (): void => {
     setShowSuccess(false)
@@ -154,7 +159,7 @@ const CompTable = (): JSX.Element => {
       endDate: formatDay(item.endDate),
       examTimes: item.examTimes,
       userQuan: item.userQuan,
-      depName: getNameDep(item.depId + 0)
+      depName: getNameDep(item.depId)
     })) || []
 
   return (
