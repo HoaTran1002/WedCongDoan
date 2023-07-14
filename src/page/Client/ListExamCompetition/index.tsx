@@ -94,13 +94,6 @@ export default function Index(): JSX.Element {
         r.userId === profile?.userId
     )
     const check = getAllResults?.payload?.find(
-<<<<<<<<< Temporary merge branch 1
-      (r: any) => Number(r?.cuid) === item?.cuid
-    )
-    if (check === undefined) setHasJoin(false)
-    else setHasJoin(true)
-  }, [getAllCompUsers?.loading,getAllResults?.loading])
-=========
       (r: IResult) => Number(r.cuid) === item.cuid
     )
     if (check === undefined) setHasJoin(false)
@@ -108,7 +101,7 @@ export default function Index(): JSX.Element {
 
     // console.log(item,check,getAllResults?.payload)
   }, [getAllResults?.loading, getAllCompUsers?.loading])
->>>>>>>>> Temporary merge branch 2
+
   React.useEffect(() => {
     const comId = localStorage.getItem('competitionId')
     if (Number(id) !== Number(comId)) {
