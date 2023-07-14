@@ -1,14 +1,8 @@
 import React from 'react'
 import Layout from '~/components/layout/Layout'
-import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import image1 from '~/assets/img/bg_home_page.jpg'
-import image2 from '~/assets/img/bg_home_page_1.jpg'
-import image3 from '~/assets/img/bg_home_page_2.png'
-import image4 from '~/assets/img/bg_home_page_3.jpg'
-import imageItemBlog from '~/assets/img/blog_item_img.jpg'
 import { Grid, Box, Typography, SxProps, Container, Button } from '@mui/material'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate,useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -29,10 +23,12 @@ import { getAllCompExam } from '~/api/competitionExam'
 import { getAllExam } from '~/api/exam'
 import { getAllComp } from '~/api/competitionApi'
 import { getAllDep } from '~/api/departmentApi'
+import { getAllResult} from '~/api/resultApi'
 import useFetch from '~/hook/useFetch'
 import {getAllCompUser, insertCompUser } from '~/api/CompetitionUser'
 export default function Index(): JSX.Element {
     const navigate = useNavigate();
+    const location = useLocation();
     const { profile } = useAuth()
     const [getAllCompExams, callAllCompExams] = useFetch();
     const [getAllExams, callAllExams] = useFetch();
@@ -40,6 +36,7 @@ export default function Index(): JSX.Element {
     const [getAllDeps,callAllDeps] = useFetch();
     const [getAllInsertCompUsers,callAllInsertCompUsers] = useFetch();
     const [getAllCompUsers,callAllCompUsers] = useFetch();
+    // const [getAllResult]
     const queryParams = new URLSearchParams(location.search)
     const id = queryParams.get('id')
     const [comId, setComId] = React.useState<number>(Number(id))
@@ -58,7 +55,12 @@ export default function Index(): JSX.Element {
     React.useEffect(() => {
         callAllDeps(getAllDep);
     }, [])
-    
+    React.useEffect(() => {
+        const comId = localStorage.getItem('competitionId')
+        if (Number(id) !== Number(comId)) {
+          navigate('/*');
+        }
+    }, [location, navigate]);
 
     const competition = getAllComps?.payload?.find((r:any)=>r.comId === comId);
     const listExam = getAllExams?.payload;
@@ -100,13 +102,9 @@ export default function Index(): JSX.Element {
 
     const handleOkExam = (): void => {
         setOpenExam(false)
-        // const listCUID = getAllCompUsers?.payload?.find((r:any)=>r.comId === comId )
         const randomIndex = Math.floor(Math.random() * listComExam.length);
         const randomElement = listComExam[randomIndex];
-        
-        // console.log(randomElement?.examId)
-        // navigate(`/ExamStart?id=${randomElement?.examId}`)
-        //Đề thi test
+        const query = { id: String(randomElement.examId), comId: String(comId) };
         callAllInsertCompUsers(async () => {
             try {
                 await insertCompUser(requestData)
@@ -115,16 +113,9 @@ export default function Index(): JSX.Element {
                 console.log(error)
             }
         })
-        // console.log(randomElement)
-        if(!localStorage.getItem('examIdRD')){
-            localStorage.setItem('examIdRD',JSON.stringify(randomElement.examId))
-            navigate(`/ExamStart?id=${randomElement.examId}&comId=${comId}`)
-        }else{
-            const Id = localStorage.getItem('examIdRD')
-            const currExamId =Id?( Number(JSON.parse(Id))) : 0;
-            navigate(`/ExamStart?id=${currExamId}&comId=${comId}`)
-        }
-        // navigate(`/ExamStart?id=${3}&comId=${comId}`)
+        localStorage.setItem('examRdId',JSON.stringify(randomElement.examId))
+        const queryParams = new URLSearchParams(query).toString();
+        navigate(`/ExamStart?${queryParams}`);
     }
     const formatDay = (dayOrigin: string): string => {
         const dateObj = new Date(dayOrigin);

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Box, Button, Container, Typography } from '@mui/material'
-import Grid from '@mui/material/Grid'
-
+import image404 from '~/assets/img/person-working-collaboratively-online.png'
+import { Link } from 'react-router-dom'
 export default function Error(): JSX.Element {
   return (
     <Box
@@ -9,22 +9,48 @@ export default function Error(): JSX.Element {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh'
+        height: '100vh',
+        width:"100vw",
+        backgroundColor:"#dcf7ff"
       }}
     >
-      <Container maxWidth='md'>
-        <Grid container spacing={2}>
-          <Grid xs={12}>
-            <img
-              src='https://www.suntorypepsico.vn/Content/Portal/img/news/page404.png'
-              alt='not found'
-              width={500}
-              height={250}
-            />
-          </Grid>
-        </Grid>
-        <Button variant='contained'>Back Home</Button>
-      </Container>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection:"column",
+          width:{md:"500px",xs:"100%"},
+          height:{md:"400px",xs:'auto'},
+        }}
+      >
+        <Box
+          component='img'
+          src={image404}
+          alt='not found'
+          sx={{
+            width:"100%",
+            height:"100%",
+          }}
+        />
+        <h2
+          className='color-primary'
+          style={{
+            fontSize:"22px"
+          }}
+        >
+          Nothing here,  &nbsp;
+          <Link 
+            className='color-primary'
+            style={{
+              textDecoration:"none"
+            }} 
+            to={'/'}
+          >
+            go to home
+          </Link>   
+        </h2>
+      </Box>
     </Box>
   )
 }

@@ -1,14 +1,7 @@
 import React, { useState } from 'react'
-import Layout from '~/components/layout/Layout'
-import { Carousel } from 'react-responsive-carousel'
 import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import image1 from '~/assets/img/bg_home_page.jpg'
-import image2 from '~/assets/img/bg_home_page_1.jpg'
-import image3 from '~/assets/img/bg_home_page_2.png'
-import image4 from '~/assets/img/bg_home_page_3.jpg'
-import imageItemBlog from '~/assets/img/blog_item_img.jpg'
 import { Grid, Box, Typography, SxProps, Container, Button } from '@mui/material'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate,useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
@@ -46,8 +39,8 @@ interface Question {
 
 const ExamStart = (): JSX.Element => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { profile } = useAuth();
-    // const [getAllComExams,callAllComExams] = useFetch()
     const queryParams = new URLSearchParams(location.search)
     const id = queryParams.get('id')
     const comId = Number(queryParams.get('comId'))
@@ -68,37 +61,43 @@ const ExamStart = (): JSX.Element => {
     const [examIndex, setExamIndex] = React.useState<number>(1)
     const [quesContain, setQuesContain] = React.useState(firstElement)
     const [questionActive, setQuestionActive] = React.useState<any>([])
-    const [pickerQuestion, setPickerQuestion] = React.useState<any>([])
     const [defaultCheck, setDefaultCheck] = React.useState<string>('')
     const [competition,setCompetition] = React.useState<any>([])
     const [change, setChange] = React.useState<boolean>(true)
     const [examTimes,setExamTimes] = React.useState(isNaN(parseInt(competition?.examTimes)) ? 0 : parseInt(competition?.examTimes));
-    // localStorage.setItem('ansOfQues', JSON.stringify(newListQuestions))
-    // console.log(listNewQuestion,questions)
 
-    // console.log(examTimes)
-    // console.log(getAllQue?.payload?.filter((r:any)=>r.examId === examId))
-
-    //===========================================
+    //=====================================================================
     const changeQuestion = (id: number, index: number): void => {
         setExamIndex(index + 1)
         const ques = questions?.find((r: any) => r.quesId === id);
         setIdQuesExam(id)
         setQuestionActive(ques)
-        console.log(id, ques)
     }
-    const handelPrevQues = (id: number, index: number): void => {
-        const ques = questions?.find((r: any) => r.quesId === id);
-        setQuestionActive(ques)
-        setExamIndex(index - 1)
+    const handelPrevQues = (quesId:number): void => {
+        const index = questions?.findIndex((r:any)=>r.quesId === quesId)
+        const itemPrev = questions[index - 1]
+        setExamIndex(r=>r-1)
+        setIdQuesExam(itemPrev?.quesId)
+        setQuestionActive(itemPrev)
+        console.log(examIndex,quesId,questions,index,itemPrev)
+        // const ques = questions?.find((r: any) => r.quesId === id);
+        // setQuestionActive(ques)
+        // setExamIndex(index - 1)
     }
-    const handelNextQues = (id: number, index: number): void => {
-        const ques = questions?.find((r: any) => r.quesId === id);
-        setQuestionActive(ques)
-        setExamIndex(index + 1)
+    const handelNextQues = (quesId:number): void => {
+        const index = questions?.findIndex((r:any)=>r.quesId === quesId)
+        const itemNext = questions[index + 1];
+        setExamIndex(r=>r+1)
+        setIdQuesExam(itemNext?.quesId)
+        setQuestionActive(itemNext)
+
+        console.log(examIndex,quesId,questions,index,itemNext)
+        // const ques = questions?.find((r: any) => r.quesId === id);
+        // setQuestionActive(ques)
+        // setExamIndex(index + 1)
     }
 
-    //==================================================
+    //=====================================================================
     const handleCloseSubmitExam = (): void => {
         setOpenSubmitExam(false)
     }
@@ -106,9 +105,6 @@ const ExamStart = (): JSX.Element => {
     const handleOpenSubmitExam = (): void => {
         setOpenSubmitExam(true)
     }
-
-
-
     const handleOKSubmitExam = (): void => {
         const endTime = new Date().toISOString();
         const beginTime = localStorage.getItem('beginTime')
@@ -125,7 +121,7 @@ const ExamStart = (): JSX.Element => {
             setRemainingQuestion(mergedArr)
         }else{
             console.log(ansOfQues,questions);
-            // localStorage.removeItem('ansOfQues')
+            localStorage.removeItem('ansOfQues')
             // callIPickerQuestions(async () => {
             //     try {
             //         for (const item of ansOfQues) {
@@ -153,23 +149,36 @@ const ExamStart = (): JSX.Element => {
                 return count;
             },0)
 
+            const requestData: {
+                cuid:number,
+                trueAns:number,
+                falseAns:number,
+                startTimes:string,
+                endTimes:string
+              } = {
+                cuid:Number(competitionUserId?.cuid),
+                trueAns:trueAnswer,
+                falseAns:falseAnswer,
+                startTimes:String(beginTime),
+                endTimes:String(endTime)
+              }
+
             callIResult(async () => {
                 try {
                     await InsertResult({
                         cuid:competitionUserId?.cuid,
-                        endTimes:String(endTime),
-                        startTimes:String(beginTime),
+                        trueAns:trueAnswer,
                         falseAns:falseAnswer,
-                        trueAns:trueAnswer
+                        startTimes:String(beginTime),
+                        endTimes:String(endTime)
                     });
+                    console.log('thành công');
                 }catch (error) {
                     console.log(error);
-                }
-            }
-            )
-            // console.log(trueAnswer,falseAnswer,beginTime,endTime,competitionUserId?.cuid)
-
-            // navigate('/FinishedExam')
+            }})
+            // console.log(competitionUserId?.cuid,trueAnswer,falseAnswer,String(beginTime),String(endTime))
+            localStorage.clear()
+            navigate('/FinishedExam')
         }
         setOpenSubmitExam(false)
     }
@@ -184,7 +193,10 @@ const ExamStart = (): JSX.Element => {
 
     const handleOKExitExam = (): void => {
         setOpenExitExam(false)
-        navigate(`/ListExamCompetition?id=${comId}`)
+        const competitionId = localStorage.getItem('competitionId')
+        localStorage.clear()
+        localStorage.setItem('competitionId',JSON.stringify(Number(competitionId)))
+        navigate(`/ListExamCompetition?id=${competitionId}`)
     }
 
     //=======================================
@@ -199,58 +211,37 @@ const ExamStart = (): JSX.Element => {
         const ansOfQuesString = localStorage.getItem('ansOfQues');
         const ansOfQues = ansOfQuesString ? JSON.parse(ansOfQuesString) : [];
         const index = ansOfQues?.findIndex((r: any) => r.quesId === idQuesExam);
-        const mergedArr = [...ansOfQues, ...questions].filter(
-            (item) =>
-                !ansOfQues.some((x:any) => x.quesId === item.quesId) ||
-                !questions.some((x:any) => x.quesId === item.quesId)
-        );
+        
         console.log(ansOfQues, index, idQuesExam)
         if (ansOfQues.find((r: any) => r.quesId === idQuesExam) !== undefined || index !== -1) {
             ansOfQues[index] = {
                 quesId: idQuesExam,
                 answer: event.target.value
             }
-            // console.log('trùng')
         } else {
             ansOfQues.push({
                 quesId: idQuesExam,
                 answer: event.target.value,
             })
-            // console.log('không trùng')
-        }
-        if(mergedArr.length !== 0){
-            setRemainingQuestion(mergedArr)
         }
         console.log(remainingQuestion)
         localStorage.setItem('ansOfQues', JSON.stringify(ansOfQues))
         setChange(r => !r)
     }
 
-    React.useEffect(()=>{
-        setExamTimes(isNaN(parseInt(competition?.examTimes)) ? 0 : parseInt(competition?.examTimes))
-    },[competition])
-    // console.log(competition)
-    // React.useEffect(() => {
-    //     setQuesContain(listQuestion.find(r=>r.idQues === quesitionCheck))
-    // }, [quesitionCheck]);
-    // React.useEffect(()=>{
-    //     callAllComExams(getAllCompExam)
-    // })
-
-
-
-    React.useEffect(() => {
-        // console.log(questions)
-        setQuestionActive(firstElement)
-        setIdQuesExam(firstElement?.quesId)
-        // localStorage.setItem('ansOfQues',JSON.stringify(questions))
-    }, [getAllQue?.loading])
+    
     React.useEffect(() => {
         callCompUsers(getAllCompUser)
     }, []);
     React.useEffect(() => {
         callAllQue(getAllQues)
     }, []);
+    React.useEffect(() => {
+        if(!localStorage.getItem('beginTime')){
+            localStorage.setItem('beginTime', new Date().toISOString());
+        }
+        callAllComps(getAllComp);    
+    }, [])
     React.useEffect(() => {
         const ansOfQuesString = localStorage.getItem('ansOfQues');
         const ansOfQues = ansOfQuesString ? JSON.parse(ansOfQuesString) : [];
@@ -260,29 +251,27 @@ const ExamStart = (): JSX.Element => {
         } else {
             setDefaultCheck('');
         }
-        setPickerQuestion(ansOfQues);
-        // console.log(ansOfQues, idQuesExam, itemPicker, defaultCheck);
     }, [idQuesExam, change]);
+    React.useEffect(()=>{
+        setExamTimes(isNaN(parseInt(competition?.examTimes)) ? 0 : parseInt(competition?.examTimes))
+    },[competition])
     React.useEffect(() => {
-        if(!localStorage.getItem('beginTime')){
-            localStorage.setItem('beginTime', new Date().toISOString());
-        }
-        callAllComps(getAllComp);    
-    }, [])
+        // console.log(questions)
+        setQuestionActive(firstElement)
+        setIdQuesExam(firstElement?.quesId)
+        // localStorage.setItem('ansOfQues',JSON.stringify(questions))
+    }, [getAllQue?.loading])
     React.useEffect(() => {
         setCompetition(getAllComps?.payload?.find((r:any)=>r.comId === comId))
     }, [getAllComps?.payload])
-    // const competition = getAllComps?.payload?.find((r:any)=>r.comId === comId);
-    // console.log(competition)
-     // React.useEffect(()=>{
-    //     const ansOfQuesString = localStorage.getItem('ansOfQues');
-    //     const ansOfQues = ansOfQuesString ? JSON.parse(ansOfQuesString) : [];
-    //     console.log(ansOfQues)
-    //     setPickerQuestion(ansOfQues)
-    // },[])
-    // React.useEffect(()=>{
-    //     localStorage.setItem('ansOfQues', JSON.stringify([]));
-    // },[])
+    React.useEffect(() => {
+        const competitionId = localStorage.getItem('competitionId')
+        const exaRdmId = localStorage.getItem('examRdId')
+        if (Number(examId!== Number(exaRdmId) || Number(comId) !== Number(competitionId))) {
+            localStorage.clear()
+            navigate('/*');
+        }
+    }, [location, navigate]);
     return (
         <>
             <Box
@@ -568,12 +557,12 @@ const ExamStart = (): JSX.Element => {
                                             onClick={(): void => changeQuestion(row.quesId, index)}
                                             sx={{
                                                 borderRadius: "5px",
-                                                border: "2px solid #1565c0",
-                                                backgroundColor: "#e0f6ff",
+                                                border: remainingQuestion.some((x:any)=>x.quesId === row.quesId)?"2px solid red":"2px solid #1565c0",
+                                                backgroundColor:remainingQuestion.some((x:any)=>x.quesId === row.quesId)?'#ffebeb':'#e0f6ff',
                                                 fontSize: "16px",
                                                 width: "40px",
                                                 height: "40px",
-                                                color: "#1565c0",
+                                                color: remainingQuestion.some((x:any)=>x.quesId === row.quesId)?'red':'#1565c0',
                                                 cursor: "pointer",
                                                 display: "flex",
                                                 alignItems: "center",
@@ -694,7 +683,7 @@ const ExamStart = (): JSX.Element => {
                                         component='button'
                                         disabled={examIndex === 1}
                                         sx={btn_next_prev}
-                                        onClick={(): void => handelPrevQues(questions, examIndex)}
+                                        onClick={(): void => handelPrevQues(idQuesExam)}
                                     >
                                         <KeyboardArrowLeftIcon />
                                     </Box>
@@ -721,7 +710,7 @@ const ExamStart = (): JSX.Element => {
                                         component='button'
                                         disabled={examIndex === questions?.length}
                                         sx={btn_next_prev}
-                                        onClick={(): void => handelNextQues(idQuesExam, examIndex)}
+                                        onClick={(): void => handelNextQues(idQuesExam)}
                                     >
                                         <KeyboardArrowRightIcon />
                                     </Box>

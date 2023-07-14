@@ -24,7 +24,7 @@ export const InsertResult = async ({
     endTimes: string
 }): Promise<void> => {
     try {
-        await server.post('/PickerQuestions', {
+        await server.post('/Results', {
             cuid,
             trueAns,
             falseAns,
@@ -53,7 +53,7 @@ export const EditResult = async ({
     endTimes: string
 }): Promise<void> => {
     try {
-        await server.post('/PickerQuestions', {
+        await server.post('/Results', {
             resId,
             cuid,
             trueAns,
