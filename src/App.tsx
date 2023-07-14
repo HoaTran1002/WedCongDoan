@@ -53,7 +53,7 @@ function App(): JSX.Element {
         <Route path='/BlogCreate' element={<BlogCreate />} />
         <Route path='/BlogDetail' element={<BlogDetail />} />
 
-        <Route path='/HomeBlogDetail' element={<HomeBlogDetail />} />
+        <Route path='/HomeBlogDetail/:id' element={<HomeBlogDetail />} />
         <Route path='/ListExamCompetition' element={<ListExamCompetition />} />
         <Route path='/ExamStart' element={<ExamStart />} />
         <Route path='/FinishedExam' element={<FinishedExam />} />

@@ -55,7 +55,6 @@ const Index = (): JSX.Element => {
   const [getComs, callAllComs] = useFetch()
   const [allBlogs, callAllBlog] = useFetch()
 
-
   const requestData: {
     blogName: string
     blogDetai: string
@@ -89,13 +88,29 @@ const Index = (): JSX.Element => {
 
   const handleClickOpen = (): void => {
     setOpen(true)
-    console.log(comId)
   }
 
   const handleClose = (): void => {
     setOpen(false)
   }
   
+  const InsertCompetitionBlog =():void=>{
+    const allNewBlog = allBlogs?.payload
+    console.log(allNewBlog)
+    // if (blogId) {
+    //   await InsertCompetitionBlog({
+    //     comId: comId,
+    //     blogId: blogId,
+    //     userId: profile?.userId,
+    //     postDate: formattedDate
+    //   });
+    //   console.log('Thành công');
+    // } else {
+    //   console.log('Thất bại');
+    // }
+    // console.log('Thất bại', blogNews,blogNews.length - 1);
+  }
+
   const handleOK = async (): Promise<void> => {
     setOpen(false);
 
@@ -128,41 +143,23 @@ const Index = (): JSX.Element => {
     if (hasError) {
       return
     }
-
-
-    try {
-      const blogData = await callBlogtInsert(async () => {
-        if (selectedImage) {
-          const reader = new FileReader();
-          reader.onload = async (): Promise<void> => {
-            const imgSrc = reader.result as string;
-            await Insert({
-              ...requestData,
-              imgSrc: imgSrc.split(',')[1],
-            });
-          };
-          reader.readAsDataURL(selectedImage);
-        } else {
-          return Insert(requestData);
-        }
+      try {
+        const blogData = await callBlogtInsert(async () => {
+          if (selectedImage) {
+            const reader = new FileReader();
+            reader.onload = async (): Promise<void> => {
+              const imgSrc = reader.result as string;
+              await Insert({
+                ...requestData,
+                imgSrc: imgSrc.split(',')[1],
+              });
+            };
+            reader.readAsDataURL(selectedImage);
+          } else {
+            return Insert(requestData);
+          }
       });
-  
-      const blogNews = await callAllBlog(getAllBlog)
-      const latestBlog = blogNews[blogNews.length - 1];
-      const blogId:number = latestBlog?.blogId;
-      console.log(blogId)
-      if (blogId) {
-        await InsertCompetitionBlog({
-          comId: comId,
-          blogId: blogId,
-          userId: profile?.userId,
-          postDate: formattedDate
-        });
-        console.log('Thành công');
-      } else {
-        console.log('Thất bại');
-      }
-      // console.log('Thất bại', blogNews,blogNews.length - 1);
+      InsertCompetitionBlog()
     } catch (error) {
       console.log(error);
     }
@@ -187,6 +184,10 @@ const Index = (): JSX.Element => {
 
     fetchData();
   }, []);
+
+  React.useEffect(()=>{
+    callAllBlog(getAllBlog)
+  },[allBlogs?.payload])
   return (
     <>
       <LayoutAdmin>

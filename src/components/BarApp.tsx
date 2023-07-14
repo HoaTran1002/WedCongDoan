@@ -294,7 +294,7 @@ export default function SideBar(): JSX.Element {
             ))}
           </Box>
         </Box>
-        <Box sx={{ flexGrow: 0, display: { md: 'flex' },gap:"10px",alignItems:"center" }}>
+        <Box sx={{ flexGrow: 0, display:'flex',gap:"10px",alignItems:"center" }}>
           <Tooltip title={profile?.userName} >
             <Box
               onClick={handleOpenUserMenu} 

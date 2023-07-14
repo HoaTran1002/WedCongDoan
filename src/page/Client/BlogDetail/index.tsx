@@ -8,7 +8,7 @@ import image3 from '~/assets/img/bg_home_page_2.png'
 import image4 from '~/assets/img/bg_home_page_3.jpg'
 import imageItemBlog from '~/assets/img/blog_item_img.jpg'
 import { Grid, Box, Typography, SxProps, Container, Button } from '@mui/material'
-import { Link,useHref } from 'react-router-dom'
+import { Link,useNavigate,useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
@@ -22,9 +22,8 @@ import useFetch from '~/hook/useFetch'
 
 
 const Index = (): JSX.Element => {
-    const history = useHref();
-    const queryParams = new URLSearchParams(location.search)
-    const id = queryParams.get('id')
+    const {id} = useParams();
+    const navigate = useNavigate();
     const [blogId, setBlogId] = React.useState<number>(Number(id))
     const [blogDetai, setBlogDetai] = useState('')
     const [blogName, setBlogName] = useState('')
@@ -34,8 +33,7 @@ const Index = (): JSX.Element => {
     const [allUser, callAllUser] = useFetch()
     const [getAllBlogs, callAllBlogs] = useFetch()
     const [allBlogCompetition, callAllBlogCompetition] = useFetch()
-
-
+    console.log(blogId,id)
 
     const getUserName = (userId: string): string => {
         const user = listUser?.find((r: any) => r.userId === userId)
@@ -50,7 +48,8 @@ const Index = (): JSX.Element => {
     }
     React.useEffect((): void => {
         callAllBlogs(getAllBlog)
-    }, [])
+    }, [id])
+    
 
     React.useEffect(() => {
         const fetchData = async (): Promise<any> => {
@@ -64,7 +63,7 @@ const Index = (): JSX.Element => {
         };
 
         fetchData();
-    }, [])
+    }, [id])
     React.useEffect(() => {
         const fetchData = async (): Promise<any> => {
             try {
@@ -76,7 +75,7 @@ const Index = (): JSX.Element => {
         };
 
         fetchData();
-    }, [])
+    }, [id])
     const listComBlog = allBlogCompetition?.payload;
     const listBlogs = getAllBlogs?.payload;
     const listUser = allUser?.payload
@@ -103,8 +102,10 @@ const Index = (): JSX.Element => {
                 console.log(error);
             }
         });
-    }, []);
-
+    }, [id]);
+    React.useEffect(()=>{
+        setBlogId(Number(id))
+    },[id])
     return (
         <>
             <Layout>
@@ -207,10 +208,16 @@ const Index = (): JSX.Element => {
                                 {visibleRows.map((row: any, index: any) => (
                                     <Grid key={index} item xs={12}>
                                         <Box
+                                        
+                                            onClick={():void =>{ 
+                                                navigate(`/HomeBlogDetail/${row.blogId}`)
+                                            }}
                                             sx={{
                                                 display: "flex",
                                                 alignItems: "center",
-                                                gap: '10px'
+                                                gap: '10px',
+                                                cursor:"pointer"
+                                                
                                             }}
                                         >
                                             <Box
@@ -258,16 +265,15 @@ const Index = (): JSX.Element => {
                                                         {formatDay(row.postDate)}
                                                     </span>
                                                 </span>
-                                                <Link
-                                                    to={`/HomeBlogDetail?id=${row.blogId}`}
-                                                    onClick={():void => history.push(`/HomeBlogDetail?id=${row.blogId}`)}
+                                                <Box
+                                                    component='span'
                                                     style={{
                                                         textDecoration: "none",
                                                         display: "inline-block",
                                                     }}
                                                 >
                                                     <BlogName>{row.blogName}</ BlogName>
-                                                </Link>
+                                                </Box>
                                             </Box>
                                         </Box>
                                     </Grid>

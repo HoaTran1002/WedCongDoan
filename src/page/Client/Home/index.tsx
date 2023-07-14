@@ -8,7 +8,7 @@ import image3 from '~/assets/img/bg_home_page_2.png'
 import image4 from '~/assets/img/bg_home_page_3.jpg'
 import imageItemBlog from '~/assets/img/blog_item_img.jpg'
 import { Grid, Box, Typography, SxProps, Container, Button } from '@mui/material'
-import { Link } from 'react-router-dom'
+import { Link,useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
@@ -39,6 +39,7 @@ interface CompetitionBlog extends Blog {
 
 
 const Home = (): JSX.Element => {
+  const navigate = useNavigate();
   const [startIndex, setStartIndex] = React.useState(0);
   const dataPerPage = 4;
   const endIndex = startIndex + dataPerPage;
@@ -194,7 +195,7 @@ const Home = (): JSX.Element => {
                             </Box>
                             <Box sx={{ padding: '10px' }}>
                               <Link
-                                to={`/HomeBlogDetail?id=${row.blogId}`}
+                                to={`/HomeBlogDetail/${row.blogId}`}
                                 style={{
                                   textDecoration: "none",
                                   display: "inline-block",
@@ -328,7 +329,7 @@ const Home = (): JSX.Element => {
                                 </span>
                               </span>
                               <Link
-                                to={'/HomeBlogDetail'}
+                                to={`/HomeBlogDetail/${row.blogId}`}
                                 style={{
                                   textDecoration: "none",
                                   display: "inline-block",
@@ -422,8 +423,12 @@ const Home = (): JSX.Element => {
                                   {formatDay(row.postDate)}
                                 </span>
                               </span>
-                              <Link
-                                to={'/HomeBlogDetail'}
+                              <Box
+                                component='span'
+                                onClick={():void => {
+                                  navigate(`/HomeBlogDetail/${row.blogId}`);
+
+                                }}
                                 style={{
                                   textDecoration: "none",
                                   display: "inline-block",
@@ -431,7 +436,7 @@ const Home = (): JSX.Element => {
                                 }}
                               >
                                 <BlogName>{row.blogName}</ BlogName>
-                              </Link>
+                              </Box>
                             </Box>
                           </Box>
                         </Grid>
