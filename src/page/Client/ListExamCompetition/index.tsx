@@ -135,7 +135,7 @@ export default function Index(): JSX.Element {
         r.userId === profile?.userId
     )
     const check = getAllResults?.payload?.find(
-      (r: any) => Number(r.cuid) === item.cuid
+      (r: any) => Number(r?.cuid) === item?.cuid
     )
     if (check === undefined) {
       setOpenExam(true)
