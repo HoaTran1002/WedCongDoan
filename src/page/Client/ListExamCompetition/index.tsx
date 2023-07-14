@@ -82,10 +82,10 @@ export default function Index(): JSX.Element {
   }, [])
   React.useEffect(() => {
     callAllCompUsers(getAllCompUser)
-  }, [getAllCompUsers?.loading])
+  }, [])
   React.useEffect(() => {
     callAllResults(getAllResult)
-  }, [getAllResults?.loading])
+  }, [])
   React.useEffect(() => {
     const competitionId = localStorage.getItem('competitionId')
     const item = getAllCompUsers?.payload?.find(
@@ -94,13 +94,12 @@ export default function Index(): JSX.Element {
         r.userId === profile?.userId
     )
     const check = getAllResults?.payload?.find(
-      (r: IResult) => Number(r.cuid) === item.cuid
+      (r: any) => Number(r.cuid) === item.cuid
     )
     if (check === undefined) setHasJoin(false)
     else setHasJoin(true)
-
     // console.log(item,check,getAllResults?.payload)
-  }, [getAllResults?.loading, getAllCompUsers?.loading])
+  }, [])
   React.useEffect(() => {
     const comId = localStorage.getItem('competitionId')
     if (Number(id) !== Number(comId)) {

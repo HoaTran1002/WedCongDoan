@@ -59,11 +59,19 @@ const Ranking = (props: PropsRanking): JSX.Element => {
                     </h3>
                     <Box
                         sx={{
-                            height:"400px"
+                            height:"400px",
+                            overflowY:"scroll",
+                            padding:"0px 5px",
                         }}
                     >
-
-
+                        <Box
+                            sx={{
+                                height:"90px",
+                                width:"100%"
+                            }}
+                        >
+                            <span>Xếp hạng</span>
+                        </Box>
                     </Box>
                 </Box>
 
