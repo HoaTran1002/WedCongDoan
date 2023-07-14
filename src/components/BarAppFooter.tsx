@@ -211,7 +211,7 @@ export default function Index(): JSX.Element {
 const Footer = styled.div`
   width: 100%;
   background-color: #1565c0;
-  margin-top: 50px;
+  margin-top: 200px;
   padding: 20px 0;
 `
 
