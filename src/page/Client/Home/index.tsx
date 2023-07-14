@@ -87,7 +87,6 @@ const Home = (): JSX.Element => {
     ...item,
     ...blogs.find((elem: any) => elem.blogId === item.blogId)
   }));
-  console.log(blogs,itemBlogs)
   const totalRows = itemBlogsCompetition.length;
   const visibleRows = itemBlogsCompetition.slice(startIndex, endIndex);
   const handleNext = (): void => {

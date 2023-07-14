@@ -9,6 +9,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import CrownImg from '~/assets/img/icons8-crown-96.png'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
@@ -26,6 +27,7 @@ import { getAllDep } from '~/api/departmentApi'
 import { getAllResult} from '~/api/resultApi'
 import useFetch from '~/hook/useFetch'
 import {getAllCompUser, insertCompUser } from '~/api/CompetitionUser'
+import Ranking from './Ranking'
 export default function Index(): JSX.Element {
     const navigate = useNavigate();
     const location = useLocation();
@@ -36,13 +38,16 @@ export default function Index(): JSX.Element {
     const [getAllDeps,callAllDeps] = useFetch();
     const [getAllInsertCompUsers,callAllInsertCompUsers] = useFetch();
     const [getAllCompUsers,callAllCompUsers] = useFetch();
-    // const [getAllResult]
+    const [getAllResults,callAllResults] = useFetch();
     const queryParams = new URLSearchParams(location.search)
     const id = queryParams.get('id')
     const [comId, setComId] = React.useState<number>(Number(id))
     const [open, setOpen] = React.useState(true);
     const [openExam, setOpenExam] = React.useState(false);
-
+    const [openWarn, setOpenWarn] = React.useState(false);
+    const [hasJoin,setHasJoin] = React.useState(false);
+    const [openRank,setOpenRank] = React.useState(false)
+    console.log(hasJoin)
     React.useEffect(() => {
         callAllExams(getAllExam);
     }, [])
@@ -56,6 +61,20 @@ export default function Index(): JSX.Element {
         callAllDeps(getAllDep);
     }, [])
     React.useEffect(() => {
+        callAllCompUsers(getAllCompUser);
+    }, [])
+    React.useEffect(() => {
+        callAllResults(getAllResult);
+    }, [])
+    React.useEffect(()=>{
+        const competitionId = localStorage.getItem('competitionId')
+        const item = getAllCompUsers?.payload?.find((r:any)=>Number(r.comId) === Number(competitionId) && r.userId === profile?.userId)
+        const check = getAllResults?.payload?.find((r:any)=>Number(r.cuid) === item.cuid)
+        if(check === undefined) setHasJoin(false)
+        else setHasJoin(true)
+        // console.log(item,check,getAllResults?.payload)
+    },[getAllResults?.loading,getAllCompUsers?.loading])
+    React.useEffect(() => {
         const comId = localStorage.getItem('competitionId')
         if (Number(id) !== Number(comId)) {
           navigate('/*');
@@ -67,11 +86,6 @@ export default function Index(): JSX.Element {
     const listComExam = getAllCompExams?.payload?.filter((r: any) => r.comId === comId);
     
     const listDep = getAllDeps?.payload;
-    console.log(competition)
-    const getExamName=(id:number):string=>{
-        const exam = listExam?.find((r:any)=>r.examId === id)
-        return exam.examName || '';
-    }
 
     const getDepName=(id:number):string=>{
         const dep = listDep?.find((r:any)=>r.depId === id)
@@ -86,12 +100,26 @@ export default function Index(): JSX.Element {
     };
 
     const handleClickExamOpen = (): void => {
-        setOpenExam(true);
+        const competitionId = localStorage.getItem('competitionId')
+        const item = getAllCompUsers?.payload?.find((r:any)=>Number(r.comId) === Number(competitionId) && r.userId === profile?.userId)
+        const check = getAllResults?.payload?.find((r:any)=>Number(r.cuid) === item.cuid)
+        if(check === undefined){
+            setOpenExam(true);
+        }else{
+            setOpenWarn(true)
+        }
+        
     };
     const handleCloseExam = (): void => {
         setOpenExam(false);
     };
 
+    const handleWatchRank = ():void =>{
+        setOpenRank(true);
+    }
+    const handleExitRank = ():void =>{
+        setOpenRank(false);
+    }
     const requestData: {
         comId: number,
         userId?:string
@@ -303,9 +331,6 @@ export default function Index(): JSX.Element {
                                         </IconButton>
                                     </Tooltip>
                                 </Box>
-
-
-                                
                             </Box>
                             <Box
                                 sx={{
@@ -316,12 +341,53 @@ export default function Index(): JSX.Element {
                                     gap:"30px"
                                 }}
                             >
-                                <Button onClick={handleClickExamOpen} variant='contained'>
-                                    VÀO THI
-                                </Button>
-                                <Button variant='outlined'>
-                                    TRỞ VỀ
-                                </Button>
+                                {
+                                    hasJoin ? (
+                                        <p>Bạn đã tham gia cuộc thi này</p>
+                                    ):
+                                    (
+                                        <Button onClick={handleClickExamOpen} variant='contained'>
+                                            VÀO THI
+                                        </Button>
+                                    )
+                                }
+                                
+                                <Link to={'/ListCompetition'}>
+                                    <Button variant='outlined'>
+                                        TRỞ VỀ
+                                    </Button>
+                                </Link>
+                                {
+                                    hasJoin &&
+                                    (
+                                        <Box
+                                            className='color-primary'
+                                            sx={{
+                                                position:"relative",
+                                                fontWeight:"500",
+                                                fontSize:"16px",
+                                                border:"1px solid #1976D2",
+                                                borderRadius:"3px",
+                                                padding:"5px 10px",
+                                                cursor:"pointer"
+                                            }}
+                                            onClick={handleWatchRank}
+                                        >
+                                            <Box
+                                                src={CrownImg}
+                                                sx={{
+                                                    height:"25px",
+                                                    position:"absolute",
+                                                    top:"-13px",
+                                                    left:"-15px",
+                                                    transform:"rotate(-45deg)"
+                                                }}
+                                                component='img'
+                                            />
+                                            XẾP HẠNG
+                                        </Box>
+                                    )
+                                }
                             </Box>
                         </Grid>
                     </Grid>
@@ -346,7 +412,6 @@ export default function Index(): JSX.Element {
                             </Button>
                         </DialogActions>
                     </Dialog>
-
 
                     <Dialog
                         open={openExam}
@@ -375,6 +440,7 @@ export default function Index(): JSX.Element {
 
                 </Container>
             </Layout>
+            {openRank && (<><Ranking callback={handleExitRank}/></>)}
         </>
     )
 }
