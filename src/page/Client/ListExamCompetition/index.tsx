@@ -35,6 +35,19 @@ import { getAllResult } from '~/api/resultApi'
 import useFetch from '~/hook/useFetch'
 import { getAllCompUser, insertCompUser } from '~/api/CompetitionUser'
 import Ranking from './Ranking'
+interface IUser {
+  cuid: number
+  comId: number
+  userId: string
+}
+interface IResult {
+  resId: number
+  cuid: number
+  trueAns: number
+  falseAns: number
+  startTimes: string
+  endTimes: string
+}
 export default function Index(): JSX.Element {
   const navigate = useNavigate()
   const location = useLocation()
@@ -76,17 +89,18 @@ export default function Index(): JSX.Element {
   React.useEffect(() => {
     const competitionId = localStorage.getItem('competitionId')
     const item = getAllCompUsers?.payload?.find(
-      (r: any) =>
+      (r: IUser) =>
         Number(r.comId) === Number(competitionId) &&
         r.userId === profile?.userId
     )
     const check = getAllResults?.payload?.find(
-      (r: any) => Number(r.cuid) === item.cuid
+      (r: IResult) => Number(r.cuid) === item.cuid
     )
     if (check === undefined) setHasJoin(false)
     else setHasJoin(true)
+
     // console.log(item,check,getAllResults?.payload)
-  }, [])
+  }, [getAllResults?.loading, getAllCompUsers?.loading])
   React.useEffect(() => {
     const comId = localStorage.getItem('competitionId')
     if (Number(id) !== Number(comId)) {
