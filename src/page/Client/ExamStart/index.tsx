@@ -80,9 +80,6 @@ const ExamStart = (): JSX.Element => {
         setIdQuesExam(itemPrev?.quesId)
         setQuestionActive(itemPrev)
         console.log(examIndex,quesId,questions,index,itemPrev)
-        // const ques = questions?.find((r: any) => r.quesId === id);
-        // setQuestionActive(ques)
-        // setExamIndex(index - 1)
     }
     const handelNextQues = (quesId:number): void => {
         const index = questions?.findIndex((r:any)=>r.quesId === quesId)
@@ -90,11 +87,6 @@ const ExamStart = (): JSX.Element => {
         setExamIndex(r=>r+1)
         setIdQuesExam(itemNext?.quesId)
         setQuestionActive(itemNext)
-
-        console.log(examIndex,quesId,questions,index,itemNext)
-        // const ques = questions?.find((r: any) => r.quesId === id);
-        // setQuestionActive(ques)
-        // setExamIndex(index + 1)
     }
 
     //=====================================================================
@@ -105,7 +97,7 @@ const ExamStart = (): JSX.Element => {
     const handleOpenSubmitExam = (): void => {
         setOpenSubmitExam(true)
     }
-    const handleOKSubmitExam = (): void => {
+    const handleOKSubmitExam = async (): Promise<void>=> {
         const endTime = new Date().toISOString();
         const beginTime = localStorage.getItem('beginTime')
         const localStorageData = localStorage.getItem('ansOfQues');
@@ -122,27 +114,25 @@ const ExamStart = (): JSX.Element => {
         }else{
             console.log(ansOfQues,questions);
             localStorage.removeItem('ansOfQues')
-            // callIPickerQuestions(async () => {
-            //     try {
-            //         for (const item of ansOfQues) {
-            //             await InsertPickerQuestion({
-            //                 quesId: item.quesId,
-            //                 cuid: competitionUserId?.cuid,
-            //                 answer: item.answer,
-            //             });
-            //         }
-            //         console.log('Thành công');
-            //     } catch (error) {
-            //         console.log(error);
-            //     }
-            // })
-
+            await callIPickerQuestions(async () => {
+                try {
+                    for (const item of ansOfQues) {
+                        await InsertPickerQuestion({
+                            quesId: item.quesId,
+                            cuid: competitionUserId?.cuid,
+                            answer: item.answer,
+                        });
+                    }
+                    console.log('Thành công');
+                } catch (error) {
+                    console.log(error);
+                }
+            })
             const trueAnswer = ansOfQues.reduce((count:number,curr:any)=>{
                 const itemQues = questions.find((r:any)=>r.quesId === curr.quesId)
                 if(curr.answer === itemQues.trueAnswer) count++
                 return count;
             },0)
-
             const falseAnswer = ansOfQues.reduce((count:number,curr:any)=>{
                 const itemQues = questions.find((r:any)=>r.quesId === curr.quesId)
                 if(curr.answer !== itemQues.trueAnswer) count++
@@ -161,22 +151,14 @@ const ExamStart = (): JSX.Element => {
                 falseAns:falseAnswer,
                 startTimes:String(beginTime),
                 endTimes:String(endTime)
-              }
-
-            callIResult(async () => {
+            }
+            await callIResult(async () => {
                 try {
-                    await InsertResult({
-                        cuid:competitionUserId?.cuid,
-                        trueAns:trueAnswer,
-                        falseAns:falseAnswer,
-                        startTimes:String(beginTime),
-                        endTimes:String(endTime)
-                    });
+                    await InsertResult(requestData);
                     console.log('thành công');
                 }catch (error) {
                     console.log(error);
             }})
-            // console.log(competitionUserId?.cuid,trueAnswer,falseAnswer,String(beginTime),String(endTime))
             localStorage.clear()
             navigate('/FinishedExam')
         }
@@ -224,7 +206,6 @@ const ExamStart = (): JSX.Element => {
                 answer: event.target.value,
             })
         }
-        console.log(remainingQuestion)
         localStorage.setItem('ansOfQues', JSON.stringify(ansOfQues))
         setChange(r => !r)
     }
