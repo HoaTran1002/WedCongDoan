@@ -58,14 +58,17 @@ const Index = (): JSX.Element => {
     const request: { _id: number } = {
       _id: ceid
     }
-    console.log(' _id: ' + request._id)
-
-    callDeleteCompExam(async (): Promise<void> => {
-      await deleteCompetitionsExams(request)
-    })
-    await setMesagge('Xoá thành công!')
-    await setSeverity('info')
-    setLoading(!loading)
+    try {
+      await callDeleteCompExam(async (): Promise<void> => {
+        await deleteCompetitionsExams(request)
+      })
+      await setSeverity('info')
+      setMesagge('Xoá thành công!')
+      setLoading(!loading)
+    } catch (error) {
+      await setSeverity('error')
+      await setMesagge('Xoá Thất bại!')
+    }
   }
   const submitEditExamName = async ({
     examId
@@ -82,7 +85,7 @@ const Index = (): JSX.Element => {
     })
     await setMesagge('sửa thành công!')
     await setSeverity('info')
-    await setLoading(!loading)
+    setLoading(!loading)
   }
   if (editExamState.error) {
     setMesagge('sửa thất bại!')

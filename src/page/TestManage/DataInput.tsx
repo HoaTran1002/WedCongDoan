@@ -63,12 +63,13 @@ const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
           await nameExamInsertCall(async () => {
             await insertExams(requesInsertExam)
           })
-          await setLoading(!loading)
-          insertCompExamCall(async (): Promise<void> => {
-            insertCompExam(requesInsertCompExam)
+          setLoading(!loading)
+          await insertCompExamCall(async (): Promise<void> => {
+            await insertCompExam(requesInsertCompExam)
           })
+
           await setShowSuccess(true)
-          await setLoad()
+          setLoad()
           console.log('data response:' + nameExamInsertState.payload)
         } catch (error) {
           setShowError(true)
@@ -94,7 +95,7 @@ const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
               elevation={6}
               variant='filled'
             >
-              Acction successful!
+              Thêm thành công!
             </MuiAlert>
           </Snackbar>
           <Snackbar
@@ -108,7 +109,7 @@ const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
               elevation={6}
               variant='filled'
             >
-              Acction Failed!
+              Thêm thất bại!
             </MuiAlert>
           </Snackbar>
           <TextField

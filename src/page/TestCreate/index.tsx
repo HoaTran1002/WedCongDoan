@@ -15,8 +15,6 @@ import {
   InputLabel,
   MenuItem,
   Modal,
-  Radio,
-  RadioGroup,
   Select,
   SelectChangeEvent,
   Snackbar,
@@ -37,6 +35,7 @@ import CardData from './CardData'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { padding } from '@mui/system'
 import { Margin } from '@mui/icons-material'
+import MessageAlert from '~/components/MessageAlert'
 
 interface IQuestion {
   examId: number
@@ -72,7 +71,7 @@ const style = {
 }
 
 const TestCreate = (): JSX.Element => {
-  const [loading, setLoading] = React.useState<boolean>(true)
+  const [loading, setLoading] = React.useState<boolean>(false)
   const [showSuccess, setShowSuccess] = React.useState<boolean>(false)
   const [showError, setShowError] = React.useState<boolean>(false)
   const [open, setOpen] = useState(false)
@@ -88,6 +87,8 @@ const TestCreate = (): JSX.Element => {
   const [errCorret, setErrCorret] = useState<string>('')
   const [errNumberCorret, setErrNumberCorret] = useState<string>('')
   const [errNullCorret, setErrNullCorret] = useState<string>('')
+  const [message, setMessage] = useState<string>('')
+  const [severity, setSeverity] = useState<string>('')
 
   const questions = getQuesState.payload || []
   const questionTypes = getQuesTypeState.payload || []
@@ -100,7 +101,7 @@ const TestCreate = (): JSX.Element => {
     } catch (error: any) {
       console.log(error)
     }
-  }, [getQuesTypeStateCall])
+  }, [getQuesTypeStateCall, loading])
   useEffect(() => {
     getQuesStateCall(async () => {
       return GetAllByExamID({ id: Number(examId) })
@@ -225,9 +226,11 @@ const TestCreate = (): JSX.Element => {
     } else {
       quesCreateCall(async (): Promise<void> => {
         try {
-          insertQues(bodyQuestion)
+          await insertQues(bodyQuestion)
+          await setLoading(!loading)
           setShowSuccess(true)
-          window.location.reload()
+          // setSeverity('info')
+          // setMessage('thêm thành công')
         } catch (error) {
           setShowError(true)
         }
@@ -260,11 +263,16 @@ const TestCreate = (): JSX.Element => {
     setOpen(false)
     window.location.reload()
   }
+
   return (
     <>
       <LayoutAdmin>
         <>
           <>
+            {message && severity && (
+              <MessageAlert mesagge={message} severity={severity} />
+            )}
+
             <Snackbar
               open={showSuccess}
               autoHideDuration={3000}
@@ -552,7 +560,9 @@ const TestCreate = (): JSX.Element => {
             const type = getNameTypeQues(q.quesTId)
             return (
               <CardData
-                callBack={(): void => {
+                callBack={async (): Promise<void> => {
+                  await setSeverity('info')
+                  await setMessage('đã xoá thành công')
                   setLoading(!loading)
                 }}
                 trueAnswer={correctAnswers}
