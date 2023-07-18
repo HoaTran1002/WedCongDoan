@@ -25,7 +25,7 @@ import {
 import MuiAlert from '@mui/material/Alert'
 import { blue, red } from '@mui/material/colors'
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { GetAllByExamID, insertQues } from '~/api/question'
 import { getAllQuesTpye } from '~/api/questionTypes'
@@ -34,7 +34,7 @@ import useFetch from '~/hook/useFetch'
 import CardData from './CardData'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { padding } from '@mui/system'
-import { Margin } from '@mui/icons-material'
+import SaveIcon from '@mui/icons-material/Save'
 import MessageAlert from '~/components/MessageAlert'
 
 interface IQuestion {
@@ -228,6 +228,7 @@ const TestCreate = (): JSX.Element => {
         try {
           await insertQues(bodyQuestion)
           await setLoading(!loading)
+
           setShowSuccess(true)
           // setSeverity('info')
           // setMessage('thêm thành công')
@@ -263,15 +264,17 @@ const TestCreate = (): JSX.Element => {
     setOpen(false)
     window.location.reload()
   }
-
+  if (message != null) {
+    setTimeout(() => {
+      setMessage('')
+    }, 3000)
+  }
   return (
     <>
       <LayoutAdmin>
         <>
           <>
-            {message && severity && (
-              <MessageAlert mesagge={message} severity={severity} />
-            )}
+            {message && <MessageAlert message={message} severity={severity} />}
 
             <Snackbar
               open={showSuccess}
@@ -500,10 +503,11 @@ const TestCreate = (): JSX.Element => {
                         <LoadingButton
                           size='small'
                           onClick={handleClick}
-                          loading={loading}
+                          loading
+                          loadingPosition='start'
+                          startIcon={<SaveIcon />}
                           variant='outlined'
                           sx={{ marginLeft: 2, marginRight: 2 }}
-                          disabled
                         >
                           <span>disabled</span>
                         </LoadingButton>

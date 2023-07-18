@@ -7,6 +7,8 @@ import useFetch from '~/hook/useFetch'
 import { getAllExam, insertExams } from '~/api/exam'
 import { insertCompExam } from '~/api/competitionExam'
 import { useParams } from 'react-router-dom'
+import LoadingButton from '@mui/lab/LoadingButton'
+import SaveIcon from '@mui/icons-material/Save'
 
 interface IExam {
   examId: number
@@ -79,7 +81,7 @@ const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
   }
   return (
     <>
-      {examsState.loading ? (
+      {examsState.loading || insertComp.loading ? (
         <h1>Đang tải dữ liệu...</h1>
       ) : (
         <>
@@ -120,13 +122,19 @@ const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
             id='selectDep'
             label='nhập tên đề'
           ></TextField>
-          <Button
-            sx={{ marginLeft: 2, marginTop: 2 }}
-            variant='outlined'
-            onClick={handelSubmitCreateExam}
-          >
-            Thêm Đề Thi{''} <CreateNewFolderSharpIcon />
-          </Button>
+          {examsState.loading || insertComp.loading ? (
+            <LoadingButton loading variant='outlined'>
+              Submit
+            </LoadingButton>
+          ) : (
+            <Button
+              sx={{ marginLeft: 2, marginTop: 2 }}
+              variant='outlined'
+              onClick={handelSubmitCreateExam}
+            >
+              Thêm Đề Thi{''} <CreateNewFolderSharpIcon />
+            </Button>
+          )}
         </>
       )}
     </>

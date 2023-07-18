@@ -1,9 +1,9 @@
 import { Snackbar, styled } from '@mui/material'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import MuiAlert, { AlertColor } from '@mui/material/Alert'
 
 interface IMessage {
-  mesagge: string
+  message: string
   severity: string
 }
 
@@ -13,14 +13,13 @@ const StyledSnackbar = styled(Snackbar)(({ theme }) => ({
   right: theme.spacing(2)
 }))
 
-const MessageAlert = ({ mesagge, severity }: IMessage): JSX.Element => {
-  const [showMessage, setShowMessage] = React.useState<boolean>(true)
+const MessageAlert = ({ message, severity }: IMessage): JSX.Element => {
+  const [showMessage, setShowMessage] = useState<boolean>(true)
 
   const handleClose = (): void => {
     setShowMessage(false)
   }
 
-  console.log(showMessage)
   return (
     <>
       <StyledSnackbar
@@ -35,7 +34,7 @@ const MessageAlert = ({ mesagge, severity }: IMessage): JSX.Element => {
           elevation={6}
           variant='filled'
         >
-          {mesagge}
+          {message}
         </MuiAlert>
       </StyledSnackbar>
     </>

@@ -16,7 +16,8 @@ const style = {
   bgcolor: 'white',
 
   borderRadius: 2,
-  boxShadow: 'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
+  boxShadow:
+    'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
   p: 4
 }
 
@@ -24,7 +25,10 @@ interface ModalAddProps {
   children: React.ReactNode
   Title: string // Prop bổ sung
 }
-export default function ModalAdd({ children, Title }: ModalAddProps): JSX.Element {
+export default function ModalAdd({
+  children,
+  Title
+}: ModalAddProps): JSX.Element {
   const [open, setOpen] = React.useState(false)
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
@@ -33,13 +37,21 @@ export default function ModalAdd({ children, Title }: ModalAddProps): JSX.Elemen
     <div>
       <Box
         onClick={handleOpen}
-        sx={{ background: blue[100], width: 100, height: 'auto', borderTopLeftRadius: 4, borderTopRightRadius: 4 }}
+        sx={{
+          background: blue[100],
+          width: 100,
+          height: 'auto',
+          marginRight: 2,
+          borderTopLeftRadius: 4,
+          borderTopRightRadius: 4
+        }}
       >
         {/* <Link to={`/TestCreate/Competition/${comId}`}>
             <Button>
               <PostAddSharpIcon sx={{ width: '100%', height: '100%' }} />
             </Button>
           </Link> */}
+
         <Button>
           <PostAddSharpIcon sx={{ width: '100%', height: '100%' }} />
         </Button>
@@ -49,12 +61,13 @@ export default function ModalAdd({ children, Title }: ModalAddProps): JSX.Elemen
             background: blue[700],
             color: '#fff',
             display: 'flex',
+
             justifyContent: 'center',
             textDecoration: 'none',
             border: 'none'
           }}
         >
-          <span>TẠO MỚI</span>
+          <span>TẠO ĐỀ THI</span>
         </Box>
       </Box>
       <Modal
@@ -75,7 +88,11 @@ export default function ModalAdd({ children, Title }: ModalAddProps): JSX.Elemen
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
             {children}
           </Typography>
-          <Button onClick={handleClose} sx={{ marginTop: 2 }} variant='contained'>
+          <Button
+            onClick={handleClose}
+            sx={{ marginTop: 2 }}
+            variant='contained'
+          >
             Thoát
           </Button>
         </Box>

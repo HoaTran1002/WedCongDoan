@@ -31,7 +31,7 @@ const Index = (): JSX.Element => {
   const [dataCompExams, compExamsCall] = useFetch()
   const [exams, setExams] = useState<{ [key: number]: string }>({})
   const [deleteCompExam, callDeleteCompExam] = useFetch()
-  const [mesagge, setMesagge] = useState<string>('')
+  const [message, setMessage] = useState<string>('')
   const [severity, setSeverity] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [nameExam, setNameExam] = useState<string>('')
@@ -63,11 +63,11 @@ const Index = (): JSX.Element => {
         await deleteCompetitionsExams(request)
       })
       await setSeverity('info')
-      setMesagge('Xoá thành công!')
+      setMessage('Xoá thành công!')
       setLoading(!loading)
     } catch (error) {
       await setSeverity('error')
-      await setMesagge('Xoá Thất bại!')
+      await setMessage('Xoá Thất bại!')
     }
   }
   const submitEditExamName = async ({
@@ -83,18 +83,22 @@ const Index = (): JSX.Element => {
     await setEditExamState(async (): Promise<void> => {
       await EditExam(reques)
     })
-    await setMesagge('sửa thành công!')
+    await setMessage('sửa thành công!')
     await setSeverity('info')
     setLoading(!loading)
   }
   if (editExamState.error) {
-    setMesagge('sửa thất bại!')
+    setMessage('sửa thất bại!')
     setSeverity('error')
   }
-
+  if (message != null) {
+    setTimeout(() => {
+      setMessage('')
+    }, 3000)
+  }
   return (
     <>
-      {mesagge && <MessageAlert mesagge={mesagge} severity={severity} />}
+      {message && <MessageAlert message={message} severity={severity} />}
       <LayoutAdmin>
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
           <ModalAdd Title='THÊM MỚI ĐỀ THI'>

@@ -76,10 +76,14 @@ const Index = ({
       setSeverity('error')
     }
   }
-
+  if (message != null) {
+    setTimeout(() => {
+      setMessage('')
+    }, 3000)
+  }
   return (
     <>
-      {message && <MessageAlert mesagge={message} severity={severity} />}
+      {message && <MessageAlert message={message} severity={severity} />}
       <Card
         sx={{
           maxWidth: '100%',
