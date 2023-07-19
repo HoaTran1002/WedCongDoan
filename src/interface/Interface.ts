@@ -24,6 +24,11 @@ export interface ICompetitionUser {
     userId: string
 }
 
+export interface IDate {
+    date: number,
+    month: number,
+    year: number
+  }
 export interface ICompetitionExam {
     ceid: number,
     examId: number,
