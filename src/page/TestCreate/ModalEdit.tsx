@@ -94,7 +94,7 @@ const ModalEdit = ({
   const [answerList, setAnswerList] = useState<string[]>([])
   const [correctAnswerList, setCorrectAnswerList] = useState<string[]>([])
   const [errQuestion, setErrQuestion] = useState<string>('')
-  const [mesagge, setMesagge] = useState<string>('')
+  const [message, setMessage] = useState<string>('')
   const [severity, setSeverity] = useState<string>('')
 
   const [errCorret, setErrCorret] = useState<string>('')
@@ -258,11 +258,11 @@ const ModalEdit = ({
       updateQuesCall(async (): Promise<void> => {
         try {
           await updateQues(bodyQuestion)
-          await setMesagge('cập nhật thành công')
+          await setMessage('cập nhật thành công')
           await setSeverity('success')
           window.location.reload()
         } catch (error) {
-          setMesagge('cập nhật thất bại')
+          setMessage('cập nhật thất bại')
           setSeverity('error')
         }
       })
@@ -278,9 +278,14 @@ const ModalEdit = ({
   function cancelModal(): void {
     setOpen(false)
   }
+  if (message != null) {
+    setTimeout(() => {
+      setMessage('')
+    }, 3000)
+  }
   return (
     <>
-      {mesagge && <MessageAlert mesagge={mesagge} severity={severity} />}
+      {message && <MessageAlert message={message} severity={severity} />}
       <LightTooltip placement='left' title='chỉnh sửa câu hỏi'>
         <Button
           sx={{

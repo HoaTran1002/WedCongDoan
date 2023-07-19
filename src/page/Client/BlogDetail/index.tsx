@@ -11,16 +11,15 @@ import { Grid, Box, Typography, SxProps, Container, Button } from '@mui/material
 import { Link,useNavigate,useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp'
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
+import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled'
 import { getAllBlog, getBlogId } from '~/api/blogApi'
 import { getAllUser } from '~/api/userApi'
 import { getAllCompetitionBlog } from '~/api/CompetitionBlog'
 import { Loader,LoaderBlogSub,LoaderBlogDetail } from '~/components/loader'
 import useFetch from '~/hook/useFetch'
-
 
 const Index = (): JSX.Element => {
     const {id} = useParams();
@@ -40,12 +39,17 @@ const Index = (): JSX.Element => {
         const user = listUser?.find((r: any) => r.userId === userId)
         return user?.userName
     }
-    const formatDay = (dayOrigin: string): string => {
-        const dateObj = new Date(dayOrigin);
-        const month = dateObj.getMonth() + 1;
-        const day = dateObj.getDate();
-        const year = dateObj.getFullYear();
-        return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
+
+    fetchData()
+  }, [id])
+  React.useEffect(() => {
+    const fetchData = async (): Promise<any> => {
+      try {
+        const data = await getAllCompetitionBlog()
+        callAllBlogCompetition(() => Promise.resolve(data))
+      } catch (error) {
+        console.log(error)
+      }
     }
     React.useEffect((): void => {
         callAllBlogs(getAllBlog)
@@ -315,10 +319,10 @@ const BlogName = styled.h2`
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-word;
-  font-size:18px;
+  font-size: 18px;
   line-height: 30px;
   height: 60px;
   margin: 0;
-  color:#1976d2;
+  color: #1976d2;
   vertical-align: middle;
 `

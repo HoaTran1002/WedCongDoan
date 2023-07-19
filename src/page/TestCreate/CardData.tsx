@@ -36,7 +36,7 @@ const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
   }
 }))
 interface IQuestion {
-  callBack?: () => void
+  callBack: () => void
   quesId: number
   index: number
   quesDetail: string
@@ -58,31 +58,32 @@ const Index = ({
   const [deleteQuestionState, deleteQuestionCall] = useFetch()
   const [message, setMessage] = useState<string>('')
   const [severity, setSeverity] = useState<string>('')
-  const [isDeleteValue, setIsDeleteValue] = useState<boolean>(false)
 
   const TypeSelect = typeAnswer === 'Radio' ? Radio : Checkbox
   const LayoutSelect = typeAnswer === 'Radio' ? RadioGroup : FormGroup
 
-  const deleteQuestion = (): void => {
+  const deleteQuestion = async (): Promise<void> => {
     const id = quesId
 
     try {
-      console.log('excute')
-      deleteQuestionCall(async () => {
-        return deleteQues({ id })
+      await deleteQuestionCall(async (): Promise<void> => {
+        await deleteQues({ id })
       })
-      setMessage('đã xoá thành công')
-      setSeverity('info')
-      callBack
+
+      callBack()
     } catch (error) {
       setMessage('xoá thất bại')
       setSeverity('error')
     }
   }
-
+  if (message != null) {
+    setTimeout(() => {
+      setMessage('')
+    }, 3000)
+  }
   return (
     <>
-      {message && <MessageAlert mesagge={message} severity={severity} />}
+      {message && <MessageAlert message={message} severity={severity} />}
       <Card
         sx={{
           maxWidth: '100%',

@@ -150,7 +150,7 @@ export default function Index(): JSX.Element {
         r.userId === profile?.userId
     )
     const check = getAllResults?.payload?.find(
-      (r: IResult) => Number(r?.cuid) === item?.cuid
+      (r: IResult) => Number(r.cuid) === item.cuid
     )
     if (check === undefined) setHasJoin(false)
     else setHasJoin(true)
@@ -160,7 +160,54 @@ export default function Index(): JSX.Element {
     if (Number(id) !== Number(comId)) {
       navigate('/*')
     }
-  }, [location, navigate]) 
+  }, [location, navigate])
+
+  const competition = getAllComps?.payload?.find((r: any) => r.comId === comId)
+  const listExam = getAllExams?.payload
+  const listComExam = getAllCompExams?.payload?.filter(
+    (r: any) => r.comId === comId
+  )
+
+  const listDep = getAllDeps?.payload
+
+  const getDepName = (id: number): string => {
+    const dep = listDep?.find((r: any) => r.depId === id)
+    return dep?.depName || ''
+  }
+  const handleClickOpen = (): void => {
+    setOpen(true)
+  }
+
+  const handleClose = (): void => {
+    setOpen(false)
+  }
+
+  const handleClickExamOpen = (): void => {
+    const competitionId = localStorage.getItem('competitionId')
+    const item = getAllCompUsers?.payload?.find(
+      (r: any) =>
+        Number(r.comId) === Number(competitionId) &&
+        r.userId === profile?.userId
+    )
+    const check = getAllResults?.payload?.find(
+      (r: any) => Number(r?.cuid) === item?.cuid
+    )
+    if (check === undefined) {
+      setOpenExam(true)
+    } else {
+      setOpenWarn(true)
+    }
+  }
+  const handleCloseExam = (): void => {
+    setOpenExam(false)
+  }
+
+  const handleWatchRank = (): void => {
+    setOpenRank(true)
+  }
+  const handleExitRank = (): void => {
+    setOpenRank(false)
+  }
   const requestData: {
     comId: number
     userId?: string

@@ -31,7 +31,7 @@ const Index = (): JSX.Element => {
   const [dataCompExams, compExamsCall] = useFetch()
   const [exams, setExams] = useState<{ [key: number]: string }>({})
   const [deleteCompExam, callDeleteCompExam] = useFetch()
-  const [mesagge, setMesagge] = useState<string>('')
+  const [message, setMessage] = useState<string>('')
   const [severity, setSeverity] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [nameExam, setNameExam] = useState<string>('')
@@ -58,14 +58,17 @@ const Index = (): JSX.Element => {
     const request: { _id: number } = {
       _id: ceid
     }
-    console.log(' _id: ' + request._id)
-
-    callDeleteCompExam(async (): Promise<void> => {
-      await deleteCompetitionsExams(request)
-    })
-    await setMesagge('Xoá thành công!')
-    await setSeverity('info')
-    setLoading(!loading)
+    try {
+      await callDeleteCompExam(async (): Promise<void> => {
+        await deleteCompetitionsExams(request)
+      })
+      await setSeverity('info')
+      setMessage('Xoá thành công!')
+      setLoading(!loading)
+    } catch (error) {
+      await setSeverity('error')
+      await setMessage('Xoá Thất bại!')
+    }
   }
   const submitEditExamName = async ({
     examId
@@ -80,18 +83,22 @@ const Index = (): JSX.Element => {
     await setEditExamState(async (): Promise<void> => {
       await EditExam(reques)
     })
-    await setMesagge('sửa thành công!')
+    await setMessage('sửa thành công!')
     await setSeverity('info')
-    await setLoading(!loading)
+    setLoading(!loading)
   }
   if (editExamState.error) {
-    setMesagge('sửa thất bại!')
+    setMessage('sửa thất bại!')
     setSeverity('error')
   }
-
+  if (message != null) {
+    setTimeout(() => {
+      setMessage('')
+    }, 3000)
+  }
   return (
     <>
-      {mesagge && <MessageAlert mesagge={mesagge} severity={severity} />}
+      {message && <MessageAlert message={message} severity={severity} />}
       <LayoutAdmin>
         <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
           <ModalAdd Title='THÊM MỚI ĐỀ THI'>

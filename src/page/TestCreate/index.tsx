@@ -15,8 +15,6 @@ import {
   InputLabel,
   MenuItem,
   Modal,
-  Radio,
-  RadioGroup,
   Select,
   SelectChangeEvent,
   Snackbar,
@@ -27,7 +25,7 @@ import {
 import MuiAlert from '@mui/material/Alert'
 import { blue, red } from '@mui/material/colors'
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { GetAllByExamID, insertQues } from '~/api/question'
 import { getAllQuesTpye } from '~/api/questionTypes'
@@ -36,7 +34,8 @@ import useFetch from '~/hook/useFetch'
 import CardData from './CardData'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import { padding } from '@mui/system'
-import { Margin } from '@mui/icons-material'
+import SaveIcon from '@mui/icons-material/Save'
+import MessageAlert from '~/components/MessageAlert'
 
 interface IQuestion {
   examId: number
@@ -72,7 +71,7 @@ const style = {
 }
 
 const TestCreate = (): JSX.Element => {
-  const [loading, setLoading] = React.useState<boolean>(true)
+  const [loading, setLoading] = React.useState<boolean>(false)
   const [showSuccess, setShowSuccess] = React.useState<boolean>(false)
   const [showError, setShowError] = React.useState<boolean>(false)
   const [open, setOpen] = useState(false)
@@ -88,6 +87,8 @@ const TestCreate = (): JSX.Element => {
   const [errCorret, setErrCorret] = useState<string>('')
   const [errNumberCorret, setErrNumberCorret] = useState<string>('')
   const [errNullCorret, setErrNullCorret] = useState<string>('')
+  const [message, setMessage] = useState<string>('')
+  const [severity, setSeverity] = useState<string>('')
 
   const questions = getQuesState.payload || []
   const questionTypes = getQuesTypeState.payload || []
@@ -100,7 +101,7 @@ const TestCreate = (): JSX.Element => {
     } catch (error: any) {
       console.log(error)
     }
-  }, [getQuesTypeStateCall])
+  }, [getQuesTypeStateCall, loading])
   useEffect(() => {
     getQuesStateCall(async () => {
       return GetAllByExamID({ id: Number(examId) })
@@ -225,9 +226,12 @@ const TestCreate = (): JSX.Element => {
     } else {
       quesCreateCall(async (): Promise<void> => {
         try {
-          insertQues(bodyQuestion)
+          await insertQues(bodyQuestion)
+          await setLoading(!loading)
+
           setShowSuccess(true)
-          window.location.reload()
+          // setSeverity('info')
+          // setMessage('thêm thành công')
         } catch (error) {
           setShowError(true)
         }
@@ -260,11 +264,18 @@ const TestCreate = (): JSX.Element => {
     setOpen(false)
     window.location.reload()
   }
+  if (message != null) {
+    setTimeout(() => {
+      setMessage('')
+    }, 3000)
+  }
   return (
     <>
       <LayoutAdmin>
         <>
           <>
+            {message && <MessageAlert message={message} severity={severity} />}
+
             <Snackbar
               open={showSuccess}
               autoHideDuration={3000}
@@ -492,10 +503,11 @@ const TestCreate = (): JSX.Element => {
                         <LoadingButton
                           size='small'
                           onClick={handleClick}
-                          loading={loading}
+                          loading
+                          loadingPosition='start'
+                          startIcon={<SaveIcon />}
                           variant='outlined'
                           sx={{ marginLeft: 2, marginRight: 2 }}
-                          disabled
                         >
                           <span>disabled</span>
                         </LoadingButton>
@@ -552,7 +564,9 @@ const TestCreate = (): JSX.Element => {
             const type = getNameTypeQues(q.quesTId)
             return (
               <CardData
-                callBack={(): void => {
+                callBack={async (): Promise<void> => {
+                  await setSeverity('info')
+                  await setMessage('đã xoá thành công')
                   setLoading(!loading)
                 }}
                 trueAnswer={correctAnswers}

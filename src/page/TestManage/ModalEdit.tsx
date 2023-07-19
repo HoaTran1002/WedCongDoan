@@ -7,16 +7,18 @@ import EditNoteIcon from '@mui/icons-material/EditNote'
 import { styled } from '@mui/material/styles'
 import { TextField, Tooltip } from '@mui/material'
 import { TooltipProps, tooltipClasses } from '@mui/material/Tooltip'
+import { blue } from '@mui/material/colors'
 
 const style = {
   position: 'absolute',
-  top: '50%',
+  top: '40%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
+  border: '1px solid #555',
   boxShadow: 24,
+  borderRadius: 2,
   p: 4
 }
 const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
@@ -72,7 +74,7 @@ export default function BasicModal({
       >
         <Box sx={style}>
           <Typography id='modal-modal-title' variant='h6' component='h2'>
-            Chỉnh Tên Đề Thi
+            Sửa Tên Đề Thi
           </Typography>
 
           <Box>
