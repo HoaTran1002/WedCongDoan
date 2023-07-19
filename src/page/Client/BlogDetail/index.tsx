@@ -33,29 +33,31 @@ const Index = (): JSX.Element => {
     const [allUser, callAllUser] = useFetch()
     const [getAllBlogs, callAllBlogs] = useFetch()
     const [allBlogCompetition, callAllBlogCompetition] = useFetch()
-    console.log(blogId,id)
 
     const getUserName = (userId: string): string => {
-        const user = listUser?.find((r: any) => r.userId === userId)
+        const user = allUser?.payload?.find((r: any) => r.userId === userId)
         return user?.userName
     }
-
-    fetchData()
-  }, [id])
-  React.useEffect(() => {
-    const fetchData = async (): Promise<any> => {
-      try {
-        const data = await getAllCompetitionBlog()
-        callAllBlogCompetition(() => Promise.resolve(data))
-      } catch (error) {
-        console.log(error)
+    const formatDay = (dayOrigin: string): string => {
+      const dateObj = new Date(dayOrigin);
+      const month = dateObj.getMonth() + 1;
+      const day = dateObj.getDate();
+      const year = dateObj.getFullYear();
+      return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
+  }
+    React.useEffect(() => {
+      const fetchData = async (): Promise<any> => {
+        try {
+          const data = await getAllCompetitionBlog()
+          callAllBlogCompetition(() => Promise.resolve(data))
+        } catch (error) {
+          console.log(error)
+        }
       }
-    }
+    })
     React.useEffect((): void => {
         callAllBlogs(getAllBlog)
     }, [id])
-    
-
     React.useEffect(() => {
         const fetchData = async (): Promise<any> => {
             try {
@@ -81,6 +83,7 @@ const Index = (): JSX.Element => {
 
         fetchData();
     }, [id])
+
     const listComBlog = allBlogCompetition?.payload;
     const listBlogs = getAllBlogs?.payload;
     const listUser = allUser?.payload
@@ -110,6 +113,7 @@ const Index = (): JSX.Element => {
     React.useEffect(()=>{
         setBlogId(Number(id))
     },[id])
+
     return (
         <>
             <Layout>
