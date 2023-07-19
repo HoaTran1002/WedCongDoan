@@ -70,13 +70,16 @@ export default function Login(): JSX.Element {
     }
     try {
       await server.post('/Users/Login', body)
+
       console.log('thành công')
       location.reload()
     } catch (error) {
       console.log(error)
     }
   }
-  if (profile) return <Navigate to={'/'} replace={true} />
+  if (profile) {
+    return <Navigate to={'/'} replace={true} />
+  }
 
   return (
     <ThemeProvider theme={theme}>
