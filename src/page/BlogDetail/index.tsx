@@ -23,7 +23,7 @@ import React, { useState, useEffect } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { getBlogId, editBlog, deleteBlog, getAllBlog } from '~/api/blogApi'
 import {getAllComp} from '~/api/competitionApi'
 import {getAllCompetitionBlog,EditCompetitionBlog,DeleteCompetitionBlog} from '~/api/CompetitionBlog'
@@ -35,6 +35,7 @@ interface Competition{
 }
 
 const Index = (): JSX.Element => {
+  const navigate = useNavigate();
   useEffect(()=>{
     const listCompetitionBlog = getComBlogs?.payload || [];
     const competitionBlog = listCompetitionBlog.find((r:any)=>r.blogId === blogId)
@@ -376,6 +377,9 @@ const Index = (): JSX.Element => {
                     onClick={handleDeleteOpen}
                   >
                     Xóa trang blog
+                  </Button>
+                  <Button sx={{ marginTop: '20px'}} variant='outlined' onClick={():void=>navigate('/BlogManage')}>
+                    Trở về
                   </Button>
                 </Stack>
                 <Dialog

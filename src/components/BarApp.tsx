@@ -35,12 +35,14 @@ import HomeIcon from '@mui/icons-material/Home';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import HistoryIcon from '@mui/icons-material/History';
+import SettingsIcon from '@mui/icons-material/Settings';
 import useAuth from '~/hook/useAuth'
 const drawerWidth = 250
 const pages = [
   { name: 'TRANG CHỦ', to: '/', iconComponent: <HomeIcon /> },
   { name: 'DANH SÁCH CUỘC THI', to: '/Listcompetition', iconComponent: <FormatListBulletedIcon /> },
-  { name: 'ADMIN', to: '/CompetitionManage' }
+  { name: 'GIẢI THƯỞNG', to: '/PrizeCompetition', iconComponent: <FormatListBulletedIcon /> },
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
@@ -102,6 +104,10 @@ export default function SideBar(): JSX.Element {
 
   const handleGoToHistoryComp = ():void =>{
     navigate('/HistoryCompetition')
+  }
+  const getOneCharacter= (userName?:string):string | undefined=>{
+    const lastPartOfName = userName?.split(" ").slice(-1)[0];
+    return lastPartOfName?.charAt(0);
   }
   return (
     <>
@@ -294,48 +300,111 @@ export default function SideBar(): JSX.Element {
             ))}
           </Box>
         </Box>
-        <Box sx={{ flexGrow: 0, display:'flex',gap:"10px",alignItems:"center" }}>
-          <Tooltip title={profile?.userName} >
-            <Box
-              onClick={handleOpenUserMenu} 
-              sx={{ 
-                mr: 5,
-                width:'40px',
-                height:"40px",
-                overflow:"hidden",
-                borderRadius:"50%",
-                cursor:"pointer"
+        <Box sx={{ display:'flex',gap:"30px",alignItems:"center" }}>
+        <Button 
+              variant='outlined'
+              startIcon={<HistoryIcon/>}
+              sx={{
+                width:"100%",
+                border:"1px solid #fff",
+                borderRadius:"5px",
+                color:"white",
+                '&:hover':{
+                  borderColor:"#fff"
+                }
               }}
-              >
-              <img 
-                src={avata} 
-                style={{
-                  width:'100%',
-                  height:"100%",
-                }}
-                alt="Avata" />
-            </Box>
-          </Tooltip>
-          <Menu
-            sx={{ mt: '45px' }}
-            id='menu-appbar'
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
+              onClick={():void=>{
+                navigate('/HistoryCompetition')
+              }}
+            >
+                LỊCH SỬ THI
+            </Button>
+          <Box
+            sx={{
+              position:"relative",
+              '&:hover .box_info-avata':{
+                display:"flex",
+              }
             }}
-            keepMounted
-            transformOrigin={{
-              vertical: 'top',
-              horizontal: 'right'
-            }}
-            open={Boolean(anchorElUser)}
-            onClose={handleCloseUserMenu}
           >
-            <MenuItem onClick={handleGoToHistoryComp}>
-              <Typography textAlign='center'>Lịch sử thi</Typography>
-            </MenuItem>
-          </Menu>
+            
+            <Avatar 
+              sx={{
+                backgroundColor:"#d139ff",
+                color:"white",
+                fontWeight:"500",
+                cursor:"pointer",
+                mr:3,
+                
+
+              }}
+            >
+              {getOneCharacter(profile?.userName)}
+            </Avatar>
+            <Box
+              className='box_info-avata'
+              sx={{
+                position:"absolute",
+                width:"200px",
+                backgroundColor:"white",
+                right:"30px",
+                top:"50px",
+                padding:"10px",
+                borderRadius:"5px",
+                display:"none",
+                alignItems:"center",
+                flexDirection:"column",
+                gap:"10px",
+                transition:"0.2s all linear",
+                boxShadow: "rgba(0, 0, 0, 0.2) -3px 4px 14px 0px",
+                '&::before':{
+                  content:"''",
+                  left:0,
+                  position:"absolute",
+                  right:0,
+                  height:"30px",
+                  top:"-30px"
+                }
+              }}
+            >
+              <Avatar 
+                sx={{
+                  backgroundColor:"#d139ff",
+                  color:"white",
+                  fontWeight:"500",
+                  cursor:"pointer",
+                  gap:"10px"
+                }}
+              >
+                {getOneCharacter(profile?.userName)}
+              </Avatar>
+              <h3 
+                className='color-primary'
+                style={{
+                  margin:"5px 0"
+                }}
+              >
+                {profile?.userName}
+              </h3>
+              
+              {
+                profile?.roleId === 1 || profile?.roleId === 2 ? (
+                  <Button 
+                    variant='outlined'
+                    startIcon={<SettingsIcon/>}
+                    sx={{
+                      width:"100%"
+                    }}
+                    onClick={():void=>{
+                      navigate('/CompetitionManage')
+                    }}
+                  >
+                    QUẢN LÝ
+                  </Button>
+                ):(<></>)
+              }
+            </Box>
+          </Box>
         </Box>
       </Box>
       <Box sx={{ display: 'flex' }}>

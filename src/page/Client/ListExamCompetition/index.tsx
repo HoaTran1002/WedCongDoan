@@ -17,12 +17,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import CrownImg from '~/assets/img/icons8-crown-96.png'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp'
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
-import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled'
-import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined'
+
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import InfoIcon from '@mui/icons-material/Info'
@@ -35,6 +30,7 @@ import { getAllResult } from '~/api/resultApi'
 import useFetch from '~/hook/useFetch'
 import { getAllCompUser, insertCompUser } from '~/api/CompetitionUser'
 import Ranking from './Ranking'
+import MessageAlert from '~/components/MessageAlert'
 import {
   IResult,
   ICompetition,
@@ -62,8 +58,9 @@ export default function Index(): JSX.Element {
   const [openExam, setOpenExam] = React.useState(false)
   const [hasJoin, setHasJoin] = React.useState(false)
   const [openRank, setOpenRank] = React.useState(false)
-  const competition = getAllComps?.payload?.find((r: ICompetition) => r.comId === comId)
-  const listExam = getAllExams?.payload
+  const competition:ICompetition = getAllComps?.payload?.find((r: ICompetition) => r.comId === comId)
+  const [message,setMessage] = React.useState('')
+  const [openDayBeforeAfter,setOpenDayBeforeAfter]=React.useState(false)
   const listComExam = getAllCompExams?.payload?.filter(
     (r: ICompetitionExam) => r.comId === comId
   )
@@ -81,19 +78,42 @@ export default function Index(): JSX.Element {
   }
 
   const handleClickExamOpen = (): void => {
-    const competitionId = localStorage.getItem('competitionId')
-    const item = getAllCompUsers?.payload?.find(
-      (r: ICompetitionUser) =>
-        Number(r.comId) === Number(competitionId) &&
-        r.userId === profile?.userId
-    )
-    const check = getAllResults?.payload?.find(
-      (r: IResult) => Number(r?.cuid) === item?.cuid
-    )
-    if (check === undefined) {
-      setOpenExam(true)
+    if(isBeforeDate(competition?.startDate)){
+      setMessage('Cuộc thi chưa bắt đầu')
+      setOpenDayBeforeAfter(true)
+    }else if(!isBeforeDate(competition?.endDate)){
+      setMessage('Cuộc thi đã kết thúc')  
+      setOpenDayBeforeAfter(true)
+    }else{
+      const competitionId = localStorage.getItem('competitionId')
+      const item = getAllCompUsers?.payload?.find(
+        (r: ICompetitionUser) =>
+          Number(r.comId) === Number(competitionId) &&
+          r.userId === profile?.userId
+      )
+      const check = getAllResults?.payload?.find(
+        (r: IResult) => Number(r?.cuid) === item?.cuid
+      )
+      if (check === undefined) {
+        setOpenExam(true)
+      }
     }
   }
+
+  const handleCloseDayBeforeAfter =():void=>{
+    setOpenDayBeforeAfter(false)
+  }
+  const isBeforeDate = (dateInput:string):boolean => {
+    const date = new Date(dateInput);
+    const currentDate = new Date();
+
+    console.log(date,currentDate)
+    if (date > currentDate) {
+      return true;
+    } else {
+      return false;
+    }
+  };
   const handleCloseExam = (): void => {
     setOpenExam(false)
   }
@@ -140,10 +160,7 @@ export default function Index(): JSX.Element {
     if (Number(id) !== Number(comId)) {
       navigate('/*')
     }
-  }, [location, navigate])
-
-  
-  
+  }, [location, navigate]) 
   const requestData: {
     comId: number
     userId?: string
@@ -151,7 +168,7 @@ export default function Index(): JSX.Element {
     comId: comId,
     userId: profile?.userId
   }
-  console.log()
+  
   const handleOkExam = (): void => {
     setOpenExam(false)
     const randomIndex = Math.floor(Math.random() * listComExam.length)
@@ -183,6 +200,13 @@ export default function Index(): JSX.Element {
     return `${month.toString().padStart(2, '0')} / ${day
       .toString()
       .padStart(2, '0')} / ${year}`
+  }
+  function formatTime(dayOrigin: string): string {
+    const date = new Date(dayOrigin);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+    return `${hours}:${minutes}:${seconds}`;
   }
   return (
     <>
@@ -247,6 +271,7 @@ export default function Index(): JSX.Element {
                     {competition?.comName}
                   </Box>
                 </Box>
+              
                 <Box
                   sx={{
                     display: 'flex',
@@ -260,7 +285,7 @@ export default function Index(): JSX.Element {
                       fontWeight: '600'
                     }}
                   >
-                    Ngày bắt đầu:
+                    Thời gian bắt đầu:
                   </Box>
                   <Box
                     sx={{
@@ -269,9 +294,10 @@ export default function Index(): JSX.Element {
                       color: '#666'
                     }}
                   >
-                    {formatDay(competition?.startDate)}
+                    {formatDay(competition?.startDate)} - {formatTime(competition?.startDate)}
                   </Box>
                 </Box>
+                
                 <Box
                   sx={{
                     display: 'flex',
@@ -285,7 +311,7 @@ export default function Index(): JSX.Element {
                       fontWeight: '600'
                     }}
                   >
-                    Ngày kết thúc:
+                    Thời gian kết thúc:
                   </Box>
                   <Box
                     sx={{
@@ -294,7 +320,7 @@ export default function Index(): JSX.Element {
                       color: '#666'
                     }}
                   >
-                    {formatDay(competition?.endDate)}
+                    {formatDay(competition?.endDate)} - {formatTime(competition?.endDate)}
                   </Box>
                 </Box>
                 <Box
@@ -361,7 +387,25 @@ export default function Index(): JSX.Element {
               {
                 (listComExam?.length === 0) ?
                   (
-                    <h2>Hãy đợi thông báo từ ban tổ chức</h2>
+                    <Box
+                      sx={{
+                        display:"flex",
+                        alignItems:"center",
+                        justifyContent:"center",
+                        flexDirection:"column"
+                      }}
+                    >
+                      <h2 
+                        className='color-primary'
+                        style={{
+                          padding:"50px 0",
+                          textAlign:"center"
+                        }}
+                      >Hãy đợi thông báo từ ban tổ chức</h2>
+                      <Link to={'/ListCompetition'}>
+                        <Button variant='outlined'>TRỞ VỀ</Button>
+                      </Link>
+                    </Box>
                   ) :
                   (
                     <Box
@@ -442,7 +486,24 @@ export default function Index(): JSX.Element {
               <Button onClick={handleClose}>Đã hiểu</Button>
             </DialogActions>
           </Dialog>
-
+          <Dialog
+            open={openDayBeforeAfter}
+            onClose={handleCloseDayBeforeAfter}
+            aria-labelledby='alert-dialog-title'
+            aria-describedby='alert-dialog-description'
+          >
+            <DialogTitle id='alert-dialog-title' className='color-primary'>
+              {'Thông báo'}
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText id='alert-dialog-description'>
+                <span style={{color:"#000"}}>{message}</span>
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDayBeforeAfter}>Đã hiểu</Button>
+            </DialogActions>
+          </Dialog>
           <Dialog
             open={openExam}
             onClose={handleCloseExam}

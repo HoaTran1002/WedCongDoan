@@ -10,7 +10,7 @@ const LayoutDefault = ({ children }: Props): JSX.Element => {
   return (
     <>
       <BarApp/>
-      {children}
+        {children}
       <BarAppFooter/>
     </>
   )

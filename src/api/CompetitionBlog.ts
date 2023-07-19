@@ -47,7 +47,7 @@ export const getBlogCompetitionBlogId = async ({ id }: {id: number }): Promise<a
 export const DeleteCompetitionBlog = async ({
   _id
 }: {
-  _id: number | null
+  _id: number | undefined
 }): Promise<void> => {
   try {
     await server.delete(`/CompetitionsBlogsUsers?id=${_id}`)
@@ -64,10 +64,10 @@ export const EditCompetitionBlog = async ({
     userId,
     postDate
 }: {
-    id:number
+    id:number | undefined
     comId: number
     blogId: number
-    userId: string
+    userId: string | undefined
     postDate: string
 }): Promise<void> => {
   try {

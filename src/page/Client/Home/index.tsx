@@ -150,7 +150,7 @@ const Home = (): JSX.Element => {
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
-            <Grid item md={8} xs={12}>
+            <Grid item md={12} xs={12}>
               <Box
                 sx={{
                   padding: "10px 0",
@@ -159,7 +159,7 @@ const Home = (): JSX.Element => {
                 }}
               >
                 <Box component='span' className='title-home-page_heading'>
-                  ĐẠI HỘI CÔNG ĐOÀN CÁC CẤP TIẾN TỚI ĐẠI HỘI CÔNG ĐOÀN XII CÔNG ĐOÀN THÀNH PHỐ HỒ CHÍ MINH
+                  CÁC CUỘC THI CÔNG ĐOÀN ĐANG DIỄN RA
                 </Box>
                 <span className='line'></span>
               </Box>
@@ -168,14 +168,14 @@ const Home = (): JSX.Element => {
                   allBlog.loading || allBlogCompetition.loading ?
                     (
                       itemBlogsCompetition.map((row: any, index: any) => (
-                        <Grid key={index} item xs={12} md={6}>
+                        <Grid key={index} item xs={12} md={4}>
                           <LoaderBlogMain key='load' />
                         </Grid>
                       ))
                     ) :
                     (
                       itemBlogsCompetition.map((row: any, index: any) => (
-                        <Grid key={index} item xs={12} md={6}>
+                        <Grid key={index} item xs={12} md={4}>
                           <Box sx={styleBlogWarp}>
                             <Box
                               sx={{
@@ -227,224 +227,6 @@ const Home = (): JSX.Element => {
                 }
               </Grid>
             </Grid >
-            <Grid item md={4} xs={12}>
-              <Box
-                sx={{
-                  padding: '10px',
-                  backgroundColor: '#1976D2',
-                  display: "flex",
-                  justifyContent: "space-between"
-                }}
-              >
-                <Typography variant='h6' sx={{ color: 'white', fontSize: '16px' }}>
-                  VĂN BẢN MỚI
-                </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    gap: "10px"
-                  }}
-                >
-                  <Box
-                    onClick={handlePrevious}
-                    component='button'
-                    disabled={startIndex === 0}
-                    sx={buttonPreNext}
-                  >
-                    <KeyboardArrowLeftIcon />
-                  </Box>
-                  <Box
-                    onClick={handleNext}
-                    component='button'
-                    disabled={startIndex + dataPerPage >= totalRows}
-                    sx={buttonPreNext}
-                  >
-                    <KeyboardArrowRightIcon />
-                  </Box>
-                </Box>
-              </Box>
-              <Grid container sx={{ marginTop: '20px' }} rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                {
-                  allBlog.loading || allBlogCompetition.loading ?
-                    (
-                      visibleRows.map((row: any, index: any) => (
-                        <Grid key={index} item xs={12}>
-                          <LoaderBlogSub />
-                        </Grid>
-                      ))
-                    ) :
-                    (
-                      visibleRows.map((row: any, index: any) => (
-                        <Grid key={index} item xs={12}>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: '10px'
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                height: "90px",
-                                width: "120px",
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  height: "100%",
-                                  width: '100%',
-                                  objectFit: "cover"
-                                }}
-                                component='img'
-                                src={`data:image/jpeg;base64,${row.imgSrc}`}
-                              />
-                            </Box>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1
-                              }}
-                            >
-                              <span
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: '10px',
-                                  color: "#999"
-                                }}
-                              >
-                                <span>
-                                  {getUserName(row.userId)}
-                                </span>
-                                <span
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center"
-                                  }}
-                                >
-                                  <AccessTimeFilledIcon sx={{ fontSize: "14px" }} />&nbsp;
-                                  {formatDay(row.postDate)}
-                                </span>
-                              </span>
-                              <Link
-                                to={`/HomeBlogDetail/${row.blogId}`}
-                                style={{
-                                  textDecoration: "none",
-                                  display: "inline-block",
-
-                                }}
-                              >
-                                <BlogName>{row.blogName}</ BlogName>
-                              </Link>
-                            </Box>
-                          </Box>
-                        </Grid>
-                      ))
-                    )
-                }
-              </Grid>
-
-              <Box
-                sx={{
-                  padding: "10px 0",
-                  display: "flex",
-                  flexDirection: "column",
-                  mt: "30px"
-                }}
-              >
-                <span className='title-home-page_heading'>
-                  CÁC CUỘC THI ĐANG DIỄN RA
-                </span>
-                <span className='line'></span>
-              </Box>
-              <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                {
-                  allBlog.loading || allBlogCompetition.loading ?
-                    (
-                      visibleRows.map((row: any, index: any) => (
-                        <Grid key={index} item xs={12}>
-                          <LoaderBlogSub />
-                        </Grid>
-                      ))
-                    ) :
-                    (
-                      visibleRows.map((row: any, index: any) => (
-                        <Grid key={index} item xs={12}>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: '10px'
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                height: "90px",
-                                width: "120px",
-                              }}
-                            >
-                              <Box
-                                sx={{
-                                  height: "100%",
-                                  width: '100%',
-                                  objectFit: "cover"
-                                }}
-                                component='img'
-                                src={`data:image/jpeg;base64,${row.imgSrc}`}
-                              />
-                            </Box>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                flexDirection: "column",
-                                flex: 1
-                              }}
-                            >
-                              <span
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: '10px',
-                                  color: "#999"
-                                }}
-                              >
-                                <span>
-                                  {getUserName(row.userId)}
-                                </span>
-                                <span
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center"
-                                  }}
-                                >
-                                  <AccessTimeFilledIcon sx={{ fontSize: "14px" }} />&nbsp;
-                                  {formatDay(row.postDate)}
-                                </span>
-                              </span>
-                              <Box
-                                component='span'
-                                onClick={():void => {
-                                  navigate(`/HomeBlogDetail/${row.blogId}`);
-
-                                }}
-                                style={{
-                                  textDecoration: "none",
-                                  display: "inline-block",
-
-                                }}
-                              >
-                                <BlogName>{row.blogName}</ BlogName>
-                              </Box>
-                            </Box>
-                          </Box>
-                        </Grid>
-                      ))
-                    )
-                }
-              </Grid>
-            </Grid>
           </Grid>
         </Container >
       </div>
@@ -508,6 +290,8 @@ const styleBlogWarp: SxProps = {
   display: "flex",
   flexDirection: "column",
   justifyContent: "flex-start",
+  borderRadius:"3px",
+  overflow:"hidden",
   mb: 2,
   gap: "10px",
   transition: "0.1s all linear",

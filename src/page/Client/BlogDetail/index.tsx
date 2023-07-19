@@ -18,6 +18,7 @@ import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled';
 import { getAllBlog, getBlogId } from '~/api/blogApi'
 import { getAllUser } from '~/api/userApi'
 import { getAllCompetitionBlog } from '~/api/CompetitionBlog'
+import { Loader,LoaderBlogSub,LoaderBlogDetail } from '~/components/loader'
 import useFetch from '~/hook/useFetch'
 
 
@@ -81,13 +82,12 @@ const Index = (): JSX.Element => {
     const listUser = allUser?.payload
     const comBlog = listComBlog?.find((r: any) => r.blogId === blogId)
     const [startIndex, setStartIndex] = React.useState(0);
-    const dataPerPage = 4;
+    const dataPerPage = 6;
     const endIndex = startIndex + dataPerPage;
     const itemBlogsCompetition = (listComBlog ?? []).map((item: any) => ({
         ...item,
         ...listBlogs?.find((elem: any) => elem.blogId === item.blogId)
     }));
-    const totalRows = itemBlogsCompetition.length;
     const visibleRows = itemBlogsCompetition.slice(startIndex, endIndex);
     React.useEffect(() => {
         const request: { id: number } = { id: blogId };
@@ -117,78 +117,85 @@ const Index = (): JSX.Element => {
                         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                     >
                         <Grid item md={9}>
-                            <Box
-                                sx={{
-                                    backgroundColor: "#e0efff",
-                                    padding: "10px"
-                                }}
-                            >
-                                <Box
-                                    sx={{
-                                        display: "flex",
-                                        flexDirection: 'column',
-                                        alignItems: "center",
-                                        gap: "20px"
-                                    }}
-                                >
-                                    <Box
-                                        component='img'
-                                        src={`data:image/jpeg;base64,${imgSrc}`}
-                                        sx={{
-                                            width: "100%",
-                                            borderRadius: "5px",
-                                            maxHeight: "300px",
-                                            objectFit: "cover"
-                                        }}
-                                    />
+                            {
+                                getAllBlogs?.loading ? (
+                                    <LoaderBlogDetail/>
+                                ):(
                                     <Box
                                         sx={{
-                                            width: "100%",
-                                            borderRadius: "10px",
-                                            backgroundColor: "white",
-                                            padding: "10px",
-                                            display: "flex",
-                                            flexDirection: "column"
-                                        }}
-                                    >
-                                        <h2 className='color-primary'>{blogName}</h2>
-                                        <span>
-                                            Tác giả &nbsp;
-                                            <span
-                                                className='color-primary'
-                                                style={{
-                                                    fontWeight: 500,
-                                                    fontSize: "17px"
-                                                }}
-                                            >
-                                                {getUserName(comBlog?.userId)}
-                                            </span>
-                                        </span>
-                                        <span>
-                                            Ngày đăng: &nbsp;
-                                            <span
-                                                className='color-primary'
-                                                style={{
-                                                    fontWeight: 500,
-                                                    fontSize: "17px"
-                                                }}
-                                            >
-                                                {formatDay(comBlog?.postDate)}
-                                            </span>
-                                        </span>
-                                    </Box>
-                                    <Box
-                                        sx={{
-                                            width: "100%",
-                                            borderRadius: "10px",
-                                            backgroundColor: "white",
+                                            backgroundColor: "#e0efff",
                                             padding: "10px"
                                         }}
                                     >
-                                        <div dangerouslySetInnerHTML={{ __html: blogDetai }} />
+                                        <Box
+                                            sx={{
+                                                display: "flex",
+                                                flexDirection: 'column',
+                                                alignItems: "center",
+                                                gap: "20px"
+                                            }}
+                                        >
+                                            <Box
+                                                component='img'
+                                                src={`data:image/jpeg;base64,${imgSrc}`}
+                                                sx={{
+                                                    width: "100%",
+                                                    borderRadius: "5px",
+                                                    maxHeight: "300px",
+                                                    objectFit: "cover"
+                                                }}
+                                            />
+                                            <Box
+                                                sx={{
+                                                    width: "100%",
+                                                    borderRadius: "10px",
+                                                    backgroundColor: "white",
+                                                    padding: "10px",
+                                                    display: "flex",
+                                                    flexDirection: "column"
+                                                }}
+                                            >
+                                                <h2 className='color-primary'>{blogName}</h2>
+                                                <span>
+                                                    Tác giả &nbsp;
+                                                    <span
+                                                        className='color-primary'
+                                                        style={{
+                                                            fontWeight: 500,
+                                                            fontSize: "17px"
+                                                        }}
+                                                    >
+                                                        {getUserName(comBlog?.userId)}
+                                                    </span>
+                                                </span>
+                                                <span>
+                                                    Ngày đăng: &nbsp;
+                                                    <span
+                                                        className='color-primary'
+                                                        style={{
+                                                            fontWeight: 500,
+                                                            fontSize: "17px"
+                                                        }}
+                                                    >
+                                                        {formatDay(comBlog?.postDate)}
+                                                    </span>
+                                                </span>
+                                            </Box>
+                                            <Box
+                                                sx={{
+                                                    width: "100%",
+                                                    borderRadius: "10px",
+                                                    backgroundColor: "white",
+                                                    padding: "10px"
+                                                }}
+                                            >
+                                                <div dangerouslySetInnerHTML={{ __html: blogDetai }} />
+                                            </Box>
+                                        </Box>
                                     </Box>
-                                </Box>
-                            </Box>
+
+                                )
+                            }
                         </Grid>
                         <Grid item md={3}>
                             <Box
@@ -205,79 +212,90 @@ const Index = (): JSX.Element => {
                                 <span className='line'></span>
                             </Box>
                             <Grid container rowSpacing={3} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-                                {visibleRows.map((row: any, index: any) => (
-                                    <Grid key={index} item xs={12}>
-                                        <Box
-                                        
-                                            onClick={():void =>{ 
-                                                navigate(`/HomeBlogDetail/${row.blogId}`)
-                                            }}
-                                            sx={{
-                                                display: "flex",
-                                                alignItems: "center",
-                                                gap: '10px',
-                                                cursor:"pointer"
-                                                
-                                            }}
-                                        >
-                                            <Box
-                                                sx={{
-                                                    height: "90px",
-                                                    width: "120px",
-                                                }}
-                                            >
+                                {
+                                    getAllBlogs?.loading ? (
+                                        visibleRows.map((row: any, index: any) => (
+                                            <Grid key={index} item xs={12}>
+                                                <LoaderBlogSub/>
+                                            </Grid>
+                                        ))
+                                    ):(
+                                        visibleRows.map((row: any, index: any) => (
+                                            <Grid key={index} item xs={12}>
                                                 <Box
-                                                    sx={{
-                                                        height: "100%",
-                                                        width: '100%',
-                                                        objectFit: "cover"
+                                                
+                                                    onClick={():void =>{ 
+                                                        navigate(`/HomeBlogDetail/${row.blogId}`)
                                                     }}
-                                                    component='img'
-                                                    src={`data:image/jpeg;base64,${row.imgSrc}`}
-                                                />
-                                            </Box>
-                                            <Box
-                                                sx={{
-                                                    display: "flex",
-                                                    flexDirection: "column",
-                                                    flex: 1
-                                                }}
-                                            >
-                                                <span
-                                                    style={{
+                                                    sx={{
                                                         display: "flex",
                                                         alignItems: "center",
                                                         gap: '10px',
-                                                        color: "#999"
+                                                        cursor:"pointer"
+                                                        
                                                     }}
                                                 >
-                                                    <span>
-                                                        {getUserName(row.userId)}
-                                                    </span>
-                                                    <span
-                                                        style={{
-                                                            display: "flex",
-                                                            alignItems: "center"
+                                                    <Box
+                                                        sx={{
+                                                            height: "90px",
+                                                            width: "120px",
                                                         }}
                                                     >
-                                                        <AccessTimeFilledIcon sx={{ fontSize: "14px" }} />
-                                                        &nbsp;
-                                                        {formatDay(row.postDate)}
-                                                    </span>
-                                                </span>
-                                                <Box
-                                                    component='span'
-                                                    style={{
-                                                        textDecoration: "none",
-                                                        display: "inline-block",
-                                                    }}
-                                                >
-                                                    <BlogName>{row.blogName}</ BlogName>
+                                                        <Box
+                                                            sx={{
+                                                                height: "100%",
+                                                                width: '100%',
+                                                                objectFit: "cover"
+                                                            }}
+                                                            component='img'
+                                                            src={`data:image/jpeg;base64,${row.imgSrc}`}
+                                                        />
+                                                    </Box>
+                                                    <Box
+                                                        sx={{
+                                                            display: "flex",
+                                                            flexDirection: "column",
+                                                            flex: 1
+                                                        }}
+                                                    >
+                                                        <span
+                                                            style={{
+                                                                display: "flex",
+                                                                alignItems: "center",
+                                                                gap: '10px',
+                                                                color: "#999"
+                                                            }}
+                                                        >
+                                                            <span>
+                                                                {getUserName(row.userId)}
+                                                            </span>
+                                                            <span
+                                                                style={{
+                                                                    display: "flex",
+                                                                    alignItems: "center"
+                                                                }}
+                                                            >
+                                                                <AccessTimeFilledIcon sx={{ fontSize: "14px" }} />
+                                                                &nbsp;
+                                                                {formatDay(row.postDate)}
+                                                            </span>
+                                                        </span>
+                                                        <Box
+                                                            component='span'
+                                                            style={{
+                                                                textDecoration: "none",
+                                                                display: "inline-block",
+                                                            }}
+                                                        >
+                                                            <BlogName>{row.blogName}</ BlogName>
+                                                        </Box>
+                                                    </Box>
                                                 </Box>
-                                            </Box>
-                                        </Box>
-                                    </Grid>
-                                ))}
+                                            </Grid>
+                                        ))
+                                    )
+                                }
+                                
                             </Grid>
                         </Grid>
                     </Grid>

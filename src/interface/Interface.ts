@@ -1,3 +1,4 @@
+
 export interface ICompetition {
     comId: number,
     comName: string,
@@ -56,3 +57,21 @@ export interface IQuestions {
     examId: number,
     quesTId: number
 }
+
+export interface IBlog {
+    blogId: number,
+    blogName: string,
+    BlogDetail:string,
+    imgSrc: string,
+    imgName: string
+}
+
+
+export interface ICompetitionBlogsUser{
+    id?: number,
+    comId: number,
+    blogId: number,
+    userId?: string,
+    postDate:string
+}
+  
