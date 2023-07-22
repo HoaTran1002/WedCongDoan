@@ -552,7 +552,7 @@ export default function Index(): JSX.Element {
                                     sx={{
                                       position: "sticky",
                                       top: "110px",
-                                      bottom: "20px",
+                                      bottom: {md:"20px",xs:"50px"},
                                       color: "#1565c0",
                                       fontSize: {md:"60px",xs:'40px'},
                                       fontWeight: "500"
@@ -651,7 +651,7 @@ export default function Index(): JSX.Element {
                                     sx={{
                                       position: "sticky",
                                       top: "110px",
-                                      bottom: "20px",
+                                      bottom: {md:"20px",xs:"50px"},
                                       color: "#1565c0",
                                       fontSize: {md:"60px",xs:'40px'},
                                       fontWeight: "500"

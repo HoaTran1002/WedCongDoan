@@ -79,4 +79,21 @@ export interface ICompetitionBlogsUser{
     userId?: string,
     postDate:string
 }
-  
+
+export interface ICompetitionPrize{
+    cpid?: number,
+    priId: number,
+    comId: number,
+    priTid: number,
+    quantity: number,
+    prizeDetail: string
+}
+
+export interface IPrize{
+    priId: number,
+    priName: string
+}
+export interface IPrizeType{
+    priTid: number,
+    priTname: string
+}

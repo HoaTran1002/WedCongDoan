@@ -266,28 +266,6 @@ const Index = (): JSX.Element => {
                       setBlogName(e.target.value)
                     }}
                   />
-                  <FormControl
-                    sx={{ m: 1, minWidth: 80 }}
-                    style={{ width: '100%' }}
-                  >
-                    <InputLabel id='demo-simple-select-autowidth-label'>
-                      Cuộc thi
-                    </InputLabel>
-                    
-                    <Select
-                      labelId='demo-simple-select-autowidth-label'
-                      id='demo-simple-select-autowidth'
-                      onChange={handleChange}
-                      label='Age'
-                      value={comId}
-                    >
-                      {
-                        competitions.map((row)=>(
-                          <MenuItem key={row.comId} value={row.comId}>{row.comName}</MenuItem>
-                        ))
-                      }
-                    </Select>
-                  </FormControl>
                 </Stack>
               </Grid>
               <Grid item xs={12}>
@@ -313,23 +291,28 @@ const Index = (): JSX.Element => {
                   {imageFile ? (
                     <div>
                       <h2 className='color-primary'>Ảnh bìa cho trang blog:</h2>
-                      <img
-                        className='selectedImage'
+                      <Box
+                        component='img'
                         src={imageFile}
                         alt='Selected'
+                        sx={{
+                          width:{xs:"100% !important",md:"450px !important"},
+                          height:{xs:"auto !important",md:"250px !important"},
+                          objectFit:"cover !important"
+                        }}
                       />
                     </div>
                   ) : (
                     <div>
                       <h2 className='color-primary'>Ảnh bìa cho trang blog:</h2>
-                      <img 
+                      <Box 
+                        component='img'
                         src={`data:image/jpeg;base64,${imgSrc}`}
                         alt='ảnh '
-                        className='selectedImage'
-                        style={{ 
-                          height: '100%', 
-                          width: '100%',
-                          objectFit:"cover" 
+                        sx={{ 
+                          width:{xs:"100% !important",md:"450px !important"},
+                          height:{xs:"auto !important",md:"250px !important"},
+                          objectFit:"cover !important" 
                         }} 
                       />
                     </div>
@@ -358,8 +341,11 @@ const Index = (): JSX.Element => {
               </Grid>
               <Grid item xs={12} sx={{ mb: 10 }}>
                 <Stack 
-                  gap={2}
-                  direction={'row'}
+                  sx={{
+                    gap:"10px",
+                    flexDirection:{md:"row",xs:"column"}
+                  }}
+                  
                 >
                   <Button
                     variant='contained'

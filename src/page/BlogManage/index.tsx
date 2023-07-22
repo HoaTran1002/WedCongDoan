@@ -364,19 +364,40 @@ const Index = (): JSX.Element => {
               {
                 currentProducts.length !== 0 &&
                 (
-                  <SpeedDial
-                    ariaLabel="SpeedDial basic example"
-                    sx={{ position: 'absolute', bottom: 16, right: 16 }}
-                    icon={<SpeedDialIcon />}
+                  <Box
+                    sx={{
+                      position:"fixed",
+                      top:0,
+                      bottom:0,
+                      left:0,
+                      right:0
+                    }}
                   >
-                    <SpeedDialAction
-                      icon={<AddIcon />}
-                      onClick={(): void => {
-                        navigate('/BlogCreate')
-                      }}
-                      tooltipTitle={'Thêm blog mới'}
-                    />
-                  </SpeedDial>
+                    <Tooltip title="Thêm Blog mới">
+                      <Box
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            height: "50px",
+                            width: "50px",
+                            borderRadius: "50%",
+                            color: "white",
+                            backgroundColor: "#1565c0",
+                            cursor: "pointer",
+                            position:"absolute",
+                            bottom:{md:"30px",xs:"20px"},
+                            right:"10px"
+                          }}
+                          onClick={(): void => {
+                            navigate('/BlogCreate')
+                          }}
+                        >
+                          <AddIcon />
+                        </Box>
+
+                    </Tooltip>
+                  </Box>
                 )
               }
             </>
