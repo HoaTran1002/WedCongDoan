@@ -20,6 +20,8 @@ import { green } from '@mui/material/colors'
 import server from '~/api/axios'
 import { Navigate } from 'react-router-dom'
 import useAuth from '~/hook/useAuth'
+import useFetch from '~/hook/useFetch'
+import { getAllRole } from '~/api/roleApi'
 
 const buttons = [
   <Button key='one'>
@@ -59,6 +61,12 @@ function Copyright(props: any): JSX.Element {
 const theme = createTheme()
 export default function Login(): JSX.Element {
   const { profile } = useAuth()
+  const [roleState, getRoleState] = useFetch()
+  React.useEffect(() => {
+    getRoleState(getAllRole)
+  }, [])
+  const roleData = roleState.payload || []
+
   const handleSubmit = async (
     event: React.FormEvent<HTMLFormElement>
   ): Promise<void> => {
@@ -77,7 +85,10 @@ export default function Login(): JSX.Element {
       console.log(error)
     }
   }
-  if (profile) {
+
+  if (profile?.roleId === 1) {
+    return <Navigate to={'/CompetitionManage'} replace={true} />
+  } else if (profile) {
     return <Navigate to={'/'} replace={true} />
   }
 

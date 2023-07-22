@@ -258,13 +258,12 @@ const ModalEdit = ({
       updateQuesCall(async (): Promise<void> => {
         try {
           await updateQues(bodyQuestion)
-          await setMessage('cập nhật thành công')
-          await setSeverity('success')
-          window.location.reload()
         } catch (error) {
           setMessage('cập nhật thất bại')
           setSeverity('error')
         }
+        setMessage('cập nhật thành công')
+        setSeverity('success')
       })
     }
   }
@@ -279,8 +278,8 @@ const ModalEdit = ({
     setOpen(false)
   }
   if (message != null) {
-    setTimeout(() => {
-      setMessage('')
+    setTimeout(async (): Promise<void> => {
+      await setMessage('')
     }, 3000)
   }
   return (

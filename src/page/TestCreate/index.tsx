@@ -265,8 +265,8 @@ const TestCreate = (): JSX.Element => {
     window.location.reload()
   }
   if (message != null) {
-    setTimeout(() => {
-      setMessage('')
+    setTimeout(async (): Promise<void> => {
+      await setMessage('')
     }, 3000)
   }
   return (
@@ -287,7 +287,7 @@ const TestCreate = (): JSX.Element => {
                 elevation={6}
                 variant='filled'
               >
-                Acction successful!
+                Đã thêm trắc nghiệm!
               </MuiAlert>
             </Snackbar>
             <Snackbar
@@ -301,7 +301,7 @@ const TestCreate = (): JSX.Element => {
                 elevation={6}
                 variant='filled'
               >
-                Acction Failed!
+                Thêm trắc nghiệm thất bại!
               </MuiAlert>
             </Snackbar>
           </>

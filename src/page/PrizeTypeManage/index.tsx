@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
-import image from '~/assets/img/competion-1.jpg'
+
 import AddIcon from '@mui/icons-material/Add'
 import EditIcon from '@mui/icons-material/Edit'
 import DeleteIcon from '@mui/icons-material/Delete'
@@ -29,6 +29,7 @@ import {
   DeletePrizeTypes,
   EditPrizeTypes
 } from '~/api/prizeTypesApi'
+const a = 100
 
 //================================
 interface PrizeType {
@@ -238,73 +239,72 @@ const Index = (): JSX.Element => {
             Quản lý loại giải thưởng
           </h1>
           {allPrizeT.loading == true ? (
-              <Box 
+            <Box
               sx={{
-                 display: 'flex',
-                 width:"100%",
-                 height:"500px",
-                 justifyContent:"center",
-                 alignItems:"center"
+                display: 'flex',
+                width: '100%',
+                height: '500px',
+                justifyContent: 'center',
+                alignItems: 'center'
               }}
             >
               <CircularProgress />
             </Box>
-            ) : (
-              <>
-                <Stack direction={'row'} alignItems={'center'} gap={'20px'}>
-                  <div>
-                    <Button
-                      onClick={handelOpenAdd}
-                      variant='contained'
-                      startIcon={<AddIcon />}
-                    >
-                      Thêm loại giải thưởng
-                    </Button>
-                    <Dialog
-                      open={addOpen}
-                      onClose={handleClose}
-                      aria-labelledby='alert-dialog-title'
-                      aria-describedby='alert-dialog-description'
-                    >
-                      <DialogTitle id='alert-dialog-title'>
-                        {'Loại giải thưởng mới'}
-                      </DialogTitle>
-                      <DialogContent>
-                        <div style={{ margin: '10px 0' }}>
-                          <TextField
-                            onChange={onchangePriName}
-                            id='outlined-basic'
-                            label='Tên loại giải'
-                            variant='outlined'
-                          />
-                        </div>
-                      </DialogContent>
-                      <DialogActions>
-                        <Button onClick={handelAddOk} variant='contained'>
-                          OK
-                        </Button>
-                        <Button onClick={handelAddClose}>Trở về</Button>
-                      </DialogActions>
-                    </Dialog>
-                  </div>
-                </Stack>
-                <div
-                  style={{ height: 400, width: '100%', backgroundColor: 'white' }}
-                >
-                  <DataGrid
-                    rows={prizesT}
-                    columns={columns}
-                    initialState={{
-                      pagination: {
-                        paginationModel: { page: 0, pageSize: 6 }
-                      }
-                    }}
-                    pageSizeOptions={[5, 10]}
-                  />
+          ) : (
+            <>
+              <Stack direction={'row'} alignItems={'center'} gap={'20px'}>
+                <div>
+                  <Button
+                    onClick={handelOpenAdd}
+                    variant='contained'
+                    startIcon={<AddIcon />}
+                  >
+                    Thêm loại giải thưởng
+                  </Button>
+                  <Dialog
+                    open={addOpen}
+                    onClose={handleClose}
+                    aria-labelledby='alert-dialog-title'
+                    aria-describedby='alert-dialog-description'
+                  >
+                    <DialogTitle id='alert-dialog-title'>
+                      {'Loại giải thưởng mới'}
+                    </DialogTitle>
+                    <DialogContent>
+                      <div style={{ margin: '10px 0' }}>
+                        <TextField
+                          onChange={onchangePriName}
+                          id='outlined-basic'
+                          label='Tên loại giải'
+                          variant='outlined'
+                        />
+                      </div>
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handelAddOk} variant='contained'>
+                        OK
+                      </Button>
+                      <Button onClick={handelAddClose}>Trở về</Button>
+                    </DialogActions>
+                  </Dialog>
                 </div>
-              </>
-            )
-          }
+              </Stack>
+              <div
+                style={{ height: 400, width: '100%', backgroundColor: 'white' }}
+              >
+                <DataGrid
+                  rows={prizesT}
+                  columns={columns}
+                  initialState={{
+                    pagination: {
+                      paginationModel: { page: 0, pageSize: 6 }
+                    }
+                  }}
+                  pageSizeOptions={[5, 10]}
+                />
+              </div>
+            </>
+          )}
         </>
       </>
     </LayoutAdmin>

@@ -31,6 +31,7 @@ import FinishedExam from '~/page/Client/FinishedExam'
 import HistoryCompetition from '~/page/Client/HistoryCompetition'
 import PrizeCompetition from '~/page/Client/PrizeCompetition'
 import Error from './page/404'
+
 function App(): JSX.Element {
   return (
     <Routes>
