@@ -1,12 +1,15 @@
 import DeleteIcon from '@mui/icons-material/Delete'
-import { Snackbar, Box, Tooltip, IconButton } from '@mui/material'
-import MuiAlert from '@mui/material/Alert'
+import { Box, Tooltip, IconButton } from '@mui/material'
+
 import CircularProgress from '@mui/material/CircularProgress'
 import * as React from 'react'
 import { deleteUsers, getAllUser } from '~/api/userApi'
+
 import useFetch from '~/hook/useFetch'
 import BasicModal from './ModalEditUser'
 import { TableWithFixedColumn, ColumnsProps } from '~/components/TableFixed'
+import MessageAlert from '~/components/MessageAlert'
+
 interface User {
   userId: string
   userName: string
@@ -17,13 +20,15 @@ interface User {
   roleId: number
   depId: number
 }
+
 const TableUser = (): JSX.Element => {
-  const [reset, setReset] = React.useState(false)
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
   const [userState, call] = useFetch()
   const [deleteUserState, callDelete] = useFetch()
-
+  const [loading, setLoading] = React.useState<boolean>(false)
+  const [message, setMessage] = React.useState<string>('')
+  const [serverity, setServerity] = React.useState<string>('')
   const users = userState?.payload
 
   const formatDay = (dayOrigin: string): string => {
@@ -55,24 +60,13 @@ const TableUser = (): JSX.Element => {
       try {
         await deleteUsers(request)
         await setShowSuccess(true)
-        window.location.reload()
+        setMessage('đã xoá user!')
+        setServerity('info')
+        setLoading(!loading)
       } catch (error) {
         setShowError(true)
       }
     })
-  }
-  const handelReset = (): void => {
-    if (reset) {
-      setReset(false)
-    } else {
-      setReset(true)
-    }
-  }
-  const handleCloseSuccess = (): void => {
-    setShowSuccess(false)
-  }
-  const handleCloseError = (): void => {
-    setShowError(false)
   }
 
   const columns: ColumnsProps[] = [
@@ -116,37 +110,17 @@ const TableUser = (): JSX.Element => {
 
   React.useEffect(() => {
     call(getAllUser)
-  }, [showSuccess])
+  }, [loading])
+  if (message != null) {
+    setTimeout(async (): Promise<void> => {
+      setMessage('')
+    }, 3000)
+  }
+
   return (
     <>
-      <Snackbar
-        open={showSuccess}
-        autoHideDuration={3000}
-        onClose={handleCloseSuccess}
-      >
-        <MuiAlert
-          onClose={handleCloseSuccess}
-          severity='success'
-          elevation={6}
-          variant='filled'
-        >
-          Thao tác thành công
-        </MuiAlert>
-      </Snackbar>
-      <Snackbar
-        open={showError}
-        autoHideDuration={3000}
-        onClose={handleCloseSuccess}
-      >
-        <MuiAlert
-          onClose={handleCloseError}
-          severity='error'
-          elevation={6}
-          variant='filled'
-        >
-          Thao tác thất bại
-        </MuiAlert>
-      </Snackbar>
+      <>{message && <MessageAlert message={message} severity={serverity} />}</>
+
       {userState.loading || deleteUserState.loading ? (
         <Box
           sx={{

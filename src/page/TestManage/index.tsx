@@ -92,8 +92,8 @@ const Index = (): JSX.Element => {
     setSeverity('error')
   }
   if (message != null) {
-    setTimeout(() => {
-      setMessage('')
+    setTimeout(async (): Promise<void> => {
+      await setMessage('')
     }, 3000)
   }
   return (

@@ -40,10 +40,10 @@ export default function BasicModal(prop: BasicModalProps): JSX.Element {
 
   return (
     <div>
-      <Tooltip title="Sửa">
-          <IconButton onClick={handleOpen}>
-            <EditIcon color='primary' />
-          </IconButton>
+      <Tooltip title='Sửa'>
+        <IconButton onClick={handleOpen}>
+          <EditIcon color='primary' />
+        </IconButton>
       </Tooltip>
       <Modal
         open={open}

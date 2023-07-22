@@ -13,6 +13,7 @@ import dayjs from 'dayjs'
 
 import useFetch from '~/hook/useFetch'
 import { editUser, insert } from '~/api/userApi'
+import MessageAlert from '~/components/MessageAlert'
 
 interface Dep {
   depId: number
@@ -32,6 +33,7 @@ export default function UserTextFields(prop: {
   userAddress: string
   roleId: number
   depId: number
+  callback?: () => void
 }): JSX.Element {
   const [cccd, setCCCD] = React.useState<string>(prop.id || '')
   const [userName, setUserName] = React.useState<string>(prop.userName || '')
@@ -43,11 +45,14 @@ export default function UserTextFields(prop: {
   const [role, setRole] = React.useState<number>(prop.roleId || 0)
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
-
+  const [loading, setLoading] = React.useState<boolean>(false)
   const [userInsert, callInsertUser] = useFetch()
   const [EdittUser, callEdittUser] = useFetch()
   const [departments, callAllDep] = useFetch()
   const [roles, callAllRole] = useFetch()
+  const [message, setMessage] = React.useState<string>('')
+  const [severity, setSeverity] = React.useState<string>('')
+
   let formattedDateOfBirth: string | null = null
 
   const Roles: Role[] = roles.payload || []
@@ -56,7 +61,7 @@ export default function UserTextFields(prop: {
     formattedDateOfBirth = dayjs(birthDay).format('MM-DD-YYYY')
   }
 
-  console.log('date of birth:' + formattedDateOfBirth)
+  // console.log('date of birth:' + formattedDateOfBirth)
 
   const onchangeUserName = function (
     event: React.ChangeEvent<HTMLInputElement>
@@ -105,6 +110,7 @@ export default function UserTextFields(prop: {
   const handleCloseError = (): void => {
     setShowError(false)
   }
+
   const requestData: {
     userId: string
     userName: string
@@ -125,11 +131,15 @@ export default function UserTextFields(prop: {
     depId: Number(dep)
   }
 
-  const onSubmitForm = (): void => {
+  const onSubmitFormInsert = (): void => {
     callInsertUser(async () => {
       try {
-        console.log(requestData)
         await insert(requestData)
+
+        await setSeverity('success')
+        await setMessage('đã thêm người dùng!')
+
+        await setLoading(!loading)
       } catch (error) {
         setShowError(true)
       }
@@ -140,7 +150,10 @@ export default function UserTextFields(prop: {
       try {
         await editUser(requestData)
         setShowSuccess(true)
-        window.location.reload()
+        if (prop.callback) {
+          prop.callback()
+        }
+        // window.location.reload()
       } catch (error) {
         setShowError(true)
       }
@@ -167,9 +180,14 @@ export default function UserTextFields(prop: {
     fetchDataRole()
     fetchDataDep()
   }, [])
-
+  if (message != null) {
+    setTimeout(async (): Promise<void> => {
+      await setMessage('')
+    }, 3000)
+  }
   return (
     <>
+      {message && <MessageAlert message={message} severity={severity} />}
       <Snackbar
         open={showSuccess}
         autoHideDuration={3000}
@@ -418,7 +436,7 @@ export default function UserTextFields(prop: {
             </TextField>
           </Box>
           <Button
-            onClick={onSubmitForm}
+            onClick={onSubmitFormInsert}
             sx={{
               position: 'relative',
               left: '45%',

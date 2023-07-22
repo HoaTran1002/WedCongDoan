@@ -67,18 +67,19 @@ const Index = ({
 
     try {
       await deleteQuestionCall(async (): Promise<void> => {
-        await deleteQues({ id })
+        return await deleteQues({ id })
       })
-
+      // setMessage('xoá thành công!')
+      // setSeverity('info')
       callBack()
     } catch (error) {
-      setMessage('xoá thất bại')
+      setMessage('xoá thất bại!')
       setSeverity('error')
     }
   }
   if (message != null) {
-    setTimeout(() => {
-      setMessage('')
+    setTimeout(async (): Promise<void> => {
+      await setMessage('')
     }, 3000)
   }
   return (
