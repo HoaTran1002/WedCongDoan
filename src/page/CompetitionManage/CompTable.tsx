@@ -122,70 +122,34 @@ const CompTable = (): JSX.Element => {
       field: 'actions',
       type: 'actions',
       getActions: (params: any) => [
-        <Button 
-          key='option'
-          sx={{ 
-            width: 50,
-            position:"relative",
-            '&:hover .option_more-list':{
-              display:"flex"
-            }
-          }}
-          variant='outlined'
+        <Tooltip key='detailExam' title='Xem đề thi' placement='top-start'>
+          <Link to={`/Tests/Competition/${params.comId}`}>
+            <Button style={{ width: 50 }} variant='outlined'>
+              <ArticleOutlinedIcon />
+            </Button>
+          </Link>
+        </Tooltip>,
+        <Tooltip
+          key='detailPrize'
+          title='Xem giải thưởng'
+          placement='top-start'
         >
-            <MoreHorizIcon />
-            <Box
-              className='option_more-list'
-              sx={{
-                position:"absolute",
-                display:"none",
-                backgroundColor:"white",
-                padding:"10px",
-                border:"1px solid #e4f5ff",
-                alignItems:"flex-start",
-                flexDirection:"column",
-                bottom:"-70px",
-                left:"-150px",
-                boxShadow: "rgba(0, 0, 0, 0.2) -3px 4px 14px 0px",
-                zIndex:"10",
-                '&::before':{
-                  content:"''",
-                  position:"absolute",
-                  top:0,
-                  bottom:0,
-                  width:"20px",
-                  right:"-20px",
-                }
-              }}
-            >
-              <Box 
-                sx={OptionHover}
-                onClick={():void=>navigate(`/Tests/Competition/${params.comId}`)}
-              >
-                Đề thi<ArticleOutlinedIcon />
-              </Box>
-              <Box sx={OptionHover} onClick={():void=>navigate(`/Prize/Competition/${params.comId}`)}>
-                Giải thưởng<MilitaryTechOutlinedIcon />
-              </Box>
-              <Box sx={OptionHover}>
-                Người thi <PersonIcon />
-              </Box>
-              <Box sx={OptionHover}>
-                Thông tin <InfoIcon />
-              </Box>
-            </Box>
-        </Button>,
+          <Link to={`/Prize/Competition/${params.comId}`}>
+            <Button style={{ width: 50 }} variant='outlined'>
+              <MilitaryTechOutlinedIcon />
+            </Button>
+          </Link>
+        </Tooltip>,
         <Tooltip key='delete' title='xoá cuộc thi' placement='top-start'>
-          <Button
-            onClick={(): void => handelDeleteComp(params.comId)}
-            sx={{ width: 50 }}
-            variant='outlined'
-            color='error'
-          >
-            <DeleteOutlinedIcon />
-          </Button>
-        </Tooltip>
-        
+        <Button
+          onClick={(): void => handelDeleteComp(params.comId)}
+          style={{ width: 50 }}
+          variant='outlined'
+          color='error'
+        >
+          <DeleteOutlinedIcon />
+        </Button>
+      </Tooltip>
       ]
     }
   ]
