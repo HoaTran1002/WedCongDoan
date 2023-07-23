@@ -9,6 +9,7 @@ import useFetch from '~/hook/useFetch'
 import BasicModal from './ModalEditUser'
 import { TableWithFixedColumn, ColumnsProps } from '~/components/TableFixed'
 import MessageAlert from '~/components/MessageAlert'
+import { LoadingContext } from '.'
 
 interface User {
   userId: string
@@ -30,6 +31,7 @@ const TableUser = (): JSX.Element => {
   const [message, setMessage] = React.useState<string>('')
   const [serverity, setServerity] = React.useState<string>('')
   const users = userState?.payload
+  const loadingParams = React.useContext(LoadingContext)
 
   const formatDay = (dayOrigin: string): string => {
     const dateObj = new Date(dayOrigin)
@@ -59,7 +61,7 @@ const TableUser = (): JSX.Element => {
     callDelete(async () => {
       try {
         await deleteUsers(request)
-        await setShowSuccess(true)
+        setShowSuccess(true)
         setMessage('đã xoá user!')
         setServerity('info')
         setLoading(!loading)
@@ -110,7 +112,7 @@ const TableUser = (): JSX.Element => {
 
   React.useEffect(() => {
     call(getAllUser)
-  }, [loading])
+  }, [loading, loadingParams.statusLoading])
   if (message != null) {
     setTimeout(async (): Promise<void> => {
       setMessage('')

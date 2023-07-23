@@ -29,7 +29,6 @@ import {
   DeletePrizeTypes,
   EditPrizeTypes
 } from '~/api/prizeTypesApi'
-const a = 100
 
 //================================
 interface PrizeType {

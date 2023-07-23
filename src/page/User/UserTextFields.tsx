@@ -9,11 +9,12 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import MuiAlert from '@mui/material/Alert'
 import { getAllDep } from '~/api/departmentApi'
 import { getAllRole } from '~/api/roleApi'
-import dayjs from 'dayjs'
+import dayjs, { Dayjs } from 'dayjs'
 
 import useFetch from '~/hook/useFetch'
 import { editUser, insert } from '~/api/userApi'
 import MessageAlert from '~/components/MessageAlert'
+import { LoadingContext } from '.'
 
 interface Dep {
   depId: number
@@ -45,16 +46,15 @@ export default function UserTextFields(prop: {
   const [role, setRole] = React.useState<number>(prop.roleId || 0)
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
-  const [loading, setLoading] = React.useState<boolean>(false)
   const [userInsert, callInsertUser] = useFetch()
   const [EdittUser, callEdittUser] = useFetch()
   const [departments, callAllDep] = useFetch()
   const [roles, callAllRole] = useFetch()
   const [message, setMessage] = React.useState<string>('')
   const [severity, setSeverity] = React.useState<string>('')
-
-  let formattedDateOfBirth: string | null = null
-
+  const [value, setValue] = React.useState<Dayjs | any>(dayjs(birthDay))
+  let formattedDateOfBirth = null
+  const loadingParams = React.useContext(LoadingContext)
   const Roles: Role[] = roles.payload || []
   const Deps: Dep[] = departments.payload || []
   if (birthDay) {
@@ -110,7 +110,7 @@ export default function UserTextFields(prop: {
   const handleCloseError = (): void => {
     setShowError(false)
   }
-
+  console.log(formattedDateOfBirth)
   const requestData: {
     userId: string
     userName: string
@@ -135,11 +135,9 @@ export default function UserTextFields(prop: {
     callInsertUser(async () => {
       try {
         await insert(requestData)
-
-        await setSeverity('success')
-        await setMessage('đã thêm người dùng!')
-
-        await setLoading(!loading)
+        setSeverity('success')
+        setMessage('đã thêm người dùng!')
+        loadingParams.setLoading()
       } catch (error) {
         setShowError(true)
       }
@@ -149,11 +147,9 @@ export default function UserTextFields(prop: {
     callEdittUser(async () => {
       try {
         await editUser(requestData)
-        setShowSuccess(true)
-        if (prop.callback) {
-          prop.callback()
-        }
-        // window.location.reload()
+        setSeverity('info')
+        setMessage('đã sửa user!')
+        loadingParams.setLoading()
       } catch (error) {
         setShowError(true)
       }
@@ -181,8 +177,8 @@ export default function UserTextFields(prop: {
     fetchDataDep()
   }, [])
   if (message != null) {
-    setTimeout(async (): Promise<void> => {
-      await setMessage('')
+    setTimeout((): void => {
+      setMessage('')
     }, 3000)
   }
   return (
@@ -249,8 +245,7 @@ export default function UserTextFields(prop: {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
-                  // defaultValue={formattedDateOfBirth}
-                  // defaultValue={formattedDateOfBirth}
+                  value={value}
                   onChange={onchangeBirthDay}
                   sx={{ width: '100%' }}
                   label='Ngày Sinh '
