@@ -5,12 +5,11 @@ import {
   Button,
   Stack,
   Tooltip,
-  Snackbar,
-  SxProps
+  Snackbar
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import useFetch from '~/hook/useFetch'
 import { deleteCompetitions, getAllComp } from '~/api/competitionApi'
 import MilitaryTechOutlinedIcon from '@mui/icons-material/MilitaryTechOutlined'
@@ -22,9 +21,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import { TableWithFixedColumn, ColumnsProps } from '~/components/TableFixed'
 import { Loader } from '~/components/loader'
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import PersonIcon from '@mui/icons-material/Person';
-import InfoIcon from '@mui/icons-material/Info';
+
 //interface
 interface Competition {
   comId: number
@@ -40,19 +37,19 @@ interface IDep {
   depName: string
 }
 const CompTable = (): JSX.Element => {
-  const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
   const [compState, callComp] = useFetch()
   const [deps, depCall] = useFetch()
   const [deleteComp, deleteCompCall] = useFetch()
   const depList = deps.payload || []
+  const [loading, setLoading] = useState<boolean>(false)
   React.useEffect(() => {
     depCall(getAllDep)
-  }, [deps?.loading])
+  }, [loading])
   React.useEffect(() => {
     callComp(getAllComp)
-  }, [compState?.loading])
+  }, [loading])
 
   const getNameDep = (idDep: number): string => {
     try {
@@ -84,6 +81,7 @@ const CompTable = (): JSX.Element => {
       try {
         await deleteCompetitions(requestDelete)
         setShowSuccess(true)
+        setLoading
       } catch (error) {
         setShowError(true)
       }
@@ -141,19 +139,17 @@ const CompTable = (): JSX.Element => {
           </Link>
         </Tooltip>,
         <Tooltip key='delete' title='xoá cuộc thi' placement='top-start'>
-        <Button
-          onClick={(): void => handelDeleteComp(params.comId)}
-          style={{ width: 50 }}
-          variant='outlined'
-          color='error'
-        >
-          <DeleteOutlinedIcon />
-        </Button>
-      </Tooltip>
+          <Button
+            onClick={(): void => handelDeleteComp(params.comId)}
+            style={{ width: 50 }}
+            variant='outlined'
+          >
+            <DeleteOutlinedIcon />
+          </Button>
+        </Tooltip>
       ]
     }
   ]
-
   const rows =
     compState.payload?.map((item: Competition) => ({
       comId: item.comId,
@@ -164,7 +160,6 @@ const CompTable = (): JSX.Element => {
       userQuan: item.userQuan,
       depName: getNameDep(item.depId)
     })) || []
-
   return (
     <>
       <Grid item xs={12}>
@@ -183,6 +178,7 @@ const CompTable = (): JSX.Element => {
           </Typography>
         </Stack>
       </Grid>
+
       <>
         <>
           <Snackbar
@@ -215,71 +211,64 @@ const CompTable = (): JSX.Element => {
           </Snackbar>
         </>
         {compState.loading || deps.loading ? (
-          <Loader />
+          <Box
+            sx={{
+              position: 'relative',
+              marginTop: 20,
+              top: '30%',
+              width: '100%',
+              height: '40px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+              //  background: '#f5f5f5', /* Màu nền (tùy chọn) */
+            }}
+          >
+            <CircularProgress
+            //  sx={{
+            //    color: '#ff4081', /* Màu của phần tử loading (tùy chọn) */
+            //  }}
+            />
+          </Box>
         ) : (
           <Grid
             container
             rowSpacing={1}
             columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           >
-            <Grid item xs={12}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  zIndex:"10"
+            <>
+              <Link
+                to={'/CompetitionCreate'}
+                style={{
+                  textDecoration: 'none',
+                  marginLeft: 40,
+                  display: 'inline-block'
                 }}
               >
-                <TableWithFixedColumn
-                  rows={rows}
-                  columns={columns}
-                  maxWidth={1100}
-                  maxHeight={430}
-                />
-              </Box>
-            </Grid>
-          </Grid>
-        )}
-            <Tooltip title="Thêm Cuộc thi mới">
-              <Box
+                <Button variant='outlined' startIcon={<AddIcon />}>
+                  Thêm cuộc thi mới
+                </Button>
+              </Link>
+              <Grid item xs={12} style={{ margin: 10 }}>
+                <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "50px",
-                    borderRadius: "50px",
-                    padding:"10px 20px",
-                    color: "white",
-                    backgroundColor: "#1565c0",
-                    cursor: "pointer",
-                    position:"absolute",
-                    bottom:{md:"30px",xs:"20px"},
-                    right:{md:"20px",xs:"50%"},
-                    transform:{xs:"translateX(50%)",md:"translateX(0)"},
-                    
-                  }}
-                  onClick={(): void => {
-                    navigate('/CompetitionCreate')
+                    display: 'flex',
+                    justifyContent: 'center'
                   }}
                 >
-                  <AddIcon /> Thêm cuộc thi
+                  <TableWithFixedColumn
+                    rows={rows}
+                    columns={columns}
+                    maxWidth={1100}
+                    maxHeight={400}
+                  />
                 </Box>
-
-            </Tooltip>
+              </Grid>
+            </>
+          </Grid>
+        )}
       </>
     </>
   )
 }
 export default CompTable
-
-const OptionHover :SxProps={
-  display:"flex",
-  alignItems:"center",
-  gap:"7px", 
-  width:"100%",
-  padding:"7px 10px ",
-  transition:"all 0.1s linear",
-  '&:hover':{
-    backgroundColor:"#eaefff"
-  }
-}

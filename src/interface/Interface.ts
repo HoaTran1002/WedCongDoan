@@ -6,7 +6,8 @@ export interface ICompetition {
     startDate: string,
     endDate: string,
     userQuan: string,
-    depId: number
+    depId: number,
+    isDeleted:number
 }
 export interface IResult {
     resId: number

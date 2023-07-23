@@ -53,7 +53,7 @@ export const deleteCompetitions = async ({
     throw new Error(message)
   }
 }
-export const editUser = async ({
+export const CompetitionEdit = async ({
   userId,
   userName,
   dateOfBirth,
@@ -73,7 +73,7 @@ export const editUser = async ({
   depId: number
 }): Promise<void> => {
   try {
-    await server.put(`/Users?id=${userId}`, {
+    await server.put(`/Competitions`, {
       userId,
       userName,
       dateOfBirth,
