@@ -54,14 +54,12 @@ function App(): JSX.Element {
         <Route path='/blogManage' element={<BlogManage />} />
         <Route path='/BlogCreate' element={<BlogCreate />} />
         <Route path='/BlogDetail' element={<BlogDetail />} />
-
         <Route path='/HomeBlogDetail/:id' element={<HomeBlogDetail />} />
         <Route path='/ListExamCompetition' element={<ListExamCompetition />} />
         <Route path='/ExamStart' element={<ExamStart />} />
         <Route path='/FinishedExam' element={<FinishedExam />} />
         <Route path='/HistoryCompetition' element={<HistoryCompetition />} />
         <Route path='/PrizeCompetition' element={<PrizeCompetition />} />
-
         <Route path='/Listcompetition' element={<Listcompetition />} />
         <Route path='/TestSchedule' element={<TestSchedule />} />
         <Route path='/ExamResult/:id' element={<ExamResult />} />
@@ -71,10 +69,9 @@ function App(): JSX.Element {
           path='/TestCreate/Test/:examId/Competition/:comId'
           element={<TestCreate />}
         />
-
         <Route path='*' element={<Error />} />
       </Route>
-
+      
       <Route path='/Login' element={<Login />} />
     </Routes>
   )

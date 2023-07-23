@@ -15,6 +15,7 @@ import { useParams } from 'react-router-dom'
 import MuiAlert from '@mui/material/Alert'
 import BasicModal from './ModalEdit'
 import { getAllPrize} from '~/api/prizesApi'
+import { Loader } from '~/components/loader'
 
 interface CompPrizes {
   cpid: number
@@ -28,14 +29,16 @@ interface CompPrizes {
 const PrizeData = (): JSX.Element => {
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
-  const [reset, setReset] = React.useState(false)
   const [deleteCompPrizState, callDelete] = useFetch()
   const [stateCompPri, callCompPrize] = useFetch()
   const [prizeType, callPrizeTypes] = useFetch()
   const [prizeState, callPrizes] = useFetch()
+  const [change, setChange] = React.useState(false)
 
   const { comId } = useParams()
-
+  const handleChange =():void=>{
+    setChange(r=>!r)
+  }
   const paramId: { id: string } = { id: comId ? comId : '' }
   React.useEffect(() => {
     const fetchData = async (): Promise<void> => {
@@ -47,14 +50,14 @@ const PrizeData = (): JSX.Element => {
     }
 
     fetchData()
-  }, [reset, comId])
+  }, [change, comId])
 
   React.useEffect(() => {
     callPrizeTypes(getAllPrizeTypes)
-  }, [reset])
+  }, [change])
   React.useEffect(() => {
     callPrizes(getAllPrize)
-  }, [reset])
+  }, [change])
 
   const CompPrizes = stateCompPri?.payload
   const prizeTypes = prizeType?.payload
@@ -83,13 +86,7 @@ const PrizeData = (): JSX.Element => {
     const prize = prizes?.find((type: any) => type.priId === PriID)
     return prize?.priName || 'chưa có loại giải'
   }
-  const handelReset = (): void => {
-    if (reset) {
-      setReset(false)
-    } else {
-      setReset(true)
-    }
-  }
+
   const handleCloseSuccess = (): void => {
     setShowSuccess(false)
   }
@@ -138,9 +135,8 @@ const PrizeData = (): JSX.Element => {
       type: 'actions',
       width: 100,
       getActions: (params: any) => [
-        // <GridActionsCellItem key={1} icon={<EditIcon />} label='Edit' />,
-
         <BasicModal
+          handleChange={handleChange}
           key={params.row.id}
           comId={params.row.ComID}
           cpid={params.row.id}
@@ -154,7 +150,10 @@ const PrizeData = (): JSX.Element => {
           key={2}
           icon={<DeleteIcon />}
           label='Delete'
-          onClick={(): void => handleDelete(params.id)}
+          onClick={(): void =>{
+            handleDelete(params.id)
+            setChange(r=>!r)
+          } }
         />
       ]
     }
@@ -191,55 +190,64 @@ const PrizeData = (): JSX.Element => {
       </Snackbar>
       <LayoutAdmin>
         <>
-          {stateCompPri.loading || deleteCompPrizState.loading ? (
-            <h1>đang tải xuống ...</h1>
-          ) : (
-            <>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'row',
-                  p: 1,
-                  m: 1,
-                  bgcolor: 'background.paper',
-                  borderRadius: 1
-                }}
-              >
-                <Button
-                  onClick={handelReset}
-                  variant='contained'
-                  startIcon={<FlipCameraAndroidIcon />}
-                >
-                  Reset
-                </Button>
-                <ModalAdd Title='Thêm Giải Thưởng'>
-                  <TextFields
-                    edit={false}
-                    cpid={''}
-                    priId={''}
-                    comId={''}
-                    priTid={''}
-                    quantity={''}
-                    prizeDetail={''}
-                  />
-                </ModalAdd>
-              </Box>
-
-              <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
-                <DataGrid
-                  rows={rows}
-                  columns={columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 5 }
-                    }
+          <Box
+            sx={{
+              width:"100%",
+              display:"flex",
+              justifyContent:"center",
+              mt:3,
+              color:"#1976d2",
+              fontWeight:"500",
+              fontSize:"30px"
+            }}
+          >
+            Quản lý phần thưởng cuộc thi
+          </Box>
+            {stateCompPri.loading || deleteCompPrizState.loading ? (
+              <Loader />
+            ) : (
+              <>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    p: 1,
+                    m: 1,
+                    bgcolor: 'background.paper',
+                    borderRadius: 1
                   }}
-                  checkboxSelection
-                  pageSizeOptions={[5, 10]}
-                />
-              </div>
-            </>
-          )}
+                >
+                  <ModalAdd Title='Thêm Giải Thưởng'>
+                    {(handleClose):JSX.Element =>  (
+                      <TextFields
+                        handleChange={handleChange}
+                        edit={false}
+                        cpid={''}
+                        priId={''}
+                        comId={''}
+                        priTid={''}
+                        quantity={''}
+                        prizeDetail={''}
+                        close={handleClose}
+                      />
+                    )}
+                  </ModalAdd>
+                </Box>
+                <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
+                  <DataGrid
+                    rows={rows}
+                    columns={columns}
+                    initialState={{
+                      pagination: {
+                        paginationModel: { page: 0, pageSize: 5 }
+                      }
+                    }}
+                    checkboxSelection
+                    pageSizeOptions={[5, 10]}
+                  />
+                </div>
+              </>
+            )}
         </>
       </LayoutAdmin>
     </>

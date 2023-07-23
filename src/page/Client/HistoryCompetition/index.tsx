@@ -97,97 +97,114 @@ const HistoryCompetition = ():JSX.Element =>{
                         </Grid>
                         <Grid container item spacing={1}>
                             {
-                                mergeHistoryList?.map((row:IHistoryList,index:number)=>(
-                                    <Grid key={index} item md={4} xs={12}>
-                                        <Box
-                                            sx={{
-                                                borderRadius:"5px",
-                                                padding:"8px",
-                                                backgroundColor:"#e0f0ff",
-                                                display:"flex",
-                                                gap:"10px",
-                                                flexDirection:{xs:'column',md:'row'}
-                                            }}
-                                        >
+                                mergeHistoryList?.length === 0?(
+                                    <Box 
+                                        className='color-primary'
+                                        sx={{
+                                            fontWeight1:"500",
+                                            fontSize:"30px",
+                                            display:"flex",
+                                            alignItems:"center",
+                                            justifyContent:"center",
+                                            width:"100%",
+                                            mt:5
+                                        }}
+                                    >
+                                        <span>Bạn chưa thi cuộc thi nào</span>
+                                    </Box>
+                                ):(
+                                    mergeHistoryList?.map((row:IHistoryList,index:number)=>(
+                                        <Grid key={index} item md={4} xs={12}>
                                             <Box
                                                 sx={{
-                                                    backgroundColor:"white",
-                                                    borderRadius:"3px",
-                                                    padding:"10px",
+                                                    borderRadius:"5px",
+                                                    padding:"8px",
+                                                    backgroundColor:"#e0f0ff",
                                                     display:"flex",
-                                                    flexDirection:"column",
-                                                    width:{xs:'100%',md:'70%'}
+                                                    gap:"10px",
+                                                    flexDirection:{xs:'column',md:'row'}
                                                 }}
                                             >
-                                                <span>
-                                                    Tên cuộc thi: <span className='color-primary'>{getNameCompetition(row.comId)}</span>
-                                                </span>
-                                                <span>
-                                                    Ngày thi : <span className='color-primary'>{formatDay(row.startTimes)}</span>
-                                                </span>
-                                                <span>
-                                                    Thời gian bắt đầu : <span className='color-primary'>{formatTime(row.startTimes)}</span>
-                                                </span>
-                                                <span>
-                                                    Thời gian kết thúc : <span className='color-primary'>{formatTime(row.endTimes)}</span>
-                                                </span>
-                                                <span>
-                                                    Số câu đúng : <span className='color-primary'>{row.trueAns}</span>
-                                                </span>
-                                                <span>
-                                                    số câu sai : <span className='color-primary'>{row.falseAns}</span>
-                                                </span>
-                                            </Box>
-                                            <Box
-                                                sx={{
-                                                    backgroundColor:"white",
-                                                    borderRadius:"3px",
-                                                    padding:"10px",
-                                                    display:"flex",
-                                                    flexDirection:{xs:'row',md:'column'},
-                                                    alignItems:"center",
-                                                    justifyContent:"center",
-                                                    gap:"20px"
-                                                }}
-                                            >
-                                                <Button 
-                                                    onClick={():void=>handleOpenWatchExam(row.cuid)}
-                                                >
-                                                    Xem bài thi
-                                                </Button>
                                                 <Box
-                                                    className='color-primary'
-                                                    onClick={():void=>{
-                                                        localStorage.setItem('competitionId',JSON.stringify(row.comId))
-                                                        navigate(`/ListExamCompetition?id=${row.comId}`)
-                                                    }}
                                                     sx={{
-                                                        position:"relative",
-                                                        fontWeight:"500",
-                                                        fontSize:"16px",
-                                                        border:"1px solid #1976D2",
+                                                        backgroundColor:"white",
                                                         borderRadius:"3px",
-                                                        padding:"5px 10px",
-                                                        cursor:"pointer"
+                                                        padding:"10px",
+                                                        display:"flex",
+                                                        flexDirection:"column",
+                                                        width:{xs:'100%',md:'70%'}
                                                     }}
                                                 >
+                                                    <span>
+                                                        Tên cuộc thi: <span className='color-primary'>{getNameCompetition(row.comId)}</span>
+                                                    </span>
+                                                    <span>
+                                                        Ngày thi : <span className='color-primary'>{formatDay(row.startTimes)}</span>
+                                                    </span>
+                                                    <span>
+                                                        Thời gian bắt đầu : <span className='color-primary'>{formatTime(row.startTimes)}</span>
+                                                    </span>
+                                                    <span>
+                                                        Thời gian kết thúc : <span className='color-primary'>{formatTime(row.endTimes)}</span>
+                                                    </span>
+                                                    <span>
+                                                        Số câu đúng : <span className='color-primary'>{row.trueAns}</span>
+                                                    </span>
+                                                    <span>
+                                                        số câu sai : <span className='color-primary'>{row.falseAns}</span>
+                                                    </span>
+                                                </Box>
+                                                <Box
+                                                    sx={{
+                                                        backgroundColor:"white",
+                                                        borderRadius:"3px",
+                                                        padding:"10px",
+                                                        display:"flex",
+                                                        flexDirection:{xs:'row',md:'column'},
+                                                        alignItems:"center",
+                                                        justifyContent:"center",
+                                                        gap:"20px"
+                                                    }}
+                                                >
+                                                    <Button 
+                                                        onClick={():void=>handleOpenWatchExam(row.cuid)}
+                                                    >
+                                                        Xem bài thi
+                                                    </Button>
                                                     <Box
-                                                        src={CrownImg}
-                                                        sx={{
-                                                            height:"25px",
-                                                            position:"absolute",
-                                                            top:"-13px",
-                                                            left:"-15px",
-                                                            transform:"rotate(-45deg)"
+                                                        className='color-primary'
+                                                        onClick={():void=>{
+                                                            localStorage.setItem('competitionId',JSON.stringify(row.comId))
+                                                            navigate(`/ListExamCompetition?id=${row.comId}`)
                                                         }}
-                                                        component='img'
-                                                    />
-                                                    XẾP HẠNG
+                                                        sx={{
+                                                            position:"relative",
+                                                            fontWeight:"500",
+                                                            fontSize:"16px",
+                                                            border:"1px solid #1976D2",
+                                                            borderRadius:"3px",
+                                                            padding:"5px 10px",
+                                                            cursor:"pointer"
+                                                        }}
+                                                    >
+                                                        <Box
+                                                            src={CrownImg}
+                                                            sx={{
+                                                                height:"25px",
+                                                                position:"absolute",
+                                                                top:"-13px",
+                                                                left:"-15px",
+                                                                transform:"rotate(-45deg)"
+                                                            }}
+                                                            component='img'
+                                                        />
+                                                        XẾP HẠNG
+                                                    </Box>
                                                 </Box>
                                             </Box>
-                                        </Box>
-                                    </Grid>
-                                ))
+                                        </Grid>
+                                    ))
+                                )
                             }
                         </Grid>
                     </Grid>

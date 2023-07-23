@@ -9,6 +9,8 @@ import { insertCompExam } from '~/api/competitionExam'
 import { useParams } from 'react-router-dom'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SaveIcon from '@mui/icons-material/Save'
+import { Loader } from '~/components/loader'
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface IExam {
   examId: number
@@ -82,7 +84,7 @@ const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
   return (
     <>
       {examsState.loading || insertComp.loading ? (
-        <h1>Đang tải dữ liệu...</h1>
+        <CircularProgress  />
       ) : (
         <>
           {' '}

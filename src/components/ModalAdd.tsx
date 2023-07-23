@@ -19,7 +19,7 @@ const style = {
 }
 
 interface ModalAddProps {
-  children: React.ReactNode
+  children: (handleClose: () => void) => React.ReactNode;
   Title: string // Prop bổ sung
 }
 export default function ModalAdd({ children, Title }: ModalAddProps): JSX.Element {
@@ -37,13 +37,10 @@ export default function ModalAdd({ children, Title }: ModalAddProps): JSX.Elemen
         Thêm Mới
         <AddCircleOutlineOutlinedIcon />
       </Button>
-      {/* <Button variant='contained' onClick={handleOpen}>
-        Thêm Người Dùng
-      </Button> */}
       <Modal
         open={open}
         onClose={handleClose}
-        aria-labelledby='modal-modal-title'
+        aria-labelledby='modal-modal-title' 
         aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
@@ -56,7 +53,7 @@ export default function ModalAdd({ children, Title }: ModalAddProps): JSX.Elemen
             {Title}
           </Typography>
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-            {children}
+            {children(handleClose)}
           </Typography>
         </Box>
       </Modal>

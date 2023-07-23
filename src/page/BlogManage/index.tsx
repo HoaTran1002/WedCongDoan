@@ -364,15 +364,7 @@ const Index = (): JSX.Element => {
               {
                 currentProducts.length !== 0 &&
                 (
-                  <Box
-                    sx={{
-                      position:"fixed",
-                      top:0,
-                      bottom:0,
-                      left:0,
-                      right:0
-                    }}
-                  >
+                  
                     <Tooltip title="Thêm Blog mới">
                       <Box
                           sx={{
@@ -397,7 +389,6 @@ const Index = (): JSX.Element => {
                         </Box>
 
                     </Tooltip>
-                  </Box>
                 )
               }
             </>

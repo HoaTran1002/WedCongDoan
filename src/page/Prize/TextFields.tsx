@@ -26,6 +26,8 @@ export default function TextFields(prop: {
   priTid: string
   quantity: string
   prizeDetail: string
+  close?:()=>void
+  handleChange:()=>void
 }): JSX.Element {
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
@@ -115,6 +117,7 @@ export default function TextFields(prop: {
       prizesCompCall(async () => {
         insert(requestData)
       })
+      prop.handleChange();
       setShowSuccess(true)
     } catch (error: any) {
       setShowError(true)
@@ -126,6 +129,10 @@ export default function TextFields(prop: {
         editcompPrize(requestEditData)
       })
       console.log(requestEditData)
+      if (prop?.close) {
+        prop.close();
+      }
+      prop.handleChange()
       setShowSuccess(true)
     } catch (error: any) {
       setShowError(true)

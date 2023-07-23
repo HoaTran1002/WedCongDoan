@@ -21,6 +21,7 @@ body::-webkit-scrollbar-track {
 .carousel-items-banner {
   height: 400px;
   background-color: #ffffff;
+  outline: none;
 }
 
 .carousel-items-banner img {
