@@ -1,13 +1,15 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import TextField from '@mui/material/TextField'
-import { Button, MenuItem , Snackbar } from '@mui/material'
+import { Button, MenuItem, Snackbar } from '@mui/material'
 import useFetch from '~/hook/useFetch'
 import { getAllPrizeTypes } from '~/api/prizeTypesApi'
 import { getAllPrize } from '~/api/prizesApi'
 import { useParams } from 'react-router-dom'
 import { editcompPrize, insert } from '~/api/CompetitionsPrizesAPI'
 import MuiAlert from '@mui/material/Alert'
+import MessageAlert from '~/components/MessageAlert'
+import { useState } from 'react'
 
 interface PrizeType {
   priTid: number
@@ -26,8 +28,8 @@ export default function TextFields(prop: {
   priTid: string
   quantity: string
   prizeDetail: string
-  close?:()=>void
-  handleChange:()=>void
+  close?: () => void
+  handleChange: () => void
 }): JSX.Element {
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
@@ -41,6 +43,8 @@ export default function TextFields(prop: {
   const [prizesState, callPrizes] = useFetch()
   const [prizesCompState, prizesCompCall] = useFetch()
   const [prizeCompEdit, prizeCompEditCall] = useFetch()
+  const [message, setMessage] = useState<string>('')
+  const [severity, setSeverity] = useState<string>('')
 
   const { comId } = useParams()
   React.useEffect(() => {
@@ -117,10 +121,12 @@ export default function TextFields(prop: {
       prizesCompCall(async () => {
         insert(requestData)
       })
-      prop.handleChange();
-      setShowSuccess(true)
+      // prop.handleChange()
+      setSeverity('success')
+      setMessage('thêm thành công!')
     } catch (error: any) {
-      setShowError(true)
+      setSeverity('error')
+      setMessage(' thất bại')
     }
   }
   const submitEditData = (): void => {
@@ -130,17 +136,28 @@ export default function TextFields(prop: {
       })
       console.log(requestEditData)
       if (prop?.close) {
-        prop.close();
+        prop.close()
       }
-      prop.handleChange()
-      setShowSuccess(true)
+      // prop.handleChange()
+      setSeverity('info')
+      setMessage('đã chỉnh sửa')
     } catch (error: any) {
-      setShowError(true)
+      setSeverity('error')
+      setMessage('chỉnh sửa thất bại')
     }
   }
-
+  if (message != null) {
+    setTimeout(async (): Promise<void> => {
+      await setMessage('')
+    }, 3000)
+  }
+  if (prizeCompEdit.error) {
+    setSeverity('error')
+    setMessage('chỉnh sửa thất bại')
+  }
   return (
     <>
+      {message && <MessageAlert message={message} severity={severity} />}
       <>
         <Snackbar
           open={showSuccess}

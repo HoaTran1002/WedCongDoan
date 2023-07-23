@@ -22,9 +22,9 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import { TableWithFixedColumn, ColumnsProps } from '~/components/TableFixed'
 import { Loader } from '~/components/loader'
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import PersonIcon from '@mui/icons-material/Person';
-import InfoIcon from '@mui/icons-material/Info';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
+import PersonIcon from '@mui/icons-material/Person'
+import InfoIcon from '@mui/icons-material/Info'
 //interface
 interface Competition {
   comId: number
@@ -34,13 +34,14 @@ interface Competition {
   examTimes: number
   userQuan: number
   depId: number
+  isDeleted: number
 }
 interface IDep {
   depId: number
   depName: string
 }
 const CompTable = (): JSX.Element => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
   const [compState, callComp] = useFetch()
@@ -122,58 +123,67 @@ const CompTable = (): JSX.Element => {
       field: 'actions',
       type: 'actions',
       getActions: (params: any) => [
-        <Button 
+        <Button
           key='option'
-          sx={{ 
+          sx={{
             width: 50,
-            position:"relative",
-            '&:hover .option_more-list':{
-              display:"flex"
+            position: 'relative',
+            '&:hover .option_more-list': {
+              display: 'flex'
             }
           }}
           variant='outlined'
         >
-            <MoreHorizIcon />
+          <MoreHorizIcon />
+          <Box
+            className='option_more-list'
+            sx={{
+              position: 'absolute',
+              display: 'none',
+              backgroundColor: 'white',
+              padding: '10px',
+              border: '1px solid #e4f5ff',
+              alignItems: 'flex-start',
+              flexDirection: 'column',
+              bottom: '-70px',
+              left: '-150px',
+              boxShadow: 'rgba(0, 0, 0, 0.2) -3px 4px 14px 0px',
+              zIndex: '10',
+              '&::before': {
+                content: "''",
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                width: '20px',
+                right: '-20px'
+              }
+            }}
+          >
             <Box
-              className='option_more-list'
-              sx={{
-                position:"absolute",
-                display:"none",
-                backgroundColor:"white",
-                padding:"10px",
-                border:"1px solid #e4f5ff",
-                alignItems:"flex-start",
-                flexDirection:"column",
-                bottom:"-70px",
-                left:"-150px",
-                boxShadow: "rgba(0, 0, 0, 0.2) -3px 4px 14px 0px",
-                zIndex:"10",
-                '&::before':{
-                  content:"''",
-                  position:"absolute",
-                  top:0,
-                  bottom:0,
-                  width:"20px",
-                  right:"-20px",
-                }
-              }}
+              sx={OptionHover}
+              onClick={(): void =>
+                navigate(`/Tests/Competition/${params.comId}`)
+              }
             >
-              <Box 
-                sx={OptionHover}
-                onClick={():void=>navigate(`/Tests/Competition/${params.comId}`)}
-              >
-                Đề thi<ArticleOutlinedIcon />
-              </Box>
-              <Box sx={OptionHover} onClick={():void=>navigate(`/Prize/Competition/${params.comId}`)}>
-                Giải thưởng<MilitaryTechOutlinedIcon />
-              </Box>
-              <Box sx={OptionHover}>
-                Người thi <PersonIcon />
-              </Box>
-              <Box sx={OptionHover}>
-                Thông tin <InfoIcon />
-              </Box>
+              Đề thi
+              <ArticleOutlinedIcon />
             </Box>
+            <Box
+              sx={OptionHover}
+              onClick={(): void =>
+                navigate(`/Prize/Competition/${params.comId}`)
+              }
+            >
+              Giải thưởng
+              <MilitaryTechOutlinedIcon />
+            </Box>
+            <Box sx={OptionHover}>
+              Người thi <PersonIcon />
+            </Box>
+            <Box sx={OptionHover}>
+              Thông tin <InfoIcon />
+            </Box>
+          </Box>
         </Button>,
         <Tooltip key='delete' title='xoá cuộc thi' placement='top-start'>
           <Button
@@ -185,7 +195,6 @@ const CompTable = (): JSX.Element => {
             <DeleteOutlinedIcon />
           </Button>
         </Tooltip>
-        
       ]
     }
   ]
@@ -263,7 +272,7 @@ const CompTable = (): JSX.Element => {
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
-                  zIndex:"10"
+                  zIndex: '10'
                 }}
               >
                 <TableWithFixedColumn
@@ -276,46 +285,44 @@ const CompTable = (): JSX.Element => {
             </Grid>
           </Grid>
         )}
-            <Tooltip title="Thêm Cuộc thi mới">
-              <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    height: "50px",
-                    borderRadius: "50px",
-                    padding:"10px 20px",
-                    color: "white",
-                    backgroundColor: "#1565c0",
-                    cursor: "pointer",
-                    position:"absolute",
-                    bottom:{md:"30px",xs:"20px"},
-                    right:{md:"20px",xs:"50%"},
-                    transform:{xs:"translateX(50%)",md:"translateX(0)"},
-                    
-                  }}
-                  onClick={(): void => {
-                    navigate('/CompetitionCreate')
-                  }}
-                >
-                  <AddIcon /> Thêm cuộc thi
-                </Box>
-
-            </Tooltip>
+        <Tooltip title='Thêm Cuộc thi mới'>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '50px',
+              borderRadius: '50px',
+              padding: '10px 20px',
+              color: 'white',
+              backgroundColor: '#1565c0',
+              cursor: 'pointer',
+              position: 'absolute',
+              bottom: { md: '30px', xs: '20px' },
+              right: { md: '20px', xs: '50%' },
+              transform: { xs: 'translateX(50%)', md: 'translateX(0)' }
+            }}
+            onClick={(): void => {
+              navigate('/CompetitionCreate')
+            }}
+          >
+            <AddIcon /> Thêm cuộc thi
+          </Box>
+        </Tooltip>
       </>
     </>
   )
 }
 export default CompTable
 
-const OptionHover :SxProps={
-  display:"flex",
-  alignItems:"center",
-  gap:"7px", 
-  width:"100%",
-  padding:"7px 10px ",
-  transition:"all 0.1s linear",
-  '&:hover':{
-    backgroundColor:"#eaefff"
+const OptionHover: SxProps = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '7px',
+  width: '100%',
+  padding: '7px 10px ',
+  transition: 'all 0.1s linear',
+  '&:hover': {
+    backgroundColor: '#eaefff'
   }
 }

@@ -27,6 +27,7 @@ import { Link } from 'react-router-dom'
 import CircularProgress from '@mui/material/CircularProgress'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
 import useFetch from '~/hook/useFetch'
+import MessageAlert from '~/components/MessageAlert'
 
 //================================
 interface Prize {
@@ -46,6 +47,8 @@ const Index = (): JSX.Element => {
   const [deletePrize, callDeletePrize] = useFetch()
   const [insertPrize, callInsertPrize] = useFetch()
   const [loading, setLoading] = useState<boolean>(false)
+  const [message, setMessage] = React.useState('')
+  const [severity, setSeverity] = React.useState('')
 
   const requestDataEdit: {
     priId: number
@@ -229,9 +232,15 @@ const Index = (): JSX.Element => {
       ]
     }
   ]
+  if (message != null) {
+    setTimeout(() => {
+      setMessage('')
+    }, 3000)
+  }
   return (
     <LayoutAdmin>
       <>
+        {message && <MessageAlert message={''} severity={''} />}
         <>
           <h1 className='color-primary text-center'>Quản lý giải thưởng</h1>
           {allPrize.loading == true ? (
