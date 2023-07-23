@@ -150,7 +150,7 @@ export default function Index(): JSX.Element {
         r.userId === profile?.userId
     )
     const check = getAllResults?.payload?.find(
-      (r: IResult) => Number(r.cuid) === item.cuid
+      (r: IResult) => Number(r?.cuid) === item?.cuid
     )
     if (check === undefined) setHasJoin(false)
     else setHasJoin(true)

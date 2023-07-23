@@ -5,7 +5,6 @@ import Layout from '~/components/layout/Layout'
 import notFoundCompetition from '~/assets/img/players-competing-in-a-game-tournament.png'
 import img_competition from '~/assets/img/competition_item.png'
 import { Grid, Box, Container, Select, MenuItem, Button,InputLabel,FormControl } from '@mui/material'
-
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import { Link, useNavigate } from 'react-router-dom'
@@ -13,33 +12,19 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import SearchIcon from '@mui/icons-material/Search';
 import { getAllDep } from '~/api/departmentApi'
 import { getAllComp } from '~/api/competitionApi'
+import { getAllCompUser } from '~/api/CompetitionUser'
+import { getAllResult } from '~/api/resultApi'
 import useFetch from '~/hook/useFetch'
-import { ICompetition, IDepartment } from '~/interface/Interface'
-import PersonIcon from '@mui/icons-material/Person';
+import { ICompetition, ICompetitionUser, IDepartment, IResult,IDate } from '~/interface/Interface'
+import { isBeforeDate,formatDay,compareDateWithTimeString } from '~/utils/dateUtils'
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
-interface Competition {
-  comId: string
-  comName: string
-  startDate: string
-  endDate: string
-  userQuan: number
-  examTimes: number
-  depId: number
-}
 
-interface Department {
-  depId: number
-  depName: string
-}
-interface IDate {
-  date: number,
-  month: number,
-  year: number
-}
 export default function Index(): JSX.Element {
   const navigate = useNavigate()
   const [getAllDeps, callAllDeps] = useFetch()
   const [getAllComps, callAllComps] = useFetch()
+  const [allCompUser, callAllCompUser] = useFetch()
+  const [allResult, callAllResult] = useFetch()
   const [compSearch, setCompSearch] = React.useState<string>('')
   const [compSearchResult, setCompSearchResult] = React.useState<string>('')
   const [depSelect, setDepSelect] = React.useState<string>('');
@@ -47,24 +32,20 @@ export default function Index(): JSX.Element {
   const [selectStatus, setSelectStatus] = React.useState<boolean>(false)
   const [listCompSearch, setListCompSearch] = React.useState<ICompetition[]>([])
   const [listCompDepSelect, setListCompDepSelect] = React.useState<ICompetition[]>([])
-  const compareDateWithTimeString = (dateObj: IDate, timeString: string): boolean => {
-    const date = new Date(timeString);
-    const yearMatch = dateObj.year === date.getFullYear();
-    const monthMatch = dateObj.month === date.getMonth() + 1;
-    const dateMatch = dateObj.date === date.getDate();
-    return yearMatch && monthMatch && dateMatch;
-  };
+  const listAllCompetitionUser = allCompUser?.payload 
+  const listAllResults = allResult?.payload
+  const coutingUserInCom = (comId:number):number=>{
+    const listCompetionUserByComId:ICompetitionUser[] = listAllCompetitionUser?.filter((r:ICompetitionUser)=>r.comId === comId)
+    const listUser = listAllResults?.reduce((listNew:IResult[],curr:IResult)=>{
+      const cuid = curr.cuid;
+      if(listCompetionUserByComId?.find((r:ICompetitionUser)=>r.cuid === cuid) !== undefined)
+      listNew?.push(curr)
+    },[])
 
-  const isBeforeDate = (dateInput: string): boolean => {
-    const date = new Date(dateInput);
-    const currentDate = new Date();
-    if (date > currentDate) {
-      return true;
-    } else {
-      return false;
-    }
-  };
+    console.log(listUser,listCompetionUserByComId)
 
+    return listUser?.length;
+  }
   const removeDuplicates = (array: any[], keyFn: (item: any) => string): any[] => {
     const seen = new Set();
     return array?.filter((item) => {
@@ -82,7 +63,7 @@ export default function Index(): JSX.Element {
     const month = dateObj.getMonth() + 1
     const day = dateObj.getDate()
     const year = dateObj.getFullYear()
-    if (isBeforeDate(current?.endDate)) listNew.push({ date: day, month: month, year: year })
+    if (!isBeforeDate(current?.endDate)) listNew.push({ date: day, month: month, year: year })
     return listNew;
   }, [])
   const listDayInBefore: IDate[] = getAllComps?.payload?.reduce((listNew: IDate[], current: ICompetition) => {
@@ -90,7 +71,7 @@ export default function Index(): JSX.Element {
     const month = dateObj.getMonth() + 1
     const day = dateObj.getDate()
     const year = dateObj.getFullYear()
-    if (!isBeforeDate(current?.endDate)) listNew.push({ date: day, month: month, year: year })
+    if (isBeforeDate(current?.endDate)) listNew.push({ date: day, month: month, year: year })
     return listNew;
   }, [])
 
@@ -115,20 +96,13 @@ export default function Index(): JSX.Element {
   });
   const newListDayInHappening = removeDuplicates(listDayInHappening, (item) => `${item.date}-${item.month}-${item.year}`);
   const newListDayBefore = removeDuplicates(listDayInBefore, (item) => `${item.date}-${item.month}-${item.year}`);
+  console.log(newListDayInHappening)
 
   const getDepName = (id: number): string => {
     const dep = getAllDeps?.payload?.find((r: IDepartment) => r?.depId === id)
     return dep?.depName || ''
   }
-  const formatDay = (dayOrigin: string): string => {
-    const dateObj = new Date(dayOrigin)
-    const month = dateObj.getMonth() + 1
-    const day = dateObj.getDate()
-    const year = dateObj.getFullYear()
-    return `${month.toString().padStart(2, '0')} / ${day
-      .toString()
-      .padStart(2, '0')} / ${year}`
-  }
+  
   const handleGoToExamComp = (id: number): void => {
     localStorage.setItem('competitionId', JSON.stringify(id))
     navigate(`/ListExamCompetition?id=${id}`)
@@ -137,11 +111,13 @@ export default function Index(): JSX.Element {
     setCompSearch(event.target.value)
   };
   
-  const listCompetitionforDate = (date: number, month: number, year: number): JSX.Element => {
+  const listCompetitionforDate = (date: number, month: number, year: number,status:string): JSX.Element => {
     const dayObj: IDate = { date: date, month: month, year: year };
-    const listCom = getAllComps?.payload?.filter((r: ICompetition) =>
-      compareDateWithTimeString(dayObj, r.startDate)
-    )
+      const listCom = getAllComps?.payload?.filter((r: ICompetition) =>
+        status !== 'afterDay'?
+        compareDateWithTimeString(dayObj, r.startDate) && !isBeforeDate(r.endDate):
+        compareDateWithTimeString(dayObj, r.startDate) && isBeforeDate(r.endDate)
+      )
     return (
       <Box
         sx={{
@@ -192,18 +168,6 @@ export default function Index(): JSX.Element {
                 </span>
                 <TitleCompetition>{r.examTimes} phút </TitleCompetition>
               </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  position: "absolute",
-                  right: "10px",
-                  bottom: "10px",
-                  color: "#1565c0"
-                }}
-              >
-                <span>0/{r.userQuan}</span><PersonIcon />
-              </Box>
             </Box>
           ))
         }
@@ -221,7 +185,7 @@ export default function Index(): JSX.Element {
   const handleSearchCom = (): void => {
     if (compSearch.trim() !== '') {
       const listCompWhensearch = getAllComps?.payload?.filter((r: ICompetition) =>
-        r.comName.toLowerCase().includes(compSearch)
+        r.comName.toLowerCase().trim().includes(compSearch.toLowerCase().trim())
       )
       setListCompSearch(listCompWhensearch);
       setCompSearchResult(compSearch)
@@ -301,18 +265,6 @@ export default function Index(): JSX.Element {
                   </span>
                   <TitleCompetition>{r.examTimes} phút </TitleCompetition>
                 </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    position: "absolute",
-                    right: "10px",
-                    bottom: "10px",
-                    color: "#1565c0"
-                  }}
-                >
-                  <span>0/{r.userQuan}</span><PersonIcon />
-                </Box>
               </Box>
           </Grid>
         ))
@@ -322,9 +274,14 @@ export default function Index(): JSX.Element {
   React.useEffect(() => {
     callAllDeps(getAllDep)
   }, [])
-
   React.useEffect(() => {
     callAllComps(getAllComp)
+  }, [])
+  React.useEffect(() => {
+    callAllCompUser(getAllCompUser)
+  }, [])
+  React.useEffect(() => {
+    callAllResult(getAllResult)
   }, [])
   React.useEffect(() => {
     localStorage.clear();
@@ -340,7 +297,8 @@ export default function Index(): JSX.Element {
                 display:"flex",
                 justifyContent:"center",
                 alignItems:"center",
-                gap:"20px"
+                gap:"20px",
+                flexDirection:{md:"row",xs:"column"}
               }}
             >
               <Box
@@ -375,7 +333,7 @@ export default function Index(): JSX.Element {
                   <Button variant='contained' onClick={handleSearchCom} ><SearchIcon /></Button>
                 </Box>
               </Box>
-              <FormControl sx={{width:"250px"}} >
+              <FormControl sx={{width:{md:"250px",xs:"100%"}}} >
                 <InputLabel id="demo-simple-select-label" sx={{padding:"0 10px",backgroundColor:"#fff",display:"inline-block"}}>Khoa tổ chức</InputLabel>
                 <Select
                   labelId="demo-simple-select-label"
@@ -384,7 +342,6 @@ export default function Index(): JSX.Element {
                   label="Khoa tổ chức"
                   onChange={handleChangeSelectDep}
                 >
-                  <MenuItem value={''}>-- chọn khoa --</MenuItem>
                   {
                     getAllDeps?.payload?.map((r:IDepartment,index:number)=>(
                       <MenuItem key={index} value={r.depId}>{getDepName(r.depId)}</MenuItem>
@@ -411,7 +368,7 @@ export default function Index(): JSX.Element {
                           fontSize: "23px"
                         }}
                       >
-                        BẠN TÌM KIẾM CUỘC THI &quot; {compSearchResult} &quot;
+                        BẠN TÌM KIẾM CUỘC THI &quot;{compSearchResult}&quot;
                       </Box>
                       <Box
                         sx={{
@@ -444,7 +401,7 @@ export default function Index(): JSX.Element {
                       </Grid>
                     ):(
                       listCompSearch?.map((r: ICompetition, index: number) => (
-                          <Grid key={index} item md={6}>
+                          <Grid key={index} item md={6} xs={12}>
                             <Box
                               key={index}
                               sx={{
@@ -483,18 +440,6 @@ export default function Index(): JSX.Element {
                                 </span>
                                 <TitleCompetition>{r.examTimes} phút </TitleCompetition>
                               </Box>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  position: "absolute",
-                                  right: "10px",
-                                  bottom: "10px",
-                                  color: "#1565c0"
-                                }}
-                              >
-                                <span>0/{r.userQuan}</span><PersonIcon />
-                              </Box>
                             </Box>
                         </Grid>
                       ))
@@ -508,7 +453,7 @@ export default function Index(): JSX.Element {
                 <Grid item xs={12} md={12} >
                 {/* Danh sách cuộc thi khi select */}
                 <Grid container spacing={1}>
-                  <Grid item md={12}>
+                  <Grid item md={12} xs={12}>
                     <Box>
                       <Box
                         sx={{
@@ -530,7 +475,7 @@ export default function Index(): JSX.Element {
                     </Box>
                   </Grid>
                 </Grid>
-                <Grid item md={12}>
+                <Grid item md={12} xs={12}>
                   <Grid container spacing={2} sx={{mt:3}}>
                     {
                       listCompForDepWhenSelect(Number(depSelect))
@@ -543,12 +488,19 @@ export default function Index(): JSX.Element {
                 {/* Danh sách cuộc thi khi chưa search  */}
                 <Grid container spacing={1}>
                   <Grid item xs={12} md={12}>
-                    <Box>
+                    <Box 
+                      sx={{
+                        position:"sticky",
+                        top:"58px",
+                        zIndex:"10"
+                      }}
+                    >
                       <Box
                         sx={{
                           fontWeight: "400",
                           color: "#1565c0",
-                          fontSize: "23px"
+                          fontSize: "23px",
+                          backgroundColor:"white"
                         }}
                       >
                         CÁC CUỘC THI ĐANG DIỄN RA
@@ -563,84 +515,108 @@ export default function Index(): JSX.Element {
                       </Box>
                     </Box>
                     {
-                      newListDayInHappening?.map((r: IDate, index: number) => (
-                        <Grid key={index} container spacing={1}>
-                          <Grid item md={3}>
-                            <Box
-                              sx={{
-                                m: "20px 0",
-                                borderRight: "2px solid #1565c0",
-                                height: "100%"
-                              }}
-                            >
+                      newListDayInHappening?.length === 0?(
+                        <Box
+                          className='color-primary'
+                          sx={{
+                            padding:"100px 0",
+                            display:"flex",
+                            alignItems:"center",
+                            justifyContent:"center",
+                            fontSize:"25px",
+                          }}
+                        >
+                          HIỆN GIỜ CHƯA CÓ CUỘC THI NÀO DIỄN RA CẢ
+                        </Box>
+                      ):(
+                        newListDayInHappening?.map((r: IDate, index: number) => (
+                          <Grid key={index} container spacing={1}>
+                            <Grid item md={3} xs={3}>
                               <Box
                                 sx={{
-                                  display: "flex",
-                                  justifyContent: "center",
-                                  alignItems: "center",
+                                  m: "20px 0",
+                                  borderRight: "2px solid #1565c0",
                                   height: "100%"
                                 }}
                               >
-                                <span
-                                  style={{
-                                    position: "sticky",
-                                    top: "80px",
-                                    bottom: "20px",
-                                    color: "#1565c0",
-                                    fontSize: "60px",
-                                    fontWeight: "500"
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    height: "100%"
                                   }}
                                 >
-                                  {r.date}
-                                  <span
-                                    style={{
-                                      position: "absolute",
+                                  <Box
+                                    component='span'
+                                    sx={{
+                                      position: "sticky",
+                                      top: "110px",
+                                      bottom: {md:"20px",xs:"50px"},
                                       color: "#1565c0",
-                                      fontSize: "20px",
-                                      fontWeight: "400",
-                                      top: "-15px",
-                                      left: "-40px"
+                                      fontSize: {md:"60px",xs:'40px'},
+                                      fontWeight: "500"
                                     }}
                                   >
-                                    tháng {r.month}
-                                  </span>
-                                </span>
+                                    {r.date}
+                                    <Box
+                                      component='span'
+                                      sx={{
+                                        position: "absolute",
+                                        display:"block",
+                                        color: "#1565c0",
+                                        fontSize: "20px",
+                                        fontWeight: "400",
+                                        top:{xs: "50px",md:"-15px"},
+                                        left: {xs:"-20px",md:'-40px'},
+                                        textAlign:{xs:'right'}
+                                        
+                                      }}
+                                    >
+                                      tháng {r.month}
+                                    </Box>
+                                  </Box>
+                                </Box>
                               </Box>
-                            </Box>
+                            </Grid>
+                            <Grid item md={9} xs={9} sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                              {listCompetitionforDate(r.date, r.month, r.year,'happeningDay')}
+                            </Grid>
+                            <Grid item md={12}>
+                              <Box
+                                sx={{
+                                  backgroundColor: "#1565c0",
+                                  height: "1px",
+                                  borderRadius: "3px",
+                                  width: "100%",
+                                  mt: 6
+                                }}
+                              >
+                              </Box>
+                            </Grid>
                           </Grid>
-                          <Grid item md={9} sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                            {listCompetitionforDate(r.date, r.month, r.year)}
-                          </Grid>
-                          <Grid item md={12}>
-                            <Box
-                              sx={{
-                                backgroundColor: "#1565c0",
-                                height: "1px",
-                                borderRadius: "3px",
-                                width: "100%",
-                                mt: 6
-                              }}
-                            >
-                            </Box>
-                          </Grid>
-                        </Grid>
-                      ))
+                        ))
+                      )
                     }
                   </Grid>
                   <Grid item md={12}>
                     <Box
                       sx={{
-                        mt: 6
+                        mt: 6,
+                        position:"sticky",
+                        top:"58px",
+                        zIndex:"10"
                       }}
                     >
                       <Box
                         sx={{
                           fontWeight: "400",
                           color: "#1565c0",
-                          fontSize: "23px"
+                          fontSize: "23px",
+                          backgroundColor:"white"
                         }}
                       >
-                        CÁC CUỘC THI TRƯỚC ĐÓ
+                        XEM CÁC CUỘC THI TRƯỚC ĐÓ
                       </Box>
                       <Box
                         sx={{
@@ -654,7 +630,7 @@ export default function Index(): JSX.Element {
                     {
                       newListDayBefore?.map((r: IDate, index: number) => (
                         <Grid key={index} container spacing={1}>
-                          <Grid item md={3}>
+                          <Grid item md={3} xs={3}>
                             <Box
                               sx={{
                                 m: "20px 0",
@@ -670,35 +646,40 @@ export default function Index(): JSX.Element {
                                   height: "100%"
                                 }}
                               >
-                                <span
-                                  style={{
-                                    position: "sticky",
-                                    top: "90px",
-                                    bottom: "20px",
-                                    color: "#1565c0",
-                                    fontSize: "60px",
-                                    fontWeight: "500"
-                                  }}
-                                >
-                                  {r.date}
-                                  <span
-                                    style={{
-                                      position: "absolute",
+                               <Box
+                                    component='span'
+                                    sx={{
+                                      position: "sticky",
+                                      top: "110px",
+                                      bottom: {md:"20px",xs:"50px"},
                                       color: "#1565c0",
-                                      fontSize: "20px",
-                                      fontWeight: "400",
-                                      top: "-15px",
-                                      left: "-40px"
+                                      fontSize: {md:"60px",xs:'40px'},
+                                      fontWeight: "500"
                                     }}
                                   >
-                                    tháng {r.month}
-                                  </span>
-                                </span>
+                                    {r.date}
+                                    <Box
+                                      component='span'
+                                      sx={{
+                                        position: "absolute",
+                                        display:"block",
+                                        color: "#1565c0",
+                                        fontSize: "20px",
+                                        fontWeight: "400",
+                                        top:{xs: "50px",md:"-15px"},
+                                        left: {xs:"-20px",md:'-40px'},
+                                        textAlign:{xs:'right'}
+                                        
+                                      }}
+                                    >
+                                      tháng {r.month}
+                                    </Box>
+                                  </Box>
                               </Box>
                             </Box>
                           </Grid>
-                          <Grid item md={9} sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                            {listCompetitionforDate(r.date, r.month, r.year)}
+                          <Grid item md={9} xs={9} sx={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                            {listCompetitionforDate(r.date, r.month, r.year,'afterDay')}
                           </Grid>
                           <Grid item md={12}>
                             <Box

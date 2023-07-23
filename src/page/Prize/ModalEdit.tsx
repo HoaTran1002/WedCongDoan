@@ -27,20 +27,19 @@ interface BasicModalProps {
   PrizTId: string
   Quantity: string
   PrizeDetail: string
+  handleChange:()=>void
 }
 export default function BasicModal(prop: BasicModalProps): JSX.Element {
-  const [open, setOpen] = React.useState(false)
-  const handleOpen = (): void => setOpen(true)
+  const [open,setOpen] = React.useState(false)
   const handleClose = (): void => setOpen(false)
-
+  const handleOpen = ():void=>{
+    setOpen(true)
+  }
   return (
     <div>
       <Button onClick={handleOpen} sx={{ width: 30, height: 30, fontSize: 21 }}>
         <EditIcon />
       </Button>
-      {/* <Button variant='contained' onClick={handleOpen}>
-        Thêm Người Dùng
-      </Button> */}
       <Modal
         open={open}
         onClose={handleClose}
@@ -58,6 +57,8 @@ export default function BasicModal(prop: BasicModalProps): JSX.Element {
           </Typography>
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
             <TextFields
+              close={handleClose}
+              handleChange={prop.handleChange}
               edit={true}
               cpid={prop.cpid}
               priId={prop.priId}

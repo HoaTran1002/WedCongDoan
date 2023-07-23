@@ -10,36 +10,19 @@ import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Typography from '@mui/material/Typography'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import GoogleIcon from '@mui/icons-material/Google'
-import TwitterIcon from '@mui/icons-material/Twitter'
-import FacebookIcon from '@mui/icons-material/Facebook'
-import ButtonGroup from '@mui/material/ButtonGroup'
-import { green } from '@mui/material/colors'
+import {InputAdornment,FormControl, InputLabel,OutlinedInput,IconButton } from '@mui/material'
+import LoginImg from '~/assets/img/congDoanLogin.jpg'
+import CongDoanLogo from '~/assets/img/logo_CongDoan.png'
 import server from '~/api/axios'
 import { Navigate } from 'react-router-dom'
 import useAuth from '~/hook/useAuth'
 import useFetch from '~/hook/useFetch'
 import { getAllRole } from '~/api/roleApi'
 
-const buttons = [
-  <Button key='one'>
-    <Link href='#'>
-      <FacebookIcon />
-    </Link>
-  </Button>,
-  <Button key='two'>
-    <Link href='#'>
-      <TwitterIcon />
-    </Link>
-  </Button>,
-  <Button key='three'>
-    <Link href='#'>
-      <GoogleIcon />
-    </Link>
-  </Button>
-]
 function Copyright(props: any): JSX.Element {
   return (
     <Typography
@@ -61,7 +44,13 @@ function Copyright(props: any): JSX.Element {
 const theme = createTheme()
 export default function Login(): JSX.Element {
   const { profile } = useAuth()
+  const [showPassword, setShowPassword] = React.useState(false);
   const [roleState, getRoleState] = useFetch()
+  const handleClickShowPassword = ():void => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>):void => {
+    event.preventDefault();
+  };
   React.useEffect(() => {
     getRoleState(getAllRole)
   }, [])
@@ -78,7 +67,6 @@ export default function Login(): JSX.Element {
     }
     try {
       await server.post('/Users/Login', body)
-
       console.log('thành công')
       location.reload()
     } catch (error) {
@@ -86,7 +74,7 @@ export default function Login(): JSX.Element {
     }
   }
 
-  if (profile?.roleId === 1) {
+  if (profile?.roleId === 1 ) {
     return <Navigate to={'/CompetitionManage'} replace={true} />
   } else if (profile) {
     return <Navigate to={'/'} replace={true} />
@@ -102,7 +90,7 @@ export default function Login(): JSX.Element {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
+            backgroundImage: `url(${LoginImg})`,
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light'
@@ -122,11 +110,15 @@ export default function Login(): JSX.Element {
               alignItems: 'center'
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: green[500] }}>
-              <LockOutlinedIcon />
-            </Avatar>
+            <Box
+              component='img'
+              src={CongDoanLogo}
+              sx={{
+                height:"70px"
+              }}
+            />
             <Typography component='h1' variant='h5'>
-              Sign in
+              Đăng Nhập
             </Typography>
             <Box
               component='form'
@@ -139,59 +131,61 @@ export default function Login(): JSX.Element {
                 required
                 fullWidth
                 id='email'
-                label='Email Address'
+                label='Email'
                 name='email'
                 autoComplete='email'
               />
-              <TextField
+              {/* <TextField
                 margin='normal'
                 required
                 fullWidth
                 name='password'
-                label='Password'
+                label='Mật khẩu'
                 type='password'
                 id='password'
                 autoComplete='current-password'
-              />
-              <FormControlLabel
-                control={<Checkbox value='remember' color='primary' />}
-                label='Remember me'
-              />
-
+              /> */}
+              <FormControl sx={{mt:2, width: '100%' }} variant="outlined">
+                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+                <OutlinedInput
+                  id="outlined-adornment-password"
+                  type={showPassword ? 'text' : 'password'}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOffIcon /> : <RemoveRedEyeIcon />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  label="Mật khẩu"
+                  name='password'
+                />
+              </FormControl>
               <Button
                 type='submit'
                 fullWidth
                 variant='contained'
                 sx={{ mt: 3, mb: 2 }}
               >
-                Sign In
+               ĐĂNG NHẬP
               </Button>
               <Grid container>
                 <Grid item xs>
                   <Link href='#' variant='body2'>
-                    Forgot password?
+                    Quên mật khẩu?
                   </Link>
                 </Grid>
                 <Grid item>
                   <Link href='/Register' variant='body2'>
-                    {"Don't have an account? Sign Up"}
+                    {"Chưa có tài khoản, đăng ký ngay "}
                   </Link>
                 </Grid>
               </Grid>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  '& > *': {
-                    m: 1
-                  }
-                }}
-              >
-                <ButtonGroup size='large' aria-label='large button group'>
-                  {buttons}
-                </ButtonGroup>
-              </Box>
               <Copyright sx={{ mt: 5 }} />
             </Box>
           </Box>

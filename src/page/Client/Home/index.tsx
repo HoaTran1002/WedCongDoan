@@ -116,10 +116,12 @@ const Home = (): JSX.Element => {
       <Box
         className='carousel-wrapper'
         sx={{
-          display: { xs: 'none', md: 'block' }
+          display: { xs: 'none', md: 'block' },
+          width:"100%",
+          overflowX:"hidden"
         }}
       >
-        <Slider {...settings} lazyLoad='anticipated'>
+        <Slider {...settings} lazyLoad='anticipated' >
           <div className='carousel-items-banner'>
             <img src={image1} alt='Image1' />
           </div>

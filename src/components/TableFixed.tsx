@@ -49,7 +49,8 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                         sx={{
                             border: "1px solid #cacaca",
                             borderRadius: "5px",
-                            overflow: "hidden"
+                            overflow: "hidden",
+                            mb:5
                         }}
                     >
                         <Box
@@ -197,7 +198,7 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                         ...scrollable_x,
                                     }}
                                 >
-                                    <Box component='table' sx={{ borderCollapse: 'collapse', width: "100%" }}>
+                                    <Box component='table' sx={{ borderCollapse: 'collapse', width: "100%" , mb:5}}>
                                         <Box
                                             component='thead'
                                         >
@@ -213,7 +214,7 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                                 ))}
                                             </tr>
                                         </Box>
-                                        <tbody>
+                                        <tbody >
                                             {rows.map((row, index: number) => (
                                                 <tr key={index}>
                                                     {columns.filter(r => r.field !== 'actions').map((column: any, columnIndex: number) => (
@@ -227,6 +228,13 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                                     ))}
                                                 </tr>
                                             ))}
+                                            <tr
+                                                style={{
+                                                    height:"50px"
+                                                }}
+                                            >
+
+                                            </tr>
                                         </tbody>
                                     </Box>
                                 </Box>
@@ -278,6 +286,7 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                                     </Box>
                                                 </tr>
                                             ))}
+                                            <tr></tr>
                                         </tbody>
                                     </Box>
                                 </Box>
@@ -289,11 +298,13 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                 sx={{
                                     ...table_container,
                                     width: { maxWidthTable },
+                                    mb:5
                                 }}
                             >
                                 <Box
                                     sx={{
                                         ...scrollable_x,
+                                        mb:10
                                     }}
                                 >
                                     <table>
@@ -331,7 +342,7 @@ const table_container: SxProps = {
 }
 const scrollable_x: SxProps = {
     display: 'inline-block',
-
+    mb:5
 }
 
 const fixed_column: SxProps = {
@@ -349,6 +360,7 @@ const itemsColumnsHeader: SxProps = {
     fontWeight: "bold",
     fontSize: "14px",
     height: '70px',
+    mb:5
 
 }
 

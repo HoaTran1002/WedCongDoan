@@ -37,11 +37,12 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HistoryIcon from '@mui/icons-material/History';
 import SettingsIcon from '@mui/icons-material/Settings';
 import useAuth from '~/hook/useAuth'
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 const drawerWidth = 250
 const pages = [
   { name: 'TRANG CHỦ', to: '/', iconComponent: <HomeIcon /> },
   { name: 'DANH SÁCH CUỘC THI', to: '/Listcompetition', iconComponent: <FormatListBulletedIcon /> },
-  { name: 'GIẢI THƯỞNG', to: '/PrizeCompetition', iconComponent: <FormatListBulletedIcon /> },
+  { name: 'GIẢI THƯỞNG', to: '/PrizeCompetition', iconComponent: <EmojiEventsIcon /> },
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
