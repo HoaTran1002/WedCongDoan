@@ -30,9 +30,8 @@ export default function TextFields(prop: {
   prizeDetail: string
   close?: () => void
   handleChange: () => void
+  showNotification:(message:string,severity:string)=>void
 }): JSX.Element {
-  const [showSuccess, setShowSuccess] = React.useState(false)
-  const [showError, setShowError] = React.useState(false)
   const [priType, setPriType] = React.useState<string>(prop.priTid || '')
   const [number, setNumber] = React.useState<string>(prop.quantity || '')
   const [detailPrize, setDetailPrize] = React.useState<string>(
@@ -77,12 +76,7 @@ export default function TextFields(prop: {
   ): void {
     setPri(event.target.value)
   }
-  const handleCloseSuccess = (): void => {
-    setShowSuccess(false)
-  }
-  const handleCloseError = (): void => {
-    setShowError(false)
-  }
+
   const requestData: {
     priId: number
     comId: number
@@ -121,12 +115,13 @@ export default function TextFields(prop: {
       prizesCompCall(async () => {
         insert(requestData)
       })
-      // prop.handleChange()
-      setSeverity('success')
-      setMessage('thêm thành công!')
+      prop.handleChange()
+      prop.showNotification('thêm thành công','success')
+      if(prop?.close){
+        prop.close()
+      }
     } catch (error: any) {
-      setSeverity('error')
-      setMessage(' thất bại')
+      prop.showNotification('thêm thất bại','error')
     }
   }
   const submitEditData = (): void => {
@@ -134,16 +129,10 @@ export default function TextFields(prop: {
       prizeCompEditCall(async () => {
         editcompPrize(requestEditData)
       })
-      console.log(requestEditData)
-      if (prop?.close) {
-        prop.close()
-      }
-      // prop.handleChange()
-      setSeverity('info')
-      setMessage('đã chỉnh sửa')
+      prop.showNotification('chỉnh sửa thành công','success')
+      prop.handleChange()
     } catch (error: any) {
-      setSeverity('error')
-      setMessage('chỉnh sửa thất bại')
+      prop.showNotification('chỉnh sửa thất bại','error')
     }
   }
   if (message != null) {
@@ -155,41 +144,18 @@ export default function TextFields(prop: {
     setSeverity('error')
     setMessage('chỉnh sửa thất bại')
   }
+  React.useEffect(() => {
+    if (message && severity) {
+      if (prop?.close) {
+        prop.close()
+      }
+    }
+  }, [message, severity]);
   return (
     <>
       {message && <MessageAlert message={message} severity={severity} />}
-      <>
-        <Snackbar
-          open={showSuccess}
-          autoHideDuration={3000}
-          onClose={handleCloseSuccess}
-        >
-          <MuiAlert
-            onClose={handleCloseSuccess}
-            severity='success'
-            elevation={6}
-            variant='filled'
-          >
-            Acction successful!
-          </MuiAlert>
-        </Snackbar>
-        <Snackbar
-          open={showError}
-          autoHideDuration={3000}
-          onClose={handleCloseSuccess}
-        >
-          <MuiAlert
-            onClose={handleCloseError}
-            severity='error'
-            elevation={6}
-            variant='filled'
-          >
-            Acction Failed!
-          </MuiAlert>
-        </Snackbar>
-      </>
       {prop.edit ? (
-        <>
+        <Box>
           <Box
             component='form'
             sx={{
@@ -283,7 +249,7 @@ export default function TextFields(prop: {
           >
             LƯU CHỈNH SỬA
           </Button>
-        </>
+        </Box>
       ) : (
         <>
           <Box

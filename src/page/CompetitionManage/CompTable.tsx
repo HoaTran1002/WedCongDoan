@@ -21,6 +21,11 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import { TableWithFixedColumn, ColumnsProps } from '~/components/TableFixed'
 import { Loader } from '~/components/loader'
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 //interface
 interface Competition {
@@ -43,6 +48,8 @@ const CompTable = (): JSX.Element => {
   const [compState, callComp] = useFetch()
   const [deps, depCall] = useFetch()
   const [deleteComp, deleteCompCall] = useFetch()
+  const [openDelete, setOpenDelete] = React.useState(false);
+  const [compId,setComId] = React.useState<number>(0)
   const depList = deps.payload || []
   const [loading, setLoading] = useState<boolean>(false)
   React.useEffect(() => {
@@ -61,6 +68,15 @@ const CompTable = (): JSX.Element => {
     }
     return 'null'
   }
+  const handleClickOpenDelete = (id:number):void => {
+    setComId(id)
+    setOpenDelete(true);
+  };
+
+  const handleCloseDelete = ():void => {
+
+    setOpenDelete(false);
+  };
   const handleCloseSuccess = (): void => {
     setShowSuccess(false)
   }
@@ -82,7 +98,8 @@ const CompTable = (): JSX.Element => {
       try {
         await deleteCompetitions(requestDelete)
         setShowSuccess(true)
-        setLoading
+        setLoading(r=>!r)
+        setOpenDelete(false);
       } catch (error) {
         setShowError(true)
       }
@@ -141,11 +158,12 @@ const CompTable = (): JSX.Element => {
         </Tooltip>,
         <Tooltip key='delete' title='xoá cuộc thi' placement='top-start'>
           <Button
-            onClick={(): void => handelDeleteComp(params.comId)}
+            onClick={(): void => handleClickOpenDelete(params.comId)}
             style={{ width: 50 }}
             variant='outlined'
+            color='error'
           >
-            <DeleteOutlinedIcon />
+            <DeleteOutlinedIcon/>
           </Button>
         </Tooltip>
       ]
@@ -212,25 +230,7 @@ const CompTable = (): JSX.Element => {
           </Snackbar>
         </>
         {compState.loading || deps.loading ? (
-          <Box
-            sx={{
-              position: 'relative',
-              marginTop: 20,
-              top: '30%',
-              width: '100%',
-              height: '40px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-              //  background: '#f5f5f5', /* Màu nền (tùy chọn) */
-            }}
-          >
-            <CircularProgress
-            //  sx={{
-            //    color: '#ff4081', /* Màu của phần tử loading (tùy chọn) */
-            //  }}
-            />
-          </Box>
+          <Loader />
         ) : (
           <Grid
             container
@@ -268,6 +268,27 @@ const CompTable = (): JSX.Element => {
             </>
           </Grid>
         )}
+        <Dialog
+        open={openDelete}
+        onClose={handleCloseDelete}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+          {"Thông báo"}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Bạn có chắc muốn xóa cuộc thi này 
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={():void=>handelDeleteComp(compId)} variant='outlined'>
+            Xóa
+          </Button>
+          <Button onClick={handleCloseDelete}>Trở về</Button>
+        </DialogActions>
+        </Dialog>
       </>
     </>
   )

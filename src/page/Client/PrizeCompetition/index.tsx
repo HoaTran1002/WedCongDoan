@@ -29,7 +29,6 @@ const PrizeCompetition = (): JSX.Element => {
         allPrizeComp?.payload?.find((rCompP:ICompetitionPrize)=>rCompP.comId == rComp.comId)
     )
 
-    console.log(listCompetitionHasPrize)
     const handleCloseBoardPrize= ():void=>{
         setOpenBoard(false)
     }
@@ -55,7 +54,7 @@ const PrizeCompetition = (): JSX.Element => {
             <Layout>
                 <Container maxWidth={'lg'}>
                     <Grid container spacing={1}>
-                        <Grid item md={12} spacing={2}>
+                        <Grid item md={12} >
                             <Box
                                 sx={{
                                     mt:3,

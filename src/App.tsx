@@ -30,6 +30,7 @@ import ExamsManage from '~/page/ExamsManage'
 import FinishedExam from '~/page/Client/FinishedExam'
 import HistoryCompetition from '~/page/Client/HistoryCompetition'
 import PrizeCompetition from '~/page/Client/PrizeCompetition'
+import ResultManage from './page/ResultManage'
 import Error from './page/404'
 
 function App(): JSX.Element {
@@ -58,6 +59,7 @@ function App(): JSX.Element {
         <Route path='/ListExamCompetition' element={<ListExamCompetition />} />
         <Route path='/ExamStart' element={<ExamStart />} />
         <Route path='/FinishedExam' element={<FinishedExam />} />
+        <Route path='/ResultManage' element={<ResultManage />} />
         <Route path='/HistoryCompetition' element={<HistoryCompetition />} />
         <Route path='/PrizeCompetition' element={<PrizeCompetition />} />
         <Route path='/Listcompetition' element={<Listcompetition />} />

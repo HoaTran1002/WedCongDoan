@@ -38,9 +38,11 @@ const pages = [
   { name: 'CUỘC THI', to: '/CompetitionManage', icon: <GridViewIcon /> },
   { name: 'USER', to: '/User', icon: <PersonIcon /> },
   { name: 'BLOG', to: '/BlogManage', icon: <WebIcon /> },
-  { name: 'QUẢN LÝ THÔNG TIN', to: '/SettingManage', icon: <AppsIcon /> },
-  { name: 'CLIENT', to: '/' }
+  { name: 'KẾT QUẢ', to: '/ResultManage', icon: <AppsIcon /> },
+  { name: 'THÔNG TIN', to: '/SettingManage', icon: <AppsIcon /> },
+  { name: 'TRANG CHỦ', to: '/' }
 ]
+
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
 interface AppBarProps extends MuiAppBarProps {

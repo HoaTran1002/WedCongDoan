@@ -37,7 +37,6 @@ export default function AuthProvider({ children, ...props }: any): JSX.Element {
       const { data } = await server.get<IUserDetails>('/Users/profile')
       setProfile(data)
     } catch (error) {
-      // console.log(error,'lỗi')
       setProfile(undefined)
     }
   }, [])

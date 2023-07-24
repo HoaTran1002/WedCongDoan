@@ -24,3 +24,13 @@ export const isBeforeDate = (dateInput: string): boolean => {
     }
     return false;
 };
+
+export const getTimeDifference=(startTimes:string,endTimes:string): number | null=> {
+    const startTime = new Date(startTimes);
+    const endTime = new Date(endTimes);
+    if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
+      return null;
+    }
+    const timeDifference = endTime.getTime() - startTime.getTime();
+    return timeDifference / 1000;
+}

@@ -20,7 +20,7 @@ const style = {
 
 interface ModalAddProps {
   children: (handleClose: () => void) => React.ReactNode;
-  Title: string // Prop bổ sung
+  Title: string
 }
 export default function ModalAdd({ children, Title }: ModalAddProps): JSX.Element {
   const [open, setOpen] = React.useState(false)

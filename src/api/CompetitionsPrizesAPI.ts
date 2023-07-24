@@ -60,7 +60,6 @@ export const editcompPrize = async ({
   prizeDetail: string
 }): Promise<void> => {
   try {
-    console.log(cpid, priId, comId, priTid, quantity, prizeDetail)
     await server.put('/CompetitionsPrizes', {
       cpid,
       priId,

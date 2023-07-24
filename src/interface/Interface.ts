@@ -7,7 +7,7 @@ export interface ICompetition {
     endDate: string,
     userQuan: string,
     depId: number,
-    isDeleted:number
+    isDeleted: number
 }
 export interface IResult {
     resId: number
@@ -29,7 +29,7 @@ export interface IDate {
     date: number,
     month: number,
     year: number
-  }
+}
 export interface ICompetitionExam {
     ceid: number,
     examId: number,
@@ -67,21 +67,21 @@ export interface IQuestions {
 export interface IBlog {
     blogId: number,
     blogName: string,
-    BlogDetail:string,
+    BlogDetail: string,
     imgSrc: string,
     imgName: string
 }
 
 
-export interface ICompetitionBlogsUser{
+export interface ICompetitionBlogsUser {
     id?: number,
     comId: number,
     blogId: number,
     userId?: string,
-    postDate:string
+    postDate: string
 }
 
-export interface ICompetitionPrize{
+export interface ICompetitionPrize {
     cpid?: number,
     priId: number,
     comId: number,
@@ -90,11 +90,17 @@ export interface ICompetitionPrize{
     prizeDetail: string
 }
 
-export interface IPrize{
+export interface IPrize {
     priId: number,
     priName: string
 }
-export interface IPrizeType{
+export interface IPrizeType {
     priTid: number,
     priTname: string
+}
+
+export interface ICompetitionPrizeUser {
+    id: number,
+    cpid: number,
+    userId: string
 }

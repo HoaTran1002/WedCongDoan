@@ -39,7 +39,6 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
     const handlePageChange = (event: React.ChangeEvent<unknown>, page: number): void => {
         setCurrentPage(page);
     };
-    console.log('width', maxWidthTable, 'height', maxHeightTable)
     return (
         <>
             {

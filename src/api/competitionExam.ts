@@ -18,7 +18,6 @@ export const insertCompExam = async ({
   examId: number
 }): Promise<void> => {
   try {
-    console.log(examId + 'va' + comId)
     await server.post('/CompetitionsExams', {
       examId,
       comId

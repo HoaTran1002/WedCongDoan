@@ -43,7 +43,6 @@ const WatchExam = (props: PropsWatchExam): JSX.Element => {
         }
         return newList;
     }, [])
-    console.log(mergeQuestionsPicker)
     React.useEffect(() => {
         callAllPickerQuestions(getAllPickerQuestion);
     }, [])
