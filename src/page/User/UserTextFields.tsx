@@ -126,12 +126,13 @@ export default function UserTextFields(prop: {
     dateOfBirth: birthDay,
     email: gmail,
     password: pass,
-    userAddress: '',
+    userAddress: address,
     roleId: Number(role),
     depId: Number(dep)
   }
 
   const onSubmitFormInsert = (): void => {
+    console.log('insert:' + requestData.userAddress)
     callInsertUser(async () => {
       try {
         await insert(requestData)
@@ -143,17 +144,13 @@ export default function UserTextFields(prop: {
       }
     })
   }
-  const onSubmitFormEdit = (): void => {
-    callEdittUser(async () => {
-      try {
-        await editUser(requestData)
-        setSeverity('info')
-        setMessage('đã sửa user!')
-        loadingParams.setLoading()
-      } catch (error) {
-        setShowError(true)
-      }
+  const onSubmitFormEdit = async (): Promise<void> => {
+    await callEdittUser(async (): Promise<void> => {
+      await editUser(requestData)
     })
+    setSeverity('info')
+    setMessage('đã sửa user!')
+    loadingParams.setLoading()
   }
   React.useEffect(() => {
     const fetchDataDep = async (): Promise<any> => {
@@ -177,8 +174,8 @@ export default function UserTextFields(prop: {
     fetchDataDep()
   }, [])
   if (message != null) {
-    setTimeout((): void => {
-      setMessage('')
+    setTimeout(async (): Promise<void> => {
+      await setMessage('')
     }, 3000)
   }
   return (

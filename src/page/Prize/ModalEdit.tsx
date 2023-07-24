@@ -27,12 +27,12 @@ interface BasicModalProps {
   PrizTId: string
   Quantity: string
   PrizeDetail: string
-  handleChange:()=>void
+  handleChange: () => void
 }
 export default function BasicModal(prop: BasicModalProps): JSX.Element {
-  const [open,setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(false)
   const handleClose = (): void => setOpen(false)
-  const handleOpen = ():void=>{
+  const handleOpen = (): void => {
     setOpen(true)
   }
   return (
@@ -57,7 +57,7 @@ export default function BasicModal(prop: BasicModalProps): JSX.Element {
           </Typography>
           <Typography id='modal-modal-description' sx={{ mt: 2 }}>
             <TextFields
-              close={handleClose}
+              // close={handleClose}
               handleChange={prop.handleChange}
               edit={true}
               cpid={prop.cpid}

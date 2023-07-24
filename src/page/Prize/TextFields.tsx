@@ -10,6 +10,7 @@ import { editcompPrize, insert } from '~/api/CompetitionsPrizesAPI'
 import MuiAlert from '@mui/material/Alert'
 import MessageAlert from '~/components/MessageAlert'
 import { useState } from 'react'
+import { LoadingContext } from './PrizeData'
 
 interface PrizeType {
   priTid: number
@@ -28,10 +29,11 @@ export default function TextFields(prop: {
   priTid: string
   quantity: string
   prizeDetail: string
-  close?: () => void
-  handleChange: () => void
-  showNotification:(message:string,severity:string)=>void
+  // close?: () => void
+  handleChange?: () => void
 }): JSX.Element {
+  const [showSuccess, setShowSuccess] = React.useState(false)
+  const [showError, setShowError] = React.useState(false)
   const [priType, setPriType] = React.useState<string>(prop.priTid || '')
   const [number, setNumber] = React.useState<string>(prop.quantity || '')
   const [detailPrize, setDetailPrize] = React.useState<string>(
@@ -76,7 +78,12 @@ export default function TextFields(prop: {
   ): void {
     setPri(event.target.value)
   }
-
+  const handleCloseSuccess = (): void => {
+    setShowSuccess(false)
+  }
+  const handleCloseError = (): void => {
+    setShowError(false)
+  }
   const requestData: {
     priId: number
     comId: number
@@ -110,57 +117,79 @@ export default function TextFields(prop: {
     requestData.comId = Number(comId)
     requestEditData.comId = Number(comId)
   }
-  const submitAddData = (): void => {
-    try {
-      prizesCompCall(async () => {
-        insert(requestData)
-      })
-      prop.handleChange()
-      prop.showNotification('thêm thành công','success')
-      if(prop?.close){
-        prop.close()
-      }
-    } catch (error: any) {
-      prop.showNotification('thêm thất bại','error')
+  const paramLoading = React.useContext(LoadingContext)
+  const submitAddData = async (): Promise<void> => {
+    await prizesCompCall(async (): Promise<void> => {
+      await insert(requestData)
+    })
+    // prop.handleChange()
+    setSeverity('info')
+    setMessage('thêm thành công!')
+    paramLoading.setLoading()
+    if (paramLoading.setMessageAdd) {
+      paramLoading.setMessageAdd()
     }
   }
-  const submitEditData = (): void => {
-    try {
-      prizeCompEditCall(async () => {
-        editcompPrize(requestEditData)
-      })
-      prop.showNotification('chỉnh sửa thành công','success')
-      prop.handleChange()
-    } catch (error: any) {
-      prop.showNotification('chỉnh sửa thất bại','error')
+  const submitEditData = async (): Promise<void> => {
+    await prizeCompEditCall(async (): Promise<void> => {
+      await editcompPrize(requestEditData)
+    })
+
+    setSeverity('info')
+    setMessage('chỉnh sửa thành công!')
+    paramLoading.setLoading()
+    if (paramLoading.setMessageEdit) {
+      paramLoading.setMessageEdit()
     }
   }
   if (message != null) {
-    setTimeout(async (): Promise<void> => {
-      await setMessage('')
+    setTimeout((): void => {
+      setMessage('')
     }, 3000)
   }
   if (prizeCompEdit.error) {
     setSeverity('error')
     setMessage('chỉnh sửa thất bại')
   }
-  React.useEffect(() => {
-    if (message && severity) {
-      if (prop?.close) {
-        prop.close()
-      }
-    }
-  }, [message, severity]);
   return (
     <>
       {message && <MessageAlert message={message} severity={severity} />}
+      <>
+        <Snackbar
+          open={showSuccess}
+          autoHideDuration={3000}
+          onClose={handleCloseSuccess}
+        >
+          <MuiAlert
+            onClose={handleCloseSuccess}
+            severity='success'
+            elevation={6}
+            variant='filled'
+          >
+            Acction successful!
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={showError}
+          autoHideDuration={3000}
+          onClose={handleCloseSuccess}
+        >
+          <MuiAlert
+            onClose={handleCloseError}
+            severity='error'
+            elevation={6}
+            variant='filled'
+          >
+            Acction Failed!
+          </MuiAlert>
+        </Snackbar>
+      </>
       {prop.edit ? (
-        <Box>
+        <>
           <Box
             component='form'
             sx={{
               '& > :not(style)': { m: 1, width: '45%' },
-
               display: 'flex',
               flexWrap: 'wrap',
               justifyContent: 'center',
@@ -249,7 +278,7 @@ export default function TextFields(prop: {
           >
             LƯU CHỈNH SỬA
           </Button>
-        </Box>
+        </>
       ) : (
         <>
           <Box

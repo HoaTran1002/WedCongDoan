@@ -14,15 +14,19 @@ const style = {
   bgcolor: 'white',
 
   borderRadius: 2,
-  boxShadow: 'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
+  boxShadow:
+    'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
   p: 4
 }
 
 interface ModalAddProps {
-  children: (handleClose: () => void) => React.ReactNode;
-  Title: string
+  children: (handleClose: () => void) => React.ReactNode
+  Title: string // Prop bổ sung
 }
-export default function ModalAdd({ children, Title }: ModalAddProps): JSX.Element {
+export default function ModalAdd({
+  children,
+  Title
+}: ModalAddProps): JSX.Element {
   const [open, setOpen] = React.useState(false)
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
@@ -31,7 +35,14 @@ export default function ModalAdd({ children, Title }: ModalAddProps): JSX.Elemen
     <div>
       <Button
         onClick={handleOpen}
-        sx={{ background: '#1976d2', color: '#fff', width: 'auto', height: 'auto', fontSize: 16, marginLeft: 2 }}
+        sx={{
+          background: '#1976d2',
+          color: '#fff',
+          width: 'auto',
+          height: 'auto',
+          fontSize: 16,
+          marginLeft: 2
+        }}
         variant='contained'
       >
         Thêm Mới
@@ -39,8 +50,7 @@ export default function ModalAdd({ children, Title }: ModalAddProps): JSX.Elemen
       </Button>
       <Modal
         open={open}
-        onClose={handleClose}
-        aria-labelledby='modal-modal-title' 
+        aria-labelledby='modal-modal-title'
         aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
