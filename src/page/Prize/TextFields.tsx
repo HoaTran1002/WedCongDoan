@@ -30,7 +30,7 @@ export default function TextFields(prop: {
   quantity: string
   prizeDetail: string
   // close?: () => void
-  handleChange: () => void
+  handleChange?: () => void
 }): JSX.Element {
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
@@ -126,23 +126,25 @@ export default function TextFields(prop: {
     setSeverity('info')
     setMessage('thêm thành công!')
     paramLoading.setLoading()
+    if (paramLoading.setMessageAdd) {
+      paramLoading.setMessageAdd()
+    }
   }
   const submitEditData = async (): Promise<void> => {
     await prizeCompEditCall(async (): Promise<void> => {
       await editcompPrize(requestEditData)
     })
 
-    // if (prop?.close) {
-    //   prop.close()
-    // }
-    // prop.handleChange()
     setSeverity('info')
     setMessage('chỉnh sửa thành công!')
     paramLoading.setLoading()
+    if (paramLoading.setMessageEdit) {
+      paramLoading.setMessageEdit()
+    }
   }
   if (message != null) {
-    setTimeout(async (): Promise<void> => {
-      await setMessage('')
+    setTimeout((): void => {
+      setMessage('')
     }, 3000)
   }
   if (prizeCompEdit.error) {
@@ -188,7 +190,6 @@ export default function TextFields(prop: {
             component='form'
             sx={{
               '& > :not(style)': { m: 1, width: '45%' },
-
               display: 'flex',
               flexWrap: 'wrap',
               justifyContent: 'center',

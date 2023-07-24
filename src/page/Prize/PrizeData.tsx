@@ -30,10 +30,18 @@ interface CompPrizes {
 interface ILoadingContext {
   statusLoading: boolean
   setLoading: () => void
+  setMessageEdit?: () => void
+  setMessageAdd?: () => void
 }
 export const LoadingContext = React.createContext<ILoadingContext>({
   statusLoading: false,
   setLoading: (): void => {
+    return
+  },
+  setMessageEdit: (): void => {
+    return
+  },
+  setMessageAdd: (): void => {
     return
   }
 })
@@ -182,6 +190,14 @@ const PrizeData = (): JSX.Element => {
     statusLoading: loading,
     setLoading: () => {
       setLoading(!loading)
+    },
+    setMessageEdit: (): void => {
+      setSeverity('info')
+      setMessage('chỉnh sửa thành công')
+    },
+    setMessageAdd: (): void => {
+      setSeverity('success')
+      setMessage('đã thêm giải thưởng!')
     }
   }
   return (
