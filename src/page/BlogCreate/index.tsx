@@ -1,4 +1,4 @@
-import React, { useState, Dispatch, SetStateAction } from 'react'
+import React, { useState } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import {
   Typography,
@@ -24,24 +24,15 @@ import 'react-quill/dist/quill.snow.css'
 import { SelectChangeEvent } from '@mui/material/Select'
 import Dropzone from 'react-dropzone'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
-import { Link, useNavigate } from 'react-router-dom'
+import {useNavigate } from 'react-router-dom'
 import { Insert, getAllBlog } from '~/api/blogApi'
-import { getAllDep } from '~/api/departmentApi'
 import { getAllComp } from '~/api/competitionApi'
 import useFetch from '~/hook/useFetch'
-import useAuth from '~/hook/useAuth'
-interface Competition {
-  comId: number,
-  comName: string
-}
+
 const Index = (): JSX.Element => {
-  const { profile } = useAuth()
   const navigate = useNavigate();
   const currentDate = new Date();
-  const formattedDate = currentDate.toISOString();
   const [imageFile, setImageFile] = useState<string | null>();
-  const [comId, setComId] = useState<number>(0)
-  const [blogId, setBlogId] = useState<number>(0)
   const [blogName, setBlogName] = useState('')
   const [content, setContent] = useState('')
   const [imgName, setImgName] = useState('')
@@ -54,8 +45,6 @@ const Index = (): JSX.Element => {
   const [blogInsert, callBlogtInsert] = useFetch()
   const [getComs, callAllComs] = useFetch()
   const [allBlogs, callAllBlog] = useFetch()
-  const [allNewBlogs, callAllNewBlog] = useFetch()
-  const [change, setChange] = useState<boolean>(false)
   const requestData: {
     blogName: string
     blogDetai: string
@@ -68,9 +57,6 @@ const Index = (): JSX.Element => {
     imgSrc: imgSrc
   }
 
-  const handleChange = (event: SelectChangeEvent): void => {
-    setComId(parseInt(event.target.value))
-  }
   const handleContentChange = (value: any): void => {
     setContent(value)
   }
@@ -84,7 +70,6 @@ const Index = (): JSX.Element => {
       setImgSrc(file.path)
     }
   }
-
   const handleClickOpen = (): void => {
     setOpen(true)
   }
@@ -92,21 +77,6 @@ const Index = (): JSX.Element => {
   const handleClose = (): void => {
     setOpen(false)
   }
-
-  const InsertCompetitionBlog = (): void => {
-    const newBlog = allNewBlogs?.payload
-    const idBlog = newBlog[newBlog.length - 1]
-    // if (blogId) {
-    //   await InsertCompetitionBlog({
-    //     comId: comId,
-    //     blogId: blogId,
-    //     userId: profile?.userId,
-    //     postDate: formattedDate
-    //   });
-    // } else {
-    // }
-  }
-
   const handleOK = async (): Promise<void> => {
     setOpen(false);
 
@@ -150,26 +120,15 @@ const Index = (): JSX.Element => {
             });
           };
           reader.readAsDataURL(selectedImage);
-
-          // setChange(true)
           navigate('/BlogManage?opensucess=true');
         } else {
           return Insert(requestData);
         }
       });
-
     } catch (error) {
       console.log(error)
     }
-
   };
-
-  const competitions: Competition[] =
-    getComs.payload?.map((com: Competition) => ({
-      comId: com.comId,
-      comName: com.comName
-    })) || []
-
   React.useEffect(() => {
     const fetchData = async (): Promise<any> => {
       try {

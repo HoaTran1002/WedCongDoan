@@ -1,25 +1,17 @@
 import React, { useState } from 'react'
 import Layout from '~/components/layout/Layout'
-import { Carousel } from 'react-responsive-carousel'
-import 'react-responsive-carousel/lib/styles/carousel.min.css'
-import image1 from '~/assets/img/bg_home_page.jpg'
-import image2 from '~/assets/img/bg_home_page_1.jpg'
-import image3 from '~/assets/img/bg_home_page_2.png'
-import image4 from '~/assets/img/bg_home_page_3.jpg'
-import imageItemBlog from '~/assets/img/blog_item_img.jpg'
-import { Grid, Box, Typography, SxProps, Container, Button } from '@mui/material'
-import { Link,useNavigate,useParams } from 'react-router-dom'
+import { Grid, Box, Container, Button } from '@mui/material'
+import { Link, useNavigate,useParams } from 'react-router-dom'
 import styled from 'styled-components'
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward'
-import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp'
-import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft'
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight'
 import AccessTimeFilledIcon from '@mui/icons-material/AccessTimeFilled'
 import { getAllBlog, getBlogId } from '~/api/blogApi'
 import { getAllUser } from '~/api/userApi'
 import { getAllCompetitionBlog } from '~/api/CompetitionBlog'
-import { Loader,LoaderBlogSub,LoaderBlogDetail } from '~/components/loader'
+import { LoaderBlogSub,LoaderBlogDetail } from '~/components/loader'
+import { formatDay } from '~/utils/dateUtils'
+import { getAllComp } from '~/api/competitionApi'
 import useFetch from '~/hook/useFetch'
+import { ICompetition } from '~/interface/Interface'
 
 const Index = (): JSX.Element => {
     const {id} = useParams();
@@ -33,18 +25,17 @@ const Index = (): JSX.Element => {
     const [allUser, callAllUser] = useFetch()
     const [getAllBlogs, callAllBlogs] = useFetch()
     const [allBlogCompetition, callAllBlogCompetition] = useFetch()
-
+    const [allComps,callAllComps] = useFetch();
+    const [comId,setComId] = useState<number>(0)
     const getUserName = (userId: string): string => {
         const user = allUser?.payload?.find((r: any) => r.userId === userId)
         return user?.userName
     }
-    const formatDay = (dayOrigin: string): string => {
-      const dateObj = new Date(dayOrigin);
-      const month = dateObj.getMonth() + 1;
-      const day = dateObj.getDate();
-      const year = dateObj.getFullYear();
-      return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
-  }
+
+    const getCompetitionName=(comId:number):string=>{
+        const itemComp:ICompetition = allComps?.payload?.find((r:ICompetition)=>r.comId === comId)
+        return itemComp?.comName || 'Tên không hợp lệ'
+    }
     React.useEffect(() => {
       const fetchData = async (): Promise<any> => {
         try {
@@ -83,10 +74,12 @@ const Index = (): JSX.Element => {
 
         fetchData();
     }, [id])
+    React.useEffect(()=>{
+        callAllComps(getAllComp)
+    },[])
 
     const listComBlog = allBlogCompetition?.payload;
     const listBlogs = getAllBlogs?.payload;
-    const listUser = allUser?.payload
     const comBlog = listComBlog?.find((r: any) => r.blogId === blogId)
     const [startIndex, setStartIndex] = React.useState(0);
     const dataPerPage = 6;
@@ -95,6 +88,7 @@ const Index = (): JSX.Element => {
         ...item,
         ...listBlogs?.find((elem: any) => elem.blogId === item.blogId)
     }));
+    console.log(itemBlogsCompetition)
     const visibleRows = itemBlogsCompetition.slice(startIndex, endIndex);
     React.useEffect(() => {
         const request: { id: number } = { id: blogId };
@@ -105,6 +99,7 @@ const Index = (): JSX.Element => {
                 await setBlogDetai(response.blogDetai);
                 await setImgName(response.imgName);
                 await setImgSrc(response.imgSrc);
+                await setComId(response.comId)
             } catch (error) {
                 console.log(error);
             }
@@ -198,6 +193,14 @@ const Index = (): JSX.Element => {
                                                 }}
                                             >
                                                 <div dangerouslySetInnerHTML={{ __html: blogDetai }} />
+                                                <Box>
+                                                    Nhấn vào đây để hướng đến cuộc thi
+                                                    <Link
+                                                        to={'/'}
+                                                    >
+                                                        {getCompetitionName(comId)}
+                                                    </Link>
+                                                </Box>
                                             </Box>
                                         </Box>
                                     </Box>

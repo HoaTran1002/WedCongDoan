@@ -32,7 +32,8 @@ import WebIcon from '@mui/icons-material/Web'
 import AppsIcon from '@mui/icons-material/Apps'
 import { blue, yellow } from '@mui/material/colors'
 import { SxProps } from '@mui/material'
-
+import { getOneCharacter } from '~/utils/stringUtils'
+import useAuth from '~/hook/useAuth'
 const drawerWidth = 250
 const pages = [
   { name: 'CUỘC THI', to: '/CompetitionManage', icon: <GridViewIcon /> },
@@ -43,29 +44,6 @@ const pages = [
   { name: 'TRANG CHỦ', to: '/' }
 ]
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
-
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open'
-})<AppBarProps>(({ theme, open }) => ({
-  transition: theme.transitions.create(['margin', 'width'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  })
-}))
-
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -75,6 +53,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }))
 
 export default function Index(): JSX.Element {
+  const {profile}= useAuth();
   const location = useLocation();
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
@@ -193,10 +172,19 @@ export default function Index(): JSX.Element {
           <MenuIcon sx={{color:"white"}} />
         </IconButton>
         <Box sx={{ flexGrow: 0, display: { md: 'flex' }, mr: 5 }}>
-          <Tooltip title='Open settings'>
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <Avatar alt='Remy Sharp' />
-            </IconButton>
+          <Tooltip title={profile?.userName}>
+            <Avatar 
+                sx={{
+                  backgroundColor:"#d139ff",
+                  color:"white",
+                  fontWeight:"500",
+                  cursor:"pointer",
+                  gap:"10px"
+                }}
+                onClick={handleOpenUserMenu}
+              >
+                {getOneCharacter(profile?.userName)}
+              </Avatar>
           </Tooltip>
           <Menu
             sx={{ mt: '45px' }}
@@ -214,11 +202,9 @@ export default function Index(): JSX.Element {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign='center'>{setting}</Typography>
+              <MenuItem onClick={handleCloseUserMenu}>
+                <Typography textAlign='center'>Đăng xuất</Typography>
               </MenuItem>
-            ))}
           </Menu>
         </Box>
       </Box>

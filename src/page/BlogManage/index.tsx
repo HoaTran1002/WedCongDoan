@@ -1,42 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import {
-  Typography,
   Grid,
   Button,
-  Stack,
-  SpeedDial,
-  SpeedDialIcon,
-  SpeedDialAction
+  Box,
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import useFetch from '~/hook/useFetch'
 import { getAllBlog } from '~/api/blogApi'
-import { Link, useLocation, useNavigate } from 'react-router-dom'
-import CircularProgress from '@mui/material/CircularProgress'
-import Box from '@mui/material/Box'
-import Snackbar from '@mui/material/Snackbar'
-import MuiAlert, { AlertProps } from '@mui/material/Alert'
-import EditIcon from '@mui/icons-material/Edit'
-import IconButton from '@mui/material/IconButton'
-import Tooltip from '@mui/material/Tooltip'
+import { useLocation, useNavigate } from 'react-router-dom' 
 import Pagination from '@mui/material/Pagination'
 import styled from 'styled-components'
 import { Loader } from '~/components/loader'
 import { getAllCompetitionBlog } from '~/api/CompetitionBlog'
 import LinkIcon from '@mui/icons-material/Link';
 import LinkOffIcon from '@mui/icons-material/LinkOff';
-import { getAll } from '~/api/depApi'
 import { IBlog, ICompetitionBlogsUser } from '~/interface/Interface'
 import LinkCompetition from './LinkCompetition'
-
-const Alert = React.forwardRef<HTMLDivElement, AlertProps>(function Alert(
-  props,
-  ref
-) {
-  return <MuiAlert elevation={6} ref={ref} variant='filled' {...props} />
-})
-
+import MessageAlert from '~/components/MessageAlert'
 const Index = (): JSX.Element => {
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
@@ -59,8 +40,6 @@ const Index = (): JSX.Element => {
       newList.push(Number(blogIdCurr))
     return newList
   }, [])
-
-  console.log(listBlogNoLink)
   const productsPerPage = 6
   const totalPages = Math.ceil(blogs.length / productsPerPage)
   const startIndex = (currentPage - 1) * productsPerPage
@@ -72,12 +51,6 @@ const Index = (): JSX.Element => {
   ): void => {
     setCurrentPage(page)
   }
-  const handleClose = (): void => {
-    setOpen(false)
-    setOpenDelete(false)
-    setOpenUpdate(false)
-  }
-
   const handleOpenLinkCom = (blogId:number):void =>{
     console.log(blogId)
     setBlogIdCheck(blogId)
@@ -103,52 +76,24 @@ const Index = (): JSX.Element => {
         ) : (
           <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
             <>
-              <Snackbar
-                open={open}
-                autoHideDuration={3000}
-                onClose={handleClose}
-              >
-                <Alert
-                  onClose={handleClose}
-                  severity='success'
-                  sx={{ width: '100%' }}
-                >
-                  Thêm thành công
-                </Alert>
-              </Snackbar>
-              <Snackbar
-                open={openUpdate}
-                autoHideDuration={3000}
-                onClose={handleClose}
-              >
-                <Alert
-                  onClose={handleClose}
-                  severity='success'
-                  sx={{ width: '100%' }}
-                >
-                  Sửa thành công
-                </Alert>
-              </Snackbar>
-              <Snackbar
-                open={openDelete}
-                autoHideDuration={3000}
-                onClose={handleClose}
-              >
-                <Alert
-                  onClose={handleClose}
-                  severity='success'
-                  sx={{ width: '100%' }}
-                >
-                  Xóa thành công
-                </Alert>
-              </Snackbar>
+              {
+                openFromUrl&&
+                  <MessageAlert message='Thêm thành công' severity='success' />
+              }
+              {
+                deleteFromUrl &&
+                  <MessageAlert message='Xóa thành công' severity='success' />
+              }
+              {
+                updateFromUrl && 
+                  <MessageAlert message='Sửa thành công' severity='success' />
+              }
               {
                 currentProducts.length === 0 ? (
                   <Grid
                     item
                     xs={12}
                     md={12}
-
                   >
                     <Box
                       className='color-primary'
@@ -185,6 +130,16 @@ const Index = (): JSX.Element => {
                     </Box>
                   </Grid>
                 ) : (
+                  <>
+                    <Button 
+                      onClick={(): void => {
+                        navigate('/BlogCreate')
+                      }}
+                      variant='outlined' 
+                      startIcon={<AddIcon />}
+                    >
+                      Thêm Blog mới
+                    </Button>
                   <Grid
                     item
                     container
@@ -198,6 +153,7 @@ const Index = (): JSX.Element => {
                       pt: '0px !important'
                     }}
                   >
+                   
                     {currentProducts.map((row: any,index:number) => (
                       <Grid
                         item
@@ -358,37 +314,7 @@ const Index = (): JSX.Element => {
                       />
                     </Box>
                   </Grid>
-                )
-              }
-              
-              {
-                currentProducts.length !== 0 &&
-                (
-                  
-                    <Tooltip title="Thêm Blog mới">
-                      <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            height: "50px",
-                            width: "50px",
-                            borderRadius: "50%",
-                            color: "white",
-                            backgroundColor: "#1565c0",
-                            cursor: "pointer",
-                            position:"absolute",
-                            bottom:{md:"30px",xs:"20px"},
-                            right:"10px"
-                          }}
-                          onClick={(): void => {
-                            navigate('/BlogCreate')
-                          }}
-                        >
-                          <AddIcon />
-                        </Box>
-
-                    </Tooltip>
+                  </>
                 )
               }
             </>

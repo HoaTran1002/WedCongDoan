@@ -10,7 +10,7 @@ import BasicModal from './ModalEditUser'
 import { TableWithFixedColumn, ColumnsProps } from '~/components/TableFixed'
 import MessageAlert from '~/components/MessageAlert'
 import { LoadingContext } from '.'
-
+import { formatDay } from '~/utils/dateUtils'
 interface User {
   userId: string
   userName: string
@@ -33,15 +33,6 @@ const TableUser = (): JSX.Element => {
   const users = userState?.payload
   const loadingParams = React.useContext(LoadingContext)
 
-  const formatDay = (dayOrigin: string): string => {
-    const dateObj = new Date(dayOrigin)
-    const month = dateObj.getMonth() + 1
-    const day = dateObj.getDate()
-    const year = dateObj.getFullYear()
-    return `${month.toString().padStart(2, '0')} / ${day
-      .toString()
-      .padStart(2, '0')} / ${year}`
-  }
   const rows =
     users?.map((user: User) => ({
       id: user.userId,
@@ -83,8 +74,6 @@ const TableUser = (): JSX.Element => {
     {
       field: 'password',
       headerName: 'Mật Khẩu'
-      // description: 'This column has a value getter and is not sortable.',
-      // sortable: false
     },
     {
       field: 'actions',

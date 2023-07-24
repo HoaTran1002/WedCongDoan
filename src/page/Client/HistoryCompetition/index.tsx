@@ -9,6 +9,7 @@ import { getAllComp } from '~/api/competitionApi'
 import { IResult,ICompetitionUser,ICompetition } from '~/interface/Interface'
 import useAuth from '~/hook/useAuth'
 import { useNavigate } from 'react-router-dom'
+import { formatDay } from '~/utils/dateUtils'
 import WatchExam from './WatchExam'
 
 interface IHistoryList{
@@ -44,13 +45,6 @@ const HistoryCompetition = ():JSX.Element =>{
         const item = allCompetition?.payload?.find((r:ICompetition)=>r.comId === comId);
 
         return item?.comName
-    }
-    const formatDay = (dayOrigin: string): string => {
-        const dateObj = new Date(dayOrigin);
-        const month = dateObj.getMonth() + 1;
-        const day = dateObj.getDate();
-        const year = dateObj.getFullYear();
-        return `${month.toString().padStart(2, "0")} / ${day.toString().padStart(2, "0")} / ${year}`;
     }
     const formatTime= (timeString:string):string =>{
         const date = new Date(timeString);

@@ -3,11 +3,7 @@ import AddIcon from '@mui/icons-material/Add'
 import DeleteIcon from '@mui/icons-material/Delete'
 import {
   Button,
-  FormControl,
   Grid,
-  InputLabel,
-  MenuItem,
-  Select,
   Stack,
   TextField,
   Typography,
@@ -24,16 +20,11 @@ import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { getBlogId, editBlog, deleteBlog, getAllBlog } from '~/api/blogApi'
+import { getBlogId, editBlog, deleteBlog } from '~/api/blogApi'
 import {getAllComp} from '~/api/competitionApi'
 import {getAllCompetitionBlog,EditCompetitionBlog,DeleteCompetitionBlog} from '~/api/CompetitionBlog'
 import Dropzone from 'react-dropzone'
 import useFetch from '~/hook/useFetch'
-interface Competition{
-  comId:number,
-  comName:string
-}
-
 const Index = (): JSX.Element => {
   const navigate = useNavigate();
   useEffect(()=>{
@@ -172,15 +163,6 @@ const Index = (): JSX.Element => {
       setImgSrc(imageFile.path)
     }
   };
-
-  const competitions :Competition[] =
-  getComs.payload?.map((com:Competition)=>({
-    comId: com.comId,
-    comName:com.comName
-  })) || []
-
-  
-
   
   useEffect(() => {
     const request: { id: number } = { id: blogId };
@@ -223,9 +205,6 @@ const Index = (): JSX.Element => {
 
     fetchData();
   }, []);
-
-
-
   return (
     <>
       <LayoutAdmin>

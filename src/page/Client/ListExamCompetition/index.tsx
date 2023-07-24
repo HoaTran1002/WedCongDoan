@@ -39,7 +39,7 @@ import {
   IDepartment,
   IUser
 } from '~/interface/Interface'
-
+import { formatDay } from '~/utils/dateUtils'
 export default function Index(): JSX.Element {
   const navigate = useNavigate()
   const location = useLocation()
@@ -192,15 +192,7 @@ export default function Index(): JSX.Element {
     const queryParams = new URLSearchParams(query).toString()
     navigate(`/ExamStart?${queryParams}`)
   }
-  const formatDay = (dayOrigin: string): string => {
-    const dateObj = new Date(dayOrigin)
-    const month = dateObj.getMonth() + 1
-    const day = dateObj.getDate()
-    const year = dateObj.getFullYear()
-    return `${month.toString().padStart(2, '0')} / ${day
-      .toString()
-      .padStart(2, '0')} / ${year}`
-  }
+  
   function formatTime(dayOrigin: string): string {
     const date = new Date(dayOrigin);
     const hours = date.getHours().toString().padStart(2, "0");

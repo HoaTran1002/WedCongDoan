@@ -26,7 +26,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-
+import { formatDay } from '~/utils/dateUtils'
 //interface
 interface Competition {
   comId: number
@@ -83,15 +83,7 @@ const CompTable = (): JSX.Element => {
   const handleCloseError = (): void => {
     setShowError(false)
   }
-  const formatDay = (dayOrigin: string): string => {
-    const dateObj = new Date(dayOrigin)
-    const month = dateObj.getMonth() + 1
-    const day = dateObj.getDate()
-    const year = dateObj.getFullYear()
-    return `${month.toString().padStart(2, '0')} / ${day
-      .toString()
-      .padStart(2, '0')} / ${year}`
-  }
+  
   const handelDeleteComp = (idComp: number): void => {
     const requestDelete: { _id: number } = { _id: idComp }
     deleteCompCall(async () => {

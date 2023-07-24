@@ -16,20 +16,8 @@ import Layout from '~/components/layout/Layout'
 import { LoaderBlogMain } from '~/components/loader'
 import useFetch from '~/hook/useFetch'
 import Slider from 'react-slick'
+import { formatDay } from '~/utils/dateUtils'
 
-interface Blog {
-  blogId: number
-  blogName: string
-  imgSrc: string
-}
-
-interface CompetitionBlog extends Blog {
-  id: number
-  comId: number
-  useId: string
-  postDate: string
-  blog: Blog
-}
 
 const Home = (): JSX.Element => {
   const navigate = useNavigate()
@@ -93,15 +81,7 @@ const Home = (): JSX.Element => {
     return user?.userName
   }
 
-  const formatDay = (dayOrigin: string): string => {
-    const dateObj = new Date(dayOrigin)
-    const month = dateObj.getMonth() + 1
-    const day = dateObj.getDate()
-    const year = dateObj.getFullYear()
-    return `${month.toString().padStart(2, '0')} / ${day
-      .toString()
-      .padStart(2, '0')} / ${year}`
-  }
+  
 
   const settings = {
     // infinite: true,

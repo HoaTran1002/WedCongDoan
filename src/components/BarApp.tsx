@@ -38,6 +38,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import SettingsIcon from '@mui/icons-material/Settings';
 import useAuth from '~/hook/useAuth'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import { getOneCharacter } from '~/utils/stringUtils'
 const drawerWidth = 250
 const pages = [
   { name: 'TRANG CHỦ', to: '/', iconComponent: <HomeIcon /> },
@@ -105,10 +106,7 @@ export default function SideBar(): JSX.Element {
   const handleGoToHistoryComp = ():void =>{
     navigate('/HistoryCompetition')
   }
-  const getOneCharacter= (userName?:string):string | undefined=>{
-    const lastPartOfName = userName?.split(" ").slice(-1)[0];
-    return lastPartOfName?.charAt(0);
-  }
+  
   return (
     <>
       <Box
