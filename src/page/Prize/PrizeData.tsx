@@ -9,13 +9,15 @@ import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import { deleteCompPrizes, getAllByComID } from '~/api/CompetitionsPrizesAPI'
 import { getAllPrizeTypes } from '~/api/prizeTypesApi'
 import ModalAdd from '~/components/ModalAdd'
-import { Box , Snackbar } from '@mui/material'
+import { Box, Snackbar } from '@mui/material'
 import TextFields from './TextFields'
 import { useParams } from 'react-router-dom'
 import MuiAlert from '@mui/material/Alert'
 import BasicModal from './ModalEdit'
-import { getAllPrize} from '~/api/prizesApi'
+import { getAllPrize } from '~/api/prizesApi'
 import { Loader } from '~/components/loader'
+import { useState } from 'react'
+import MessageAlert from '~/components/MessageAlert'
 
 interface CompPrizes {
   cpid: number
@@ -25,7 +27,16 @@ interface CompPrizes {
   quantity: number
   prizeDetail: string
 }
-
+interface ILoadingContext {
+  statusLoading: boolean
+  setLoading: () => void
+}
+export const LoadingContext = React.createContext<ILoadingContext>({
+  statusLoading: false,
+  setLoading: (): void => {
+    return
+  }
+})
 const PrizeData = (): JSX.Element => {
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
@@ -34,10 +45,12 @@ const PrizeData = (): JSX.Element => {
   const [prizeType, callPrizeTypes] = useFetch()
   const [prizeState, callPrizes] = useFetch()
   const [change, setChange] = React.useState(false)
-
+  const [loading, setLoading] = React.useState(false)
+  const [message, setMessage] = useState<string>('')
+  const [severity, setSeverity] = useState<string>('')
   const { comId } = useParams()
-  const handleChange =():void=>{
-    setChange(r=>!r)
+  const handleChange = (): void => {
+    setChange((r) => !r)
   }
   const paramId: { id: string } = { id: comId ? comId : '' }
   React.useEffect(() => {
@@ -50,30 +63,31 @@ const PrizeData = (): JSX.Element => {
     }
 
     fetchData()
-  }, [change, comId])
+  }, [change, comId, loading])
 
   React.useEffect(() => {
     callPrizeTypes(getAllPrizeTypes)
   }, [change])
   React.useEffect(() => {
     callPrizes(getAllPrize)
-  }, [change])
+  }, [change, loading])
 
   const CompPrizes = stateCompPri?.payload
   const prizeTypes = prizeType?.payload
   const prizes = prizeState?.payload
 
-  const handleDelete = (id: string): void => {
+  const handleDelete = async (id: string): Promise<void> => {
     const request: { _id: string } = {
       _id: id
     }
 
-
     try {
-      callDelete(async () => {
-        deleteCompPrizes(request)
+      await callDelete(async (): Promise<void> => {
+        await deleteCompPrizes(request)
       })
-      setShowSuccess(true)
+      setSeverity('info')
+      setMessage('đã xoá giải thưởng!')
+      setLoading(!loading)
     } catch (error) {
       setShowError(true)
     }
@@ -150,59 +164,73 @@ const PrizeData = (): JSX.Element => {
           key={2}
           icon={<DeleteIcon />}
           label='Delete'
-          onClick={(): void =>{
+          onClick={(): void => {
             handleDelete(params.id)
-            setChange(r=>!r)
-          } }
+            setChange((r) => !r)
+          }}
         />
       ]
     }
   ]
+  if (message != null) {
+    setTimeout(async (): Promise<void> => {
+      await setMessage('')
+    }, 3000)
+  }
+
+  const loadingParams: ILoadingContext = {
+    statusLoading: loading,
+    setLoading: () => {
+      setLoading(!loading)
+    }
+  }
   return (
-    <>
-      <Snackbar
-        open={showSuccess}
-        autoHideDuration={3000}
-        onClose={handleCloseSuccess}
-      >
-        <MuiAlert
+    <LoadingContext.Provider value={loadingParams}>
+      <>
+        {message && <MessageAlert message={message} severity={severity} />}
+        <Snackbar
+          open={showSuccess}
+          autoHideDuration={3000}
           onClose={handleCloseSuccess}
-          severity='success'
-          elevation={6}
-          variant='filled'
         >
-          Acction successful!
-        </MuiAlert>
-      </Snackbar>
-      <Snackbar
-        open={showError}
-        autoHideDuration={3000}
-        onClose={handleCloseSuccess}
-      >
-        <MuiAlert
-          onClose={handleCloseError}
-          severity='error'
-          elevation={6}
-          variant='filled'
-        >
-          Acction Failed!
-        </MuiAlert>
-      </Snackbar>
-      <LayoutAdmin>
-        <>
-          <Box
-            sx={{
-              width:"100%",
-              display:"flex",
-              justifyContent:"center",
-              mt:3,
-              color:"#1976d2",
-              fontWeight:"500",
-              fontSize:"30px"
-            }}
+          <MuiAlert
+            onClose={handleCloseSuccess}
+            severity='success'
+            elevation={6}
+            variant='filled'
           >
-            Quản lý phần thưởng cuộc thi
-          </Box>
+            Acction successful!
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={showError}
+          autoHideDuration={3000}
+          onClose={handleCloseSuccess}
+        >
+          <MuiAlert
+            onClose={handleCloseError}
+            severity='error'
+            elevation={6}
+            variant='filled'
+          >
+            Acction Failed!
+          </MuiAlert>
+        </Snackbar>
+        <LayoutAdmin>
+          <>
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                mt: 3,
+                color: '#1976d2',
+                fontWeight: '500',
+                fontSize: '30px'
+              }}
+            >
+              Quản lý phần thưởng cuộc thi
+            </Box>
             {stateCompPri.loading || deleteCompPrizState.loading ? (
               <Loader />
             ) : (
@@ -218,7 +246,7 @@ const PrizeData = (): JSX.Element => {
                   }}
                 >
                   <ModalAdd Title='Thêm Giải Thưởng'>
-                    {(handleClose):JSX.Element =>  (
+                    {(handleClose): JSX.Element => (
                       <TextFields
                         handleChange={handleChange}
                         edit={false}
@@ -228,12 +256,18 @@ const PrizeData = (): JSX.Element => {
                         priTid={''}
                         quantity={''}
                         prizeDetail={''}
-                        close={handleClose}
+                        // close={handleClose}
                       />
                     )}
                   </ModalAdd>
                 </Box>
-                <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
+                <div
+                  style={{
+                    height: 400,
+                    width: '100%',
+                    backgroundColor: 'white'
+                  }}
+                >
                   <DataGrid
                     rows={rows}
                     columns={columns}
@@ -248,9 +282,10 @@ const PrizeData = (): JSX.Element => {
                 </div>
               </>
             )}
-        </>
-      </LayoutAdmin>
-    </>
+          </>
+        </LayoutAdmin>
+      </>
+    </LoadingContext.Provider>
   )
 }
 

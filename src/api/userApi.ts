@@ -73,6 +73,16 @@ export const editUser = async ({
   roleId: number
   depId: number
 }): Promise<void> => {
+  console.log(
+    userId,
+    userName,
+    dateOfBirth,
+    email,
+    password,
+    userAddress,
+    roleId,
+    depId
+  )
   try {
     await server.put(`/Users?id=${userId}`, {
       userId,

@@ -10,6 +10,7 @@ import { editcompPrize, insert } from '~/api/CompetitionsPrizesAPI'
 import MuiAlert from '@mui/material/Alert'
 import MessageAlert from '~/components/MessageAlert'
 import { useState } from 'react'
+import { LoadingContext } from './PrizeData'
 
 interface PrizeType {
   priTid: number
@@ -28,7 +29,7 @@ export default function TextFields(prop: {
   priTid: string
   quantity: string
   prizeDetail: string
-  close?: () => void
+  // close?: () => void
   handleChange: () => void
 }): JSX.Element {
   const [showSuccess, setShowSuccess] = React.useState(false)
@@ -116,35 +117,28 @@ export default function TextFields(prop: {
     requestData.comId = Number(comId)
     requestEditData.comId = Number(comId)
   }
-  const submitAddData = (): void => {
-    try {
-      prizesCompCall(async () => {
-        insert(requestData)
-      })
-      // prop.handleChange()
-      setSeverity('success')
-      setMessage('thêm thành công!')
-    } catch (error: any) {
-      setSeverity('error')
-      setMessage(' thất bại')
-    }
+  const paramLoading = React.useContext(LoadingContext)
+  const submitAddData = async (): Promise<void> => {
+    await prizesCompCall(async (): Promise<void> => {
+      await insert(requestData)
+    })
+    // prop.handleChange()
+    setSeverity('info')
+    setMessage('thêm thành công!')
+    paramLoading.setLoading()
   }
-  const submitEditData = (): void => {
-    try {
-      prizeCompEditCall(async () => {
-        editcompPrize(requestEditData)
-      })
-      console.log(requestEditData)
-      if (prop?.close) {
-        prop.close()
-      }
-      // prop.handleChange()
-      setSeverity('info')
-      setMessage('đã chỉnh sửa')
-    } catch (error: any) {
-      setSeverity('error')
-      setMessage('chỉnh sửa thất bại')
-    }
+  const submitEditData = async (): Promise<void> => {
+    await prizeCompEditCall(async (): Promise<void> => {
+      await editcompPrize(requestEditData)
+    })
+
+    // if (prop?.close) {
+    //   prop.close()
+    // }
+    // prop.handleChange()
+    setSeverity('info')
+    setMessage('chỉnh sửa thành công!')
+    paramLoading.setLoading()
   }
   if (message != null) {
     setTimeout(async (): Promise<void> => {
