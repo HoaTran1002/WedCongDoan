@@ -232,15 +232,10 @@ const Index = (): JSX.Element => {
       ]
     }
   ]
-  if (message != null) {
-    setTimeout(() => {
-      setMessage('')
-    }, 3000)
-  }
+
   return (
     <LayoutAdmin>
       <>
-        {message && <MessageAlert message={''} severity={''} />}
         <>
           <h1 className='color-primary text-center'>Quản lý giải thưởng</h1>
           {allPrize.loading == true ? (
