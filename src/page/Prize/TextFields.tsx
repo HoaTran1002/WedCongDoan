@@ -123,8 +123,8 @@ export default function TextFields(prop: {
       await insert(requestData)
     })
     // prop.handleChange()
-    setSeverity('info')
-    setMessage('thêm thành công!')
+    // setSeverity('info')
+    // setMessage('thêm thành công!')
     paramLoading.setLoading()
     if (paramLoading.setMessageAdd) {
       paramLoading.setMessageAdd()

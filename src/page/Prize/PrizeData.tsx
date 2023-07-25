@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { deleteUsers } from '~/api/userApi'
+
 import useFetch from '~/hook/useFetch'
 import Button from '@mui/material/Button'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
@@ -18,6 +18,8 @@ import { getAllPrize } from '~/api/prizesApi'
 import { Loader } from '~/components/loader'
 import { useState } from 'react'
 import MessageAlert from '~/components/MessageAlert'
+import ModalDelete from '~/components/ModalDelete'
+import { padding } from '@mui/system'
 
 interface CompPrizes {
   cpid: number
@@ -155,7 +157,7 @@ const PrizeData = (): JSX.Element => {
     {
       field: 'actions',
       type: 'actions',
-      width: 100,
+      width: 175,
       getActions: (params: any) => [
         <BasicModal
           handleChange={handleChange}
@@ -168,15 +170,24 @@ const PrizeData = (): JSX.Element => {
           PrizeDetail={params.row.PrizeDetail}
           id={''}
         />,
-        <GridActionsCellItem
-          key={2}
-          icon={<DeleteIcon />}
-          label='Delete'
-          onClick={(): void => {
+
+        <ModalDelete
+          key={params.row.id}
+          callBack={(): void => {
             handleDelete(params.id)
-            setChange((r) => !r)
           }}
+          content={'xoá giải thưởng này?'}
+          question={'cảnh báo!!'}
         />
+        // <GridActionsCellItem
+        //   key={2}
+        //   icon={<DeleteIcon />}
+        //   label='Delete'
+        //   onClick={(): void => {
+        //     handleDelete(params.id)
+        //     setChange((r) => !r)
+        //   }}
+        // />
       ]
     }
   ]
