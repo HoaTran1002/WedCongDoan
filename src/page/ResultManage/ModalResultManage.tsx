@@ -25,7 +25,7 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SearchIcon from '@mui/icons-material/Search';
-import { getTimeDifference } from '~/utils/dateUtils';
+import { formatDay, formatTime, formatTimeHour, getTimeDifference } from '~/utils/dateUtils';
 interface PropsResultManage {
     comId: number
     close: () => void;
@@ -250,6 +250,42 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
                                                         style={{ fontWeight: "500", fontSize: "18px" }}
                                                     >
                                                         {getNameUserById(r.userId)}
+                                                    </span>
+                                                </Box>
+                                                <Box>
+                                                    <span>Thời gian bắt đầu:&nbsp;</span>
+                                                    <span
+                                                        className='color-primary'
+                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                    >
+                                                        {formatDay(r.startTimes)}
+                                                    </span>
+                                                </Box>
+                                                <Box>
+                                                    <span>Thời gian kết thúc:&nbsp;</span>
+                                                    <span
+                                                        className='color-primary'
+                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                    >
+                                                        {formatDay(r.endTimes)}
+                                                    </span>
+                                                </Box>
+                                                <Box>
+                                                    <span>Giờ bắt đầu:&nbsp;</span>
+                                                    <span
+                                                        className='color-primary'
+                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                    >
+                                                        {formatTimeHour(r.startTimes)}
+                                                    </span>
+                                                </Box>
+                                                <Box>
+                                                    <span>Giờ kết thúc:&nbsp;</span>
+                                                    <span
+                                                        className='color-primary'
+                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                    >
+                                                        {formatTimeHour(r.endTimes)}
                                                     </span>
                                                 </Box>
                                                 <Box>

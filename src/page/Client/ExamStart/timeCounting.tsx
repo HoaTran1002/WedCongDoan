@@ -1,4 +1,5 @@
 import React from 'react'
+import { formatTime } from '~/utils/dateUtils'
 import { Grid,
      Box, Typography, SxProps, Container, Button } from '@mui/material'
 
@@ -22,11 +23,7 @@ const TimerCount: React.FC<TimeCountingProps> = ({
         return time * 60;
     });
 
-    const formatTime = (time:number):string => {
-        const minutes = Math.floor(time / 60);
-        const seconds = Math.floor(time % 60);
-        return `${minutes.toString().padStart(2, "0")} : ${seconds.toString().padStart(2, "0")}`;
-    };
+    
     React.useEffect(() => {
         if (!localStorage.getItem("startTime")) {
           localStorage.setItem("startTime", Date.now().toString());

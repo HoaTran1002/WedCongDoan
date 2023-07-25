@@ -34,3 +34,17 @@ export const getTimeDifference=(startTimes:string,endTimes:string): number | nul
     const timeDifference = endTime.getTime() - startTime.getTime();
     return timeDifference / 1000;
 }
+
+export const formatTime = (time:number):string => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes.toString().padStart(2, "0")} : ${seconds.toString().padStart(2, "0")}`;
+};
+
+export function formatTimeHour(dayOrigin: string): string {
+    const date = new Date(dayOrigin);
+    const hours = date.getHours().toString().padStart(2, "0");
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const seconds = date.getSeconds().toString().padStart(2, "0");
+    return `${hours}:${minutes}:${seconds}`;
+  }

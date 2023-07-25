@@ -32,6 +32,7 @@ const Index = (): JSX.Element => {
   const [openDelete, setOpenDelete] = React.useState(deleteFromUrl)
   const [openUpdate, setOpenUpdate] = React.useState(updateFromUrl)
   const [openLinkCompetition,setOpenLinkCompetition]=React.useState(false)
+  const [change,setChange] = React.useState<boolean>(false)
   const [blogIdCheck,setBlogIdCheck]=React.useState(0)
   const blogs: IBlog[] = getBlog.payload || []
   const listBlogNoLink = blogs.reduce((newList: number[], curr: IBlog) => {
@@ -57,15 +58,16 @@ const Index = (): JSX.Element => {
     setOpenLinkCompetition(true)
   }
   const handleCloseLinkCom = ():void =>{
+    setChange(r=>!r)
     setOpenLinkCompetition(false)
   }
 
   React.useEffect(() => {
     callAllCompetitionBlogs(getAllCompetitionBlog)
-  }, [openLinkCompetition])
+  }, [change])
   React.useEffect(() => {
     callBlog(getAllBlog)
-  }, [open, openDelete, openUpdate])
+  }, [change])
   return (
     <LayoutAdmin>
       <>
