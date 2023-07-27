@@ -52,6 +52,18 @@ export const deleteCompetitions = async ({
     throw new Error(message)
   }
 }
+export const UpdateIsDeleted = async ({
+  _id
+}: {
+  _id: number
+}): Promise<void> => {
+  try {
+    await server.put(`/Competitions/UpdateIsDeleted?id=${_id}&value=${1}`)
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
+  }
+}
 export const CompetitionEdit = async ({
   userId,
   userName,

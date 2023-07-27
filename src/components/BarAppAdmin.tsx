@@ -5,7 +5,7 @@ import Drawer from '@mui/material/Drawer'
 import CssBaseline from '@mui/material/CssBaseline'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import { useLocation , Link } from 'react-router-dom';
+import { useLocation, Link, useNavigate } from 'react-router-dom'
 import List from '@mui/material/List'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
@@ -34,6 +34,11 @@ import { blue, yellow } from '@mui/material/colors'
 import { SxProps } from '@mui/material'
 import { getOneCharacter } from '~/utils/stringUtils'
 import useAuth from '~/hook/useAuth'
+import { getCookie, removeCookie, setCookie } from 'typescript-cookie'
+import { locale } from 'dayjs'
+import useFetch from '~/hook/useFetch'
+import { getLogout } from '~/api/userApi'
+import { textAlign } from '@mui/system'
 const drawerWidth = 250
 const pages = [
   { name: 'CUỘC THI', to: '/CompetitionManage', icon: <GridViewIcon /> },
@@ -53,14 +58,16 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }))
 
 export default function Index(): JSX.Element {
-  const {profile}= useAuth();
-  const location = useLocation();
+  const { profile } = useAuth()
+  const location = useLocation()
+  const navigate = useNavigate()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   )
+  const [logOutState, setLogout] = useFetch()
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget)
@@ -79,6 +86,12 @@ export default function Index(): JSX.Element {
 
   const handleDrawerClose = (): void => {
     setOpen(false)
+  }
+
+  const logoutAccount = (): void => {
+    getLogout().then((): void => {
+      window.location.reload()
+    })
   }
 
   return (
@@ -138,25 +151,24 @@ export default function Index(): JSX.Element {
           backgroundColor: blue[400],
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
+          justifyContent: 'space-between'
         }}
       >
         <Box
           sx={{
-            display:{xs:'none', md:"inlineFlex"},
+            display: { xs: 'none', md: 'inlineFlex' },
             width: '260px',
             height: '100%',
             justifyContent: 'center',
-            alignItems:"center",
-            background: 'transparent',
+            alignItems: 'center',
+            background: 'transparent'
           }}
           alignItems={'center'}
         >
           <Box
             component='img'
             sx={{
-              height: '50px',
-              
+              height: '50px'
             }}
             alt='The house from the offer.'
             src='https://api.congdoantphochiminh.org.vn/Upload/Multimedia/Images/20221229150859445_logo%20DAI%20HOI%20XII%20CONG%20DOAN%20TP%20-%20png.png'
@@ -167,24 +179,24 @@ export default function Index(): JSX.Element {
           aria-label='open drawer'
           onClick={handleDrawerOpen}
           edge='start'
-          sx={{ mr: 2, display: { xs: 'flex', md: 'none' },ml:2 }}
+          sx={{ mr: 2, display: { xs: 'flex', md: 'none' }, ml: 2 }}
         >
-          <MenuIcon sx={{color:"white"}} />
+          <MenuIcon sx={{ color: 'white' }} />
         </IconButton>
         <Box sx={{ flexGrow: 0, display: { md: 'flex' }, mr: 5 }}>
           <Tooltip title={profile?.userName}>
-            <Avatar 
-                sx={{
-                  backgroundColor:"#d139ff",
-                  color:"white",
-                  fontWeight:"500",
-                  cursor:"pointer",
-                  gap:"10px"
-                }}
-                onClick={handleOpenUserMenu}
-              >
-                {getOneCharacter(profile?.userName)}
-              </Avatar>
+            <Avatar
+              sx={{
+                backgroundColor: '#d139ff',
+                color: 'white',
+                fontWeight: '500',
+                cursor: 'pointer',
+                gap: '10px'
+              }}
+              onClick={handleOpenUserMenu}
+            >
+              {getOneCharacter(profile?.userName)}
+            </Avatar>
           </Tooltip>
           <Menu
             sx={{ mt: '45px' }}
@@ -202,9 +214,15 @@ export default function Index(): JSX.Element {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-              <MenuItem onClick={handleCloseUserMenu}>
-                <Typography textAlign='center'>Đăng xuất</Typography>
-              </MenuItem>
+            <MenuItem
+              onClick={(): void => {
+                handleCloseUserMenu()
+              }}
+            >
+              <Button onClick={logoutAccount} sx={{ textAlign: 'center' }}>
+                Đăng xuất
+              </Button>
+            </MenuItem>
           </Menu>
         </Box>
       </Box>
@@ -233,15 +251,16 @@ export default function Index(): JSX.Element {
         <Divider />
         <List>
           {pages.map((page, index) => (
-            <Link key={index} style={{textDecoration:"none"}} to={page.to}>
+            <Link key={index} style={{ textDecoration: 'none' }} to={page.to}>
               <ListItem key={index} disablePadding>
                 <ListItemButton>
-                  <ListItemIcon>
-                    {page.icon}
-                  </ListItemIcon>
+                  <ListItemIcon>{page.icon}</ListItemIcon>
                   <ListItemText>
-                    <span className='color-primary' style={{fontWeight:"600"}}>
-                      {page.name} 
+                    <span
+                      className='color-primary'
+                      style={{ fontWeight: '600' }}
+                    >
+                      {page.name}
                     </span>
                   </ListItemText>
                 </ListItemButton>
@@ -253,7 +272,6 @@ export default function Index(): JSX.Element {
     </Box>
   )
 }
-
 
 const buttonStyles = {
   padding: '10px',
@@ -273,11 +291,11 @@ const buttonStyles = {
   textDecoration: 'none',
   width: '100%',
   color: blue[900]
-};
+}
 
 const activeButtonStyles = {
   backgroundColor: 'white',
   color: '#1769ba',
   borderRadius: '0px !important',
   boxShadow: 'none'
-};
+}

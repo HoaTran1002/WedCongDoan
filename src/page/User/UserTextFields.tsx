@@ -34,14 +34,15 @@ export default function UserTextFields(prop: {
   userAddress: string
   roleId: number
   depId: number
-  callback?: () => void
 }): JSX.Element {
   const [cccd, setCCCD] = React.useState<string>(prop.id || '')
   const [userName, setUserName] = React.useState<string>(prop.userName || '')
   const [pass, setPass] = React.useState<string>(prop.password || '')
   const [gmail, setGmail] = React.useState(prop.email || '')
   const [address, setAddress] = React.useState<string>(prop.userAddress || '')
-  const [birthDay, setBirthDay] = React.useState<string>(prop.dateOfBirth || '')
+  const [birthDay, setBirthDay] = React.useState<Dayjs | any>(
+    dayjs(prop.dateOfBirth).format('MM/DD/YYYY') || ''
+  )
   const [dep, setDep] = React.useState<number>(prop.depId || 0)
   const [role, setRole] = React.useState<number>(prop.roleId || 0)
   const [showSuccess, setShowSuccess] = React.useState(false)
@@ -52,17 +53,11 @@ export default function UserTextFields(prop: {
   const [roles, callAllRole] = useFetch()
   const [message, setMessage] = React.useState<string>('')
   const [severity, setSeverity] = React.useState<string>('')
-  const [value, setValue] = React.useState<Dayjs | any>(dayjs(birthDay))
-  let formattedDateOfBirth = null
+
   const loadingParams = React.useContext(LoadingContext)
   const Roles: Role[] = roles.payload || []
   const Deps: Dep[] = departments.payload || []
-  if (birthDay) {
-    formattedDateOfBirth = dayjs(birthDay).format('MM-DD-YYYY')
-  }
-
-  // console.log('date of birth:' + formattedDateOfBirth)
-
+  console.log(birthDay)
   const onchangeUserName = function (
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
@@ -110,7 +105,7 @@ export default function UserTextFields(prop: {
   const handleCloseError = (): void => {
     setShowError(false)
   }
-  console.log(formattedDateOfBirth)
+
   const requestData: {
     userId: string
     userName: string
@@ -120,6 +115,7 @@ export default function UserTextFields(prop: {
     userAddress: string
     roleId: number
     depId: number
+    isDeleted: number
   } = {
     userId: cccd,
     userName: userName,
@@ -128,11 +124,11 @@ export default function UserTextFields(prop: {
     password: pass,
     userAddress: address,
     roleId: Number(role),
-    depId: Number(dep)
+    depId: Number(dep),
+    isDeleted: 0
   }
 
   const onSubmitFormInsert = (): void => {
-    console.log('insert:' + requestData.userAddress)
     callInsertUser(async () => {
       try {
         await insert(requestData)
@@ -148,6 +144,7 @@ export default function UserTextFields(prop: {
     await callEdittUser(async (): Promise<void> => {
       await editUser(requestData)
     })
+
     setSeverity('info')
     setMessage('đã sửa user!')
     loadingParams.setLoading()
@@ -242,7 +239,7 @@ export default function UserTextFields(prop: {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
-                  value={value}
+                  defaultValue={birthDay}
                   onChange={onchangeBirthDay}
                   sx={{ width: '100%' }}
                   label='Ngày Sinh '

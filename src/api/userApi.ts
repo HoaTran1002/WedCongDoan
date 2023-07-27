@@ -9,6 +9,14 @@ export const getAllUser = async (): Promise<any> => {
     throw new Error(message)
   }
 }
+export const getLogout = async (): Promise<any> => {
+  try {
+    await server.get('/Users/Logout')
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
+  }
+}
 
 export const insert = async ({
   userId,
@@ -54,6 +62,20 @@ export const deleteUsers = async ({ _id }: { _id: string }): Promise<void> => {
     throw new Error(message)
   }
 }
+export const UpdateIsDeleted = async ({
+  _id,
+  value
+}: {
+  _id: string
+  value: number
+}): Promise<void> => {
+  try {
+    await server.put(`/Users/UpdateIsDeleted?id=${_id}&value=${value}`)
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
+  }
+}
 export const editUser = async ({
   userId,
   userName,
@@ -62,7 +84,8 @@ export const editUser = async ({
   password,
   userAddress,
   roleId,
-  depId
+  depId,
+  isDeleted
 }: {
   userId: string
   userName: string
@@ -72,19 +95,20 @@ export const editUser = async ({
   userAddress: string
   roleId: number
   depId: number
+  isDeleted: number
 }): Promise<void> => {
-  console.log(
-    userId,
-    userName,
-    dateOfBirth,
-    email,
-    password,
-    userAddress,
-    roleId,
-    depId
-  )
   try {
-    await server.put(`/Users?id=${userId}`, {
+    // console.log(userId)
+    // console.log(userName)
+    // console.log(dateOfBirth)
+    // console.log(email)
+    // console.log(password)
+    // console.log(userAddress)
+    // console.log(roleId)
+    // console.log(depId)
+    // console.log(isDeleted)
+
+    await server.put(`/Users`, {
       userId,
       userName,
       dateOfBirth,
@@ -92,7 +116,8 @@ export const editUser = async ({
       password,
       userAddress,
       roleId,
-      depId
+      depId,
+      isDeleted
     })
   } catch (error: any) {
     const message = error?.response?.data?.message ?? error.message

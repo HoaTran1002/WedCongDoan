@@ -11,7 +11,11 @@ import AddIcon from '@mui/icons-material/Add'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 import { Link } from 'react-router-dom'
 import useFetch from '~/hook/useFetch'
-import { deleteCompetitions, getAllComp } from '~/api/competitionApi'
+import {
+  deleteCompetitions,
+  getAllComp,
+  UpdateIsDeleted
+} from '~/api/competitionApi'
 import MilitaryTechOutlinedIcon from '@mui/icons-material/MilitaryTechOutlined'
 import { color } from '@mui/system'
 import { getAllDep } from '~/api/depApi'
@@ -21,14 +25,14 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import { TableWithFixedColumn, ColumnsProps } from '~/components/TableFixed'
 import { Loader } from '~/components/loader'
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@mui/material/Dialog'
+import DialogActions from '@mui/material/DialogActions'
+import DialogContent from '@mui/material/DialogContent'
+import DialogContentText from '@mui/material/DialogContentText'
+import DialogTitle from '@mui/material/DialogTitle'
 import { formatDay } from '~/utils/dateUtils'
 //interface
-interface Competition {
+interface ICompetition {
   comId: number
   comName: string
   startDate: string
@@ -48,8 +52,8 @@ const CompTable = (): JSX.Element => {
   const [compState, callComp] = useFetch()
   const [deps, depCall] = useFetch()
   const [deleteComp, deleteCompCall] = useFetch()
-  const [openDelete, setOpenDelete] = React.useState(false);
-  const [compId,setComId] = React.useState<number>(0)
+  const [openDelete, setOpenDelete] = React.useState(false)
+  const [compId, setComId] = React.useState<number>(0)
   const depList = deps.payload || []
   const [loading, setLoading] = useState<boolean>(false)
   React.useEffect(() => {
@@ -68,30 +72,29 @@ const CompTable = (): JSX.Element => {
     }
     return 'null'
   }
-  const handleClickOpenDelete = (id:number):void => {
+  const handleClickOpenDelete = (id: number): void => {
     setComId(id)
-    setOpenDelete(true);
-  };
+    setOpenDelete(true)
+  }
 
-  const handleCloseDelete = ():void => {
-
-    setOpenDelete(false);
-  };
+  const handleCloseDelete = (): void => {
+    setOpenDelete(false)
+  }
   const handleCloseSuccess = (): void => {
     setShowSuccess(false)
   }
   const handleCloseError = (): void => {
     setShowError(false)
   }
-  
+
   const handelDeleteComp = (idComp: number): void => {
     const requestDelete: { _id: number } = { _id: idComp }
     deleteCompCall(async () => {
       try {
-        await deleteCompetitions(requestDelete)
+        await UpdateIsDeleted(requestDelete)
         setShowSuccess(true)
-        setLoading(r=>!r)
-        setOpenDelete(false);
+        setLoading((r) => !r)
+        setOpenDelete(false)
       } catch (error) {
         setShowError(true)
       }
@@ -148,6 +151,16 @@ const CompTable = (): JSX.Element => {
             </Button>
           </Link>
         </Tooltip>,
+        // <Tooltip key='edit' title='chỉnh sửa' placement='top-start'>
+        //   <Button
+        //     onClick={(): void => handleClickOpenDelete(params.comId)}
+        //     style={{ width: 50 }}
+        //     variant='outlined'
+        //     color='error'
+        //   >
+        //     <DeleteOutlinedIcon />
+        //   </Button>
+        // </Tooltip>,
         <Tooltip key='delete' title='xoá cuộc thi' placement='top-start'>
           <Button
             onClick={(): void => handleClickOpenDelete(params.comId)}
@@ -155,22 +168,24 @@ const CompTable = (): JSX.Element => {
             variant='outlined'
             color='error'
           >
-            <DeleteOutlinedIcon/>
+            <DeleteOutlinedIcon />
           </Button>
         </Tooltip>
       ]
     }
   ]
   const rows =
-    compState.payload?.map((item: Competition) => ({
-      comId: item.comId,
-      comName: item.comName,
-      startDate: formatDay(item.startDate),
-      endDate: formatDay(item.endDate),
-      examTimes: item.examTimes,
-      userQuan: item.userQuan,
-      depName: getNameDep(item.depId)
-    })) || []
+    compState.payload
+      ?.filter((item: ICompetition) => item.isDeleted !== 1)
+      .map((item: ICompetition) => ({
+        comId: item.comId,
+        comName: item.comName,
+        startDate: formatDay(item.startDate),
+        endDate: formatDay(item.endDate),
+        examTimes: item.examTimes,
+        userQuan: item.userQuan,
+        depName: getNameDep(item.depId)
+      })) || []
   return (
     <>
       <Grid item xs={12}>
@@ -261,25 +276,26 @@ const CompTable = (): JSX.Element => {
           </Grid>
         )}
         <Dialog
-        open={openDelete}
-        onClose={handleCloseDelete}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Thông báo"}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            Bạn có chắc muốn xóa cuộc thi này 
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={():void=>handelDeleteComp(compId)} variant='outlined'>
-            Xóa
-          </Button>
-          <Button onClick={handleCloseDelete}>Trở về</Button>
-        </DialogActions>
+          open={openDelete}
+          onClose={handleCloseDelete}
+          aria-labelledby='alert-dialog-title'
+          aria-describedby='alert-dialog-description'
+        >
+          <DialogTitle id='alert-dialog-title'>{'Thông báo'}</DialogTitle>
+          <DialogContent>
+            <DialogContentText id='alert-dialog-description'>
+              Bạn có chắc muốn xóa cuộc thi này
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={(): void => handelDeleteComp(compId)}
+              variant='outlined'
+            >
+              Xóa
+            </Button>
+            <Button onClick={handleCloseDelete}>Trở về</Button>
+          </DialogActions>
         </Dialog>
       </>
     </>
