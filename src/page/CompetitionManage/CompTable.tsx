@@ -185,7 +185,7 @@ const CompTable = (): JSX.Element => {
         examTimes: item.examTimes,
         userQuan: item.userQuan,
         depName: getNameDep(item.depId)
-      })) || []
+      })).reverse() || []
   return (
     <>
       <Grid item xs={12}>

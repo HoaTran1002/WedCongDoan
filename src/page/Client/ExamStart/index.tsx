@@ -115,8 +115,8 @@ const ExamStart = (): JSX.Element => {
             console.log('thiếu câu hỏi')
             setRemainingQuestion(mergedArr)
         }else{
-            console.log(ansOfQues,questions);
-            localStorage.removeItem('ansOfQues')
+            // console.log(ansOfQues,questions);
+            // localStorage.removeItem('ansOfQues')
             await callIPickerQuestions(async () => {
                 try {
                     for (const item of ansOfQues) {
@@ -129,7 +129,7 @@ const ExamStart = (): JSX.Element => {
                     console.log('Thành công');
                 } catch (error) {
                     console.log(error);
-                    setMessage('Đã có lỗi, vui lòng thử lại!')
+                    setMessage('Kết nối không ổn định, vui lòng tải lại trang!')
                     setSeverity('error')
                     return;
                 }
@@ -162,14 +162,14 @@ const ExamStart = (): JSX.Element => {
                 try {
                     await InsertResult(requestData);
                     console.log('thành công');
+                    localStorage.clear()
                     navigate('/FinishedExam')
                 }catch (error) {
                     console.log(error);
-                    setMessage('Đã có lỗi, vui lòng thử lại!')
+                    setMessage('Kết nối không ổn định, vui lòng tải lại trang!')
                     setSeverity('error')
                     return;
             }})
-            localStorage.clear()
         }
         setOpenSubmitExam(false)
     }

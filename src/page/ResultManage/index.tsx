@@ -151,7 +151,7 @@ const ResultManage = (): JSX.Element => {
                         }}
                     >
                         <TableWithFixedColumn
-                            rows={rows}
+                            rows={rows.reverse()}
                             columns={columns}
                             maxWidth={1100}
                             maxHeight={450}

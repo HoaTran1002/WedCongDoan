@@ -10,7 +10,8 @@ import {
   Button,
   Stack,
   TextField
-, Snackbar } from '@mui/material'
+, Snackbar, 
+Box} from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -21,15 +22,14 @@ import { getAllDep } from '~/api/depApi'
 import useFetch from '~/hook/useFetch'
 import dayjs from 'dayjs'
 import { insert } from '~/api/competitionApi'
-
-import MuiAlert from '@mui/material/Alert'
-import { DateValidationError } from '@mui/x-date-pickers/models'
+import MessageAlert from '~/components/MessageAlert'
+import { useNavigate } from 'react-router-dom'
 
 const label = { inputProps: { 'aria-label': 'Switch demo' } }
 const Index = (): JSX.Element => {
-  const [showSuccess, setShowSuccess] = React.useState(false)
-  const [showError, setShowError] = React.useState(false)
-
+  const [message, setMessage] = React.useState('')
+  const [serverity, setServerity] = React.useState('')
+  const navigate = useNavigate();
   const [dep, setDep] = React.useState<string>('')
   const [errDep, setErrDep] = React.useState<string>('')
   const [comNameValue, setComName] = React.useState<string>('')
@@ -73,12 +73,6 @@ const Index = (): JSX.Element => {
     endDate: endDateValue,
     userQuan: userQuanValue,
     depId: dep
-  }
-  const handleCloseSuccess = (): void => {
-    setShowSuccess(false)
-  }
-  const handleCloseError = (): void => {
-    setShowError(false)
   }
 
   const handleChange = (event: SelectChangeEvent): void => {
@@ -191,44 +185,22 @@ const Index = (): JSX.Element => {
     callComp(async () => {
       try {
         await insert(request)
-        setShowSuccess(true)
+        await setMessage('Thêm trang blog thành công')
+        await setServerity('success')
+        await navigate('CompetitionManage')
       } catch (error) {
         console.error(error)
-        setShowError(true)
+        setMessage('Thêm trang blog thất bại')
+        setServerity('error')
       }
     })
   }
 
   return (
     <>
-      <Snackbar
-        open={showSuccess}
-        autoHideDuration={3000}
-        onClose={handleCloseSuccess}
-      >
-        <MuiAlert
-          onClose={handleCloseSuccess}
-          severity='success'
-          elevation={6}
-          variant='filled'
-        >
-          Acction successful!
-        </MuiAlert>
-      </Snackbar>
-      <Snackbar
-        open={showError}
-        autoHideDuration={3000}
-        onClose={handleCloseSuccess}
-      >
-        <MuiAlert
-          onClose={handleCloseError}
-          severity='error'
-          elevation={6}
-          variant='filled'
-        >
-          Acction Failed!
-        </MuiAlert>
-      </Snackbar>
+    {
+      message && <MessageAlert message={message} severity={serverity} />
+    }
       <LayoutAdmin>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
           <Grid xs={12}>
@@ -270,6 +242,7 @@ const Index = (): JSX.Element => {
                   id='demo-simple-select-autowidth'
                   value={dep}
                   onChange={handleChange}
+                  error={Boolean(errDep)}
                   label='Khoa'
                 >
                   {dataDep.map((item: any) => (
@@ -289,32 +262,66 @@ const Index = (): JSX.Element => {
                 justifyContent='flex-start'
                 style={{ width: '100%' }}
               >
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DateTimePicker
-                      slotProps={{
-                        textField: {
-                          helperText: errStartDate
-                        }
-                      }}
-                      onChange={startDateChange}
-                      label='Ngày bắt đầu'
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <DemoContainer components={['DatePicker']}>
-                    <DateTimePicker
-                      slotProps={{
-                        textField: {
-                          helperText: errEndDate
-                        }
-                      }}
-                      onChange={endDateChange}
-                      label='Ngày kết thúc'
-                    />
-                  </DemoContainer>
-                </LocalizationProvider>
+                <Box
+                  sx={{
+                    display:"flex",
+                    flexDirection:"column",
+                    gap:"10px"
+                  }}
+                >
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker']}>
+                      <DateTimePicker
+                        slotProps={{
+                          textField: {
+                            helperText: errStartDate
+                          }
+                        }}
+                        onChange={startDateChange}
+                        label='Ngày bắt đầu'
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                  {
+                    errStartDate === null 
+                    &&(
+                      <Box sx={{color:"red"}}>
+                        Nhập ngày bắt đầu
+                      </Box>
+                    )
+                  }
+
+                </Box>
+                <Box
+                  sx={{
+                    display:"flex",
+                    flexDirection:"column",
+                    gap:"10px"
+                  }}
+                >
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={['DatePicker']}>
+                      <DateTimePicker
+                        slotProps={{
+                          textField: {
+                            helperText: errEndDate
+                          }
+                        }}
+                        onChange={endDateChange}
+                        label='Ngày kết thúc'
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                  {
+                    errEndDate === null 
+                    &&(
+                      <Box sx={{color:"red"}}>
+                        Nhập ngày kết thúc
+                      </Box>
+                    )
+                  }
+
+                </Box>
               </Stack>
               <Stack
                 direction={'row'}
@@ -338,194 +345,6 @@ const Index = (): JSX.Element => {
               </Stack>
             </Stack>
           </Grid>
-          {/* <Grid xs={12} style={{ marginTop: '100px' }}>
-            <Stack direction={'row'} gap={'20px'}>
-              <Typography variant='h4' sx={{ fontWeight: 500, color: '#1976d2' }}>
-                Giải cá nhân
-              </Typography>
-              <Switch {...label} defaultChecked />
-            </Stack>
-            <div style={{ marginTop: '20px' }}>
-              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
-                <Checkbox {...label} defaultChecked />
-                <img src={gold} alt='' style={{ width: 30 }} />
-                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
-                  Hạng nhất
-                </span>
-                <TextField
-                  id='filled-search'
-                  label='Tên giải thưởng'
-                  type='search'
-                  variant='outlined'
-                  style={{ width: '100%' }}
-                />
-                <TextField
-                  id='filled-search'
-                  label='Số lượng'
-                  type='number'
-                  variant='outlined'
-                  style={{ width: '300px' }}
-                />
-              </Stack>
-              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
-                <Checkbox {...label} defaultChecked />
-                <img src={siver} alt='' style={{ width: 30 }} />
-                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
-                  Hạng nhì
-                </span>
-                <TextField
-                  id='filled-search'
-                  label='Tên giải thưởng'
-                  type='search'
-                  variant='outlined'
-                  style={{ width: '100%' }}
-                />
-                <TextField
-                  id='filled-search'
-                  label='Số lượng'
-                  type='number'
-                  variant='outlined'
-                  style={{ width: '300px' }}
-                />
-              </Stack>
-              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
-                <Checkbox {...label} defaultChecked />
-                <img src={bronze} alt='' style={{ width: 30 }} />
-                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
-                  Hạng ba
-                </span>
-                <TextField
-                  id='filled-search'
-                  label='Tên giải thưởng'
-                  type='search'
-                  variant='outlined'
-                  style={{ width: '100%' }}
-                />
-                <TextField
-                  id='filled-search'
-                  label='Số lượng'
-                  type='number'
-                  variant='outlined'
-                  style={{ width: '300px' }}
-                />
-              </Stack>
-              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
-                <Checkbox {...label} defaultChecked />
-                <img src={khuyenkhich} alt='' style={{ width: 30 }} />
-                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
-                  Khuyến khích
-                </span>
-                <TextField
-                  id='filled-search'
-                  label='Tên giải thưởng'
-                  type='search'
-                  variant='outlined'
-                  style={{ width: '100%' }}
-                />
-                <TextField
-                  id='filled-search'
-                  label='Số lượng'
-                  type='number'
-                  variant='outlined'
-                  style={{ width: '300px' }}
-                />
-              </Stack>
-            </div>
-          </Grid>
-          <Grid xs={12} style={{ marginTop: '100px' }}>
-            <Stack direction={'row'} gap={'20px'}>
-              <Typography variant='h4' sx={{ fontWeight: 500, color: '#1976d2' }}>
-                Giải tập thể
-              </Typography>
-              <Switch {...label} defaultChecked />
-            </Stack>
-            <div style={{ marginTop: '20px' }}>
-              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
-                <Checkbox {...label} defaultChecked />
-                <img src={gold} alt='' style={{ width: 30 }} />
-                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
-                  Hạng nhất
-                </span>
-                <TextField
-                  id='filled-search'
-                  label='Tên giải thưởng'
-                  type='search'
-                  variant='outlined'
-                  style={{ width: '100%' }}
-                />
-                <TextField
-                  id='filled-search'
-                  label='Số lượng'
-                  type='number'
-                  variant='outlined'
-                  style={{ width: '300px' }}
-                />
-              </Stack>
-              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
-                <Checkbox {...label} defaultChecked />
-                <img src={siver} alt='' style={{ width: 30 }} />
-                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
-                  Hạng nhì
-                </span>
-                <TextField
-                  id='filled-search'
-                  label='Tên giải thưởng'
-                  type='search'
-                  variant='outlined'
-                  style={{ width: '100%' }}
-                />
-                <TextField
-                  id='filled-search'
-                  label='Số lượng'
-                  type='number'
-                  variant='outlined'
-                  style={{ width: '300px' }}
-                />
-              </Stack>
-              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
-                <Checkbox {...label} defaultChecked />
-                <img src={bronze} alt='' style={{ width: 30 }} />
-                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
-                  Hạng ba
-                </span>
-                <TextField
-                  id='filled-search'
-                  label='Tên giải thưởng'
-                  type='search'
-                  variant='outlined'
-                  style={{ width: '100%' }}
-                />
-                <TextField
-                  id='filled-search'
-                  label='Số lượng'
-                  type='number'
-                  variant='outlined'
-                  style={{ width: '300px' }}
-                />
-              </Stack>
-              <Stack direction={'row'} gap={'20px'} alignItems={'center'}>
-                <Checkbox {...label} defaultChecked />
-                <img src={khuyenkhich} alt='' style={{ width: 30 }} />
-                <span style={{ display: 'inline-block', width: '180px', fontWeight: 500, color: '#1976d2' }}>
-                  Khuyến khích
-                </span>
-                <TextField
-                  id='filled-search'
-                  label='Tên giải thưởng'
-                  type='search'
-                  variant='outlined'
-                  style={{ width: '100%' }}
-                />
-                <TextField
-                  id='filled-search'
-                  label='Số lượng'
-                  type='number'
-                  variant='outlined'
-                  style={{ width: '300px' }}
-                />
-              </Stack>
-            </div>
-          </Grid> */}
           <Grid>
             <Button
               onClick={submitAddComp}
