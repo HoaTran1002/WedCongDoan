@@ -48,6 +48,7 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import useAuth from '~/hook/useAuth'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import { getOneCharacter } from '~/utils/stringUtils'
+import { getLogout } from '~/api/userApi'
 const drawerWidth = 250
 const pages = [
   { name: 'TRANG CHỦ', to: '/', iconComponent: <HomeIcon /> },
@@ -121,7 +122,11 @@ export default function SideBar(): JSX.Element {
   const handleDrawerClose = (): void => {
     setOpen(false)
   }
-
+  const logoutAccount = async (): Promise<void> => {
+    await getLogout().then((): void => {
+      window.location.reload()
+    })
+  }
   const handleGoToHistoryComp = (): void => {
     navigate('/HistoryCompetition')
   }
@@ -411,9 +416,7 @@ export default function SideBar(): JSX.Element {
                     sx={{
                       width: '100%'
                     }}
-                    onClick={(): void => {
-                      navigate('/CompetitionManage')
-                    }}
+                    onClick={logoutAccount}
                   >
                     ĐĂNG XUẤT
                   </Button>
@@ -426,9 +429,7 @@ export default function SideBar(): JSX.Element {
                     sx={{
                       width: '100%'
                     }}
-                    onClick={(): void => {
-                      navigate('/CompetitionManage')
-                    }}
+                    onClick={logoutAccount}
                   >
                     ĐĂNG XUẤT
                   </Button>

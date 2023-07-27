@@ -10,11 +10,17 @@ import Paper from '@mui/material/Paper'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
-import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
-import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye'
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import Typography from '@mui/material/Typography'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
-import {InputAdornment,FormControl, InputLabel,OutlinedInput,IconButton } from '@mui/material'
+import {
+  InputAdornment,
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  IconButton
+} from '@mui/material'
 import LoginImg from '~/assets/img/congDoanLogin.jpg'
 import CongDoanLogo from '~/assets/img/logo_CongDoan.png'
 import server from '~/api/axios'
@@ -44,13 +50,15 @@ function Copyright(props: any): JSX.Element {
 const theme = createTheme()
 export default function Login(): JSX.Element {
   const { profile } = useAuth()
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = React.useState(false)
   const [roleState, getRoleState] = useFetch()
-  const handleClickShowPassword = ():void => setShowPassword((show) => !show);
+  const handleClickShowPassword = (): void => setShowPassword((show) => !show)
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>):void => {
-    event.preventDefault();
-  };
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ): void => {
+    event.preventDefault()
+  }
   React.useEffect(() => {
     getRoleState(getAllRole)
   }, [])
@@ -67,16 +75,16 @@ export default function Login(): JSX.Element {
     }
     try {
       await server.post('/Users/Login', body)
-      console.log('thành công')
       location.reload()
     } catch (error) {
       console.log(error)
     }
   }
 
-  if (profile?.roleId === 1 ) {
+  if (profile?.roleId === 1 || profile?.roleId === 2) {
     return <Navigate to={'/CompetitionManage'} replace={true} />
-  } else if (profile) {
+  } else if (profile?.roleId == 3) {
+    console.log('okee')
     return <Navigate to={'/'} replace={true} />
   }
 
@@ -114,7 +122,7 @@ export default function Login(): JSX.Element {
               component='img'
               src={CongDoanLogo}
               sx={{
-                height:"70px"
+                height: '70px'
               }}
             />
             <Typography component='h1' variant='h5'>
@@ -145,24 +153,30 @@ export default function Login(): JSX.Element {
                 id='password'
                 autoComplete='current-password'
               /> */}
-              <FormControl sx={{mt:2, width: '100%' }} variant="outlined">
-                <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
+              <FormControl sx={{ mt: 2, width: '100%' }} variant='outlined'>
+                <InputLabel htmlFor='outlined-adornment-password'>
+                  Password
+                </InputLabel>
                 <OutlinedInput
-                  id="outlined-adornment-password"
+                  id='outlined-adornment-password'
                   type={showPassword ? 'text' : 'password'}
                   endAdornment={
-                    <InputAdornment position="end">
+                    <InputAdornment position='end'>
                       <IconButton
-                        aria-label="toggle password visibility"
+                        aria-label='toggle password visibility'
                         onClick={handleClickShowPassword}
                         onMouseDown={handleMouseDownPassword}
-                        edge="end"
+                        edge='end'
                       >
-                        {showPassword ? <VisibilityOffIcon /> : <RemoveRedEyeIcon />}
+                        {showPassword ? (
+                          <VisibilityOffIcon />
+                        ) : (
+                          <RemoveRedEyeIcon />
+                        )}
                       </IconButton>
                     </InputAdornment>
                   }
-                  label="Mật khẩu"
+                  label='Mật khẩu'
                   name='password'
                 />
               </FormControl>
@@ -172,7 +186,7 @@ export default function Login(): JSX.Element {
                 variant='contained'
                 sx={{ mt: 3, mb: 2 }}
               >
-               ĐĂNG NHẬP
+                ĐĂNG NHẬP
               </Button>
               <Grid container>
                 <Grid item xs>
@@ -182,7 +196,7 @@ export default function Login(): JSX.Element {
                 </Grid>
                 <Grid item>
                   <Link href='/Register' variant='body2'>
-                    {"Chưa có tài khoản, đăng ký ngay "}
+                    {'Chưa có tài khoản, đăng ký ngay '}
                   </Link>
                 </Grid>
               </Grid>

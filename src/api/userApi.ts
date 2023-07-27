@@ -9,6 +9,14 @@ export const getAllUser = async (): Promise<any> => {
     throw new Error(message)
   }
 }
+export const getLogout = async (): Promise<any> => {
+  try {
+    await server.get('/Users/Logout')
+  } catch (error: any) {
+    const message = error?.response?.data?.message ?? error.message
+    throw new Error(message)
+  }
+}
 
 export const insert = async ({
   userId,
@@ -90,15 +98,15 @@ export const editUser = async ({
   isDeleted: number
 }): Promise<void> => {
   try {
-    console.log(userId)
-    console.log(userName)
-    console.log(dateOfBirth)
-    console.log(email)
-    console.log(password)
-    console.log(userAddress)
-    console.log(roleId)
-    console.log(depId)
-    console.log(isDeleted)
+    // console.log(userId)
+    // console.log(userName)
+    // console.log(dateOfBirth)
+    // console.log(email)
+    // console.log(password)
+    // console.log(userAddress)
+    // console.log(roleId)
+    // console.log(depId)
+    // console.log(isDeleted)
 
     await server.put(`/Users`, {
       userId,

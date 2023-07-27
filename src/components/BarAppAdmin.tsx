@@ -5,7 +5,7 @@ import Drawer from '@mui/material/Drawer'
 import CssBaseline from '@mui/material/CssBaseline'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
-import { useLocation, Link } from 'react-router-dom'
+import { useLocation, Link, useNavigate } from 'react-router-dom'
 import List from '@mui/material/List'
 import Typography from '@mui/material/Typography'
 import Divider from '@mui/material/Divider'
@@ -36,6 +36,9 @@ import { getOneCharacter } from '~/utils/stringUtils'
 import useAuth from '~/hook/useAuth'
 import { getCookie, removeCookie, setCookie } from 'typescript-cookie'
 import { locale } from 'dayjs'
+import useFetch from '~/hook/useFetch'
+import { getLogout } from '~/api/userApi'
+import { textAlign } from '@mui/system'
 const drawerWidth = 250
 const pages = [
   { name: 'CUỘC THI', to: '/CompetitionManage', icon: <GridViewIcon /> },
@@ -57,12 +60,14 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 export default function Index(): JSX.Element {
   const { profile } = useAuth()
   const location = useLocation()
+  const navigate = useNavigate()
   const theme = useTheme()
   const [open, setOpen] = React.useState(false)
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   )
+  const [logOutState, setLogout] = useFetch()
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget)
@@ -82,10 +87,11 @@ export default function Index(): JSX.Element {
   const handleDrawerClose = (): void => {
     setOpen(false)
   }
+
   const logoutAccount = (): void => {
-    // document.cookie.replace('idx_web_cookie', 'fafdddddddd')
-    // setCookie('', 'tddddddddddddddđdddddddddsavdsavdsavdsvsdvdsv')
-    removeCookie('idx_web_cookie', { path: '/', domain: 'localhost' })
+    getLogout().then((): void => {
+      window.location.reload()
+    })
   }
 
   return (
@@ -210,11 +216,12 @@ export default function Index(): JSX.Element {
           >
             <MenuItem
               onClick={(): void => {
-                logoutAccount()
                 handleCloseUserMenu()
               }}
             >
-              <Typography textAlign='center'>Đăng xuất</Typography>
+              <Button onClick={logoutAccount} sx={{ textAlign: 'center' }}>
+                Đăng xuất
+              </Button>
             </MenuItem>
           </Menu>
         </Box>
