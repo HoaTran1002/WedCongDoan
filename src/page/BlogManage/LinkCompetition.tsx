@@ -244,7 +244,7 @@ const LinkCompetition = (props: PropLinkCompetition): JSX.Element => {
                               {itemBlog?.blogName}
                             </span>
                           </span>
-                          <Box
+                          {/* <Box
                             component='img'
                             src={`data:image/jpeg;base64,${itemBlog?.imgSrc}`}
                             sx={{
@@ -253,7 +253,7 @@ const LinkCompetition = (props: PropLinkCompetition): JSX.Element => {
                               objectFit: 'cover',
                               m: '20px 0'
                             }}
-                          />
+                          /> */}
                         </Box>
                       </Grid>
                       <Grid item md={6} xs={12}>
@@ -437,7 +437,7 @@ const LinkCompetition = (props: PropLinkCompetition): JSX.Element => {
                             {itemBlog?.blogName}
                           </span>
                         </span>
-                        <Box
+                        {/* <Box
                           component='img'
                           src={`data:image/jpeg;base64,${itemBlog?.imgSrc}`}
                           sx={{
@@ -446,7 +446,7 @@ const LinkCompetition = (props: PropLinkCompetition): JSX.Element => {
                             objectFit: 'cover',
                             m: '20px 0'
                           }}
-                        />
+                        /> */}
                       </Box>
                     </Grid>
                     <Grid item md={6} xs={12}>

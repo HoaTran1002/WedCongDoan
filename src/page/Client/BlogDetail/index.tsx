@@ -11,7 +11,7 @@ import { LoaderBlogSub,LoaderBlogDetail } from '~/components/loader'
 import { formatDay } from '~/utils/dateUtils'
 import { getAllComp } from '~/api/competitionApi'
 import useFetch from '~/hook/useFetch'
-import { ICompetition } from '~/interface/Interface'
+import { ICompetition, ICompetitionBlogsUser } from '~/interface/Interface'
 
 const Index = (): JSX.Element => {
     const {id} = useParams();
@@ -32,10 +32,7 @@ const Index = (): JSX.Element => {
         return user?.userName
     }
 
-    const getCompetitionName=(comId:number):string=>{
-        const itemComp:ICompetition = allComps?.payload?.find((r:ICompetition)=>r.comId === comId)
-        return itemComp?.comName || 'Tên không hợp lệ'
-    }
+    
     React.useEffect(() => {
       const fetchData = async (): Promise<any> => {
         try {
@@ -88,7 +85,11 @@ const Index = (): JSX.Element => {
         ...item,
         ...listBlogs?.find((elem: any) => elem.blogId === item.blogId)
     }));
-    console.log(itemBlogsCompetition)
+    const itemBlog:ICompetitionBlogsUser = itemBlogsCompetition?.find((r:ICompetitionBlogsUser)=>r.blogId === blogId)
+    const getCompetitionName=():string=>{
+        const itemComp:ICompetition = allComps?.payload?.find((r:ICompetition)=>r.comId === itemBlog.comId)
+        return itemComp?.comName || 'Tên không hợp lệ'
+    }
     const visibleRows = itemBlogsCompetition.slice(startIndex, endIndex);
     React.useEffect(() => {
         const request: { id: number } = { id: blogId };
@@ -99,7 +100,6 @@ const Index = (): JSX.Element => {
                 await setBlogDetai(response.blogDetai);
                 await setImgName(response.imgName);
                 await setImgSrc(response.imgSrc);
-                await setComId(response.comId)
             } catch (error) {
                 console.log(error);
             }
@@ -119,7 +119,7 @@ const Index = (): JSX.Element => {
                         rowSpacing={1}
                         columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                     >
-                        <Grid item md={9}>
+                        <Grid item md={9} xs={12}>
                             {
                                 getAllBlogs?.loading ? (
                                     <LoaderBlogDetail/>
@@ -194,11 +194,18 @@ const Index = (): JSX.Element => {
                                             >
                                                 <div dangerouslySetInnerHTML={{ __html: blogDetai }} />
                                                 <Box>
-                                                    Nhấn vào đây để hướng đến cuộc thi
+                                                    Nhấn vào đây để hướng đến cuộc thi &nbsp;
                                                     <Link
-                                                        to={'/'}
+                                                        to={`/ListExamCompetition?id=${itemBlog?.comId}`}
+                                                        style={{textDecoration:"none"}}
+                                                        onClick={():void=>{
+                                                            localStorage.setItem("competitionId",JSON.stringify (itemBlog?.comId))
+                                                        }}
                                                     >
-                                                        {getCompetitionName(comId)}
+
+                                                        <TitleName>
+                                                            {getCompetitionName()}
+                                                        </TitleName>
                                                     </Link>
                                                 </Box>
                                             </Box>
@@ -333,3 +340,11 @@ const BlogName = styled.h2`
   color: #1976d2;
   vertical-align: middle;
 `
+
+const TitleName = styled.span`
+  font-size: 16px;
+  color: #1565c0;
+  font-weight: 600;
+  text-decoration: none;
+`
+

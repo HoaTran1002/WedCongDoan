@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { Grid, Box, Typography, SxProps, Container, Button } from '@mui/material'
 import Layout from '~/components/layout/Layout'
 import CrownImg from '~/assets/img/icons8-crown-96.png'
@@ -11,7 +12,7 @@ import useAuth from '~/hook/useAuth'
 import { useNavigate } from 'react-router-dom'
 import { formatDay } from '~/utils/dateUtils'
 import WatchExam from './WatchExam'
-
+import RemoveRedEyeOutlinedIcon from '@mui/icons-material/RemoveRedEyeOutlined';
 interface IHistoryList{
     comId:number,
     cuid:number,
@@ -108,15 +109,15 @@ const HistoryCompetition = ():JSX.Element =>{
                                     </Box>
                                 ):(
                                     mergeHistoryList?.map((row:IHistoryList,index:number)=>(
-                                        <Grid key={index} item md={4} xs={12}>
+                                        <Grid key={index} item md={3} xs={12}>
                                             <Box
                                                 sx={{
                                                     borderRadius:"5px",
                                                     padding:"8px",
                                                     backgroundColor:"#e0f0ff",
                                                     display:"flex",
-                                                    gap:"10px",
-                                                    flexDirection:{xs:'column',md:'row'}
+                                                    flexDirection:"column",
+                                                    gap:"10px"
                                                 }}
                                             >
                                                 <Box
@@ -126,20 +127,20 @@ const HistoryCompetition = ():JSX.Element =>{
                                                         padding:"10px",
                                                         display:"flex",
                                                         flexDirection:"column",
-                                                        width:{xs:'100%',md:'70%'}
+                                                        width:"100%"
                                                     }}
                                                 >
                                                     <span>
-                                                        Tên cuộc thi: <span className='color-primary'>{getNameCompetition(row.comId)}</span>
+                                                        Tên cuộc thi: <TitleName>{getNameCompetition(row.comId)}</TitleName>
                                                     </span>
                                                     <span>
-                                                        Ngày thi : <span className='color-primary'>{formatDay(row.startTimes)}</span>
+                                                        Ngày thi : <TitleName>{formatDay(row.startTimes)}</TitleName>
                                                     </span>
                                                     <span>
-                                                        Thời gian bắt đầu : <span className='color-primary'>{formatTime(row.startTimes)}</span>
+                                                        Thời gian bắt đầu : <TitleName>{formatTime(row.startTimes)}</TitleName>
                                                     </span>
                                                     <span>
-                                                        Thời gian kết thúc : <span className='color-primary'>{formatTime(row.endTimes)}</span>
+                                                        Thời gian kết thúc : <TitleName>{formatTime(row.endTimes)}</TitleName>
                                                     </span>
                                                     <span>
                                                         Số câu đúng : <span className='color-primary'>{row.trueAns}</span>
@@ -154,16 +155,17 @@ const HistoryCompetition = ():JSX.Element =>{
                                                         borderRadius:"3px",
                                                         padding:"10px",
                                                         display:"flex",
-                                                        flexDirection:{xs:'row',md:'column'},
+                                                        flexDirection:'row',
                                                         alignItems:"center",
-                                                        justifyContent:"center",
+                                                        justifyContent:"space-evenly",
                                                         gap:"20px"
                                                     }}
                                                 >
                                                     <Button 
                                                         onClick={():void=>handleOpenWatchExam(row.cuid)}
+                                                        variant='outlined'
                                                     >
-                                                        Xem bài thi
+                                                        Xem bài thi <RemoveRedEyeOutlinedIcon sx={{ml:1}} />
                                                     </Button>
                                                     <Box
                                                         className='color-primary'
@@ -219,3 +221,9 @@ const HistoryCompetition = ():JSX.Element =>{
 }
 
 export default HistoryCompetition
+
+const TitleName = styled.span`
+  font-size: 16px;
+  color: #1565c0;
+  font-weight: 600;
+`
