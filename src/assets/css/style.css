@@ -228,7 +228,13 @@ body::-webkit-scrollbar-track {
   opacity: 1 !important;
 }
 
+.errorMessage .css-1wc848c-MuiFormHelperText-root{
+  color:rgb(224, 0, 0) !important
+}
 
+.errorMessage .css-1d3z3hw-MuiOutlinedInput-notchedOutline{
+  border-color: rgb(224, 0, 0) !important;
+}
 /* Animate*/
 
 @keyframes grayAnimation {

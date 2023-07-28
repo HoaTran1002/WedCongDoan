@@ -58,7 +58,9 @@ const FinishedExam =():JSX.Element =>{
                                     }}
                                 >
                                     <Button onClick={handleGoHome}>Trở về trang chủ</Button>
-                                    <Button variant='outlined'>Xem lại bài thi</Button>
+                                    <Button onClick={():void=>{
+                                        navigate('/HistoryCompetition')
+                                    }} variant='outlined'>Xem lại bài thi</Button>
                                 </Box>
                             </Box>
                         </Grid>

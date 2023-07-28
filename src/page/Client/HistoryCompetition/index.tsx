@@ -108,7 +108,7 @@ const HistoryCompetition = ():JSX.Element =>{
                                         <span>Bạn chưa thi cuộc thi nào</span>
                                     </Box>
                                 ):(
-                                    mergeHistoryList?.map((row:IHistoryList,index:number)=>(
+                                    mergeHistoryList?.reverse()?.map((row:IHistoryList,index:number)=>(
                                         <Grid key={index} item md={3} xs={12}>
                                             <Box
                                                 sx={{

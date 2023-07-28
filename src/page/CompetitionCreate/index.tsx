@@ -11,7 +11,8 @@ import {
   Stack,
   TextField
 , Snackbar, 
-Box} from '@mui/material'
+Box,
+FormHelperText} from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
@@ -37,8 +38,8 @@ const Index = (): JSX.Element => {
   const [examTimesValue, setExamTimes] = React.useState<string>('')
   const [errExamTimes, setErrExamTimes] = React.useState<string>('')
   const [startDateValue, setStartDate] = React.useState<string>('')
-  const [errStartDate, setErrStartDate] = React.useState<string | null>(null)
   const [endDateValue, setEndDate] = React.useState<string>('')
+  const [errStartDate, setErrStartDate] = React.useState<string | null>(null)
   const [errEndDate, setErrEndDate] = React.useState<string | null>(null)
   const [userQuanValue, setUerQuan] = React.useState<string>('')
   const [errUserQuan, setErrUserQuan] = React.useState<string>('')
@@ -50,7 +51,7 @@ const Index = (): JSX.Element => {
     callDep(getAllDep)
   }, [depState.loading])
 
-  const dataDep = depState.payload || [
+  const dataDep = depState?.payload || [
     { depId: 1, depName: 'Công Nghệ Thông Tin' },
     { depId: 2, depName: 'Công Nghệ Thực Phẩm' },
     { depId: 3, depName: 'Quản Trị Kinh Doanh' },
@@ -58,7 +59,7 @@ const Index = (): JSX.Element => {
     { depId: 5, depName: 'Luật' }
   ]
 
-  console.log(depState.loading)
+  
   const request: {
     comName: string
     examTimes: string
@@ -77,6 +78,7 @@ const Index = (): JSX.Element => {
 
   const handleChange = (event: SelectChangeEvent): void => {
     setDep(event.target.value)
+    setErrDep('')
     const value = event.target.value
     if (String(value) == '') {
       setErrDep('vui lòng chọn một khoa')
@@ -107,24 +109,13 @@ const Index = (): JSX.Element => {
     if (value) {
       const formattedDate = dayjs(value).format('YYYY-MM-DDTHH:mm:ss.SSS' + 'Z')
       setStartDate(formattedDate)
-      const values = formattedDate
-      if (String(values) == '') {
-        setErrStartDate('chọn ngày bắt đầu')
-      } else {
-        setErrEndDate(null)
-      }
+      setErrStartDate('')
     }
   }
   const endDateChange = (value: string | null): void => {
     const formattedDate = dayjs(value).format('YYYY-MM-DDTHH:mm:ss.SSS' + 'Z')
     setEndDate(formattedDate)
-
-    const values = formattedDate
-    if (String(values) == null) {
-      setErrEndDate('nhập ngày kết thúc')
-    } else {
-      setErrEndDate(null)
-    }
+    setErrEndDate('')
   }
   const userQuanChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
     setUerQuan(event.target.value)
@@ -154,14 +145,14 @@ const Index = (): JSX.Element => {
         errorMessage: 'Nhập thời gian thi'
       },
       {
-        condition: startDateValue === null,
+        condition: startDateValue === '',
         setError: setErrStartDate,
-        errorMessage: 'Chọn ngày bắt đầu'
+        errorMessage: 'nhập ngày bắt đầu'
       },
       {
-        condition: endDateValue === null,
+        condition: endDateValue === '',
         setError: setErrEndDate,
-        errorMessage: 'Chọn ngày kết thúc'
+        errorMessage: 'nhập ngày kết thúc'
       },
       {
         condition: userQuanValue === '',
@@ -187,7 +178,7 @@ const Index = (): JSX.Element => {
         await insert(request)
         await setMessage('Thêm trang blog thành công')
         await setServerity('success')
-        await navigate('CompetitionManage')
+        await navigate('/CompetitionManage')
       } catch (error) {
         console.error(error)
         setMessage('Thêm trang blog thất bại')
@@ -195,7 +186,7 @@ const Index = (): JSX.Element => {
       }
     })
   }
-
+  console.log(errStartDate,errEndDate,'-',startDateValue,endDateValue)
   return (
     <>
     {
@@ -203,7 +194,7 @@ const Index = (): JSX.Element => {
     }
       <LayoutAdmin>
         <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-          <Grid xs={12}>
+          <Grid item xs={12}>
             <Stack
               direction='row'
               spacing={20}
@@ -218,7 +209,7 @@ const Index = (): JSX.Element => {
               </Typography>
             </Stack>
           </Grid>
-          <Grid xs={12} style={{ marginTop: '10px' }}>
+          <Grid item xs={12} style={{ marginTop: '10px' }}>
             <Stack direction={'row'} alignItems='center' gap={5}>
               <TextField
                 onChange={comNameChange}
@@ -230,31 +221,58 @@ const Index = (): JSX.Element => {
                 error={Boolean(errComName)}
                 helperText={errComName}
               />
-              <FormControl
-                sx={{ m: 1, minWidth: 80 }}
-                style={{ width: '100%' }}
-              >
-                <InputLabel id='demo-simple-select-autowidth-label'>
-                  Khoa
-                </InputLabel>
-                <Select
-                  labelId='demo-simple-select-autowidth-label'
-                  id='demo-simple-select-autowidth'
-                  value={dep}
-                  onChange={handleChange}
-                  error={Boolean(errDep)}
-                  label='Khoa'
-                >
-                  {dataDep.map((item: any) => (
-                    <MenuItem key={item.depId} value={item.depId}>
-                      {item.depName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
+              {
+                errDep !== ''?(
+                  <FormControl 
+                    sx={{ m: 1, minWidth: 80 }}
+                    style={{ width: '100%' }}
+                    error
+                  >
+                    <InputLabel id="demo-simple-select-error-label">Khoa</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-error-label"
+                      id="demo-simple-select-error"
+                      value={dep}
+                      onChange={handleChange}
+                      label='Khoa'
+                    >
+                      {dataDep.map((item: any) => (
+                        <MenuItem key={item.depId} value={item.depId}>
+                          {item.depName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                    <FormHelperText>{errDep}</FormHelperText>
+                  </FormControl>
+                ):(
+                  <FormControl
+                    sx={{ m: 1, minWidth: 80 }}
+                    style={{ width: '100%' }}
+                  >
+                    <InputLabel id='demo-simple-select-autowidth-label'>
+                      Khoa
+                    </InputLabel>
+                    <Select
+                      labelId='demo-simple-select-autowidth-label'
+                      id='demo-simple-select-autowidth'
+                      value={dep}
+                      onChange={handleChange}
+                      label='Khoa'
+                      error={Boolean(errDep)}
+                    >
+                      {dataDep.map((item: any) => (
+                        <MenuItem key={item.depId} value={item.depId}>
+                          {item.depName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
+                )
+              }
             </Stack>
           </Grid>
-          <Grid xs={12} style={{ marginTop: '10px' }}>
+          <Grid item xs={12} style={{ marginTop: '10px' }}>
             <Stack direction={'row'} gap={5} style={{ width: '100%' }}>
               <Stack
                 direction={'row'}
@@ -274,7 +292,8 @@ const Index = (): JSX.Element => {
                       <DateTimePicker
                         slotProps={{
                           textField: {
-                            helperText: errStartDate
+                            className:errStartDate ? 'errorMessage' : '',
+                            helperText: errStartDate,
                           }
                         }}
                         onChange={startDateChange}
@@ -282,14 +301,6 @@ const Index = (): JSX.Element => {
                       />
                     </DemoContainer>
                   </LocalizationProvider>
-                  {
-                    errStartDate === null 
-                    &&(
-                      <Box sx={{color:"red"}}>
-                        Nhập ngày bắt đầu
-                      </Box>
-                    )
-                  }
 
                 </Box>
                 <Box
@@ -304,7 +315,8 @@ const Index = (): JSX.Element => {
                       <DateTimePicker
                         slotProps={{
                           textField: {
-                            helperText: errEndDate
+                            className:errEndDate ? 'errorMessage' : '',
+                            helperText: errEndDate,
                           }
                         }}
                         onChange={endDateChange}
@@ -312,15 +324,6 @@ const Index = (): JSX.Element => {
                       />
                     </DemoContainer>
                   </LocalizationProvider>
-                  {
-                    errEndDate === null 
-                    &&(
-                      <Box sx={{color:"red"}}>
-                        Nhập ngày kết thúc
-                      </Box>
-                    )
-                  }
-
                 </Box>
               </Stack>
               <Stack
@@ -345,7 +348,7 @@ const Index = (): JSX.Element => {
               </Stack>
             </Stack>
           </Grid>
-          <Grid>
+          <Grid item xs={12}>
             <Button
               onClick={submitAddComp}
               variant='contained'

@@ -236,9 +236,6 @@ const CompTable = (): JSX.Element => {
             </MuiAlert>
           </Snackbar>
         </>
-        {compState.loading || deps.loading ? (
-          <Loader />
-        ) : (
           <Grid
             container
             rowSpacing={1}
@@ -265,6 +262,7 @@ const CompTable = (): JSX.Element => {
                   }}
                 >
                   <TableWithFixedColumn
+                    isLoading={compState.loading || deps.loading}
                     rows={rows}
                     columns={columns}
                     maxWidth={1100}
@@ -274,7 +272,6 @@ const CompTable = (): JSX.Element => {
               </Grid>
             </>
           </Grid>
-        )}
         <Dialog
           open={openDelete}
           onClose={handleCloseDelete}
