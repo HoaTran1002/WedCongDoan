@@ -40,9 +40,7 @@ export default function UserTextFields(prop: {
   const [pass, setPass] = React.useState<string>(prop.password || '')
   const [gmail, setGmail] = React.useState(prop.email || '')
   const [address, setAddress] = React.useState<string>(prop.userAddress || '')
-  const [birthDay, setBirthDay] = React.useState<Dayjs | any>(
-    dayjs(prop.dateOfBirth).format('MM/DD/YYYY') || ''
-  )
+  const [birthDay, setBirthDay] = React.useState<Dayjs | null>(null)
   const [dep, setDep] = React.useState<number>(prop.depId || 0)
   const [role, setRole] = React.useState<number>(prop.roleId || 0)
   const [showSuccess, setShowSuccess] = React.useState(false)
@@ -86,9 +84,10 @@ export default function UserTextFields(prop: {
   const onchangeBirthDay = function (value: string | null): void {
     if (value) {
       const formattedDate = dayjs(value).format('YYYY-MM-DD')
-      setBirthDay(formattedDate)
+      setBirthDay(dayjs(formattedDate))
     }
   }
+
   const onchangeDep = function (
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
@@ -119,7 +118,7 @@ export default function UserTextFields(prop: {
   } = {
     userId: cccd,
     userName: userName,
-    dateOfBirth: birthDay,
+    dateOfBirth: String(birthDay),
     email: gmail,
     password: pass,
     userAddress: address,
@@ -239,7 +238,7 @@ export default function UserTextFields(prop: {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
-                  defaultValue={birthDay}
+                  value={birthDay}
                   onChange={onchangeBirthDay}
                   sx={{ width: '100%' }}
                   label='Ngày Sinh '

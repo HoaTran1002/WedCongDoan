@@ -46,9 +46,7 @@ export const AdminRoute: IPramsRoute[] = [
   { path: '/blogManage', element: <BlogManage /> },
   { path: '/BlogCreate', element: <BlogCreate /> },
   { path: '/BlogDetail', element: <BlogDetail /> },
-
   { path: '/Prize/Competition/:comId', element: <PrizeData /> },
-
   { path: '/ResultManage', element: <ResultManage /> }
 ]
 //tài khoản admin và giảng viên
@@ -56,8 +54,6 @@ export const TeacherAdminRoute = [
   { path: '/CompetitionManage', element: <CompetitionManage /> },
   { path: '/TestCreate', element: <TestCreate /> },
   { path: '/TestManage', element: <TestManage /> },
-  //   { path: '/Test', element: <Test /> },
-
   {
     path: '/TestCreate/Test/:examId/Competition/:comId',
     element: <TestCreate />
