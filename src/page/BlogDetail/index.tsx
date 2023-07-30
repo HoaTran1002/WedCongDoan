@@ -27,14 +27,7 @@ import Dropzone from 'react-dropzone'
 import useFetch from '~/hook/useFetch'
 const Index = (): JSX.Element => {
   const navigate = useNavigate();
-  useEffect(()=>{
-    const listCompetitionBlog = getComBlogs?.payload || [];
-    const competitionBlog = listCompetitionBlog.find((r:any)=>r.blogId === blogId)
-    setComId(competitionBlog?.comId)
-    setComBlogUserId(competitionBlog?.id)
-    setUserId(competitionBlog?.userId)
-    setPostDate(competitionBlog?.postDate)
-  },[])
+  
   const [blogName, setBlogName] = useState('')
   const [comBlogUserId, setComBlogUserId] = useState(0)
   const [userId, setUserId] = useState('')
@@ -181,30 +174,21 @@ const Index = (): JSX.Element => {
 
 
   useEffect(() => {
-    const fetchData = async () :Promise<any> => {
-      try {
-        const data = await getAllComp();
-        callAllComs(() => Promise.resolve(data));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
+    callAllComs(getAllComp);
   }, []);
 
   useEffect(() => {
-    const fetchData = async () :Promise<any> => {
-      try {
-        const data = await getAllCompetitionBlog();
-        callAllComBlogs(() => Promise.resolve(data));
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchData();
+    callAllComBlogs(getAllCompetitionBlog);
   }, []);
+
+  useEffect(()=>{
+    const listCompetitionBlog = getComBlogs?.payload || [];
+    const competitionBlog = listCompetitionBlog.find((r:any)=>r.blogId === blogId)
+    setComId(competitionBlog?.comId)
+    setComBlogUserId(competitionBlog?.id)
+    setUserId(competitionBlog?.userId)
+    setPostDate(competitionBlog?.postDate)
+  },[])
   return (
     <>
       <LayoutAdmin>

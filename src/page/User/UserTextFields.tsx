@@ -40,7 +40,9 @@ export default function UserTextFields(prop: {
   const [pass, setPass] = React.useState<string>(prop.password || '')
   const [gmail, setGmail] = React.useState(prop.email || '')
   const [address, setAddress] = React.useState<string>(prop.userAddress || '')
-  const [birthDay, setBirthDay] = React.useState<Dayjs | null>(null)
+  const [birthDay, setBirthDay] = React.useState<Dayjs | any>(
+    dayjs(prop.dateOfBirth).format('MM/DD/YYYY') || ''
+  )
   const [dep, setDep] = React.useState<number>(prop.depId || 0)
   const [role, setRole] = React.useState<number>(prop.roleId || 0)
   const [showSuccess, setShowSuccess] = React.useState(false)
@@ -56,6 +58,7 @@ export default function UserTextFields(prop: {
   const Roles: Role[] = roles.payload || []
   const Deps: Dep[] = departments.payload || []
   console.log(birthDay)
+  console.log(errorCccd, errorDep, errorUserName, errorGmail, 'lỗi')
   const onchangeUserName = function (
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
@@ -98,13 +101,6 @@ export default function UserTextFields(prop: {
   ): void {
     setRole(Number(event.target.value))
   }
-  const handleCloseSuccess = (): void => {
-    setShowSuccess(false)
-  }
-  const handleCloseError = (): void => {
-    setShowError(false)
-  }
-
   const requestData: {
     userId: string
     userName: string
@@ -128,6 +124,49 @@ export default function UserTextFields(prop: {
   }
 
   const onSubmitFormInsert = (): void => {
+    const errorConditions = [
+      {
+        condition: cccd === '',
+        setError: setErrorCccd,
+        errorMessage: 'Chưa nhập cccd'
+      },
+      {
+        condition: userName === '',
+        setError: setErrorUserName,
+        errorMessage: 'Chưa nhập tên người dùng'
+      },
+      {
+        condition: gmail === '',
+        setError: setErrorGmail,
+        errorMessage: 'Chưa nhập gmail'
+      },
+      {
+        condition: pass === '',
+        setError: setErrorPassword,
+        errorMessage: 'Chưa nhập mật khẩu'
+      },
+      {
+        condition: dep === 0,
+        setError: setErrorDep,
+        errorMessage: 'Chưa chọn khoa'
+      },
+      {
+        condition: role === 0,
+        setError: setErrorRole,
+        errorMessage: 'Chưa chọn quyền người dùng'
+      }
+    ]
+
+    for (const condition of errorConditions) {
+      if (condition.condition) {
+        condition.setError(condition.errorMessage)
+      }
+    }
+
+    const hasError = errorConditions.some((condition) => condition.condition)
+    if (hasError) {
+      return
+    }
     callInsertUser(async () => {
       try {
         await insert(requestData)
@@ -174,37 +213,10 @@ export default function UserTextFields(prop: {
       await setMessage('')
     }, 3000)
   }
+
   return (
     <>
       {message && <MessageAlert message={message} severity={severity} />}
-      <Snackbar
-        open={showSuccess}
-        autoHideDuration={3000}
-        onClose={handleCloseSuccess}
-      >
-        <MuiAlert
-          onClose={handleCloseSuccess}
-          severity='success'
-          elevation={6}
-          variant='filled'
-        >
-          Thao tác thành công
-        </MuiAlert>
-      </Snackbar>
-      <Snackbar
-        open={showError}
-        autoHideDuration={3000}
-        onClose={handleCloseSuccess}
-      >
-        <MuiAlert
-          onClose={handleCloseError}
-          severity='error'
-          elevation={6}
-          variant='filled'
-        >
-          Thao tác thất bại
-        </MuiAlert>
-      </Snackbar>
       {prop.edit ? (
         <>
           <Box
@@ -224,9 +236,10 @@ export default function UserTextFields(prop: {
             <TextField
               defaultValue={cccd}
               onChange={onchangeCCCD}
-              id='outlined-basic'
+              id='outlined-error-helper-text'
               label='CCCD'
-              variant='outlined'
+              error={Boolean(errorCccd)}
+              helperText={errorCccd}
             />
             <TextField
               defaultValue={userName}
@@ -234,6 +247,8 @@ export default function UserTextFields(prop: {
               label='Họ Và Tên'
               onChange={onchangeUserName}
               variant='outlined'
+              error={Boolean(errorUserName)}
+              helperText={errorUserName}
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
@@ -252,6 +267,8 @@ export default function UserTextFields(prop: {
               id='outlined-basic'
               label='Gmail'
               variant='outlined'
+              error={Boolean(errorGmail)}
+              helperText={errorGmail}
             />
             <TextField
               defaultValue={pass}
@@ -259,6 +276,8 @@ export default function UserTextFields(prop: {
               id='filled-basic'
               label='Mật Khẩu'
               variant='outlined'
+              error={Boolean(errorPassword)}
+              helperText={errorPassword}
             />
             <TextField
               defaultValue={address}
@@ -270,6 +289,8 @@ export default function UserTextFields(prop: {
 
             <TextField
               value={role}
+              error={Boolean(errorRole)}
+              helperText={errorRole}
               onChange={onchangeRole}
               id='selectDep'
               label='Chọn Quyền'
@@ -293,6 +314,8 @@ export default function UserTextFields(prop: {
             </TextField>
             <TextField
               value={dep}
+              error={Boolean(errorDep)}
+              helperText={errorDep}
               onChange={onchangeDep}
               id='selectDep'
               label='Chọn Khoa'
@@ -344,16 +367,21 @@ export default function UserTextFields(prop: {
             autoComplete='off'
           >
             <TextField
+              defaultValue={cccd}
               onChange={onchangeCCCD}
               id='outlined-basic'
               label='CCCD'
               variant='outlined'
+              error={Boolean(errorCccd)}
+              helperText={errorCccd}
             />
             <TextField
               id='filled-basic'
               label='Họ Và Tên'
               onChange={onchangeUserName}
               variant='outlined'
+              error={Boolean(errorUserName)}
+              helperText={errorUserName}
             />
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
@@ -369,20 +397,25 @@ export default function UserTextFields(prop: {
               id='outlined-basic'
               label='Gmail'
               variant='outlined'
+              error={Boolean(errorGmail)}
+              helperText={errorGmail}
             />
             <TextField
               onChange={onchangePass}
               id='filled-basic'
               label='Mật Khẩu'
               variant='outlined'
+              error={Boolean(errorPassword)}
+              helperText={errorPassword}
             />
-            {/* <TextField onChange={onchangeAddress} id='standard-basic' label='Địa Chỉ' variant='outlined' /> */}
 
             <TextField
               onChange={onchangeRole}
               id='selectDep'
               label='Chọn Quyền'
               select
+              error={Boolean(errorRole)}
+              helperText={errorRole}
             >
               {Roles == null ? (
                 <MenuItem value='10'>Ten</MenuItem>
@@ -405,6 +438,8 @@ export default function UserTextFields(prop: {
               id='selectDep'
               label='Chọn Khoa'
               select
+              error={Boolean(errorDep)}
+              helperText={errorDep}
             >
               {Deps == null ? (
                 <MenuItem value='10'>Ten</MenuItem>

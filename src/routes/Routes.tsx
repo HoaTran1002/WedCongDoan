@@ -27,7 +27,6 @@ import DepartmentManage from '~/page/Department'
 import ExamsManage from '~/page/ExamsManage'
 import FinishedExam from '~/page/Client/FinishedExam'
 import HistoryCompetition from '~/page/Client/HistoryCompetition'
-import PrizeCompetition from '~/page/Client/PrizeCompetition'
 import Error from '~/page/404'
 import ResultManage from '~/page/ResultManage'
 interface IPramsRoute {
@@ -63,7 +62,6 @@ export const TeacherAdminRoute = [
 //tài khoản admin,giảng viên, user
 export const ProtectedRoute: IPramsRoute[] = [
   { path: '/HistoryCompetition', element: <HistoryCompetition /> },
-  { path: '/PrizeCompetition', element: <PrizeCompetition /> },
   { path: '/Listcompetition', element: <Listcompetition /> },
   { path: '/ListExamCompetition', element: <ListExamCompetition /> },
   { path: '/ExamStart', element: <ExamStart /> },

@@ -64,6 +64,7 @@ const Index = (): JSX.Element => {
 
   React.useEffect(() => {
     callAllCompetitionBlogs(getAllCompetitionBlog)
+    
   }, [change])
   React.useEffect(() => {
     callBlog(getAllBlog)

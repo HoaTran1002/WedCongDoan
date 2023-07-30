@@ -25,15 +25,28 @@ export const isBeforeDate = (dateInput: string): boolean => {
     return false;
 };
 
-export const getTimeDifference=(startTimes:string,endTimes:string): number | null=> {
+export const getTimeDifferenceSeconds=(startTimes:string,endTimes:string): number => {
     const startTime = new Date(startTimes);
     const endTime = new Date(endTimes);
     if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
-      return null;
+      return 0;
     }
     const timeDifference = endTime.getTime() - startTime.getTime();
     return timeDifference / 1000;
 }
+export const getTimeDifference = (startTimes: string, endTimes: string): { hours: number, minutes: number, seconds: number } => {
+    const startTime = new Date(startTimes);
+    const endTime = new Date(endTimes);
+    if (isNaN(startTime.getTime()) || isNaN(endTime.getTime())) {
+        return { hours: 0, minutes: 0, seconds: 0 };
+    }
+    const timeDifference = endTime.getTime() - startTime.getTime();
+    const totalSeconds = Math.floor(timeDifference / 1000);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return { hours, minutes, seconds };
+};
 
 export const formatTime = (time:number):string => {
     const minutes = Math.floor(time / 60);

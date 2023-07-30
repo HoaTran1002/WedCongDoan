@@ -30,6 +30,7 @@ import TimerCount from './timeCounting'
 import useAuth from '~/hook/useAuth'
 import { getAllComp } from '~/api/competitionApi'
 import {InsertResult} from '~/api/resultApi'
+import MessageAlert from '~/components/MessageAlert'
 interface Question {
     idQues: number,
     contentQues: string,
@@ -64,6 +65,8 @@ const ExamStart = (): JSX.Element => {
     const [defaultCheck, setDefaultCheck] = React.useState<string>('')
     const [competition,setCompetition] = React.useState<any>([])
     const [change, setChange] = React.useState<boolean>(true)
+    const [message,setMessage] = React.useState<string>('')
+    const [severity,setSeverity] = React.useState<string>('')
     const [examTimes,setExamTimes] = React.useState(isNaN(parseInt(competition?.examTimes)) ? 0 : parseInt(competition?.examTimes));
 
     //=====================================================================
@@ -112,8 +115,8 @@ const ExamStart = (): JSX.Element => {
             console.log('thiếu câu hỏi')
             setRemainingQuestion(mergedArr)
         }else{
-            console.log(ansOfQues,questions);
-            localStorage.removeItem('ansOfQues')
+            // console.log(ansOfQues,questions);
+            // localStorage.removeItem('ansOfQues')
             await callIPickerQuestions(async () => {
                 try {
                     for (const item of ansOfQues) {
@@ -126,6 +129,9 @@ const ExamStart = (): JSX.Element => {
                     console.log('Thành công');
                 } catch (error) {
                     console.log(error);
+                    setMessage('Kết nối không ổn định, vui lòng tải lại trang!')
+                    setSeverity('error')
+                    return;
                 }
             })
             const trueAnswer = ansOfQues.reduce((count:number,curr:any)=>{
@@ -156,11 +162,14 @@ const ExamStart = (): JSX.Element => {
                 try {
                     await InsertResult(requestData);
                     console.log('thành công');
+                    localStorage.clear()
+                    navigate('/FinishedExam')
                 }catch (error) {
                     console.log(error);
+                    setMessage('Kết nối không ổn định, vui lòng tải lại trang!')
+                    setSeverity('error')
+                    return;
             }})
-            localStorage.clear()
-            navigate('/FinishedExam')
         }
         setOpenSubmitExam(false)
     }
@@ -255,6 +264,7 @@ const ExamStart = (): JSX.Element => {
     }, [location, navigate]);
     return (
         <>
+        {message && <MessageAlert message={message} severity={severity}/>}
             <Box
                 sx={{
                     display: "flex",

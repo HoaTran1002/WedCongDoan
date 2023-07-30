@@ -52,16 +52,8 @@ import { getLogout } from '~/api/userApi'
 const drawerWidth = 250
 const pages = [
   { name: 'TRANG CHỦ', to: '/', iconComponent: <HomeIcon /> },
-  {
-    name: 'DANH SÁCH CUỘC THI',
-    to: '/Listcompetition',
-    iconComponent: <FormatListBulletedIcon />
-  },
-  {
-    name: 'GIẢI THƯỞNG',
-    to: '/PrizeCompetition',
-    iconComponent: <EmojiEventsIcon />
-  }
+  { name: 'DANH SÁCH CUỘC THI', to: '/Listcompetition', iconComponent: <FormatListBulletedIcon /> },
+
 ]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 

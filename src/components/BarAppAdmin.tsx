@@ -34,19 +34,17 @@ import { blue, yellow } from '@mui/material/colors'
 import { SxProps } from '@mui/material'
 import { getOneCharacter } from '~/utils/stringUtils'
 import useAuth from '~/hook/useAuth'
-import { getCookie, removeCookie, setCookie } from 'typescript-cookie'
-import { locale } from 'dayjs'
 import useFetch from '~/hook/useFetch'
 import { getLogout } from '~/api/userApi'
 import { textAlign } from '@mui/system'
 const drawerWidth = 250
-const pages = [
-  { name: 'CUỘC THI', to: '/CompetitionManage', icon: <GridViewIcon /> },
-  { name: 'USER', to: '/User', icon: <PersonIcon /> },
-  { name: 'BLOG', to: '/BlogManage', icon: <WebIcon /> },
-  { name: 'KẾT QUẢ', to: '/ResultManage', icon: <AppsIcon /> },
-  { name: 'THÔNG TIN', to: '/SettingManage', icon: <AppsIcon /> },
-  { name: 'TRANG CHỦ', to: '/' }
+const pagesOfAdmin = [
+  { name: 'CUỘC THI', to: '/CompetitionManage', icon: <GridViewIcon />,roles:[1,2] },
+  { name: 'USER', to: '/User', icon: <PersonIcon />,roles:[1] },
+  { name: 'BLOG', to: '/BlogManage', icon: <WebIcon />,roles:[1] },
+  { name: 'KẾT QUẢ', to: '/ResultManage', icon: <AppsIcon />,roles:[1] },
+  { name: 'THÔNG TIN', to: '/SettingManage', icon: <AppsIcon />,roles:[1] },
+  { name: 'TRANG CHỦ', to: '/',roles:[1,2] }
 ]
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -117,26 +115,56 @@ export default function Index(): JSX.Element {
             flexDirection: 'column'
           }}
         >
-          {pages.map((page, index) => (
-            <Link
-              key={index}
-              style={{ color: 'white', textDecoration: 'none' }}
-              to={page.to}
-            >
-              <Button
-                key={index}
-                onClick={handleCloseNavMenu}
-                startIcon={page.icon}
-                sx={{
-                  ...buttonStyles,
-                  ...(location.pathname === page.to && activeButtonStyles)
-                }}
-                variant='contained'
-              >
-                {page.name}
-              </Button>
-            </Link>
-          ))}
+          {
+            pagesOfAdmin.map((page, index: number) => (
+              page.roles.find((r)=>r === profile?.roleId) ?(
+                <Link
+                  key={index}
+                  style={{ color: 'white', textDecoration: 'none' }}
+                  to={page.to}
+                >
+                  <Button
+                    key={index}
+                    onClick={handleCloseNavMenu}
+                    startIcon={page.icon}
+                    sx={{
+                      ...buttonStyles,
+                      ...(location.pathname === page.to && activeButtonStyles)
+                    }}
+                    variant='contained'
+                  >
+                    {page.name}
+                  </Button>
+                </Link>
+
+              ):(
+                <Button
+                  key={index}
+                  onClick={handleCloseNavMenu}
+                  startIcon={page.icon}
+                  sx={{
+                    padding: '10px',
+                    background: blue[100],
+                    boxShadow: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    flexDirection: 'row',
+                    color:"#666",
+                    cursor:"default",
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                      borderRadius: 'none',
+                      boxShadow: 'none'
+                    },
+                  }}
+                  variant='contained'
+                >
+                  {page.name}
+                </Button>
+              )
+            ))
+          }
         </Box>
       </Box>
       <Box
@@ -250,23 +278,25 @@ export default function Index(): JSX.Element {
         </DrawerHeader>
         <Divider />
         <List>
-          {pages.map((page, index) => (
-            <Link key={index} style={{ textDecoration: 'none' }} to={page.to}>
-              <ListItem key={index} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>{page.icon}</ListItemIcon>
-                  <ListItemText>
-                    <span
-                      className='color-primary'
-                      style={{ fontWeight: '600' }}
-                    >
-                      {page.name}
-                    </span>
-                  </ListItemText>
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
+          {
+            pagesOfAdmin.map((page, index) => (
+              <Link key={index} style={{ textDecoration: 'none' }} to={page.to}>
+                <ListItem key={index} disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>{page.icon}</ListItemIcon>
+                    <ListItemText>
+                      <span
+                        className='color-primary'
+                        style={{ fontWeight: '600' }}
+                      >
+                        {page.name}
+                      </span>
+                    </ListItemText>
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            ))
+          }
         </List>
       </Drawer>
     </Box>

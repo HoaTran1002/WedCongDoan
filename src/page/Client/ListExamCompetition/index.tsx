@@ -40,6 +40,16 @@ import {
   IUser
 } from '~/interface/Interface'
 import { formatDay } from '~/utils/dateUtils'
+interface IUserResult {
+  comId: number
+  cuid: number
+  endTimes: string
+  falseAns: number
+  resId: number
+  startTimes: string
+  trueAns: number
+  userId: string
+}
 export default function Index(): JSX.Element {
   const navigate = useNavigate()
   const location = useLocation()
@@ -64,6 +74,16 @@ export default function Index(): JSX.Element {
   const listComExam = getAllCompExams?.payload?.filter(
     (r: ICompetitionExam) => r.comId === comId
   )
+  const listUserInComp: ICompetitionUser[] = getAllCompUsers?.payload?.filter((r: ICompetitionUser) => r.comId === comId)
+  const listUserHasJoinComp = getAllResults?.payload?.reduce((newList: IUserResult[], curr: IResult) => {
+      const itemCompUser = listUserInComp?.find((r: ICompetitionUser) => r.cuid === curr.cuid)
+      if (itemCompUser !== undefined)
+          newList.push({
+              ...curr,
+              ...itemCompUser
+          })
+      return newList
+  }, [])
   const listDep = getAllDeps?.payload
   const getDepName = (id: number): string => {
     const dep = listDep?.find((r: IDepartment) => r.depId === id)
@@ -106,7 +126,6 @@ export default function Index(): JSX.Element {
   const isBeforeDate = (dateInput:string):boolean => {
     const date = new Date(dateInput);
     const currentDate = new Date();
-
     console.log(date,currentDate)
     if (date > currentDate) {
       return true;
@@ -521,7 +540,7 @@ export default function Index(): JSX.Element {
       </Layout>
       {openRank && (
         <>
-          <Ranking callback={handleExitRank} />
+          <Ranking  callback={handleExitRank} listuser={listUserHasJoinComp} />
         </>
       )}
     </>

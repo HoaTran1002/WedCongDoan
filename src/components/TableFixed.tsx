@@ -4,11 +4,13 @@ import {
     SxProps,
     Pagination
 } from '@mui/material'
+import { Loader } from './loader';
 
 export interface ColumnsProps {
     headerName?: string | null,
     field: string,
     type?: string,
+    
     getActions?: (params?: any) => JSX.Element[];
 }
 interface TableWithFixedColumnProps {
@@ -17,13 +19,15 @@ interface TableWithFixedColumnProps {
     maxWidth?: number;
     maxHeight?: number;
     numberItems?: number;
+    isLoading?:boolean,
 }
 export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
     columns,
     rows,
     maxWidth,
     maxHeight,
-    numberItems
+    numberItems,
+    isLoading
 }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [maxWidthTable, setMaxWidthTable] = useState<number>(maxWidth || 700);
@@ -197,45 +201,70 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                         ...scrollable_x,
                                     }}
                                 >
-                                    <Box component='table' sx={{ borderCollapse: 'collapse', width: "100%" , mb:5}}>
-                                        <Box
-                                            component='thead'
-                                        >
-                                            <tr>
-                                                {columns.filter(r => r.field !== 'actions').map((row, index) => (
-                                                    <Box
-                                                        component='td'
-                                                        key={index}
-                                                        sx={itemsColumnsHeader}
-                                                    >
-                                                        {row.headerName}
-                                                    </Box>
-                                                ))}
-                                            </tr>
-                                        </Box>
-                                        <tbody >
-                                            {rows.map((row, index: number) => (
-                                                <tr key={index}>
-                                                    {columns.filter(r => r.field !== 'actions').map((column: any, columnIndex: number) => (
-                                                        <Box
-                                                            component='td'
-                                                            sx={itemsColumnsRows}
-                                                            key={columnIndex}
-                                                        >
-                                                            {row[column.field]}
-                                                        </Box>
+                                    {
+                                        !isLoading ?(
+                                            <Box component='table' sx={{ borderCollapse: 'collapse', width: "100%" , mb:5}}>
+                                                <Box
+                                                    component='thead'
+                                                >
+                                                    <tr>
+                                                        {columns.filter(r => r.field !== 'actions').map((row, index) => (
+                                                            <Box
+                                                                component='td'
+                                                                key={index}
+                                                                sx={itemsColumnsHeader}
+                                                            >
+                                                                {row.headerName}
+                                                            </Box>
+                                                        ))}
+                                                    </tr>
+                                                </Box>
+                                                <tbody >
+                                                    {rows.map((row, index: number) => (
+                                                        <tr key={index}>
+                                                            {columns.filter(r => r.field !== 'actions').map((column: any, columnIndex: number) => (
+                                                                <Box
+                                                                    component='td'
+                                                                    sx={itemsColumnsRows}
+                                                                    key={columnIndex}
+                                                                >
+                                                                    {row[column.field]}
+                                                                </Box>
+                                                            ))}
+                                                        </tr>
                                                     ))}
-                                                </tr>
-                                            ))}
-                                            <tr
-                                                style={{
-                                                    height:"50px"
-                                                }}
-                                            >
+                                                    <tr
+                                                        style={{
+                                                            height:"50px"
+                                                        }}
+                                                    >
 
-                                            </tr>
-                                        </tbody>
-                                    </Box>
+                                                    </tr>
+                                                </tbody>
+                                            </Box>
+                                        ):(
+                                            <Box sx={{width:'100%'}}>
+                                                <Box component='table' sx={{ borderCollapse: 'collapse', width: "100%" , mb:5}}>
+                                                    <Box
+                                                        component='thead'
+                                                    >
+                                                        <tr>
+                                                            {columns.filter(r => r.field !== 'actions').map((row, index) => (
+                                                                <Box
+                                                                    component='td'
+                                                                    key={index}
+                                                                    sx={itemsColumnsHeader}
+                                                                >
+                                                                    {row.headerName}
+                                                                </Box>
+                                                            ))}
+                                                        </tr>
+                                                    </Box>
+                                                </Box>
+                                                <Loader/>
+                                            </Box>
+                                        )
+                                    }
                                 </Box>
                                 <Box
                                     sx={{

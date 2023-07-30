@@ -91,6 +91,11 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
         setUserSearch('')
         setWhenSearch(true)
     }
+    const handleKeyPressEnter = (event: React.KeyboardEvent<HTMLDivElement>): void => {
+        if (event.key === 'Enter') {
+            handleSearchUser(userSearch);
+        }
+    };
     console.log(userSearch);
 
     const handleViewExamUser = (cuid: number, userId: string): void => {
@@ -230,79 +235,203 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
                                     <Loader />
                                 ) : (
                                     prop.type === 'listUsers' ? (
-                                        listUserHasJoinComp?.map((r: IUserResult, index: number) => (
-                                            <Box key={index} sx={componentUserJoinInfo}>
-                                                <Box>
-                                                    <span>
-                                                        UID:&nbsp;
-                                                    </span>
-                                                    <span
-                                                        className='color-primary'
-                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                    >
-                                                        {r.userId}
-                                                    </span>
-                                                </Box>
-                                                <Box>
-                                                    <span>Tên thí sinh:&nbsp;</span>
-                                                    <span
-                                                        className='color-primary'
-                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                    >
-                                                        {getNameUserById(r.userId)}
-                                                    </span>
-                                                </Box>
-                                                <Box>
-                                                    <span>Thời gian bắt đầu:&nbsp;</span>
-                                                    <span
-                                                        className='color-primary'
-                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                    >
-                                                        {formatDay(r.startTimes)}
-                                                    </span>
-                                                </Box>
-                                                <Box>
-                                                    <span>Thời gian kết thúc:&nbsp;</span>
-                                                    <span
-                                                        className='color-primary'
-                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                    >
-                                                        {formatDay(r.endTimes)}
-                                                    </span>
-                                                </Box>
-                                                <Box>
-                                                    <span>Giờ bắt đầu:&nbsp;</span>
-                                                    <span
-                                                        className='color-primary'
-                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                    >
-                                                        {formatTimeHour(r.startTimes)}
-                                                    </span>
-                                                </Box>
-                                                <Box>
-                                                    <span>Giờ kết thúc:&nbsp;</span>
-                                                    <span
-                                                        className='color-primary'
-                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                    >
-                                                        {formatTimeHour(r.endTimes)}
-                                                    </span>
-                                                </Box>
-                                                <Box>
-                                                    <span>Thời gian hoàn thành:&nbsp;</span>
-                                                    <span
-                                                        className='color-primary'
-                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                    >
-                                                        {getTimeDifference(r.startTimes,r.endTimes)}
-                                                    </span>
-                                                </Box>
+                                        <Box
+                                            onKeyDown={handleKeyPressEnter}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    borderRadius: "4px",
+                                                    border: "1px solid #1565c0",
+                                                    padding: "5px",
+                                                    display: "flex",
+                                                    alignItems: "center",
+                                                    gap: "10px",
+                                                    top: "70px",
+                                                    position: "absolute",
+                                                    left: "8px",
+                                                    right: "8px",
+                                                    backgroundColor: "white"
+                                                }}
+                                            >
+                                                <Box
+                                                    placeholder='Tìm UID hoặc tên thí sinh'
+                                                    component='input'
+                                                    type="text"
+                                                    sx={{
+                                                        fontSize: "16px",
+                                                        outline: "none",
+                                                        width: "100%",
+                                                        border: "none"
+                                                    }}
+                                                    value={userSearch}
+                                                    onChange={handleSearchChange}
+                                                />
+                                                <Box component='span' onClick={(): void => setWhenSearch(false)}><RefreshIcon /></Box>
+                                                <Button
+                                                    variant='contained'
+                                                    onClick={(): void => handleSearchUser(userSearch)}
+
+                                                >
+                                                    <SearchIcon />
+                                                </Button>
                                             </Box>
-                                        ))
+                                            <Box
+                                                sx={{
+                                                    mt: 8
+                                                }}
+                                            >
+                                                {
+                                                    whenSearch ? (
+                                                        listUserWhenSearch?.map((r: IUserResult, index: number) => (
+                                                            <Box key={index} sx={componentUserJoinInfo}>
+                                                                <Box>
+                                                                    <span>
+                                                                        UID:&nbsp;
+                                                                    </span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {r.userId}
+                                                                    </span>
+                                                                </Box>
+                                                                <Box>
+                                                                    <span>Tên thí sinh:&nbsp;</span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {getNameUserById(r.userId)}
+                                                                    </span>
+                                                                </Box>
+                                                                <Box>
+                                                                    <span>Thời gian bắt đầu:&nbsp;</span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {formatDay(r.startTimes)}
+                                                                    </span>
+                                                                </Box>
+                                                                <Box>
+                                                                    <span>Thời gian kết thúc:&nbsp;</span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {formatDay(r.endTimes)}
+                                                                    </span>
+                                                                </Box>
+                                                                <Box>
+                                                                    <span>Giờ bắt đầu:&nbsp;</span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {formatTimeHour(r.startTimes)}
+                                                                    </span>
+                                                                </Box>
+                                                                <Box>
+                                                                    <span>Giờ kết thúc:&nbsp;</span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {formatTimeHour(r.endTimes)}
+                                                                    </span>
+                                                                </Box>
+                                                                <Box>
+                                                                    <span>Thời gian hoàn thành:&nbsp;</span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {`${getTimeDifference(r.startTimes, r.endTimes).hours.toString().padStart(2, '0')}:${getTimeDifference(r.startTimes, r.endTimes).minutes.toString().padStart(2, '0')}:${getTimeDifference(r.startTimes, r.endTimes).seconds.toString().padStart(2, '0')}s`}
+                                                                    </span>
+                                                                </Box>
+                                                            </Box>
+                                                        ))
+
+                                                    ) : (
+                                                        listUserHasJoinComp?.map((r: IUserResult, index: number) => (
+                                                            <Box key={index} sx={componentUserJoinInfo}>
+                                                                <Box>
+                                                                    <span>
+                                                                        UID:&nbsp;
+                                                                    </span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {r.userId}
+                                                                    </span>
+                                                                </Box>
+                                                                <Box>
+                                                                    <span>Tên thí sinh:&nbsp;</span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {getNameUserById(r.userId)}
+                                                                    </span>
+                                                                </Box>
+                                                                <Box>
+                                                                    <span>Thời gian bắt đầu:&nbsp;</span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {formatDay(r.startTimes)}
+                                                                    </span>
+                                                                </Box>
+                                                                <Box>
+                                                                    <span>Thời gian kết thúc:&nbsp;</span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {formatDay(r.endTimes)}
+                                                                    </span>
+                                                                </Box>
+                                                                <Box>
+                                                                    <span>Giờ bắt đầu:&nbsp;</span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {formatTimeHour(r.startTimes)}
+                                                                    </span>
+                                                                </Box>
+                                                                <Box>
+                                                                    <span>Giờ kết thúc:&nbsp;</span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {formatTimeHour(r.endTimes)}
+                                                                    </span>
+                                                                </Box>
+                                                                <Box>
+                                                                    <span>Thời gian hoàn thành:&nbsp;</span>
+                                                                    <span
+                                                                        className='color-primary'
+                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
+                                                                    >
+                                                                        {`${getTimeDifference(r.startTimes, r.endTimes).hours.toString().padStart(2, '0')}:${getTimeDifference(r.startTimes, r.endTimes).minutes.toString().padStart(2, '0')}:${getTimeDifference(r.startTimes, r.endTimes).seconds.toString().padStart(2, '0')}s`}
+                                                                    </span>
+                                                                </Box>
+                                                            </Box>
+                                                        ))
+                                                    )
+                                                }
+
+                                            </Box>
+                                        </Box>
                                     ) : (
                                         <Grid container spacing={1} sx={{ height: "100%" }}>
                                             <Grid item md={4} >
                                                 <Box
+                                                    onKeyDown={handleKeyPressEnter}
                                                     sx={{
                                                         height: "100%",
                                                         width: "100%",
