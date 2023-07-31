@@ -10,7 +10,7 @@ import MuiAlert from '@mui/material/Alert'
 import { getAllDep } from '~/api/departmentApi'
 import { getAllRole } from '~/api/roleApi'
 import dayjs, { Dayjs } from 'dayjs'
-import { v4 as uuidv4 } from 'uuid'
+
 import useFetch from '~/hook/useFetch'
 import { editUser, insert } from '~/api/userApi'
 import MessageAlert from '~/components/MessageAlert'

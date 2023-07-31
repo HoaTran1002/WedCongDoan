@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { v4 as uuidv4 } from 'uuid'
 
 import useFetch from '~/hook/useFetch'
 import Button from '@mui/material/Button'

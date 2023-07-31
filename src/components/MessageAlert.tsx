@@ -1,7 +1,7 @@
 import { Alert, Snackbar, styled } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import MuiAlert, { AlertColor } from '@mui/material/Alert'
-import { v4 as uuidv4 } from 'uuid'
+
 interface IMessage {
   message: string
   severity: string
