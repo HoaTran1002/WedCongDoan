@@ -24,7 +24,6 @@ const ResultManage = (): JSX.Element => {
     const [compState, callComp] = useFetch()
     const [deps, depCall] = useFetch()
     const [openModalListUser, setOpenModalListUser] = React.useState<boolean>(false);
-    const [openModalResult, setOpenModalResult] = React.useState<boolean>(false);
     const [comId, setComId] = React.useState<number>(0)
 
     const getNameDep = (idDep: number): string => {
@@ -44,13 +43,6 @@ const ResultManage = (): JSX.Element => {
     const handleOpenModalListUser = (comId: number): void => {
         setComId(comId)
         setOpenModalListUser(true)
-    }
-    const handleCloseModalResult = (): void => {
-        setOpenModalResult(false)
-    }
-    const handleOpenModalResult = (comId: number): void => {
-        setComId(comId)
-        setOpenModalResult(true)
     }
     const columns: ColumnsProps[] = [
         {
@@ -85,15 +77,6 @@ const ResultManage = (): JSX.Element => {
             field: 'actions',
             type: 'actions',
             getActions: (params: any) => [
-                <Tooltip key='detailResult' title='Xem kết quả' placement='top-start'>
-                    <Button
-                        sx={{ width: 50 }}
-                        variant='outlined'
-                        onClick={(): void => handleOpenModalResult(params.comId)}
-                    >
-                        <DensitySmallIcon />
-                    </Button>
-                </Tooltip>,
                 <Tooltip key='detailUser' title='Danh sách thí sinh' placement='top-start'>
                     <Button
                         sx={{ width: 50 }}
@@ -103,7 +86,6 @@ const ResultManage = (): JSX.Element => {
                         <PersonIcon />
                     </Button>
                 </Tooltip>,
-
             ]
         }
     ]
@@ -160,9 +142,6 @@ const ResultManage = (): JSX.Element => {
                 </Grid>
                 {
                     openModalListUser && <ModalResultManage close={handleCloseModalListUser} comId={comId} type='listUsers'   />
-                }
-                {
-                    openModalResult && <ModalResultManage close={handleCloseModalResult} comId={comId} type='listResult'  />
                 }
             </Grid>
         </LayoutAdmin>

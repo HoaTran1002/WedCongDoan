@@ -44,11 +44,19 @@ const TableUser = (): JSX.Element => {
         dateofbirth: formatDay(user.dateOfBirth),
         email: user.email,
         password: user.password,
-        useraddress: user.userAddress,
         roleId: user.roleId,
         depId: user.depId
       })) || []
-
+      const formatDateYYYY_DD_MM = (inputDate: string):string => {
+        const parts = inputDate.split('/').map((part) => part.trim());
+        if (parts.length !== 3) {
+          throw new Error('Invalid date format');
+        }
+      
+        const [day, month, year] = parts;
+        const formattedDate = `${year}-${month}-${day}`;
+        return formattedDate;
+      };
   const handleDelete = async (id: string): Promise<void> => {
     const request: { _id: string; value: number } = {
       _id: id,
@@ -56,10 +64,9 @@ const TableUser = (): JSX.Element => {
     }
     await callDelete(async (): Promise<void> => {
       await UpdateIsDeleted(request)
-      // setShowSuccess(true)
     })
     setMessage('đã xoá user!')
-    setServerity('info')
+    setServerity('success')
     setLoading(!loading)
   }
 
@@ -77,10 +84,6 @@ const TableUser = (): JSX.Element => {
       headerName: 'Mật Khẩu'
     },
     {
-      field: 'useraddress',
-      headerName: 'Địa Chỉ'
-    },
-    {
       field: 'actions',
       type: 'actions',
       getActions: (params: any) => [
@@ -88,26 +91,24 @@ const TableUser = (): JSX.Element => {
           key='edit'
           id={params.id}
           userName={params.username}
-          dateOfBirth={params.dateofbirth}
+          dateOfBirth={formatDateYYYY_DD_MM(params.dateofbirth)}
           email={params.email}
           password={params.password}
           userAddress={params.useraddress}
           roleId={params.roleId}
           depId={params.depId}
         />,
-        <Tooltip key='delete' title='Xóa'>
-          <ModalDelete
-            callBack={(): void => {
-              handleDelete(params.id)
-            }}
-            content={'bạn có muốn xoá người dùng này?'}
-            question={'cảnh báo!!'}
-          />
-
-          {/* <IconButton onClick={(): void => handleDelete(params.id)}>
-            <DeleteIcon color='error' />
-          </IconButton> */}
-        </Tooltip>
+        <>
+          <Tooltip key='delete' title='Xóa'>
+            <ModalDelete
+              callBack={(): void => {
+                handleDelete(params.id)
+              }}
+              content={'bạn có muốn xoá người dùng này?'}
+              question={'cảnh báo!!'}
+            />
+          </Tooltip>
+        </>
       ]
     }
   ]
