@@ -5,10 +5,11 @@ import {
     Button,
     Stack,
     Tooltip,
-    Snackbar,
+    IconButton,
     Box,
     SxProps
 } from '@mui/material'
+import styled from 'styled-components'
 import RefreshIcon from '@mui/icons-material/Refresh';
 import CloseIcon from '@mui/icons-material/Close';
 import { TableWithFixedColumn } from '~/components/TableFixed';
@@ -26,6 +27,7 @@ import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SearchIcon from '@mui/icons-material/Search';
 import { formatDay, formatTime, formatTimeHour, getTimeDifference } from '~/utils/dateUtils';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 interface PropsResultManage {
     comId: number
     close: () => void;
@@ -63,6 +65,8 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
     const [allPickerQuesForUser, setAllPickerQuesForUser] = React.useState<IQuestionsUserPicker[]>([])
     const [listUserWhenSearch, setListUserWhenSearch] = React.useState<IUserResult[]>([])
     const [whenSearch, setWhenSearch] = React.useState<boolean>(false)
+    const [showResult,setShowResult] = React.useState<boolean>(false)
+    const [userId ,setUserId] = React.useState<string>('')
 
     const getNameUserById = (userId: string): string => {
         const user = allUsers?.payload?.find((r: IUser) => r.userId === userId)
@@ -112,7 +116,11 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
         setAllPickerQuesForUser(mergeQuestionsPicker)
 
     }
-
+    const showResultUser = (cuid:number,userId:string):void=>{
+        setUserId(userId)
+        handleViewExamUser(cuid,userId);
+        setShowResult(true)
+    }
 
 
     React.useEffect(() => {
@@ -194,14 +202,7 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
                             gap: "5px"
                         }}
                     >
-                        {
-                            prop.type === 'listUsers' ? (
-                                <span>DANH SÁCH DỰ THI</span>
-                            ) : (
-                                <span>KẾT QUẢ DỰ THI CỦA THÍ SINH</span>
-                            )
-
-                        }
+                        <span>DANH SÁCH DỰ THI</span>
 
                     </h3>
                     <Box
@@ -234,9 +235,264 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
                                 allResults?.loading && allCompUsers?.loading && allUsers?.loading ? (
                                     <Loader />
                                 ) : (
-                                    prop.type === 'listUsers' ? (
+                                    <Box
+                                        sx={{
+                                            width:"100%",
+                                            display: "flex",
+                                            overflow: "hidden",
+                                            transition: "all 0.3s ease",
+                                        }}
+                                    >
+                                        <Box
+                                            sx={{
+                                                overflow:"unset",
+                                                width:showResult ? '100%' :'0px',
+                                                opacity:showResult?'1':'0',
+                                                transition: 'all 0.3s ease',
+                                                position:"relative"
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    position:"absolute",
+                                                    left:0,
+                                                    right:0,
+                                                    display:"flex",
+                                                    justifyContent:"space-between",
+                                                    alignItems:"center"
+                                                }}
+                                            >
+                                                <Box
+                                                    sx={{
+                                                        display:"flex",
+                                                        gap:"20px"
+                                                    }}
+                                                >
+                                                    <span>UID:&nbsp;<TitleName>{userId}</TitleName></span>
+                                                    <span>Tên thí sinh:&nbsp;<TitleName>{getNameUserById(userId)}</TitleName></span>
+                                                </Box>
+                                                <IconButton aria-label="delete" onClick={():void=>setShowResult(false)}>
+                                                    <ArrowForwardIcon />
+                                                </IconButton>
+                                            </Box>
+                                            <Box
+                                                sx={{
+                                                    display: "block",
+                                                    flexDirection: "column",
+                                                    gap: "10px",
+                                                    width: "100%",
+                                                    overflowY: "scroll",
+                                                    height: "450px",
+                                                    '&::-webkit-scrollbar': {
+                                                        display: "none"
+                                                    },
+                                                    mt: 5
+                                                }}
+                                            >
+                                                {
+                                                    allPickerQuesForUser?.map((r: IQuestionsUserPicker, index: number) => (
+                                                        <Box
+                                                            key={index}
+                                                            sx={{
+                                                                width: "100%",
+                                                                mb: 2,
+                                                                backgroundColor: "#1565c0   ",
+                                                                padding: "3px",
+                                                                borderRadius: "3px",
+                                                                position: "relative"
+                                                            }}
+                                                        >
+                                                            {
+                                                                r.answer.trim() === r.trueAnswer.trim() ?
+                                                                    (
+                                                                        <Box
+                                                                            sx={{
+                                                                                backgroundColor: "white",
+                                                                                position: "absolute",
+                                                                                right: "10px",
+                                                                                top: "10px",
+                                                                                height: "17px",
+                                                                                width: "20px",
+                                                                                borderRadius: "50%",
+                                                                                display: "flex",
+                                                                                alignItems: "center",
+                                                                                justifyContent: "center"
+                                                                            }}
+                                                                        >
+                                                                            <CheckCircleIcon
+                                                                                sx={{
+                                                                                    color: "#00bd00",
+                                                                                    fontSize: "30px"
+                                                                                }}
+                                                                            />
+                                                                        </Box>
+                                                                    ) :
+                                                                    (
+                                                                        <Box
+                                                                            sx={{
+                                                                                backgroundColor: "white",
+                                                                                position: "absolute",
+                                                                                right: "10px",
+                                                                                top: "10px",
+                                                                                height: "17px",
+                                                                                width: "20px",
+                                                                                borderRadius: "50%",
+                                                                                display: "flex",
+                                                                                alignItems: "center",
+                                                                                justifyContent: "center"
+                                                                            }}
+                                                                        >
+                                                                            <CancelIcon
+                                                                                sx={{
+                                                                                    color: "red",
+                                                                                    fontSize: "30px"
+                                                                                }}
+                                                                            />
+                                                                        </Box>
+                                                                    )
+                                                            }
+                                                            <Box
+                                                                component='span'
+                                                                sx={{
+                                                                    color: "white",
+                                                                    display: "inline-block",
+                                                                    fontSize: "17px",
+                                                                    padding: "5px",
+                                                                    fontWeight: "500",
+                                                                    maxWidth: { xs: '90%', md: "96%" }
+                                                                }}
+                                                            >
+                                                                Câu {index + 1} :&nbsp;{r.quesDetail}
+                                                            </Box>
+                                                            <Box
+                                                                sx={{
+                                                                    backgroundColor: "white",
+                                                                    borderRadius: "3px",
+                                                                    padding: "10px 4px"
+                                                                }}
+                                                            >
+                                                                {
+                                                                    r.quesTId === 1 ? (
+                                                                        <>
+                                                                            <Box
+                                                                                sx={{
+                                                                                    mb: 2,
+                                                                                    display: "flex",
+                                                                                    flexDirection: "column",
+                                                                                    gap: "5px"
+                                                                                }}
+                                                                            >
+                                                                                {
+                                                                                    r.ansOfQues.split('<====>').map((item: string, index: number) => (
+                                                                                        r.answer.trim() === item.trim() && r.trueAnswer.trim() === r.answer.trim() ? (
+                                                                                            <Box
+                                                                                                key={index}
+                                                                                                sx={{
+                                                                                                    display: "flex",
+                                                                                                    gap: "10px",
+                                                                                                    padding: "5px 3px",
+                                                                                                    alignItems: "center",
+                                                                                                    backgroundColor: "#daf1ff",
+                                                                                                    borderRadius: "2px",
+                                                                                                    color: "#0075b9",
+                                                                                                    fontWeight: "500"
+                                                                                                }}
+                                                                                            >
+                                                                                                <RadioButtonCheckedIcon /> <span>{item.trim()}</span>
+                                                                                            </Box>
+                                                                                        ) : (
+                                                                                            r.answer.trim() === item.trim() && r.trueAnswer !== r.answer ? (
+                                                                                                <Box
+                                                                                                    key={index}
+                                                                                                    sx={{
+                                                                                                        display: "flex",
+                                                                                                        gap: "10px",
+                                                                                                        padding: "5px 3px",
+                                                                                                        alignItems: "center",
+                                                                                                        backgroundColor: "#ffe0e0",
+                                                                                                        borderRadius: "2px",
+                                                                                                        color: "#ff2424",
+                                                                                                        fontWeight: "500"
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <RadioButtonCheckedIcon /> <span>{item.trim()}</span>
+                                                                                                </Box>
+                                                                                            ) : (
+                                                                                                <Box
+                                                                                                    key={index}
+                                                                                                    sx={{
+                                                                                                        display: "flex",
+                                                                                                        gap: "10px",
+                                                                                                        padding: "5px 3px",
+                                                                                                        alignItems: "center"
+                                                                                                    }}
+                                                                                                >
+                                                                                                    <RadioButtonUncheckedIcon /> <span>{item.trim()}</span>
+                                                                                                </Box>
+                                                                                            )
+                                                                                        )
+                                                                                    ))
+                                                                                }
+                                                                            </Box>
+                                                                            {
+                                                                                r.trueAnswer.trim() !== r.answer.trim() &&
+                                                                                (
+                                                                                    <Box
+                                                                                        sx={{
+                                                                                            padding: "10px 3px"
+                                                                                        }}
+                                                                                    >
+                                                                                        <span className='color-primary' style={{ fontWeight: "500" }}>Câu trả lời đúng</span>
+                                                                                        <Box
+                                                                                            sx={{
+                                                                                                display: "flex",
+                                                                                                gap: "10px",
+                                                                                                padding: "5px 3px",
+                                                                                                alignItems: "center",
+                                                                                                backgroundColor: "#dbffd7",
+                                                                                                borderRadius: "2px",
+                                                                                                color: "#00ae11",
+                                                                                                fontWeight: "500"
+                                                                                            }}
+                                                                                        >
+                                                                                            <RadioButtonCheckedIcon />
+                                                                                            <span >{r.trueAnswer}</span>
+                                                                                        </Box>
+                                                                                    </Box>
+                                                                                )
+                                                                            }
+                                                                        </>
+                                                                    ) : (
+                                                                        r.ansOfQues.split('<====>').map((r: string, index: number) => (
+                                                                            <Box
+                                                                                key={index}
+                                                                                sx={{
+                                                                                    display: "flex",
+                                                                                    gap: "10px",
+                                                                                    padding: "5px 3px"
+                                                                                }}
+                                                                            >
+                                                                                <RadioButtonCheckedIcon /> &nbsp; {r.trim()}
+                                                                            </Box>
+                                                                        ))
+                                                                    )
+                                                                }
+                                                            </Box>
+                                                        </Box>
+                                                    ))
+                                                }
+
+                                            </Box>
+                                        </Box>
                                         <Box
                                             onKeyDown={handleKeyPressEnter}
+                                            sx={{
+                                                width:showResult?'0px':'100%',
+                                                opacity:showResult ?'0':'1',
+                                                height:showResult?'0px':'100%',
+                                                transition: 'all 0.3s ease',
+                                                position:"relative",
+                                            }}
                                         >
                                             <Box
                                                 sx={{
@@ -246,7 +502,7 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
                                                     display: "flex",
                                                     alignItems: "center",
                                                     gap: "10px",
-                                                    top: "70px",
+                                                    top: "0",
                                                     position: "absolute",
                                                     left: "8px",
                                                     right: "8px",
@@ -280,580 +536,143 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
                                                     mt: 8
                                                 }}
                                             >
-                                                {
-                                                    whenSearch ? (
-                                                        listUserWhenSearch?.map((r: IUserResult, index: number) => (
-                                                            <Box key={index} sx={componentUserJoinInfo}>
-                                                                <Box>
-                                                                    <span>
-                                                                        UID:&nbsp;
-                                                                    </span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {r.userId}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Tên thí sinh:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {getNameUserById(r.userId)}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Thời gian bắt đầu:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {formatDay(r.startTimes)}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Thời gian kết thúc:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {formatDay(r.endTimes)}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Giờ bắt đầu:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {formatTimeHour(r.startTimes)}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Giờ kết thúc:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {formatTimeHour(r.endTimes)}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Thời gian hoàn thành:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {`${getTimeDifference(r.startTimes, r.endTimes).hours.toString().padStart(2, '0')}:${getTimeDifference(r.startTimes, r.endTimes).minutes.toString().padStart(2, '0')}:${getTimeDifference(r.startTimes, r.endTimes).seconds.toString().padStart(2, '0')}s`}
-                                                                    </span>
-                                                                </Box>
-                                                            </Box>
-                                                        ))
-
-                                                    ) : (
-                                                        listUserHasJoinComp?.map((r: IUserResult, index: number) => (
-                                                            <Box key={index} sx={componentUserJoinInfo}>
-                                                                <Box>
-                                                                    <span>
-                                                                        UID:&nbsp;
-                                                                    </span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {r.userId}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Tên thí sinh:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {getNameUserById(r.userId)}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Thời gian bắt đầu:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {formatDay(r.startTimes)}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Thời gian kết thúc:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {formatDay(r.endTimes)}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Giờ bắt đầu:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {formatTimeHour(r.startTimes)}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Giờ kết thúc:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {formatTimeHour(r.endTimes)}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Thời gian hoàn thành:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {`${getTimeDifference(r.startTimes, r.endTimes).hours.toString().padStart(2, '0')}:${getTimeDifference(r.startTimes, r.endTimes).minutes.toString().padStart(2, '0')}:${getTimeDifference(r.startTimes, r.endTimes).seconds.toString().padStart(2, '0')}s`}
-                                                                    </span>
-                                                                </Box>
-                                                            </Box>
-                                                        ))
-                                                    )
-                                                }
-
-                                            </Box>
-                                        </Box>
-                                    ) : (
-                                        <Grid container spacing={1} sx={{ height: "100%" }}>
-                                            <Grid item md={4} >
-                                                <Box
-                                                    onKeyDown={handleKeyPressEnter}
-                                                    sx={{
-                                                        height: "100%",
-                                                        width: "100%",
-                                                        overflowY: "scroll",
-                                                        '&::-webkit-scrollbar': {
-                                                            display: "none"
-                                                        },
-                                                        position: "relative"
-                                                    }}
-                                                >
-                                                    <Box
-                                                        sx={{
-                                                            borderRadius: "4px",
-                                                            border: "1px solid #1565c0",
-                                                            padding: "5px",
-                                                            display: "flex",
-                                                            alignItems: "center",
-                                                            gap: "10px",
-                                                            mb: 2,
-                                                            position: "absolute",
-                                                            left: 0,
-                                                            right: 0
-                                                        }}
-                                                    >
-                                                        <Box
-                                                            placeholder='Tìm UID hoặc tên thí sinh'
-                                                            component='input'
-                                                            type="text"
-                                                            sx={{
-                                                                fontSize: "16px",
-                                                                outline: "none",
-                                                                width: "100%",
-                                                                border: "none"
-                                                            }}
-                                                            value={userSearch}
-                                                            onChange={handleSearchChange}
-                                                        />
-                                                        <Box component='span' onClick={(): void => setWhenSearch(false)}><RefreshIcon /></Box>
-                                                        <Button variant='contained' onClick={(): void => handleSearchUser(userSearch)}><SearchIcon /></Button>
-                                                    </Box>
-                                                    <Box
-                                                        sx={{
-                                                            mt: 8,
-                                                            width: "100%"
-                                                        }}
-                                                    >
+                                                    <Grid container spacing={2}>
                                                         {
                                                             whenSearch ? (
                                                                 listUserWhenSearch?.map((r: IUserResult, index: number) => (
-                                                                    <Box
-                                                                        key={index}
-                                                                        sx={componentUserJoinInfo}
-                                                                        onClick={(): void => handleViewExamUser(r.cuid, r.userId)}
-                                                                    >
-                                                                        <Box>
-                                                                            <span>
-                                                                                UID:&nbsp;
-                                                                            </span>
-                                                                            <span
-                                                                                className='color-primary'
-                                                                                style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                            >
-                                                                                {r.userId}
-                                                                            </span>
+                                                                    <Grid key={index} item md={4}>
+                                                                        <Box sx={componentUserJoinInfo} onClick={():void=>showResultUser(r.cuid,r.userId)}>
+                                                                            <Box>
+                                                                                <span>
+                                                                                    UID:&nbsp;
+                                                                                </span>
+                                                                                <TitleName>
+                                                                                    {r.userId}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Tên thí sinh:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {getNameUserById(r.userId)}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Thời gian bắt đầu:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {formatDay(r.startTimes)}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Thời gian kết thúc:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {formatDay(r.endTimes)}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Giờ bắt đầu:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {formatTimeHour(r.startTimes)}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Giờ kết thúc:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {formatTimeHour(r.endTimes)}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Thời gian hoàn thành:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {`${getTimeDifference(r.startTimes, r.endTimes).hours.toString().padStart(2, '0')}:${getTimeDifference(r.startTimes, r.endTimes).minutes.toString().padStart(2, '0')}:${getTimeDifference(r.startTimes, r.endTimes).seconds.toString().padStart(2, '0')}s`}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Số câu đúng:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {r.trueAns}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Số câu sai:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {r.falseAns}
+                                                                                </TitleName>
+                                                                            </Box>
                                                                         </Box>
-                                                                        <Box>
-                                                                            <span>Tên thí sinh:&nbsp;</span>
-                                                                            <span
-                                                                                className='color-primary'
-                                                                                style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                            >
-                                                                                {getNameUserById(r.userId)}
-                                                                            </span>
-                                                                        </Box>
-                                                                        <Box>
-                                                                            <span>Số câu đúng:&nbsp;</span>
-                                                                            <span
-                                                                                style={{ fontWeight: "500", fontSize: "18px", color: "#119300" }}
-                                                                            >
-                                                                                {r.trueAns}
-                                                                            </span>
-                                                                        </Box>
-                                                                        <Box>
-                                                                            <span>Số câu sai:&nbsp;</span>
-                                                                            <span
-                                                                                style={{ fontWeight: "500", fontSize: "18px", color: "#ed0000" }}
-                                                                            >
-                                                                                {r.falseAns}
-                                                                            </span>
-                                                                        </Box>
-                                                                    </Box>
+                                                                    </Grid>
                                                                 ))
+        
                                                             ) : (
                                                                 listUserHasJoinComp?.map((r: IUserResult, index: number) => (
-                                                                    <Box
-                                                                        key={index}
-                                                                        sx={componentUserJoinInfo}
-                                                                        onClick={(): void => handleViewExamUser(r.cuid, r.userId)}
-                                                                    >
-                                                                        <Box>
-                                                                            <span>
-                                                                                UID:&nbsp;
-                                                                            </span>
-                                                                            <span
-                                                                                className='color-primary'
-                                                                                style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                            >
-                                                                                {r.userId}
-                                                                            </span>
+                                                                    <Grid key={index} item md={4}>
+                                                                        <Box sx={componentUserJoinInfo} onClick={():void=>showResultUser(r.cuid,r.userId)}>
+                                                                            <Box>
+                                                                                <span>
+                                                                                    UID:&nbsp;
+                                                                                </span>
+                                                                                <TitleName>
+                                                                                    {r.userId}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Tên thí sinh:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {getNameUserById(r.userId)}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Thời gian bắt đầu:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {formatDay(r.startTimes)}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Thời gian kết thúc:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {formatDay(r.endTimes)}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Giờ bắt đầu:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {formatTimeHour(r.startTimes)}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Giờ kết thúc:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {formatTimeHour(r.endTimes)}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Thời gian hoàn thành:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {`${getTimeDifference(r.startTimes, r.endTimes).hours.toString().padStart(2, '0')}:${getTimeDifference(r.startTimes, r.endTimes).minutes.toString().padStart(2, '0')}:${getTimeDifference(r.startTimes, r.endTimes).seconds.toString().padStart(2, '0')}s`}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Số câu đúng:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {r.trueAns}
+                                                                                </TitleName>
+                                                                            </Box>
+                                                                            <Box>
+                                                                                <span>Số câu sai:&nbsp;</span>
+                                                                                <TitleName>
+                                                                                    {r.falseAns}
+                                                                                </TitleName>
+                                                                            </Box>
                                                                         </Box>
-                                                                        <Box>
-                                                                            <span>Tên thí sinh:&nbsp;</span>
-                                                                            <span
-                                                                                className='color-primary'
-                                                                                style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                            >
-                                                                                {getNameUserById(r.userId)}
-                                                                            </span>
-                                                                        </Box>
-                                                                        <Box>
-                                                                            <span>Số câu đúng:&nbsp;</span>
-                                                                            <span
-                                                                                style={{ fontWeight: "500", fontSize: "18px", color: "#119300" }}
-                                                                            >
-                                                                                {r.trueAns}
-                                                                            </span>
-                                                                        </Box>
-                                                                        <Box>
-                                                                            <span>Số câu sai:&nbsp;</span>
-                                                                            <span
-                                                                                style={{ fontWeight: "500", fontSize: "18px", color: "#ed0000" }}
-                                                                            >
-                                                                                {r.falseAns}
-                                                                            </span>
-                                                                        </Box>
-                                                                    </Box>
+                                                                    </Grid>
                                                                 ))
                                                             )
                                                         }
+                                                    </Grid>
 
-                                                    </Box>
-                                                </Box>
-                                            </Grid>
-                                            <Grid item md={8}>
-                                                {
-                                                    userIdChecked === '' ? (
-                                                        <Box
-                                                            sx={{
-                                                                display: 'flex',
-                                                                alignItems: "center",
-                                                                justifyContent: "center",
-                                                                height: "100%",
-                                                                width: "100%"
-                                                            }}
-                                                        >
-                                                            <span
-                                                                className='color-primary'
-                                                                style={{
-                                                                    fontWeight: "500",
-                                                                    fontSize: "18px"
-                                                                }}
-                                                            >
-                                                                Vui lòng chọn thí sinh để xem kết quả
-                                                            </span>
-                                                        </Box>
-                                                    ) : (
-                                                        <Box
-                                                            sx={{
-                                                                display: "flex",
-                                                                alignItems: "center",
-                                                                gap: "30px",
-                                                                flexDirection: "column",
-                                                                position: "relative",
-                                                                height: "100%"
-                                                            }}
-                                                        >
-                                                            <Box
-                                                                sx={{
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                    gap: "30px",
-                                                                    position: "absolute",
-                                                                    left: 0,
-                                                                    right: 0,
-                                                                    top: 0
-                                                                }}
-                                                            >
-                                                                <Box>
-                                                                    <span>
-                                                                        UID:&nbsp;
-                                                                    </span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {userIdChecked}
-                                                                    </span>
-                                                                </Box>
-                                                                <Box>
-                                                                    <span>Tên thí sinh:&nbsp;</span>
-                                                                    <span
-                                                                        className='color-primary'
-                                                                        style={{ fontWeight: "500", fontSize: "18px" }}
-                                                                    >
-                                                                        {getNameUserById(userIdChecked)}
-                                                                    </span>
-                                                                </Box>
-                                                            </Box>
-                                                            <Box
-                                                                sx={{
-                                                                    display: "block",
-                                                                    flexDirection: "column",
-                                                                    gap: "10px",
-                                                                    width: "100%",
-                                                                    overflowY: "scroll",
-                                                                    height: "450px",
-                                                                    '&::-webkit-scrollbar': {
-                                                                        display: "none"
-                                                                    },
-                                                                    mt: 5
-                                                                }}
-                                                            >
-                                                                {
-                                                                    allPickerQuesForUser?.map((r: IQuestionsUserPicker, index: number) => (
-                                                                        <Box
-                                                                            key={index}
-                                                                            sx={{
-                                                                                width: "100%",
-                                                                                mb: 2,
-                                                                                backgroundColor: "#1565c0   ",
-                                                                                padding: "3px",
-                                                                                borderRadius: "3px",
-                                                                                position: "relative"
-                                                                            }}
-                                                                        >
-                                                                            {
-                                                                                r.answer.trim() === r.trueAnswer.trim() ?
-                                                                                    (
-                                                                                        <Box
-                                                                                            sx={{
-                                                                                                backgroundColor: "white",
-                                                                                                position: "absolute",
-                                                                                                right: "10px",
-                                                                                                top: "10px",
-                                                                                                height: "17px",
-                                                                                                width: "20px",
-                                                                                                borderRadius: "50%",
-                                                                                                display: "flex",
-                                                                                                alignItems: "center",
-                                                                                                justifyContent: "center"
-                                                                                            }}
-                                                                                        >
-                                                                                            <CheckCircleIcon
-                                                                                                sx={{
-                                                                                                    color: "#00bd00",
-                                                                                                    fontSize: "30px"
-                                                                                                }}
-                                                                                            />
-                                                                                        </Box>
-                                                                                    ) :
-                                                                                    (
-                                                                                        <Box
-                                                                                            sx={{
-                                                                                                backgroundColor: "white",
-                                                                                                position: "absolute",
-                                                                                                right: "10px",
-                                                                                                top: "10px",
-                                                                                                height: "17px",
-                                                                                                width: "20px",
-                                                                                                borderRadius: "50%",
-                                                                                                display: "flex",
-                                                                                                alignItems: "center",
-                                                                                                justifyContent: "center"
-                                                                                            }}
-                                                                                        >
-                                                                                            <CancelIcon
-                                                                                                sx={{
-                                                                                                    color: "red",
-                                                                                                    fontSize: "30px"
-                                                                                                }}
-                                                                                            />
-                                                                                        </Box>
-                                                                                    )
-                                                                            }
-                                                                            <Box
-                                                                                component='span'
-                                                                                sx={{
-                                                                                    color: "white",
-                                                                                    display: "inline-block",
-                                                                                    fontSize: "17px",
-                                                                                    padding: "5px",
-                                                                                    fontWeight: "500",
-                                                                                    maxWidth: { xs: '90%', md: "96%" }
-                                                                                }}
-                                                                            >
-                                                                                Câu {index + 1} :&nbsp;{r.quesDetail}
-                                                                            </Box>
-                                                                            <Box
-                                                                                sx={{
-                                                                                    backgroundColor: "white",
-                                                                                    borderRadius: "3px",
-                                                                                    padding: "10px 4px"
-                                                                                }}
-                                                                            >
-                                                                                {
-                                                                                    r.quesTId === 1 ? (
-                                                                                        <>
-                                                                                            <Box
-                                                                                                sx={{
-                                                                                                    mb: 2,
-                                                                                                    display: "flex",
-                                                                                                    flexDirection: "column",
-                                                                                                    gap: "5px"
-                                                                                                }}
-                                                                                            >
-                                                                                                {
-                                                                                                    r.ansOfQues.split('<====>').map((item: string, index: number) => (
-                                                                                                        r.answer.trim() === item.trim() && r.trueAnswer.trim() === r.answer.trim() ? (
-                                                                                                            <Box
-                                                                                                                key={index}
-                                                                                                                sx={{
-                                                                                                                    display: "flex",
-                                                                                                                    gap: "10px",
-                                                                                                                    padding: "5px 3px",
-                                                                                                                    alignItems: "center",
-                                                                                                                    backgroundColor: "#daf1ff",
-                                                                                                                    borderRadius: "2px",
-                                                                                                                    color: "#0075b9",
-                                                                                                                    fontWeight: "500"
-                                                                                                                }}
-                                                                                                            >
-                                                                                                                <RadioButtonCheckedIcon /> <span>{item.trim()}</span>
-                                                                                                            </Box>
-                                                                                                        ) : (
-                                                                                                            r.answer.trim() === item.trim() && r.trueAnswer !== r.answer ? (
-                                                                                                                <Box
-                                                                                                                    key={index}
-                                                                                                                    sx={{
-                                                                                                                        display: "flex",
-                                                                                                                        gap: "10px",
-                                                                                                                        padding: "5px 3px",
-                                                                                                                        alignItems: "center",
-                                                                                                                        backgroundColor: "#ffe0e0",
-                                                                                                                        borderRadius: "2px",
-                                                                                                                        color: "#ff2424",
-                                                                                                                        fontWeight: "500"
-                                                                                                                    }}
-                                                                                                                >
-                                                                                                                    <RadioButtonCheckedIcon /> <span>{item.trim()}</span>
-                                                                                                                </Box>
-                                                                                                            ) : (
-                                                                                                                <Box
-                                                                                                                    key={index}
-                                                                                                                    sx={{
-                                                                                                                        display: "flex",
-                                                                                                                        gap: "10px",
-                                                                                                                        padding: "5px 3px",
-                                                                                                                        alignItems: "center"
-                                                                                                                    }}
-                                                                                                                >
-                                                                                                                    <RadioButtonUncheckedIcon /> <span>{item.trim()}</span>
-                                                                                                                </Box>
-                                                                                                            )
-                                                                                                        )
-                                                                                                    ))
-                                                                                                }
-                                                                                            </Box>
-                                                                                            {
-                                                                                                r.trueAnswer.trim() !== r.answer.trim() &&
-                                                                                                (
-                                                                                                    <Box
-                                                                                                        sx={{
-                                                                                                            padding: "10px 3px"
-                                                                                                        }}
-                                                                                                    >
-                                                                                                        <span className='color-primary' style={{ fontWeight: "500" }}>Câu trả lời đúng</span>
-                                                                                                        <Box
-                                                                                                            sx={{
-                                                                                                                display: "flex",
-                                                                                                                gap: "10px",
-                                                                                                                padding: "5px 3px",
-                                                                                                                alignItems: "center",
-                                                                                                                backgroundColor: "#dbffd7",
-                                                                                                                borderRadius: "2px",
-                                                                                                                color: "#00ae11",
-                                                                                                                fontWeight: "500"
-                                                                                                            }}
-                                                                                                        >
-                                                                                                            <RadioButtonCheckedIcon />
-                                                                                                            <span >{r.trueAnswer}</span>
-                                                                                                        </Box>
-                                                                                                    </Box>
-                                                                                                )
-                                                                                            }
-                                                                                        </>
-                                                                                    ) : (
-                                                                                        r.ansOfQues.split('<====>').map((r: string, index: number) => (
-                                                                                            <Box
-                                                                                                key={index}
-                                                                                                sx={{
-                                                                                                    display: "flex",
-                                                                                                    gap: "10px",
-                                                                                                    padding: "5px 3px"
-                                                                                                }}
-                                                                                            >
-                                                                                                <RadioButtonCheckedIcon /> &nbsp; {r.trim()}
-                                                                                            </Box>
-                                                                                        ))
-                                                                                    )
-                                                                                }
-                                                                            </Box>
-                                                                        </Box>
-                                                                    ))
-                                                                }
-
-                                                            </Box>
-                                                        </Box>
-                                                    )
-                                                }
-                                            </Grid>
-                                        </Grid>
-                                    )
+                                            </Box>
+                                        </Box>
+                                        
+                                    </Box>
                                 )
                             )
                         }
@@ -875,3 +694,9 @@ const componentUserJoinInfo: SxProps = {
     mb: 3,
     cursor: "pointer"
 }
+const TitleName = styled.span`
+  font-size: 16px;
+  color: #1565c0;
+  font-weight: 600;
+  text-decoration: none;
+`
