@@ -47,16 +47,16 @@ const TableUser = (): JSX.Element => {
         roleId: user.roleId,
         depId: user.depId
       })) || []
-      const formatDateYYYY_DD_MM = (inputDate: string):string => {
-        const parts = inputDate.split('/').map((part) => part.trim());
-        if (parts.length !== 3) {
-          throw new Error('Invalid date format');
-        }
-      
-        const [day, month, year] = parts;
-        const formattedDate = `${year}-${month}-${day}`;
-        return formattedDate;
-      };
+  const formatDateYYYY_DD_MM = (inputDate: string): string => {
+    const parts = inputDate.split('/').map((part) => part.trim())
+    if (parts.length !== 3) {
+      throw new Error('Invalid date format')
+    }
+
+    const [day, month, year] = parts
+    const formattedDate = `${year}-${month}-${day}`
+    return formattedDate
+  }
   const handleDelete = async (id: string): Promise<void> => {
     const request: { _id: string; value: number } = {
       _id: id,

@@ -25,8 +25,7 @@ const MessageAlert = ({ message, severity }: IMessage): JSX.Element => {
       <StyledSnackbar
         sx={{
           position: 'fixed',
-          top: 0,
-          left: 0,
+
           width: '50%'
         }}
         open={showMessage}
