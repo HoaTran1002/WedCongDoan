@@ -24,7 +24,6 @@ export const insert = async ({
   dateOfBirth,
   email,
   password,
-  userAddress,
   roleId,
   depId
 }: {
@@ -33,7 +32,6 @@ export const insert = async ({
   dateOfBirth: string
   email: string
   password: string
-  userAddress: string
   roleId: number
   depId: number
 }): Promise<void> => {
@@ -44,7 +42,6 @@ export const insert = async ({
       dateOfBirth,
       email,
       password,
-      userAddress,
       roleId,
       depId
     })
@@ -82,7 +79,6 @@ export const editUser = async ({
   dateOfBirth,
   email,
   password,
-  userAddress,
   roleId,
   depId,
   isDeleted
@@ -92,7 +88,6 @@ export const editUser = async ({
   dateOfBirth: string
   email: string
   password: string
-  userAddress: string
   roleId: number
   depId: number
   isDeleted: number
@@ -114,7 +109,6 @@ export const editUser = async ({
       dateOfBirth,
       email,
       password,
-      userAddress,
       roleId,
       depId,
       isDeleted
