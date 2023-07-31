@@ -107,6 +107,7 @@ export default function UserTextFields(prop: {
   ): void {
     setRole(Number(event.target.value))
   }
+  console.log('data edit:' + prop)
   const requestData: {
     userId: string
     userName: string
