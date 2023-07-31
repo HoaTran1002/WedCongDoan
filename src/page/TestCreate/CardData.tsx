@@ -79,7 +79,7 @@ const Index = ({
   }
   if (message != null) {
     setTimeout(async (): Promise<void> => {
-      await setMessage('')
+      setMessage('')
     }, 3000)
   }
   return (

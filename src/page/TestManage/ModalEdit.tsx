@@ -44,9 +44,10 @@ export default function BasicModal({
   const [open, setOpen] = React.useState(false)
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
-  const submit = (): void => {
+  const submit = async (): Promise<void> => {
     if (callBack) {
       callBack()
+      setOpen(false)
     }
   }
   const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -92,14 +93,14 @@ export default function BasicModal({
               onClick={submit}
               variant='outlined'
             >
-              submit
+              xác nhận
             </Button>
             <Button
               sx={{ marginLeft: 0.2 }}
               onClick={handleClose}
               variant='outlined'
             >
-              cancel
+              thoát
             </Button>
           </>
         </Box>

@@ -142,14 +142,15 @@ export default function TextFields(prop: {
       paramLoading.setMessageEdit()
     }
   }
-  if (message != null) {
-    setTimeout((): void => {
-      setMessage('')
-    }, 3000)
-  }
+
   if (prizeCompEdit.error) {
     setSeverity('error')
     setMessage('chỉnh sửa thất bại')
+  }
+  if (message != null) {
+    setTimeout(async (): Promise<void> => {
+      setMessage('')
+    }, 3000)
   }
   return (
     <>

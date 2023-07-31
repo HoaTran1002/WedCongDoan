@@ -12,7 +12,7 @@ import { DeleteExam, EditExam, getAllExam } from '~/api/exam'
 import ModalEdit from '~/page/TestManage/ModalEdit'
 import ModalDelete from '~/components/ModalDelete'
 import MessageAlert from '~/components/MessageAlert'
-
+import { v4 as uuidv4 } from 'uuid'
 interface CompExam {
   ceid: string
   examId: string
@@ -62,12 +62,12 @@ const Index = (): JSX.Element => {
       await callDeleteCompExam(async (): Promise<void> => {
         await deleteCompetitionsExams(request)
       })
-      await setSeverity('info')
+      setSeverity('info')
       setMessage('Xoá thành công!')
       setLoading(!loading)
     } catch (error) {
-      await setSeverity('error')
-      await setMessage('Xoá Thất bại!')
+      setSeverity('error')
+      setMessage('Xoá Thất bại!')
     }
   }
   const submitEditExamName = async ({
@@ -83,8 +83,8 @@ const Index = (): JSX.Element => {
     await setEditExamState(async (): Promise<void> => {
       await EditExam(reques)
     })
-    await setMessage('sửa thành công!')
-    await setSeverity('info')
+    setMessage('sửa thành công!')
+    setSeverity('info')
     setLoading(!loading)
   }
   if (editExamState.error) {
@@ -93,142 +93,146 @@ const Index = (): JSX.Element => {
   }
   if (message != null) {
     setTimeout(async (): Promise<void> => {
-      await setMessage('')
+      setMessage('')
     }, 3000)
   }
   return (
     <>
-      {message && <MessageAlert message={message} severity={severity} />}
       <LayoutAdmin>
-        <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-          <ModalAdd Title='THÊM MỚI ĐỀ THI'>
-            <DataInput
-              setLoad={(): void => {
-                setLoading(!loading)
-              }}
-            />
-          </ModalAdd>
+        <>
+          {message && <MessageAlert message={message} severity={severity} />}
+          <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
+            <ModalAdd Title='THÊM MỚI ĐỀ THI'>
+              <DataInput
+                setLoad={(): void => {
+                  setLoading(!loading)
+                  setSeverity('success')
+                  setMessage('đã thêm đề thi!')
+                }}
+              />
+            </ModalAdd>
 
-          <Grid
-            spacing={{ xs: 2, md: 3 }}
-            columns={{ xs: 4, sm: 8, md: 12 }}
-            sx={{
-              border: 1,
-              borderColor: blue[300],
-              borderRadius: 2,
-              width: '88%',
-              height: 500,
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              paddingY: 1,
-              gap: 10,
-              overflowY: 'scroll',
-              background: '#fff'
-            }}
-          >
-            {dataCompExams?.payload?.map((item: CompExam, index: number) => {
-              if (item.comId == comId) {
-                return (
-                  <>
-                    <Box
-                      sx={{
-                        position: 'relative',
-                        '&:hover .hover-content': {
-                          display: 'block'
-                        }
-                      }}
-                    >
-                      <Grid
-                        item
-                        xs={2}
-                        sm={4}
-                        md={4}
-                        key={index}
-                        sx={{
-                          background: blue[100],
-                          width: 100,
-                          height: 120,
-                          borderTopLeftRadius: 4,
-                          borderTopRightRadius: 4,
-                          marginRight: 2
-                        }}
-                      >
-                        <div>
-                          {' '}
-                          <Link
-                            to={`/TestCreate/Test/${item.examId}/Competition/${comId}`}
-                          >
-                            <Button>
-                              <DescriptionOutlinedIcon
-                                sx={{ width: '100%', height: '100%' }}
-                              />
-                            </Button>
-                          </Link>
-                          <Box
-                            sx={{
-                              background: blue[700],
-                              color: '#fff',
-                              display: 'flex',
-                              justifyContent: 'center',
-                              textDecoration: 'none',
-                              border: 'none'
-                            }}
-                          >
-                            <span>{exams[Number(item.examId)]}</span>
-                          </Box>
-                        </div>
-                      </Grid>
+            <Grid
+              spacing={{ xs: 2, md: 3 }}
+              columns={{ xs: 4, sm: 8, md: 12 }}
+              sx={{
+                border: 1,
+                borderColor: blue[300],
+                borderRadius: 2,
+                width: '88%',
+                height: 500,
+                display: 'flex',
+                flexWrap: 'wrap',
+                justifyContent: 'center',
+                paddingY: 1,
+                gap: 10,
+                overflowY: 'scroll',
+                background: '#fff'
+              }}
+            >
+              {dataCompExams?.payload?.map((item: CompExam, index: number) => {
+                if (item.comId == comId) {
+                  return (
+                    <>
                       <Box
-                        className='hover-content'
                         sx={{
-                          position: 'absolute',
-                          display: 'none',
-                          // transition: 'width 4s ease-out',
-                          width: '80%',
-                          // background: red[500],
-                          paddingTop: 1,
-                          top: 5,
-                          left: '86%',
-                          zIndex: 100,
-                          right: 10,
-                          height: '100%'
+                          position: 'relative',
+                          '&:hover .hover-content': {
+                            display: 'block'
+                          }
                         }}
                       >
-                        <>
-                          <ModalDelete
-                            question={'Bạn muốn xoá đề thi?'}
-                            content={
-                              'sẽ xoá đề thi và tất cả câu hỏi trong đề thi!'
-                            }
-                            callBack={(): void => {
-                              const ceid = Number(item.ceid)
-                              submitDeleteCompExam({ ceid })
-                            }}
-                          />
-                          <ModalEdit
-                            nameExam={exams[Number(item.examId)]}
-                            callBack={(): void => {
-                              const examId = Number(item.examId)
-                              submitEditExamName({ examId })
-                            }}
-                            setNameExam={({
-                              value
-                            }: {
-                              value: string
-                            }): void => {
-                              setNameExam(value)
-                            }}
-                          />
-                        </>
+                        <Grid
+                          item
+                          xs={2}
+                          sm={4}
+                          md={4}
+                          key={index}
+                          sx={{
+                            background: blue[100],
+                            width: 100,
+                            height: 120,
+                            borderTopLeftRadius: 4,
+                            borderTopRightRadius: 4,
+                            marginRight: 2
+                          }}
+                        >
+                          <div>
+                            {' '}
+                            <Link
+                              to={`/TestCreate/Test/${item.examId}/Competition/${comId}`}
+                            >
+                              <Button>
+                                <DescriptionOutlinedIcon
+                                  sx={{ width: '100%', height: '100%' }}
+                                />
+                              </Button>
+                            </Link>
+                            <Box
+                              sx={{
+                                background: blue[700],
+                                color: '#fff',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                textDecoration: 'none',
+                                border: 'none'
+                              }}
+                            >
+                              <span>{exams[Number(item.examId)]}</span>
+                            </Box>
+                          </div>
+                        </Grid>
+                        <Box
+                          className='hover-content'
+                          sx={{
+                            position: 'absolute',
+                            display: 'none',
+                            // transition: 'width 4s ease-out',
+                            width: '80%',
+                            // background: red[500],
+                            paddingTop: 1,
+                            top: 5,
+                            left: '86%',
+                            zIndex: 100,
+                            right: 10,
+                            height: '100%'
+                          }}
+                        >
+                          <>
+                            <ModalDelete
+                              question={'Bạn muốn xoá đề thi?'}
+                              content={
+                                'sẽ xoá đề thi và tất cả câu hỏi trong đề thi!'
+                              }
+                              callBack={(): void => {
+                                const ceid = Number(item.ceid)
+                                submitDeleteCompExam({ ceid })
+                              }}
+                            />
+                            <ModalEdit
+                              nameExam={exams[Number(item.examId)]}
+                              callBack={(): void => {
+                                const examId = Number(item.examId)
+                                submitEditExamName({ examId })
+                              }}
+                              setNameExam={({
+                                value
+                              }: {
+                                value: string
+                              }): void => {
+                                setNameExam(value)
+                              }}
+                            />
+                          </>
+                        </Box>
                       </Box>
-                    </Box>
-                  </>
-                )
-              }
-            })}
-          </Grid>
-        </Box>
+                    </>
+                  )
+                }
+              })}
+            </Grid>
+          </Box>
+        </>
       </LayoutAdmin>
     </>
   )

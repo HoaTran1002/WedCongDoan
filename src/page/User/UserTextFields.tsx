@@ -10,7 +10,7 @@ import MuiAlert from '@mui/material/Alert'
 import { getAllDep } from '~/api/departmentApi'
 import { getAllRole } from '~/api/roleApi'
 import dayjs, { Dayjs } from 'dayjs'
-
+import { v4 as uuidv4 } from 'uuid'
 import useFetch from '~/hook/useFetch'
 import { editUser, insert } from '~/api/userApi'
 import MessageAlert from '~/components/MessageAlert'
@@ -40,20 +40,11 @@ export default function UserTextFields(prop: {
   const [pass, setPass] = React.useState<string>(prop.password || '')
   const [gmail, setGmail] = React.useState(prop.email || '')
   const [address, setAddress] = React.useState<string>(prop.userAddress || '')
-  const [dep, setDep] = React.useState<number>(prop.depId || 0)
-  const [role, setRole] = React.useState<number>(prop.roleId || 0)
-  const [errorCccd,setErrorCccd] = React.useState<string>('')
-  const [errorUserName,setErrorUserName] = React.useState<string>('')
-  const [errorDayOfBirth,setErrorDayOfBirth] = React.useState<string>('')
-  const [errorGmail,setErrorGmail] = React.useState<string>('')
-  const [errorPassword,setErrorPassword] = React.useState<string>('')
-  const [errorRole,setErrorRole] = React.useState<string>('')
-  const [errorDep,setErrorDep] = React.useState<string>('')
-
   const [birthDay, setBirthDay] = React.useState<Dayjs | any>(
     dayjs(prop.dateOfBirth).format('MM/DD/YYYY') || ''
   )
-  
+  const [dep, setDep] = React.useState<number>(prop.depId || 0)
+  const [role, setRole] = React.useState<number>(prop.roleId || 0)
   const [showSuccess, setShowSuccess] = React.useState(false)
   const [showError, setShowError] = React.useState(false)
   const [userInsert, callInsertUser] = useFetch()
@@ -62,12 +53,18 @@ export default function UserTextFields(prop: {
   const [roles, callAllRole] = useFetch()
   const [message, setMessage] = React.useState<string>('')
   const [severity, setSeverity] = React.useState<string>('')
+  const [errorCccd, setErrorCccd] = React.useState<string>('')
+  const [errorUserName, setErrorUserName] = React.useState<string>('')
+  const [errorDayOfBirth, setErrorDayOfBirth] = React.useState<string>('')
+  const [errorGmail, setErrorGmail] = React.useState<string>('')
+  const [errorPassword, setErrorPassword] = React.useState<string>('')
+  const [errorRole, setErrorRole] = React.useState<string>('')
+  const [errorDep, setErrorDep] = React.useState<string>('')
 
   const loadingParams = React.useContext(LoadingContext)
   const Roles: Role[] = roles.payload || []
   const Deps: Dep[] = departments.payload || []
-  console.log(birthDay)
-  console.log(errorCccd,errorDep,errorUserName,errorGmail,'lỗi')
+
   const onchangeUserName = function (
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
@@ -96,9 +93,10 @@ export default function UserTextFields(prop: {
   const onchangeBirthDay = function (value: string | null): void {
     if (value) {
       const formattedDate = dayjs(value).format('YYYY-MM-DD')
-      setBirthDay(formattedDate)
+      setBirthDay(dayjs(formattedDate))
     }
   }
+
   const onchangeDep = function (
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
@@ -122,7 +120,7 @@ export default function UserTextFields(prop: {
   } = {
     userId: cccd,
     userName: userName,
-    dateOfBirth: birthDay,
+    dateOfBirth: String(birthDay),
     email: gmail,
     password: pass,
     userAddress: address,
@@ -145,7 +143,7 @@ export default function UserTextFields(prop: {
       },
       {
         condition: gmail === '',
-        setError: setErrorGmail ,
+        setError: setErrorGmail,
         errorMessage: 'Chưa nhập gmail'
       },
       {
@@ -218,10 +216,10 @@ export default function UserTextFields(prop: {
   }, [])
   if (message != null) {
     setTimeout(async (): Promise<void> => {
-      await setMessage('')
+      setMessage('')
     }, 3000)
   }
-  
+
   return (
     <>
       {message && <MessageAlert message={message} severity={severity} />}
@@ -244,7 +242,7 @@ export default function UserTextFields(prop: {
             <TextField
               defaultValue={cccd}
               onChange={onchangeCCCD}
-              id="outlined-error-helper-text"
+              id='outlined-error-helper-text'
               label='CCCD'
               error={Boolean(errorCccd)}
               helperText={errorCccd}
@@ -261,7 +259,7 @@ export default function UserTextFields(prop: {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={['DatePicker']}>
                 <DatePicker
-                  defaultValue={birthDay}
+                  value={birthDay}
                   onChange={onchangeBirthDay}
                   sx={{ width: '100%' }}
                   label='Ngày Sinh '
@@ -374,7 +372,6 @@ export default function UserTextFields(prop: {
             noValidate
             autoComplete='off'
           >
-            
             <TextField
               defaultValue={cccd}
               onChange={onchangeCCCD}
@@ -383,7 +380,6 @@ export default function UserTextFields(prop: {
               variant='outlined'
               error={Boolean(errorCccd)}
               helperText={errorCccd}
-
             />
             <TextField
               id='filled-basic'

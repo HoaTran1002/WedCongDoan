@@ -1,7 +1,7 @@
-import { Snackbar, styled } from '@mui/material'
+import { Alert, Snackbar, styled } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import MuiAlert, { AlertColor } from '@mui/material/Alert'
-
+import { v4 as uuidv4 } from 'uuid'
 interface IMessage {
   message: string
   severity: string
@@ -23,19 +23,24 @@ const MessageAlert = ({ message, severity }: IMessage): JSX.Element => {
   return (
     <>
       <StyledSnackbar
-        sx={{ position: 5, width: '50%' }}
+        sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '50%'
+        }}
         open={showMessage}
         autoHideDuration={3000}
         onClose={handleClose}
       >
-        <MuiAlert
+        <Alert
           onClose={handleClose}
           severity={severity ? (severity as AlertColor) : 'success'}
           elevation={6}
-          variant='filled'
+          variant='outlined'
         >
           {message}
-        </MuiAlert>
+        </Alert>
       </StyledSnackbar>
     </>
   )

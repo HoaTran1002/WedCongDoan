@@ -1,5 +1,5 @@
 import { Button, TextField, Snackbar } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import CreateNewFolderSharpIcon from '@mui/icons-material/CreateNewFolderSharp'
 
 import MuiAlert from '@mui/material/Alert'
@@ -10,7 +10,8 @@ import { useParams } from 'react-router-dom'
 import LoadingButton from '@mui/lab/LoadingButton'
 import SaveIcon from '@mui/icons-material/Save'
 import { Loader } from '~/components/loader'
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from '@mui/material/CircularProgress'
+import { SetModal } from './ModalAdd'
 
 interface IExam {
   examId: number
@@ -18,8 +19,7 @@ interface IExam {
 }
 const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(true)
-  const [showSuccess, setShowSuccess] = useState(false)
-  const [showError, setShowError] = useState(false)
+
   const [nameExam, setNameExam] = useState<string>('')
   const [nameExamErr, setNameExamErr] = useState<string>('')
   const [nameExamInsertState, nameExamInsertCall] = useFetch()
@@ -33,12 +33,6 @@ const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
   const exams = examsState.payload || []
   const exam: IExam = exams[exams.length - 1]
 
-  const handleCloseSuccess = (): void => {
-    setShowSuccess(false)
-  }
-  const handleCloseError = (): void => {
-    setShowError(false)
-  }
   const onchangeNameExam = (
     event: React.ChangeEvent<HTMLInputElement>
   ): void => {
@@ -58,6 +52,7 @@ const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
   if (comId) {
     requesInsertCompExam.comId = Number(comId)
   }
+  const modalParams = useContext(SetModal)
   const handelSubmitCreateExam = (): void => {
     if (nameExam == '') {
       setNameExamErr('hãy nhập tên đề')
@@ -67,16 +62,16 @@ const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
           await nameExamInsertCall(async () => {
             await insertExams(requesInsertExam)
           })
-          setLoading(!loading)
+          setLoading(!loading) //loading modal
           await insertCompExamCall(async (): Promise<void> => {
             await insertCompExam(requesInsertCompExam)
           })
 
-          await setShowSuccess(true)
+          // await setShowSuccess(true)
           setLoad()
-          console.log('data response:' + nameExamInsertState.payload)
+          modalParams.offModal()
         } catch (error) {
-          setShowError(true)
+          // setShowError(true)
         }
       })()
     }
@@ -84,38 +79,9 @@ const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
   return (
     <>
       {examsState.loading || insertComp.loading ? (
-        <CircularProgress  />
+        <CircularProgress />
       ) : (
         <>
-          {' '}
-          <Snackbar
-            open={showSuccess}
-            autoHideDuration={3000}
-            onClose={handleCloseSuccess}
-          >
-            <MuiAlert
-              onClose={handleCloseSuccess}
-              severity='success'
-              elevation={6}
-              variant='filled'
-            >
-              Thêm thành công!
-            </MuiAlert>
-          </Snackbar>
-          <Snackbar
-            open={showError}
-            autoHideDuration={3000}
-            onClose={handleCloseSuccess}
-          >
-            <MuiAlert
-              onClose={handleCloseError}
-              severity='error'
-              elevation={6}
-              variant='filled'
-            >
-              Thêm thất bại!
-            </MuiAlert>
-          </Snackbar>
           <TextField
             error={Boolean(nameExamErr)}
             helperText={nameExamErr}

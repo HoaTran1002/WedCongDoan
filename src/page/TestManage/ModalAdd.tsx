@@ -6,6 +6,7 @@ import Modal from '@mui/material/Modal'
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined'
 import PostAddSharpIcon from '@mui/icons-material/PostAddSharp'
 import { blue } from '@mui/material/colors'
+import { createContext } from 'react'
 const style = {
   position: 'absolute',
   top: '50%',
@@ -25,6 +26,16 @@ interface ModalAddProps {
   children: React.ReactNode
   Title: string // Prop bổ sung
 }
+interface IModalContext {
+  display: boolean
+  offModal: () => void
+}
+export const SetModal = createContext<IModalContext>({
+  display: true,
+  offModal: (): void => {
+    return
+  }
+})
 export default function ModalAdd({
   children,
   Title
@@ -32,71 +43,78 @@ export default function ModalAdd({
   const [open, setOpen] = React.useState(false)
   const handleOpen = (): void => setOpen(true)
   const handleClose = (): void => setOpen(false)
-
+  const modalParams: IModalContext = {
+    display: open,
+    offModal: (): void => {
+      setOpen(false)
+    }
+  }
   return (
-    <div>
-      <Box
-        onClick={handleOpen}
-        sx={{
-          background: blue[100],
-          width: 100,
-          height: 'auto',
-          marginRight: 2,
-          borderTopLeftRadius: 4,
-          borderTopRightRadius: 4
-        }}
-      >
-        {/* <Link to={`/TestCreate/Competition/${comId}`}>
+    <SetModal.Provider value={modalParams}>
+      <div>
+        <Box
+          onClick={handleOpen}
+          sx={{
+            background: blue[100],
+            width: 100,
+            height: 'auto',
+            marginRight: 2,
+            borderTopLeftRadius: 4,
+            borderTopRightRadius: 4
+          }}
+        >
+          {/* <Link to={`/TestCreate/Competition/${comId}`}>
             <Button>
               <PostAddSharpIcon sx={{ width: '100%', height: '100%' }} />
             </Button>
           </Link> */}
 
-        <Button>
-          <PostAddSharpIcon sx={{ width: '100%', height: '100%' }} />
-        </Button>
-
-        <Box
-          sx={{
-            background: blue[700],
-            color: '#fff',
-            display: 'flex',
-
-            justifyContent: 'center',
-            textDecoration: 'none',
-            border: 'none'
-          }}
-        >
-          <span>TẠO ĐỀ THI</span>
-        </Box>
-      </Box>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby='modal-modal-title'
-        aria-describedby='modal-modal-description'
-      >
-        <Box sx={style}>
-          <Typography
-            sx={{ display: 'flex', justifyContent: 'center', color: 'blue' }}
-            id='modal-modal-title'
-            variant='h6'
-            component='h2'
-          >
-            {Title}
-          </Typography>
-          <Typography id='modal-modal-description' sx={{ mt: 2 }}>
-            {children}
-          </Typography>
-          <Button
-            onClick={handleClose}
-            sx={{ marginTop: 2 }}
-            variant='contained'
-          >
-            Thoát
+          <Button>
+            <PostAddSharpIcon sx={{ width: '100%', height: '100%' }} />
           </Button>
+
+          <Box
+            sx={{
+              background: blue[700],
+              color: '#fff',
+              display: 'flex',
+
+              justifyContent: 'center',
+              textDecoration: 'none',
+              border: 'none'
+            }}
+          >
+            <span>TẠO ĐỀ THI</span>
+          </Box>
         </Box>
-      </Modal>
-    </div>
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby='modal-modal-title'
+          aria-describedby='modal-modal-description'
+        >
+          <Box sx={style}>
+            <Typography
+              sx={{ display: 'flex', justifyContent: 'center', color: 'blue' }}
+              id='modal-modal-title'
+              variant='h6'
+              component='h2'
+            >
+              {Title}
+            </Typography>
+            <Typography id='modal-modal-description' sx={{ mt: 2 }}>
+              {children}
+            </Typography>
+            <Button
+              onClick={handleClose}
+              sx={{ marginTop: 2 }}
+              variant='contained'
+            >
+              Thoát
+            </Button>
+          </Box>
+        </Modal>
+      </div>
+    </SetModal.Provider>
   )
 }

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { DataGrid, GridColDef, GridActionsCellItem } from '@mui/x-data-grid'
 import DeleteIcon from '@mui/icons-material/Delete'
+import { v4 as uuidv4 } from 'uuid'
 
 import useFetch from '~/hook/useFetch'
 import Button from '@mui/material/Button'
@@ -97,6 +98,7 @@ const PrizeData = (): JSX.Element => {
       })
       setSeverity('info')
       setMessage('đã xoá giải thưởng!')
+
       setLoading(!loading)
     } catch (error) {
       setShowError(true)
@@ -191,11 +193,6 @@ const PrizeData = (): JSX.Element => {
       ]
     }
   ]
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
-      await setMessage('')
-    }, 3000)
-  }
 
   const loadingParams: ILoadingContext = {
     statusLoading: loading,
@@ -210,6 +207,11 @@ const PrizeData = (): JSX.Element => {
       setSeverity('success')
       setMessage('đã thêm giải thưởng!')
     }
+  }
+  if (message != null) {
+    setTimeout(async (): Promise<void> => {
+      setMessage('')
+    }, 3000)
   }
   return (
     <LoadingContext.Provider value={loadingParams}>
