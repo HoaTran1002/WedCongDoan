@@ -64,7 +64,8 @@ export default function UserTextFields(prop: {
   const loadingParams = React.useContext(LoadingContext)
   const Roles: Role[] = roles.payload || []
   const Deps: Dep[] = departments.payload || []
-
+  console.log(birthDay)
+  console.log(errorCccd, errorDep, errorUserName, errorGmail, 'lỗi')
   const onchangeUserName = function (
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
