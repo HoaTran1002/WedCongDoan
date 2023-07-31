@@ -12,7 +12,7 @@ import { DeleteExam, EditExam, getAllExam } from '~/api/exam'
 import ModalEdit from '~/page/TestManage/ModalEdit'
 import ModalDelete from '~/components/ModalDelete'
 import MessageAlert from '~/components/MessageAlert'
-import { v4 as uuidv4 } from 'uuid'
+
 interface CompExam {
   ceid: string
   examId: string
@@ -91,11 +91,14 @@ const Index = (): JSX.Element => {
     setMessage('sửa thất bại!')
     setSeverity('error')
   }
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
-      setMessage('')
-    }, 3000)
+  const unMountMessage = (): void => {
+    if (message != null) {
+      setTimeout(async (): Promise<void> => {
+        setMessage('')
+      }, 3000)
+    }
   }
+  unMountMessage()
   return (
     <>
       <LayoutAdmin>

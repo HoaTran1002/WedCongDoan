@@ -31,6 +31,7 @@ import useFetch from '~/hook/useFetch'
 import EditCalendarIcon from '@mui/icons-material/EditCalendar'
 import MessageAlert from '~/components/MessageAlert'
 import { red } from '@mui/material/colors'
+import { LoadingContext } from './index'
 
 interface QuestType {
   quesTId: number
@@ -94,8 +95,7 @@ const ModalEdit = ({
   const [answerList, setAnswerList] = useState<string[]>([])
   const [correctAnswerList, setCorrectAnswerList] = useState<string[]>([])
   const [errQuestion, setErrQuestion] = useState<string>('')
-  const [message, setMessage] = useState<string>('')
-  const [severity, setSeverity] = useState<string>('')
+  const [errErrMinTrueAnswer, setErrMinTrueAnswer] = useState<string>('')
 
   const [errCorret, setErrCorret] = useState<string>('')
   const [errNumberCorret, setErrNumberCorret] = useState<string>('')
@@ -132,12 +132,12 @@ const ModalEdit = ({
 
   React.useEffect(() => {
     const fetchData = async (): Promise<void> => {
-      await setAnswerList(arrStr)
-      await setQuestion(quesDetail)
+      setAnswerList(arrStr)
+      setQuestion(quesDetail)
 
-      const trueAns = await arrrCorretAnswer(arrStr, trueAnswer)
+      const trueAns = arrrCorretAnswer(arrStr, trueAnswer)
 
-      await setCorrectAnswerList(trueAns)
+      setCorrectAnswerList(trueAns)
     }
 
     fetchData()
@@ -219,10 +219,12 @@ const ModalEdit = ({
     updatedCorrectAnswerList.splice(index, 1)
     setCorrectAnswerList(updatedCorrectAnswerList)
   }
-
-  const submitQuestion = (): void => {
+  const loadingPrams = React.useContext(LoadingContext)
+  const handleClose = (): void => setOpen(false)
+  const handleOpen = (): void => setOpen(true)
+  const submitQuestion = async (): Promise<void> => {
     // console.log('data trả lời:' + bodyQuestion.ansOfQues)
-    // console.log('data trả lời đúng:' + bodyQuestion.trueAnswer)
+    // console.log('data trả lời đúng:' + bodyQuestion.trueAnswer.split('<====>').length)
     // console.log('data câu hỏi:' + bodyQuestion.quesDetail)
     // console.log('data loại đap án:' + bodyQuestion.quesTId)
     // console.log('data Id :' + bodyQuestion.examId)
@@ -243,6 +245,13 @@ const ModalEdit = ({
         condition: bodyQuestion.quesDetail === '',
         setError: setErrQuestion,
         errorMessage: 'hãy nhập câu hỏi'
+      },
+      {
+        condition:
+          bodyQuestion.trueAnswer.split('<====>').length > 1 &&
+          bodyQuestion.quesTId === 1,
+        setError: setErrMinTrueAnswer,
+        errorMessage: 'Radio chỉ gồm một đáp án đúng'
       }
     ]
     for (const condition of errorConditions) {
@@ -255,21 +264,14 @@ const ModalEdit = ({
     if (hasError) {
       return
     } else {
-      updateQuesCall(async (): Promise<void> => {
-        try {
-          await updateQues(bodyQuestion)
-        } catch (error) {
-          setMessage('cập nhật thất bại')
-          setSeverity('error')
-        }
-        setMessage('cập nhật thành công')
-        setSeverity('success')
+      await updateQuesCall(async (): Promise<void> => {
+        await updateQues(bodyQuestion)
       })
+      loadingPrams.setLoadingContext()
+      loadingPrams.setMessageEdit()
+      handleClose()
     }
   }
-
-  const handleClose = (): void => setOpen(false)
-  const handleOpen = (): void => setOpen(true)
 
   function handleClick(): void {
     setLoading(true)
@@ -277,14 +279,9 @@ const ModalEdit = ({
   function cancelModal(): void {
     setOpen(false)
   }
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
-      setMessage('')
-    }, 3000)
-  }
+
   return (
     <>
-      {message && <MessageAlert message={message} severity={severity} />}
       <LightTooltip placement='left' title='chỉnh sửa câu hỏi'>
         <Button
           sx={{
@@ -449,7 +446,7 @@ const ModalEdit = ({
                     margin: 0.2
                   }}
                 >
-                  <span>hãy nhập đáp án</span>
+                  <span>{errCorret}</span>
                 </Box>
               )}
               {errNullCorret && (
@@ -463,7 +460,21 @@ const ModalEdit = ({
                     margin: 0.2
                   }}
                 >
-                  <span>chưa có đáp án đúng</span>
+                  <span>{errNullCorret}</span>
+                </Box>
+              )}
+              {errErrMinTrueAnswer && (
+                <Box
+                  sx={{
+                    color: 'white',
+                    backgroundColor: red[300],
+                    fontSize: 13,
+                    borderRadius: 2,
+                    padding: 0.3,
+                    margin: 0.2
+                  }}
+                >
+                  <span>{errErrMinTrueAnswer}</span>
                 </Box>
               )}
             </Box>
