@@ -103,9 +103,11 @@ const TestCreate = (): JSX.Element => {
   const [errNullCorret, setErrNullCorret] = useState<string>('')
   const [message, setMessage] = useState<string>('')
   const [severity, setSeverity] = useState<string>('')
+  const [isAlert, setIsAlert] = useState<boolean>(false)
+
   if (message !== '') {
     setTimeout((): void => {
-      setMessage('')
+      setIsAlert(false)
     }, 2500)
   }
   const questions = getQuesState.payload || []
@@ -262,6 +264,7 @@ const TestCreate = (): JSX.Element => {
           setShowError(true)
         }
       })
+      setIsAlert(true)
     }
   }
 
@@ -305,7 +308,7 @@ const TestCreate = (): JSX.Element => {
       <LayoutAdmin>
         <LoadingContext.Provider value={loadingPrams}>
           <>
-            {message && <MessageAlert message={message} severity={severity} />}
+            {isAlert && <MessageAlert message={message} severity={severity} />}
           </>
           <Stack
             sx={{

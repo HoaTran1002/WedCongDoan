@@ -91,19 +91,15 @@ const Index = (): JSX.Element => {
     setMessage('sửa thất bại!')
     setSeverity('error')
   }
-  const unMountMessage = (): void => {
-    if (message != null) {
-      setTimeout(async (): Promise<void> => {
-        setMessage('')
-      }, 3000)
-    }
-  }
-  unMountMessage()
+
   return (
     <>
       <LayoutAdmin>
         <>
-          {message && <MessageAlert message={message} severity={severity} />}
+          {message !== '' && (
+            <MessageAlert message={message} severity={severity} />
+          )}
+
           <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
             <ModalAdd Title='THÊM MỚI ĐỀ THI'>
               <DataInput
