@@ -298,8 +298,8 @@ const TestCreate = (): JSX.Element => {
       setMessage('cập nhật thành công')
     }
   }
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
+  if (message !== '') {
+    setTimeout(() => {
       setMessage('')
     }, 3000)
   }
@@ -308,7 +308,7 @@ const TestCreate = (): JSX.Element => {
       <LayoutAdmin>
         <LoadingContext.Provider value={loadingPrams}>
           <>
-            {isAlert && <MessageAlert message={message} severity={severity} />}
+            {message && <MessageAlert message={message} severity={severity} />}
           </>
           <Stack
             sx={{

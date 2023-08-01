@@ -23,10 +23,19 @@ interface User {
   depId: number
   isDeleted: number
 }
-
+interface IUserContext {
+  alertEdit: () => void
+  alertAdd: () => void
+}
+export const UserContex = React.createContext<IUserContext>({
+  alertEdit: () => {
+    return
+  },
+  alertAdd: () => {
+    return
+  }
+})
 const TableUser = (): JSX.Element => {
-  const [showSuccess, setShowSuccess] = React.useState(false)
-  const [showError, setShowError] = React.useState(false)
   const [userState, call] = useFetch()
   const [deleteUserState, callDelete] = useFetch()
   const [loading, setLoading] = React.useState<boolean>(false)
@@ -58,7 +67,7 @@ const TableUser = (): JSX.Element => {
       await UpdateIsDeleted(request)
       // setShowSuccess(true)
     })
-    setMessage('đã xoá user!')
+    setMessage('đã xoá người Dùng!')
     setServerity('info')
     setLoading(!loading)
   }
@@ -115,14 +124,23 @@ const TableUser = (): JSX.Element => {
   React.useEffect(() => {
     call(getAllUser)
   }, [loading, loadingParams.statusLoading])
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
+  if (message !== '') {
+    setTimeout(() => {
       setMessage('')
     }, 3000)
   }
-
+  const userContextParams: IUserContext = {
+    alertEdit: (): void => {
+      setServerity('info')
+      setMessage('chỉnh sửa thành công!')
+    },
+    alertAdd: (): void => {
+      setServerity('info')
+      setMessage('đã thêm người Dùng!')
+    }
+  }
   return (
-    <>
+    <UserContex.Provider value={userContextParams}>
       <>{message && <MessageAlert message={message} severity={serverity} />}</>
 
       {userState.loading || deleteUserState.loading ? (
@@ -154,7 +172,7 @@ const TableUser = (): JSX.Element => {
           </Box>
         </>
       )}
-    </>
+    </UserContex.Provider>
   )
 }
 export default TableUser

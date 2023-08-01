@@ -152,8 +152,8 @@ const LinkCompetition = (props: PropLinkCompetition): JSX.Element => {
   React.useEffect(() => {
     callAllBlog(getAllBlog)
   }, [])
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
+  if (message !== '') {
+    setTimeout(() => {
       setMessage('')
     }, 3000)
   }

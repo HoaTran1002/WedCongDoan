@@ -91,7 +91,11 @@ const Index = (): JSX.Element => {
     setMessage('sửa thất bại!')
     setSeverity('error')
   }
-
+  if (message !== '') {
+    setTimeout(() => {
+      setMessage('')
+    }, 3000)
+  }
   return (
     <>
       <LayoutAdmin>

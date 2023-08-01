@@ -20,7 +20,14 @@ const style = {
     'rgba(0, 0, 0, 0.19) 0px 10px 20px, rgba(0, 0, 0, 0.23) 0px 6px 6px',
   p: 4
 }
-
+interface IModalcontex {
+  offModal: () => void
+}
+export const UsecontexModalAdd = React.createContext<IModalcontex>({
+  offModal: () => {
+    return
+  }
+})
 export default function BasicModal(): JSX.Element {
   const [open, setOpen] = React.useState(false)
   const handleOpen = (): void => setOpen(true)
@@ -30,9 +37,13 @@ export default function BasicModal(): JSX.Element {
   React.useEffect(() => {
     call(getAllUser)
   }, [])
-
+  const modalPrams: IModalcontex = {
+    offModal: (): void => {
+      handleClose()
+    }
+  }
   return (
-    <div>
+    <UsecontexModalAdd.Provider value={modalPrams}>
       {!userState.loading ? (
         <Stack
           direction={'row'}
@@ -71,13 +82,13 @@ export default function BasicModal(): JSX.Element {
               dateOfBirth={''}
               email={''}
               password={''}
-              userAddress={''}
+              // userAddress={''}
               roleId={0}
               depId={0}
             />
           </Typography>
         </Box>
       </Modal>
-    </div>
+    </UsecontexModalAdd.Provider>
   )
 }

@@ -16,6 +16,8 @@ import { editUser, insert } from '~/api/userApi'
 import MessageAlert from '~/components/MessageAlert'
 import { LoadingContext } from '.'
 import { isEmailValid } from '~/utils/stringUtils'
+import { UserContex } from './TableUser'
+import { UsecontexModalAdd } from './ModalAddUser'
 
 interface Dep {
   depId: number
@@ -43,7 +45,6 @@ export default function UserTextFields(prop: {
   const [role, setRole] = React.useState<number>(prop.roleId || 0)
   const [errorCccd, setErrorCccd] = React.useState<string>('')
   const [errorUserName, setErrorUserName] = React.useState<string>('')
-  const [errorDayOfBirth, setErrorDayOfBirth] = React.useState<string>('')
   const [errorGmail, setErrorGmail] = React.useState<string>('')
   const [errorPassword, setErrorPassword] = React.useState<string>('')
   const [errorRole, setErrorRole] = React.useState<string>('')
@@ -168,7 +169,9 @@ export default function UserTextFields(prop: {
       errorMessage: 'Chưa chọn quyền người dùng'
     }
   ]
-  const onSubmitFormInsert = (): void => {
+  const userContextParams = React.useContext(UserContex)
+  const modalPrams = React.useContext(UsecontexModalAdd)
+  const onSubmitFormInsert = async (): Promise<void> => {
     for (const condition of errorConditions) {
       if (condition.condition) {
         condition.setError(condition.errorMessage)
@@ -179,18 +182,14 @@ export default function UserTextFields(prop: {
     if (hasError) {
       return
     }
-    callInsertUser(async () => {
-      try {
-        await insert(requestData)
-        setSeverity('success')
-        setMessage('đã thêm người dùng!')
-        loadingParams.setLoading()
-      } catch (error) {
-        setShowError(true)
-      }
+    await callInsertUser(async (): Promise<void> => {
+      await insert(requestData)
     })
+    modalPrams.offModal
+    setMessage('đã thêm người Dùng!')
+    setSeverity('success')
+    loadingParams.setLoading()
   }
-  console.log(dayjs(birthDay))
 
   const onSubmitFormEdit = async (): Promise<void> => {
     for (const condition of errorConditions) {
@@ -207,8 +206,7 @@ export default function UserTextFields(prop: {
       await editUser(requestData)
     })
 
-    setSeverity('info')
-    setMessage('đã sửa user!')
+    userContextParams.alertEdit()
     loadingParams.setLoading()
   }
   React.useEffect(() => {
@@ -232,9 +230,9 @@ export default function UserTextFields(prop: {
     fetchDataRole()
     fetchDataDep()
   }, [])
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
-      await setMessage('')
+  if (message !== '') {
+    setTimeout(() => {
+      setMessage('')
     }, 3000)
   }
 
@@ -258,6 +256,7 @@ export default function UserTextFields(prop: {
             autoComplete='off'
           >
             <TextField
+              type={'number'}
               defaultValue={cccd}
               onChange={onchangeCCCD}
               id='outlined-error-helper-text'
