@@ -71,7 +71,6 @@ export default function BasicModal(): JSX.Element {
               dateOfBirth={''}
               email={''}
               password={''}
-              userAddress={''}
               roleId={0}
               depId={0}
             />
