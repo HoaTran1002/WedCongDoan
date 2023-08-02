@@ -7,14 +7,19 @@ type Props = {
 
 const PrivateRoute = (props: Props): JSX.Element => {
   const { profile } = useAuth()
-  console.log(props.roles,profile?.roleId);
-  if(profile?.roleId === 3 ) return <Navigate to='/'/>
-  if (props.roles?.length && profile?.roleId ) {
-    const isConfirm = props.roles.some((x) => x === profile.roleId)
-    if (!isConfirm) return <Navigate to='/403' />
+  console.log("Roles prop in PrivateRoute:", props.roles);
+  console.log("RoleId in profile:", profile?.roleId);
+  if (!profile) {
+    return <Navigate to='/login' />;
   }
-  
-  return profile ? <Outlet /> : <Navigate to='/login' />
+  if (props.roles?.length) {
+    const isConfirmed = props.roles.some((x) => x === profile.roleId);
+    if (!isConfirmed) {
+      return <Navigate to='/403' />;
+    }
+  }
+
+  return <Outlet />;
 }
 
 export default PrivateRoute
