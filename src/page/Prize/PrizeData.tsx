@@ -207,8 +207,8 @@ const PrizeData = (): JSX.Element => {
       setMessage('đã thêm giải thưởng!')
     }
   }
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
+  if (message !== '') {
+    setTimeout(() => {
       setMessage('')
     }, 3000)
   }

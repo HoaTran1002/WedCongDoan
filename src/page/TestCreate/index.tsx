@@ -70,9 +70,23 @@ const style = {
   padding: 2
 }
 
+interface ILoading {
+  loadingStatus: boolean
+  setLoadingContext: () => void
+  setMessageEdit: () => void
+}
+export const LoadingContext = React.createContext<ILoading>({
+  loadingStatus: false,
+  setLoadingContext: (): void => {
+    return
+  },
+  setMessageEdit: (): void => {
+    return
+  }
+})
+
 const TestCreate = (): JSX.Element => {
   const [loading, setLoading] = React.useState<boolean>(false)
-  const [showSuccess, setShowSuccess] = React.useState<boolean>(false)
   const [showError, setShowError] = React.useState<boolean>(false)
   const [open, setOpen] = useState(false)
   const [createQuesState, quesCreateCall] = useFetch()
@@ -83,13 +97,19 @@ const TestCreate = (): JSX.Element => {
   const [question, setQuestion] = useState<string>('')
   const [answerList, setAnswerList] = useState<string[]>([])
   const [correctAnswerList, setCorrectAnswerList] = useState<string[]>([])
+  const [errErrMinTrueAnswer, setErrMinTrueAnswer] = useState<string>('')
   const [errQuestion, setErrQuestion] = useState<string>('')
   const [errCorret, setErrCorret] = useState<string>('')
-  const [errNumberCorret, setErrNumberCorret] = useState<string>('')
   const [errNullCorret, setErrNullCorret] = useState<string>('')
   const [message, setMessage] = useState<string>('')
   const [severity, setSeverity] = useState<string>('')
+  const [isAlert, setIsAlert] = useState<boolean>(false)
 
+  if (message !== '') {
+    setTimeout((): void => {
+      setIsAlert(false)
+    }, 2500)
+  }
   const questions = getQuesState.payload || []
   const questionTypes = getQuesTypeState.payload || []
 
@@ -212,6 +232,13 @@ const TestCreate = (): JSX.Element => {
         condition: bodyQuestion.quesDetail === '',
         setError: setErrQuestion,
         errorMessage: 'hãy nhập câu hỏi'
+      },
+      {
+        condition:
+          bodyQuestion.trueAnswer.split('<====>').length > 1 &&
+          bodyQuestion.quesTId === 1,
+        setError: setErrMinTrueAnswer,
+        errorMessage: 'Radio chỉ gồm một đáp án đúng'
       }
     ]
     for (const condition of errorConditions) {
@@ -227,24 +254,20 @@ const TestCreate = (): JSX.Element => {
       quesCreateCall(async (): Promise<void> => {
         try {
           await insertQues(bodyQuestion)
-          await setLoading(!loading)
+          handleClose()
+          setLoading(!loading)
 
-          setShowSuccess(true)
-          // setSeverity('info')
-          // setMessage('thêm thành công')
+          // setShowSuccess(true)
+          setSeverity('success')
+          setMessage('thêm thành công')
         } catch (error) {
           setShowError(true)
         }
       })
+      setIsAlert(true)
     }
   }
 
-  const handleCloseSuccess = (): void => {
-    setShowSuccess(false)
-  }
-  const handleCloseError = (): void => {
-    setShowError(false)
-  }
   const handleOpen = (): void => {
     setOpen(true)
   }
@@ -264,46 +287,28 @@ const TestCreate = (): JSX.Element => {
     setOpen(false)
     window.location.reload()
   }
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
+
+  const loadingPrams: ILoading = {
+    loadingStatus: loading,
+    setLoadingContext: (): void => {
+      setLoading(!loading)
+    },
+    setMessageEdit: (): void => {
+      setSeverity('info')
+      setMessage('cập nhật thành công')
+    }
+  }
+  if (message !== '') {
+    setTimeout(() => {
       setMessage('')
     }, 3000)
   }
   return (
     <>
       <LayoutAdmin>
-        <>
+        <LoadingContext.Provider value={loadingPrams}>
           <>
             {message && <MessageAlert message={message} severity={severity} />}
-
-            <Snackbar
-              open={showSuccess}
-              autoHideDuration={3000}
-              onClose={handleCloseSuccess}
-            >
-              <MuiAlert
-                onClose={handleCloseSuccess}
-                severity='success'
-                elevation={6}
-                variant='filled'
-              >
-                Đã thêm trắc nghiệm!
-              </MuiAlert>
-            </Snackbar>
-            <Snackbar
-              open={showError}
-              autoHideDuration={3000}
-              onClose={handleCloseSuccess}
-            >
-              <MuiAlert
-                onClose={handleCloseError}
-                severity='error'
-                elevation={6}
-                variant='filled'
-              >
-                Thêm trắc nghiệm thất bại!
-              </MuiAlert>
-            </Snackbar>
           </>
           <Stack
             sx={{
@@ -482,6 +487,20 @@ const TestCreate = (): JSX.Element => {
                         <span>hãy nhập đáp án</span>
                       </Box>
                     )}
+                    {errErrMinTrueAnswer && (
+                      <Box
+                        sx={{
+                          color: 'white',
+                          backgroundColor: red[300],
+                          fontSize: 13,
+                          borderRadius: 2,
+                          padding: 0.3,
+                          margin: 0.2
+                        }}
+                      >
+                        <span>{errErrMinTrueAnswer}</span>
+                      </Box>
+                    )}
                     {errNullCorret && (
                       <Box
                         sx={{
@@ -565,8 +584,8 @@ const TestCreate = (): JSX.Element => {
             return (
               <CardData
                 callBack={async (): Promise<void> => {
-                  await setSeverity('info')
-                  await setMessage('đã xoá thành công')
+                  setSeverity('info')
+                  setMessage('đã xoá thành công')
                   setLoading(!loading)
                 }}
                 trueAnswer={correctAnswers}
@@ -580,7 +599,7 @@ const TestCreate = (): JSX.Element => {
               />
             )
           })}
-        </>
+        </LoadingContext.Provider>
       </LayoutAdmin>
     </>
   )

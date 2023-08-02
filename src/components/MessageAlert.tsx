@@ -14,20 +14,32 @@ const StyledSnackbar = styled(Snackbar)(({ theme }) => ({
 }))
 
 const MessageAlert = ({ message, severity }: IMessage): JSX.Element => {
-  const [showMessage, setShowMessage] = useState<boolean>(true)
+  const [showMessage, setShowMessage] = useState<boolean>(false)
+
+  useEffect(() => {
+    if (!showMessage) {
+      // Nếu showMessage là true, hiển thị MessageAlert
+      const timer = setTimeout(() => {
+        setShowMessage(true) // Đặt lại trạng thái để unmount MessageAlert sau 3000ms
+      }, 500)
+
+      // Cleanup function để xóa timer khi component unmount hoặc khi trạng thái showMessage thay đổi thành false
+      return () => clearTimeout(timer)
+    }
+  }, [showMessage])
 
   const handleClose = (): void => {
     setShowMessage(false)
   }
 
   return (
-    <>
+    <div id='message-alert-container'>
+      {/* Đặt ID cho container chứa MessageAlert */}
       <StyledSnackbar
         sx={{
           position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '50%'
+          minWidth: 30,
+          background: '#fff'
         }}
         open={showMessage}
         autoHideDuration={3000}
@@ -42,7 +54,7 @@ const MessageAlert = ({ message, severity }: IMessage): JSX.Element => {
           {message}
         </Alert>
       </StyledSnackbar>
-    </>
+    </div>
   )
 }
 

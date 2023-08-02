@@ -16,6 +16,8 @@ import { editUser, insert } from '~/api/userApi'
 import MessageAlert from '~/components/MessageAlert'
 import { LoadingContext } from '.'
 import { isEmailValid } from '~/utils/stringUtils'
+import { UserContex } from './TableUser'
+import { UsecontexModalAdd } from './ModalAddUser'
 
 interface Dep {
   depId: number
@@ -41,16 +43,15 @@ export default function UserTextFields(prop: {
   const [gmail, setGmail] = React.useState(prop.email || '')
   const [dep, setDep] = React.useState<number>(prop.depId || 0)
   const [role, setRole] = React.useState<number>(prop.roleId || 0)
-  const [errorCccd,setErrorCccd] = React.useState<string>('')
-  const [errorUserName,setErrorUserName] = React.useState<string>('')
-  const [errorDayOfBirth,setErrorDayOfBirth] = React.useState<string>('')
-  const [errorGmail,setErrorGmail] = React.useState<string>('')
-  const [errorPassword,setErrorPassword] = React.useState<string>('')
-  const [errorRole,setErrorRole] = React.useState<string>('')
-  const [errorDep,setErrorDep] = React.useState<string>('')
-  const [errDateOfBirth,setErrDateOfBirth] = React.useState<string>('')
+  const [errorCccd, setErrorCccd] = React.useState<string>('')
+  const [errorUserName, setErrorUserName] = React.useState<string>('')
+  const [errorGmail, setErrorGmail] = React.useState<string>('')
+  const [errorPassword, setErrorPassword] = React.useState<string>('')
+  const [errorRole, setErrorRole] = React.useState<string>('')
+  const [errorDep, setErrorDep] = React.useState<string>('')
+  const [errDateOfBirth, setErrDateOfBirth] = React.useState<string>('')
   const [birthDay, setBirthDay] = React.useState<Dayjs | any>(
-    dayjs(prop.dateOfBirth) 
+    dayjs(prop.dateOfBirth)
   )
   const [showError, setShowError] = React.useState(false)
   const [userInsert, callInsertUser] = useFetch()
@@ -117,7 +118,7 @@ export default function UserTextFields(prop: {
   } = {
     userId: cccd,
     userName: userName,
-    dateOfBirth:birthDay.format('YYYY-MM-DD'),
+    dateOfBirth: birthDay.format('YYYY-MM-DD'),
     email: gmail,
     password: pass,
     roleId: Number(role),
@@ -166,12 +167,11 @@ export default function UserTextFields(prop: {
       condition: role === 0,
       setError: setErrorRole,
       errorMessage: 'Chưa chọn quyền người dùng'
-    },
-
+    }
   ]
-  const onSubmitFormInsert = (): void => {
-    
-
+  const userContextParams = React.useContext(UserContex)
+  const modalPrams = React.useContext(UsecontexModalAdd)
+  const onSubmitFormInsert = async (): Promise<void> => {
     for (const condition of errorConditions) {
       if (condition.condition) {
         condition.setError(condition.errorMessage)
@@ -182,19 +182,15 @@ export default function UserTextFields(prop: {
     if (hasError) {
       return
     }
-    callInsertUser(async () => {
-      try {
-        await insert(requestData)
-        setSeverity('success')
-        setMessage('đã thêm người dùng!')
-        loadingParams.setLoading()
-      } catch (error) {
-        setShowError(true)
-      }
+    await callInsertUser(async (): Promise<void> => {
+      await insert(requestData)
     })
+    modalPrams.offModal
+    setMessage('đã thêm người Dùng!')
+    setSeverity('success')
+    loadingParams.setLoading()
   }
-  console.log(dayjs(birthDay));
-  
+
   const onSubmitFormEdit = async (): Promise<void> => {
     for (const condition of errorConditions) {
       if (condition.condition) {
@@ -210,8 +206,7 @@ export default function UserTextFields(prop: {
       await editUser(requestData)
     })
 
-    setSeverity('info')
-    setMessage('đã sửa user!')
+    userContextParams.alertEdit()
     loadingParams.setLoading()
   }
   React.useEffect(() => {
@@ -235,12 +230,12 @@ export default function UserTextFields(prop: {
     fetchDataRole()
     fetchDataDep()
   }, [])
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
-      await setMessage('')
+  if (message !== '') {
+    setTimeout(() => {
+      setMessage('')
     }, 3000)
   }
-  
+
   return (
     <>
       {message && <MessageAlert message={message} severity={severity} />}
@@ -261,9 +256,10 @@ export default function UserTextFields(prop: {
             autoComplete='off'
           >
             <TextField
+              type={'number'}
               defaultValue={cccd}
               onChange={onchangeCCCD}
-              id="outlined-error-helper-text"
+              id='outlined-error-helper-text'
               label='CCCD'
               error={Boolean(errorCccd)}
               helperText={errorCccd}
@@ -386,7 +382,6 @@ export default function UserTextFields(prop: {
             noValidate
             autoComplete='off'
           >
-            
             <TextField
               defaultValue={cccd}
               onChange={onchangeCCCD}
@@ -395,7 +390,6 @@ export default function UserTextFields(prop: {
               variant='outlined'
               error={Boolean(errorCccd)}
               helperText={errorCccd}
-
             />
             <TextField
               id='filled-basic'
@@ -410,8 +404,8 @@ export default function UserTextFields(prop: {
                 <DatePicker
                   slotProps={{
                     textField: {
-                      className:errDateOfBirth ? 'errorMessage' : '',
-                      helperText: errDateOfBirth,
+                      className: errDateOfBirth ? 'errorMessage' : '',
+                      helperText: errDateOfBirth
                     }
                   }}
                   onChange={onchangeBirthDay}

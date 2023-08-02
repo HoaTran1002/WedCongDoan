@@ -288,8 +288,8 @@ const ExamStart = (): JSX.Element => {
       navigate('/*')
     }
   }, [location, navigate])
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
+  if (message !== '') {
+    setTimeout(() => {
       setMessage('')
     }, 3000)
   }

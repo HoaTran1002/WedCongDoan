@@ -18,8 +18,10 @@ export const LoadingContext = createContext<ILoadingContext>({
 
 const Index = (): JSX.Element => {
   const [loading, setLoading] = useState<boolean>(false)
+
   const loadingParams: ILoadingContext = {
     statusLoading: loading,
+
     setLoading: () => {
       console.log('okeee')
       setLoading(!loading)

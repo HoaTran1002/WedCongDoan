@@ -147,8 +147,8 @@ export default function TextFields(prop: {
     setSeverity('error')
     setMessage('chỉnh sửa thất bại')
   }
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
+  if (message !== '') {
+    setTimeout(() => {
       setMessage('')
     }, 3000)
   }

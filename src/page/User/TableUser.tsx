@@ -22,10 +22,19 @@ interface User {
   depId: number
   isDeleted: number
 }
-
+interface IUserContext {
+  alertEdit: () => void
+  alertAdd: () => void
+}
+export const UserContex = React.createContext<IUserContext>({
+  alertEdit: () => {
+    return
+  },
+  alertAdd: () => {
+    return
+  }
+})
 const TableUser = (): JSX.Element => {
-  const [showSuccess, setShowSuccess] = React.useState(false)
-  const [showError, setShowError] = React.useState(false)
   const [userState, call] = useFetch()
   const [deleteUserState, callDelete] = useFetch()
   const [loading, setLoading] = React.useState<boolean>(false)
@@ -43,19 +52,11 @@ const TableUser = (): JSX.Element => {
         dateofbirth: formatDay(user.dateOfBirth),
         email: user.email,
         password: user.password,
+        useraddress: user.userAddress,
         roleId: user.roleId,
         depId: user.depId
       })) || []
-      const formatDateYYYY_DD_MM = (inputDate: string):string => {
-        const parts = inputDate.split('/').map((part) => part.trim());
-        if (parts.length !== 3) {
-          throw new Error('Invalid date format');
-        }
-      
-        const [day, month, year] = parts;
-        const formattedDate = `${year}-${month}-${day}`;
-        return formattedDate;
-      };
+
   const handleDelete = async (id: string): Promise<void> => {
     const request: { _id: string; value: number } = {
       _id: id,
@@ -63,9 +64,10 @@ const TableUser = (): JSX.Element => {
     }
     await callDelete(async (): Promise<void> => {
       await UpdateIsDeleted(request)
+      // setShowSuccess(true)
     })
-    setMessage('đã xoá user!')
-    setServerity('success')
+    setMessage('đã xoá người Dùng!')
+    setServerity('info')
     setLoading(!loading)
   }
 
@@ -83,6 +85,10 @@ const TableUser = (): JSX.Element => {
       headerName: 'Mật Khẩu'
     },
     {
+      field: 'useraddress',
+      headerName: 'Địa Chỉ'
+    },
+    {
       field: 'actions',
       type: 'actions',
       getActions: (params: any) => [
@@ -90,23 +96,25 @@ const TableUser = (): JSX.Element => {
           key='edit'
           id={params.id}
           userName={params.username}
-          dateOfBirth={formatDateYYYY_DD_MM(params.dateofbirth)}
+          dateOfBirth={params.dateofbirth}
           email={params.email}
           password={params.password}
           roleId={params.roleId}
           depId={params.depId}
         />,
-        <>
-          <Tooltip key='delete' title='Xóa'>
-            <ModalDelete
-              callBack={(): void => {
-                handleDelete(params.id)
-              }}
-              content={'bạn có muốn xoá người dùng này?'}
-              question={'cảnh báo!!'}
-            />
-          </Tooltip>
-        </>
+        <Tooltip key='delete' title='Xóa'>
+          <ModalDelete
+            callBack={(): void => {
+              handleDelete(params.id)
+            }}
+            content={'bạn có muốn xoá người dùng này?'}
+            question={'cảnh báo!!'}
+          />
+
+          {/* <IconButton onClick={(): void => handleDelete(params.id)}>
+            <DeleteIcon color='error' />
+          </IconButton> */}
+        </Tooltip>
       ]
     }
   ]
@@ -114,14 +122,23 @@ const TableUser = (): JSX.Element => {
   React.useEffect(() => {
     call(getAllUser)
   }, [loading, loadingParams.statusLoading])
-  if (message != null) {
-    setTimeout(async (): Promise<void> => {
+  if (message !== '') {
+    setTimeout(() => {
       setMessage('')
     }, 3000)
   }
-
+  const userContextParams: IUserContext = {
+    alertEdit: (): void => {
+      setServerity('info')
+      setMessage('chỉnh sửa thành công!')
+    },
+    alertAdd: (): void => {
+      setServerity('info')
+      setMessage('đã thêm người Dùng!')
+    }
+  }
   return (
-    <>
+    <UserContex.Provider value={userContextParams}>
       <>{message && <MessageAlert message={message} severity={serverity} />}</>
 
       {userState.loading || deleteUserState.loading ? (
@@ -153,7 +170,7 @@ const TableUser = (): JSX.Element => {
           </Box>
         </>
       )}
-    </>
+    </UserContex.Provider>
   )
 }
 export default TableUser
