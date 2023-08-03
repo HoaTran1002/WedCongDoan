@@ -108,7 +108,7 @@ const TableDepartment = (): JSX.Element => {
   return (
     <>
       {depState.loading == true ? (
-        <Loader />
+        <Loader height='500px' />
       ) : (
         <>
           <Button

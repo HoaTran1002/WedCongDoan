@@ -3,6 +3,7 @@ import {
   Button,
   Modal,
   styled,
+  SxProps,
   Tooltip,
   tooltipClasses,
   TooltipProps,
@@ -11,7 +12,7 @@ import {
 import React from 'react'
 import DeleteSweepIcon from '@mui/icons-material/DeleteSweep'
 import { blue, red } from '@mui/material/colors'
-const style = {
+const style:SxProps = {
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -24,8 +25,8 @@ const style = {
   boxShadow: 24,
   p: 4,
   display: 'flex',
-  justyficontent: 'center',
-  alignItems: 'center'
+  justifyContent:"flex-start",
+  flexDirection:"column"
 }
 interface IModal {
   question?: string
@@ -84,27 +85,34 @@ const ModalDelete = ({
         aria-describedby='modal-modal-description'
       >
         <Box sx={style}>
-          <>
             <Typography
               id='modal-modal-title'
               variant='h6'
               component='h2'
-              sx={{ padding: 2 }}
             >
               {question ? question : 'Bạn muốn xoá trắc nghiệm?'}
-              <Typography id='modal-modal-description'>
+                </Typography>
+              <Typography id='modal-modal-description' sx={{mt:2}}>
                 {content
                   ? content
                   : 'câu trắc nghiệm này sẽ hoàn toàn bị xoá khỏi đề thi!'}
               </Typography>
-              <Button variant='contained' onClick={callDelete}>
-                Đồng ý
-              </Button>
-              <Button variant='outlined' onClick={handleClose}>
-                Thoát
-              </Button>
-            </Typography>
-          </>
+              <Box
+                sx={{
+                  display:"flex",
+                  gap:"20px",
+                  justifyContent:"flex-end",
+                  mt:3
+                }}
+              >
+                <Button variant='contained' onClick={callDelete}>
+                  Đồng ý
+                </Button>
+                <Button variant='outlined' onClick={handleClose}>
+                  Thoát
+                </Button>
+                
+              </Box>
         </Box>
       </Modal>
     </div>

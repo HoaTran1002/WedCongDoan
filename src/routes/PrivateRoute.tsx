@@ -7,8 +7,7 @@ type Props = {
 
 const PrivateRoute = (props: Props): JSX.Element => {
   const { profile } = useAuth()
-  console.log("Roles prop in PrivateRoute:", props.roles);
-  console.log("RoleId in profile:", profile?.roleId);
+  
   if (!profile) {
     return <Navigate to='/login' />;
   }

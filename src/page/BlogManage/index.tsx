@@ -75,7 +75,7 @@ const Index = (): JSX.Element => {
         <h1 className='color-primary text-center'>Quản lý trang blog</h1>
 
         {getBlog.loading ? (
-          <Loader />
+          <Loader height='500px' />
         ) : (
           <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
             <>
