@@ -377,6 +377,7 @@ export default function SideBar(): JSX.Element {
                           key={index}
                           variant='outlined'
                           startIcon={r.icon}
+                          color='error'
                           sx={{
                             width: '100%'
                           }}

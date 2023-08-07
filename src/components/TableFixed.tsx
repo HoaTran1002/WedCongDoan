@@ -5,7 +5,7 @@ import {
     Pagination
 } from '@mui/material'
 import { Loader } from './loader';
-
+import InventoryIcon from '@mui/icons-material/Inventory';
 export interface ColumnsProps {
     headerName?: string | null,
     field: string,
@@ -16,8 +16,8 @@ export interface ColumnsProps {
 interface TableWithFixedColumnProps {
     columns: ColumnsProps[];
     rows: string[];
-    maxWidth?: number;
-    maxHeight?: number;
+    maxWidth?: number | string;
+    maxHeight?: number | string;
     numberItems?: number;
     isLoading?:boolean,
 }
@@ -30,23 +30,22 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
     isLoading
 }) => {
     const [currentPage, setCurrentPage] = useState(1);
-    const [maxWidthTable, setMaxWidthTable] = useState<number>(maxWidth || 700);
-    const [maxHeightTable, setMaxHeightTable] = useState<number>(maxHeight || 500);
+    const [maxWidthTable, setMaxWidthTable] = useState<number | string>(maxWidth || 700);
+    const [maxHeightTable, setMaxHeightTable] = useState<number | string>(maxHeight || 500);
     const actionsColumn = columns.find((column) => column.type === 'actions');
     const fixed = actionsColumn ? true : false;
     const page = numberItems ? true : false;
     const productsPerPage = numberItems || 0;
-    const totalPages = Math.ceil(rows.length / productsPerPage);
+    const totalPages = Math.ceil(rows?.length / productsPerPage);
     const startIndex = (currentPage - 1) * productsPerPage;
     const endIndex = startIndex + productsPerPage;
-    const currentItems = rows.slice(startIndex, endIndex);
+    const currentItems = rows?.slice(startIndex, endIndex);
     const handlePageChange = (event: React.ChangeEvent<unknown>, page: number): void => {
         setCurrentPage(page);
     };
     return (
         <>
             {
-
                 page ? (
                     <Box
                         sx={{
@@ -59,8 +58,8 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                         <Box
                             sx={{
                                 ...table_container,
-                                width: `${maxWidthTable}px`,
-                                height: `${maxHeightTable}px`,
+                                width: Number(maxWidthTable) ? `${maxWidthTable}px` : maxWidthTable,
+                                height:Number(maxHeightTable) ? `${maxHeightTable}px` : maxHeightTable,
                                 '&::-webkit-scrollbar': {
                                     height: "8px",
                                     width: '0px'
@@ -182,9 +181,10 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                             <Box
                                 sx={{
                                     ...table_container,
-                                    width: `${maxWidthTable}px`,
-                                    height: `${maxHeightTable}px`,
+                                    width: Number(maxWidthTable) ? `${maxWidthTable}px` : maxWidthTable,
+                                    height:Number(maxHeightTable) ? `${maxHeightTable}px` : maxHeightTable,
                                     border: "1px solid #cacaca",
+                                    backgroundColor:"white",
                                     borderRadius: "5px",
                                     '&::-webkit-scrollbar': {
                                         height: "8px",
@@ -202,48 +202,57 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                     }}
                                 >
                                     {
-                                        !isLoading ?(
-                                            <Box component='table' sx={{ borderCollapse: 'collapse', width: "100%" , mb:5}}>
-                                                <Box
-                                                    component='thead'
-                                                >
-                                                    <tr>
-                                                        {columns.filter(r => r.field !== 'actions').map((row, index) => (
-                                                            <Box
-                                                                component='td'
-                                                                key={index}
-                                                                sx={itemsColumnsHeader}
-                                                            >
-                                                                {row.headerName}
-                                                            </Box>
-                                                        ))}
-                                                    </tr>
+                                        rows?.length === 0 ?(
+                                            <Box sx={{width:'100%',height:"100%",position:"relative"}}>
+                                                    <Box component='table' sx={{ borderCollapse: 'collapse', width: "100%" , mb:5,height:"100%"}}>
+                                                        <Box
+                                                            component='thead'
+                                                        >
+                                                            <tr>
+                                                                {columns.filter(r => r.field !== 'actions').map((row, index) => (
+                                                                    <Box
+                                                                        component='td'
+                                                                        key={index}
+                                                                        sx={itemsColumnsHeader}
+                                                                    >
+                                                                        {row.headerName}
+                                                                    </Box>
+                                                                ))}
+                                                            </tr>
+                                                        </Box>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td colSpan={columns?.length}>
+                                                                    <Box>
+                                                                        <Box
+                                                                            sx={{
+                                                                                display:"flex",
+                                                                                flexDirection:"column",
+                                                                                gap:"20",
+                                                                                justifyContent:"center",
+                                                                                alignItems:"center"
+                                                                            }}
+                                                                        >
+                                                                            <InventoryIcon sx={{
+                                                                                fontSize:"80px",
+                                                                                color:"#787878"
+                                                                            }}/>
+                                                                            <span
+                                                                                style={{
+                                                                                    color:"#999",
+                                                                                    fontWeight:"500",
+                                                                                    fontSize:"19px"
+                                                                                }}
+                                                                            >Không có gì ở đây</span>
+                                                                        </Box>
+                                                                    </Box>
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </Box>
                                                 </Box>
-                                                <tbody >
-                                                    {rows.map((row, index: number) => (
-                                                        <tr key={index}>
-                                                            {columns.filter(r => r.field !== 'actions').map((column: any, columnIndex: number) => (
-                                                                <Box
-                                                                    component='td'
-                                                                    sx={itemsColumnsRows}
-                                                                    key={columnIndex}
-                                                                >
-                                                                    {row[column.field]}
-                                                                </Box>
-                                                            ))}
-                                                        </tr>
-                                                    ))}
-                                                    <tr
-                                                        style={{
-                                                            height:"50px"
-                                                        }}
-                                                    >
-
-                                                    </tr>
-                                                </tbody>
-                                            </Box>
                                         ):(
-                                            <Box sx={{width:'100%'}}>
+                                            !isLoading ?(
                                                 <Box component='table' sx={{ borderCollapse: 'collapse', width: "100%" , mb:5}}>
                                                     <Box
                                                         component='thead'
@@ -260,9 +269,52 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                                             ))}
                                                         </tr>
                                                     </Box>
+                                                    <tbody >
+                                                        {rows?.map((row, index: number) => (
+                                                            <tr key={index}>
+                                                                {columns.filter(r => r.field !== 'actions').map((column: any, columnIndex: number) => (
+                                                                    <Box
+                                                                        component='td'
+                                                                        sx={itemsColumnsRows}
+                                                                        key={columnIndex}
+                                                                    >
+                                                                        {row[column.field]}
+                                                                    </Box>
+                                                                ))}
+                                                            </tr>
+                                                        ))}
+                                                        <tr
+                                                            style={{
+                                                                height:"50px"
+                                                            }}
+                                                        >
+    
+                                                        </tr>
+                                                    </tbody>
                                                 </Box>
-                                                <Loader height='100%'/>
-                                            </Box>
+                                            ):(
+                                                <Box sx={{width:'100%'}}>
+                                                    <Box component='table' sx={{ borderCollapse: 'collapse', width: "100%" , mb:5}}>
+                                                        <Box
+                                                            component='thead'
+                                                        >
+                                                            <tr>
+                                                                {columns.filter(r => r.field !== 'actions').map((row, index) => (
+                                                                    <Box
+                                                                        component='td'
+                                                                        key={index}
+                                                                        sx={itemsColumnsHeader}
+                                                                    >
+                                                                        {row.headerName}
+                                                                    </Box>
+                                                                ))}
+                                                            </tr>
+                                                        </Box>
+                                                    </Box>
+                                                    <Loader height='100%'/>
+                                                </Box>
+                                            )
+                                            
                                         )
                                     }
                                 </Box>
@@ -289,7 +341,7 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {rows.map((row, rowIndex) => (
+                                            {rows?.map((row, rowIndex) => (
                                                 <tr key={rowIndex}>
                                                     <Box
                                                         component='th'

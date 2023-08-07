@@ -1,7 +1,11 @@
 import * as React from 'react'
 import { createContext, useState } from 'react'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
-
+import {
+  Box,
+  SxProps,
+  Pagination
+} from '@mui/material'
 import TableUser from '~/page/User/TableUser'
 import BasicModal from './ModalAddUser'
 interface ILoadingContext {
@@ -31,9 +35,53 @@ const Index = (): JSX.Element => {
     <>
       <LayoutAdmin>
         <LoadingContext.Provider value={loadingParams}>
-          <h1 className='color-primary text-center'>Quản lý người dùng</h1>
-          <BasicModal />
+          <Box
+            sx={{
+              backgroundColor: "white",
+              borderRadius: "3px",
+              padding: "10px",
+              display: "flex",
+              alignItems: "center",
+              gap: "30px",
+              m:"0 20px"
+            }}
+          >
+            {/* <Box
+              sx={{
+                display: "flex",
+                borderBottom: "1px solid #0057c1",
+                gap: "10px"
+              }}
+              onKeyDown={handleKeyPressEnter}
+            >
+              <Box
+                component='input'
+                value={compSearch}
+                sx={{
+                  fontSize: "18px",
+                  border: "none",
+                  outline: "none"
+                }}
+                placeholder='Tìm kiếm cuộc thi'
+                onChange={(e): void => setCompSearch(e.target.value)}
+              />
+              <Box
+                onClick={handleSearch}
+              >
+                <SearchIcon />
+              </Box>
+            </Box> */}
+            <BasicModal />
+          </Box>
+          <Box
+          sx={{
+            mt:"20px"
+          }}
+          >
+
           <TableUser />
+
+          </Box>
         </LoadingContext.Provider>
       </LayoutAdmin>
     </>

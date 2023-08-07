@@ -9,13 +9,14 @@ import {
 } from '@mui/material'
 import AddIcon from '@mui/icons-material/Add'
 import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import useFetch from '~/hook/useFetch'
 import {
   deleteCompetitions,
   getAllComp,
   UpdateIsDeleted
 } from '~/api/competitionApi'
+import SearchIcon from '@mui/icons-material/Search';
 import MilitaryTechOutlinedIcon from '@mui/icons-material/MilitaryTechOutlined'
 import { color } from '@mui/system'
 import { getAllDep } from '~/api/depApi'
@@ -47,6 +48,7 @@ interface IDep {
   depName: string
 }
 const CompTable = (): JSX.Element => {
+  const navigate = useNavigate();
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
   const [compState, callComp] = useFetch()
@@ -56,12 +58,30 @@ const CompTable = (): JSX.Element => {
   const [compId, setComId] = React.useState<number>(0)
   const depList = deps.payload || []
   const [loading, setLoading] = useState<boolean>(false)
+  const [compSearch,setCompSearch] = React.useState<string>('')
+  const [listCompetition,setListCompetition] = React.useState<any[]>([]) 
   React.useEffect(() => {
     depCall(getAllDep)
   }, [loading])
   React.useEffect(() => {
     callComp(getAllComp)
+    
   }, [loading])
+  React.useEffect(()=>{
+    setListCompetition(
+      compState?.payload
+      ?.filter((item: ICompetition) => item.isDeleted !== 1)
+      .map((item: ICompetition) => ({
+        comId: item.comId,
+        comName: item.comName,
+        startDate: formatDay(item.startDate),
+        endDate: formatDay(item.endDate),
+        examTimes: item.examTimes,
+        userQuan: item.userQuan,
+        depName: getNameDep(item.depId)
+      })).reverse()
+    )
+  },[compState?.loading])
 
   const getNameDep = (idDep: number): string => {
     try {
@@ -87,6 +107,32 @@ const CompTable = (): JSX.Element => {
     setShowError(false)
   }
 
+  const handleSearch=():void=>{
+    setListCompetition(
+      compState?.payload
+        ?.filter((item: ICompetition) =>   
+        item.isDeleted !== 1 &&
+        item.comName.trim().toLowerCase()?.includes(compSearch.trim().toLowerCase())
+      )
+      ?.map((item: ICompetition) => ({
+        comId: item.comId,
+        comName: item.comName,
+        startDate: formatDay(item.startDate),
+        endDate: formatDay(item.endDate),
+        examTimes: item.examTimes,
+        userQuan: item.userQuan,
+        depName: getNameDep(item.depId)
+      }))
+      .reverse()
+    )
+
+    setCompSearch('')
+  }
+  const handleKeyPressEnter = (event: React.KeyboardEvent<HTMLDivElement>): void => {
+    if (event.key === 'Enter') {
+      handleSearch()
+    }
+  };
   const handelDeleteComp = (idComp: number): void => {
     const requestDelete: { _id: number } = { _id: idComp }
     deleteCompCall(async () => {
@@ -174,127 +220,156 @@ const CompTable = (): JSX.Element => {
       ]
     }
   ]
-  const rows =
-    compState.payload
-      ?.filter((item: ICompetition) => item.isDeleted !== 1)
-      .map((item: ICompetition) => ({
-        comId: item.comId,
-        comName: item.comName,
-        startDate: formatDay(item.startDate),
-        endDate: formatDay(item.endDate),
-        examTimes: item.examTimes,
-        userQuan: item.userQuan,
-        depName: getNameDep(item.depId)
-      })).reverse() || []
+  console.log(compSearch)
   return (
     <>
-      <Grid item xs={12}>
-        <Stack>
-          <Typography
-            variant='h4'
-            sx={{
-              fontWeight: 500,
-              color: '#1976d2',
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: 2
-            }}
-          >
-            Danh sách cuộc thi
-          </Typography>
-        </Stack>
-      </Grid>
-
       <>
-        <>
-          <Snackbar
-            open={showSuccess}
-            autoHideDuration={3000}
+        <Snackbar
+          open={showSuccess}
+          autoHideDuration={3000}
+          onClose={handleCloseSuccess}
+        >
+          <MuiAlert
             onClose={handleCloseSuccess}
+            severity='success'
+            elevation={6}
+            variant='filled'
           >
-            <MuiAlert
-              onClose={handleCloseSuccess}
-              severity='success'
-              elevation={6}
-              variant='filled'
-            >
-              Thao tác thành công
-            </MuiAlert>
-          </Snackbar>
-          <Snackbar
-            open={showError}
-            autoHideDuration={3000}
-            onClose={handleCloseSuccess}
+            Thao tác thành công
+          </MuiAlert>
+        </Snackbar>
+        <Snackbar
+          open={showError}
+          autoHideDuration={3000}
+          onClose={handleCloseSuccess}
+        >
+          <MuiAlert
+            onClose={handleCloseError}
+            severity='error'
+            elevation={6}
+            variant='filled'
           >
-            <MuiAlert
-              onClose={handleCloseError}
-              severity='error'
-              elevation={6}
-              variant='filled'
-            >
-              Thao tác thất bại
-            </MuiAlert>
-          </Snackbar>
-        </>
-          <Grid
-            container
-            rowSpacing={1}
-            columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-          >
-            <>
-              <Link
-                to={'/CompetitionCreate'}
-                style={{
-                  textDecoration: 'none',
-                  marginLeft: 40,
-                  display: 'inline-block'
+            Thao tác thất bại
+          </MuiAlert>
+        </Snackbar>
+      </>
+        <Grid
+          container
+          rowSpacing={1}
+          sx={{width:"100% !important"}}
+        >
+            <Grid item xs={12} style={{ margin: 10 }}>
+              <Box 
+                sx={{
+                  backgroundColor:"white",
+                  borderRadius:"3px",
+                  padding:"10px",
+                  display:"flex",
+                  alignItems:"center",
+                  gap:"30px"
                 }}
               >
-                <Button variant='outlined' startIcon={<AddIcon />}>
-                  Thêm cuộc thi mới
-                </Button>
-              </Link>
-              <Grid item xs={12} style={{ margin: 10 }}>
                 <Box
                   sx={{
-                    display: 'flex',
-                    justifyContent: 'center'
+                    display:"flex",
+                    borderBottom:"1px solid #0057c1",
+                    gap:"10px"
                   }}
+                  onKeyDown={handleKeyPressEnter}
                 >
-                  <TableWithFixedColumn
-                    isLoading={compState.loading || deps.loading}
-                    rows={rows}
-                    columns={columns}
-                    maxWidth={1100}
-                    maxHeight={400}
+                  <Box 
+                    component='input'
+                    value={compSearch}
+                    sx={{
+                      fontSize:"18px",
+                      border:"none",
+                      outline:"none"
+                    }}
+                    placeholder='Tìm kiếm cuộc thi'
+                    onChange={(e):void=>setCompSearch(e.target.value)}
                   />
+                  <Box
+                    onClick={handleSearch}
+                  >
+                    <SearchIcon/>
+                  </Box>
                 </Box>
-              </Grid>
-            </>
-          </Grid>
-        <Dialog
-          open={openDelete}
-          onClose={handleCloseDelete}
-          aria-labelledby='alert-dialog-title'
-          aria-describedby='alert-dialog-description'
-        >
-          <DialogTitle id='alert-dialog-title'>{'Thông báo'}</DialogTitle>
-          <DialogContent>
-            <DialogContentText id='alert-dialog-description'>
-              Bạn có chắc muốn xóa cuộc thi này
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={(): void => handelDeleteComp(compId)}
-              variant='outlined'
-            >
-              Xóa
-            </Button>
-            <Button onClick={handleCloseDelete}>Trở về</Button>
-          </DialogActions>
-        </Dialog>
-      </>
+                <Box
+                  sx={{
+                    display:"inline-flex",
+                    alignItems:"center",
+                    position:"relative",
+                    cursor:"pointer",
+                    borderRadius:"3px",
+                    transition:"all linear 0.2s",
+                  }}
+                  onClick={():void=>navigate('/CompetitionCreate')}
+                >
+                  <span
+                    className='icon-button'
+                    style={{
+                      transition:"all linear 0.2s",
+                      display:"flex",
+                      alignItems:"center",
+                      justifyContent:"center",
+                      backgroundColor:"#007ecd",
+                      color:"white",
+                      padding:"5px",
+                    }}
+                  ><AddIcon/></span>
+                  <span
+                    style={{
+                      backgroundColor:"#def5ff",
+                      height:"100%",
+                      color:"#002fa7",
+                      fontWeight:"500",
+                      padding:"5px",
+                    }}
+                  >Thêm cuộc thi</span>
+                  
+                </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={12} style={{ margin: 0,padding:"0" }}>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  width:"100%",
+                }}
+              >
+                <TableWithFixedColumn
+                  isLoading={compState.loading || deps.loading}
+                  rows={listCompetition}
+                  columns={columns}
+                  maxWidth={'95%'}
+                  maxHeight={'70vh'}
+                />
+              </Box>
+            </Grid>
+        </Grid>
+      <Dialog
+        open={openDelete}
+        onClose={handleCloseDelete}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle id='alert-dialog-title'>{'Thông báo'}</DialogTitle>
+        <DialogContent>
+          <DialogContentText id='alert-dialog-description'>
+            Bạn có chắc muốn xóa cuộc thi này
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={(): void => handelDeleteComp(compId)}
+            variant='outlined'
+          >
+            Xóa
+          </Button>
+          <Button onClick={handleCloseDelete}>Trở về</Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 }

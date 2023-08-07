@@ -45,19 +45,40 @@ export default function BasicModal(): JSX.Element {
   return (
     <UsecontexModalAdd.Provider value={modalPrams}>
       {!userState.loading ? (
-        <Stack
-          direction={'row'}
-          gap={'20px'}
-          sx={{ ml: 2, mt: '15px', mb: '15px' }}
-        >
-          <Button
-            variant='outlined'
-            onClick={handleOpen}
-            startIcon={<AddIcon />}
-          >
-            Thêm Người Dùng
-          </Button>
-        </Stack>
+          <Box
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                position: "relative",
+                cursor: "pointer",
+                borderRadius: "3px",
+                transition: "all linear 0.2s",
+              }}
+              onClick={handleOpen}
+            >
+              <span
+                className='icon-button'
+                style={{
+                  transition: "all linear 0.2s",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#007ecd",
+                  color: "white",
+                  padding: "5px",
+                }}
+              ><AddIcon /></span>
+              <span
+                style={{
+                  backgroundColor: "#def5ff",
+                  height: "100%",
+                  color: "#002fa7",
+                  fontWeight: "500",
+                  padding: "5px",
+                }}
+              >Thêm người dùng</span>
+
+            </Box>
       ) : null}
       <Modal
         open={open}
