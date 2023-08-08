@@ -39,12 +39,17 @@ import { getLogout } from '~/api/userApi'
 import { textAlign } from '@mui/system'
 const drawerWidth = 250
 const pagesOfAdmin = [
-  { name: 'CUỘC THI', to: '/CompetitionManage', icon: <GridViewIcon />,roles:[1,2] },
-  { name: 'USER', to: '/User', icon: <PersonIcon />,roles:[1] },
-  { name: 'BLOG', to: '/BlogManage', icon: <WebIcon />,roles:[1] },
-  { name: 'KẾT QUẢ', to: '/ResultManage', icon: <AppsIcon />,roles:[1] },
-  { name: 'THÔNG TIN', to: '/SettingManage', icon: <AppsIcon />,roles:[1] },
-  { name: 'TRANG CHỦ', to: '/',roles:[1,2] }
+  {
+    name: 'CUỘC THI',
+    to: '/CompetitionManage',
+    icon: <GridViewIcon />,
+    roles: [1, 2]
+  },
+  { name: 'USER', to: '/User', icon: <PersonIcon />, roles: [1] },
+  { name: 'BLOG', to: '/BlogManage', icon: <WebIcon />, roles: [1] },
+  { name: 'KẾT QUẢ', to: '/ResultManage', icon: <AppsIcon />, roles: [1] },
+  { name: 'THÔNG TIN', to: '/SettingManage', icon: <AppsIcon />, roles: [1] },
+  { name: 'TRANG CHỦ', to: '/', roles: [1, 2] }
 ]
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -115,56 +120,53 @@ export default function Index(): JSX.Element {
             flexDirection: 'column'
           }}
         >
-          {
-            pagesOfAdmin.map((page, index: number) => (
-              page.roles.find((r)=>r === profile?.roleId) ?(
-                <Link
-                  key={index}
-                  style={{ color: 'white', textDecoration: 'none' }}
-                  to={page.to}
-                >
-                  <Button
-                    key={index}
-                    onClick={handleCloseNavMenu}
-                    startIcon={page.icon}
-                    sx={{
-                      ...buttonStyles,
-                      ...(location.pathname === page.to && activeButtonStyles)
-                    }}
-                    variant='contained'
-                  >
-                    {page.name}
-                  </Button>
-                </Link>
-
-              ):(
+          {pagesOfAdmin.map((page, index: number) =>
+            page.roles.find((r) => r === profile?.roleId) ? (
+              <Link
+                key={index}
+                style={{ color: 'white', textDecoration: 'none' }}
+                to={page.to}
+              >
                 <Button
                   key={index}
                   onClick={handleCloseNavMenu}
                   startIcon={page.icon}
                   sx={{
-                    padding: '10px',
-                    background: blue[100],
-                    boxShadow: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
-                    flexDirection: 'row',
-                    color:"#666",
-                    cursor:"default",
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                      borderRadius: 'none',
-                      boxShadow: 'none'
-                    },
+                    ...buttonStyles,
+                    ...(location.pathname === page.to && activeButtonStyles)
                   }}
                   variant='contained'
                 >
                   {page.name}
                 </Button>
-              )
-            ))
-          }
+              </Link>
+            ) : (
+              <Button
+                key={index}
+                onClick={handleCloseNavMenu}
+                startIcon={page.icon}
+                sx={{
+                  padding: '10px',
+                  background: blue[100],
+                  boxShadow: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-start',
+                  flexDirection: 'row',
+                  color: '#666',
+                  cursor: 'default',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    borderRadius: 'none',
+                    boxShadow: 'none'
+                  }
+                }}
+                variant='contained'
+              >
+                {page.name}
+              </Button>
+            )
+          )}
         </Box>
       </Box>
       <Box
@@ -278,25 +280,23 @@ export default function Index(): JSX.Element {
         </DrawerHeader>
         <Divider />
         <List>
-          {
-            pagesOfAdmin.map((page, index) => (
-              <Link key={index} style={{ textDecoration: 'none' }} to={page.to}>
-                <ListItem key={index} disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>{page.icon}</ListItemIcon>
-                    <ListItemText>
-                      <span
-                        className='color-primary'
-                        style={{ fontWeight: '600' }}
-                      >
-                        {page.name}
-                      </span>
-                    </ListItemText>
-                  </ListItemButton>
-                </ListItem>
-              </Link>
-            ))
-          }
+          {pagesOfAdmin.map((page, index) => (
+            <Link key={index} style={{ textDecoration: 'none' }} to={page.to}>
+              <ListItem key={index} disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>{page.icon}</ListItemIcon>
+                  <ListItemText>
+                    <span
+                      className='color-primary'
+                      style={{ fontWeight: '600' }}
+                    >
+                      {page.name}
+                    </span>
+                  </ListItemText>
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          ))}
         </List>
       </Drawer>
     </Box>
