@@ -2,9 +2,10 @@ import AddIcon from '@mui/icons-material/Add'
 import { LoadingButton } from '@mui/lab'
 import {
   Box,
+  CardActionArea,
   Button,
   Card,
-  CardActionArea,
+  IconButton,
   CardContent,
   CardMedia,
   Checkbox,
@@ -26,14 +27,14 @@ import MuiAlert from '@mui/material/Alert'
 import { blue, red } from '@mui/material/colors'
 import * as React from 'react'
 import { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { GetAllByExamID, insertQues } from '~/api/question'
 import { getAllQuesTpye } from '~/api/questionTypes'
 import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import useFetch from '~/hook/useFetch'
 import CardData from './CardData'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
-import { padding } from '@mui/system'
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import SaveIcon from '@mui/icons-material/Save'
 import MessageAlert from '~/components/MessageAlert'
 
@@ -86,6 +87,7 @@ export const LoadingContext = React.createContext<ILoading>({
 })
 
 const TestCreate = (): JSX.Element => {
+  const navigate = useNavigate();
   const [loading, setLoading] = React.useState<boolean>(false)
   const [showError, setShowError] = React.useState<boolean>(false)
   const [open, setOpen] = useState(false)
@@ -105,6 +107,7 @@ const TestCreate = (): JSX.Element => {
   const [severity, setSeverity] = useState<string>('')
   const [isAlert, setIsAlert] = useState<boolean>(false)
 
+  
   if (message !== '') {
     setTimeout((): void => {
       setIsAlert(false)
@@ -310,271 +313,279 @@ const TestCreate = (): JSX.Element => {
           <>
             {message && <MessageAlert message={message} severity={severity} />}
           </>
-          <Stack
-            sx={{
-              position: 'fixed',
-              zIndex: 2,
-              minWidth: 'auto',
-              boxShadow: 'rgba(0, 0, 0, 0.24) 0px 3px 8px;',
-              p: 1,
-              borderRadius: 4
-            }}
-            direction='row'
-            spacing={2}
+          <Modal
+            open={open}
+            onClose={handleClose}
+            aria-labelledby='modal-modal-title'
+            aria-describedby='modal-modal-description'
           >
-            <Button onClick={handleOpen} variant='contained'>
-              tạo trắc nghiệm
-            </Button>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby='modal-modal-title'
-              aria-describedby='modal-modal-description'
-            >
-              <Box sx={style}>
-                <Card
-                  sx={{
-                    Width: '100%',
-                    overflowY: 'scroll',
-                    boxShadow: 'none'
-                  }}
-                >
-                  <CardContent>
-                    <Typography variant='subtitle1'>
-                      <FormGroup>
-                        <TextField
-                          error={Boolean(errQuestion)}
-                          helperText={errQuestion}
-                          onChange={onChangeQuestion}
-                          id='standard-basic'
-                          label='nhập câu hỏi'
-                          variant='standard'
-                        />
-                      </FormGroup>
-                    </Typography>
-                    <Typography variant='h6' color='text.secondary'>
-                      <>
-                        {answerList.map((t, index): JSX.Element => {
-                          return (
-                            <FormGroup key={index}>
+            <Box sx={style}>
+              <Card
+                sx={{
+                  Width: '100%',
+                  overflowY: 'scroll',
+                  boxShadow: 'none'
+                }}
+              >
+                <CardContent>
+                  <Typography variant='subtitle1'>
+                    <FormGroup>
+                      <TextField
+                        error={Boolean(errQuestion)}
+                        helperText={errQuestion}
+                        onChange={onChangeQuestion}
+                        id='standard-basic'
+                        label='nhập câu hỏi'
+                        variant='standard'
+                      />
+                    </FormGroup>
+                  </Typography>
+                  <Typography variant='h6' color='text.secondary'>
+                    <>
+                      {answerList.map((t, index): JSX.Element => {
+                        return (
+                          <FormGroup key={index}>
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
                               <Box
                                 sx={{
-                                  display: 'flex',
-                                  alignItems: 'center'
+                                  flex: 1,
+                                  width: '100%'
                                 }}
                               >
-                                <Box
-                                  sx={{
-                                    flex: 1,
-                                    width: '100%'
+                                <TextField
+                                  value={t}
+                                  id='standard-basic'
+                                  variant='standard'
+                                  label='Nhập đáp án'
+                                  onChange={(
+                                    event: React.ChangeEvent<HTMLInputElement>
+                                  ): void => {
+                                    onchangeAnswer(event, index)
                                   }}
-                                >
-                                  <TextField
-                                    value={t}
-                                    id='standard-basic'
-                                    variant='standard'
-                                    label='Nhập đáp án'
-                                    onChange={(
-                                      event: React.ChangeEvent<HTMLInputElement>
-                                    ): void => {
-                                      onchangeAnswer(event, index)
-                                    }}
-                                    sx={{ width: '100%' }}
-                                  />
-                                </Box>
-                                <Box>
-                                  <FormControlLabel
-                                    control={
-                                      <Checkbox
-                                        checked={
-                                          answerList[index] !== '' &&
-                                          correctAnswerList.includes(
-                                            answerList[index]
-                                          )
-                                        }
-                                        onChange={(
-                                          event: React.ChangeEvent<HTMLInputElement>
-                                        ): void => {
-                                          selectAnswer(event, index)
-                                        }}
-                                      />
-                                    }
-                                    label='Đáp án đúng'
-                                  />
-                                </Box>
-                                <Button
-                                  onClick={(): void => {
-                                    deleteRow({ index })
-                                  }}
-                                  startIcon={
-                                    <RemoveCircleOutlineIcon color='error' />
-                                  }
-                                  variant='outlined'
-                                >
-                                  {' '}
-                                  xoá hàng
-                                </Button>
+                                  sx={{ width: '100%' }}
+                                />
                               </Box>
-                            </FormGroup>
-                          )
-                        })}
-                      </>
+                              <Box>
+                                <FormControlLabel
+                                  control={
+                                    <Checkbox
+                                      checked={
+                                        answerList[index] !== '' &&
+                                        correctAnswerList.includes(
+                                          answerList[index]
+                                        )
+                                      }
+                                      onChange={(
+                                        event: React.ChangeEvent<HTMLInputElement>
+                                      ): void => {
+                                        selectAnswer(event, index)
+                                      }}
+                                    />
+                                  }
+                                  label='Đáp án đúng'
+                                />
+                              </Box>
+                              <Button
+                                onClick={(): void => {
+                                  deleteRow({ index })
+                                }}
+                                startIcon={
+                                  <RemoveCircleOutlineIcon color='error' />
+                                }
+                                variant='outlined'
+                              >
+                                {' '}
+                                xoá hàng
+                              </Button>
+                            </Box>
+                          </FormGroup>
+                        )
+                      })}
+                    </>
 
-                      <Button
-                        onClick={addRow}
-                        sx={{ mt: 1 }}
-                        size='small'
-                        variant='outlined'
-                        color='primary'
-                        endIcon={<AddIcon />}
-                      >
-                        Tạo hàng
-                      </Button>
-                    </Typography>
-                  </CardContent>
-                  <Box
-                    component='form'
-                    sx={{
-                      '& .MuiTextField-root': { m: 1, width: '25ch' }
-                    }}
-                    noValidate
-                    autoComplete='off'
-                  >
-                    <Box sx={{ margin: 2 }}>
-                      <FormControl fullWidth>
-                        <InputLabel id='demo-simple-select-label'>
-                          Chọn loại đáp án
-                        </InputLabel>
-                        <Select
-                          labelId='demo-simple-select-label'
-                          id='demo-simple-select'
-                          label='Chọn loại đáp án'
-                          value={questionType.toString()}
-                          onChange={selectQuestionType}
-                        >
-                          {questionTypes.map((option: QuestType) => (
-                            <MenuItem
-                              key={option.quesTId}
-                              value={option.quesTId}
-                            >
-                              {option.quesTName}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Box>
-                  </Box>
-                  <Box
-                    sx={{
-                      color: red[300],
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'flex-start',
-                      flexDirection: 'column'
-                    }}
-                  >
-                    {errCorret && (
-                      <Box
-                        sx={{
-                          color: 'white',
-                          backgroundColor: red[300],
-                          fontSize: 13,
-                          borderRadius: 2,
-                          padding: 0.3,
-                          margin: 0.2
-                        }}
-                      >
-                        <span>hãy nhập đáp án</span>
-                      </Box>
-                    )}
-                    {errErrMinTrueAnswer && (
-                      <Box
-                        sx={{
-                          color: 'white',
-                          backgroundColor: red[300],
-                          fontSize: 13,
-                          borderRadius: 2,
-                          padding: 0.3,
-                          margin: 0.2
-                        }}
-                      >
-                        <span>{errErrMinTrueAnswer}</span>
-                      </Box>
-                    )}
-                    {errNullCorret && (
-                      <Box
-                        sx={{
-                          color: 'white',
-                          backgroundColor: red[300],
-                          fontSize: 13,
-                          borderRadius: 2,
-                          padding: 0.3,
-                          margin: 0.2
-                        }}
-                      >
-                        <span>chưa có đáp án đúng</span>
-                      </Box>
-                    )}
-                  </Box>
-                  <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                    <Box>
-                      {createQuesState.loading ? (
-                        <LoadingButton
-                          size='small'
-                          onClick={handleClick}
-                          loading
-                          loadingPosition='start'
-                          startIcon={<SaveIcon />}
-                          variant='outlined'
-                          sx={{ marginLeft: 2, marginRight: 2 }}
-                        >
-                          <span>disabled</span>
-                        </LoadingButton>
-                      ) : (
-                        <Button
-                          onClick={submitQuestion}
-                          size='small'
-                          color='primary'
-                          variant='outlined'
-                          sx={{ marginLeft: 2, marginRight: 2 }}
-                        >
-                          Thêm câu hỏi
-                        </Button>
-                      )}
-                    </Box>
                     <Button
-                      onClick={cancelModal}
+                      onClick={addRow}
+                      sx={{ mt: 1 }}
                       size='small'
-                      color='primary'
                       variant='outlined'
-                      sx={{ marginLeft: 2, marginRight: 2 }}
+                      color='primary'
+                      endIcon={<AddIcon />}
                     >
-                      thoát
+                      Tạo hàng
                     </Button>
+                  </Typography>
+                </CardContent>
+                <Box
+                  component='form'
+                  sx={{
+                    '& .MuiTextField-root': { m: 1, width: '25ch' }
+                  }}
+                  noValidate
+                  autoComplete='off'
+                >
+                  <Box sx={{ margin: 2 }}>
+                    <FormControl fullWidth>
+                      <InputLabel id='demo-simple-select-label'>
+                        Chọn loại đáp án
+                      </InputLabel>
+                      <Select
+                        labelId='demo-simple-select-label'
+                        id='demo-simple-select'
+                        label='Chọn loại đáp án'
+                        value={questionType.toString()}
+                        onChange={selectQuestionType}
+                      >
+                        {questionTypes.map((option: QuestType) => (
+                          <MenuItem
+                            key={option.quesTId}
+                            value={option.quesTId}
+                          >
+                            {option.quesTName}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
                   </Box>
-                </Card>
-              </Box>
-            </Modal>
-          </Stack>
-          <Card sx={{ Width: '100%' }}>
-            <CardActionArea>
-              <CardMedia
+                </Box>
+                <Box
+                  sx={{
+                    color: red[300],
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'flex-start',
+                    flexDirection: 'column'
+                  }}
+                >
+                  {errCorret && (
+                    <Box
+                      sx={{
+                        color: 'white',
+                        backgroundColor: red[300],
+                        fontSize: 13,
+                        borderRadius: 2,
+                        padding: 0.3,
+                        margin: 0.2
+                      }}
+                    >
+                      <span>hãy nhập đáp án</span>
+                    </Box>
+                  )}
+                  {errErrMinTrueAnswer && (
+                    <Box
+                      sx={{
+                        color: 'white',
+                        backgroundColor: red[300],
+                        fontSize: 13,
+                        borderRadius: 2,
+                        padding: 0.3,
+                        margin: 0.2
+                      }}
+                    >
+                      <span>{errErrMinTrueAnswer}</span>
+                    </Box>
+                  )}
+                  {errNullCorret && (
+                    <Box
+                      sx={{
+                        color: 'white',
+                        backgroundColor: red[300],
+                        fontSize: 13,
+                        borderRadius: 2,
+                        padding: 0.3,
+                        margin: 0.2
+                      }}
+                    >
+                      <span>chưa có đáp án đúng</span>
+                    </Box>
+                  )}
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Box>
+                    {createQuesState.loading ? (
+                      <LoadingButton
+                        size='small'
+                        onClick={handleClick}
+                        loading
+                        loadingPosition='start'
+                        startIcon={<SaveIcon />}
+                        variant='outlined'
+                        sx={{ marginLeft: 2, marginRight: 2 }}
+                      >
+                        <span>disabled</span>
+                      </LoadingButton>
+                    ) : (
+                      <Button
+                        onClick={submitQuestion}
+                        size='small'
+                        color='primary'
+                        variant='outlined'
+                        sx={{ marginLeft: 2, marginRight: 2 }}
+                      >
+                        Thêm câu hỏi
+                      </Button>
+                    )}
+                  </Box>
+                  <Button
+                    onClick={cancelModal}
+                    size='small'
+                    color='primary'
+                    variant='outlined'
+                    sx={{ marginLeft: 2, marginRight: 2 }}
+                  >
+                    thoát
+                  </Button>
+                </Box>
+              </Card>
+            </Box>
+          </Modal>
+          <Box 
+            sx={{
+              display:"flex",
+              flexDirection:"column"
+            }}
+          >
+              <Box
+              sx={{
+                width:"100%",
+                height:"200px",
+                objectFit:"cover",
+                borderTopLeftRadius:"5px",
+                borderTopRightRadius:"5px"
+              }}
                 component='img'
-                height='140'
-                image='https://hufi.edu.vn/images/slide/banner-web-hufi-01.jpg'
-                alt='green iguana'
-              />
-              <CardContent>
-                <Typography gutterBottom variant='h5' component='div'>
-                  Lizard
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  Lizards are a widespread group of squamate reptiles, with over
-                  6,000 species, ranging across all continents except Antarctica
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
+                src='https://hufi.edu.vn/images/slide/banner-web-hufi-01.jpg'
+              />    
+          </Box>
+              <Box
+                  sx={{
+                    backgroundColor: "#42a5f5",
+                    padding: "10px",
+                    display:"flex",
+                    gap:"40px",
+                    position:"sticky",
+                    top:"78px",
+                    left:0,
+                  zIndex:"30"
+                  }}
+                >
+                  <IconButton
+                    onClick={
+                      ():void=>{
+                        navigate(`/Tests/Competition/${comId}`)
+                      }
+                    }
+                  >
+                    <ArrowBackIcon sx={{color:"white"}} />
+                  </IconButton>
+                  <Button onClick={handleOpen} variant='contained'>
+                    tạo trắc nghiệm
+                  </Button>
+                </Box>
           {questions.map((q: QuestionData, index: number) => {
             const correctAnswers = q.trueAnswer.split('<====>')
             const arrStr = q.ansOfQues

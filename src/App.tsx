@@ -35,12 +35,12 @@ function App(): JSX.Element {
           <Route key={index} path={item.path} element={item.element} />
         ))}
       </Route>
-      {/* tài khoản admin,giảng viên, user */}
-      <Route element={<PrivateRoute roles={[1, 2, 3]} />}>
-        {ProtectedRoute.map((item: IRoute, index) => (
-          <Route key={index} path={item.path} element={item.element} />
-        ))}
-      </Route>
+        {/* tài khoản admin,giảng viên, user */}
+        <Route element={<PrivateRoute roles={[1, 2, 3]} />}>
+          {ProtectedRoute.map((item: IRoute, index) => (
+            <Route key={index} path={item.path} element={item.element} />
+          ))}
+        </Route>
       {/* không cần đăng nhập */}
       <Route path='/Listcompetition' element={<Listcompetition />} />
       <Route path={'/HomeBlogDetail/:id'} element={<HomeBlogDetail />} />

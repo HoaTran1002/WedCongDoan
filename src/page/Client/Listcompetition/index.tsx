@@ -25,6 +25,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { ICompetition, ICompetitionUser, IDepartment, IResult, IDate, ICompetitionPrize, IPrize } from '~/interface/Interface'
 import { isBeforeDate, formatDay, compareDateWithTimeString } from '~/utils/dateUtils'
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import { LoaderListCompetition } from '~/components/loader'
 
 export default function Index(): JSX.Element {
   const navigate = useNavigate()
@@ -42,6 +43,9 @@ export default function Index(): JSX.Element {
   const [listCompSearch, setListCompSearch] = React.useState<ICompetition[]>([])
   const listAllCompetitionUser = allCompUser?.payload
   const listAllResults = allResult?.payload
+  const allCompetition = getAllComps?.payload?.filter((r:ICompetition)=>r.isDeleted === 0);
+
+  console.log(allCompetition)
   const coutingUserInCom = (comId: number): number => {
     const listCompetionUserByComId: ICompetitionUser[] = listAllCompetitionUser?.filter((r: ICompetitionUser) => r.comId === comId)
     const listUser = listAllResults?.reduce((listNew: IResult[], curr: IResult) => {
@@ -66,7 +70,7 @@ export default function Index(): JSX.Element {
     });
   };
 
-  const listDayInHappening: IDate[] = getAllComps?.payload?.reduce((listNew: IDate[], current: ICompetition) => {
+  const listDayInHappening: IDate[] = allCompetition?.reduce((listNew: IDate[], current: ICompetition) => {
     const dateObj = new Date(current?.startDate)
     const month = dateObj.getMonth() + 1
     const day = dateObj.getDate()
@@ -74,7 +78,7 @@ export default function Index(): JSX.Element {
     if (!isBeforeDate(current?.endDate)) listNew.push({ date: day, month: month, year: year })
     return listNew;
   }, [])
-  const listDayInBefore: IDate[] = getAllComps?.payload?.reduce((listNew: IDate[], current: ICompetition) => {
+  const listDayInBefore: IDate[] = allCompetition?.reduce((listNew: IDate[], current: ICompetition) => {
     const dateObj = new Date(current?.startDate)
     const month = dateObj.getMonth() + 1
     const day = dateObj.getDate()
@@ -186,7 +190,7 @@ export default function Index(): JSX.Element {
 
   const listCompetitionforDate = (date: number, month: number, year: number, status: string): JSX.Element => {
     const dayObj: IDate = { date: date, month: month, year: year };
-    const listCom = getAllComps?.payload?.filter((r: ICompetition) =>
+    const listCom = allCompetition.filter((r: ICompetition) =>
       status !== 'afterDay' ?
         compareDateWithTimeString(dayObj, r.startDate) && !isBeforeDate(r.endDate) :
         compareDateWithTimeString(dayObj, r.startDate) && isBeforeDate(r.endDate)
@@ -202,6 +206,7 @@ export default function Index(): JSX.Element {
         }}
       >
         {
+          
           listCom?.map((r: ICompetition, index: number) => (
             <Box key={index}>
               <Box
@@ -259,7 +264,7 @@ export default function Index(): JSX.Element {
   };
   const handleSearchCom = (): void => {
     if (compSearch.trim() !== '') {
-      const listCompWhensearch = getAllComps?.payload?.filter((r: ICompetition) =>
+      const listCompWhensearch = allCompetition?.filter((r: ICompetition) =>
         r.comName.toLowerCase().trim().includes(compSearch.toLowerCase().trim())
       )
       setListCompSearch(listCompWhensearch);
@@ -280,7 +285,7 @@ export default function Index(): JSX.Element {
     setSelectStatus(false)
   }
   const listCompForDepWhenSelect = (depId: number): JSX.Element[] => {
-    const listCompForDep = getAllComps?.payload?.filter((r: ICompetition) =>
+    const listCompForDep = allCompetition?.filter((r: ICompetition) =>
       r.depId === Number(depId)
     )
     return (
@@ -315,9 +320,11 @@ export default function Index(): JSX.Element {
                   backgroundColor: "#cdebff",
                 }
               }}
-              onClick={(): void => handleGoToExamComp(r.comId)}
+              
             >
-              <ComName>{r.comName}</ComName>
+              <ComName
+                onClick={(): void => handleGoToExamComp(r.comId)}
+              >{r.comName}</ComName>
               <Box>
                 <span>
                   Khoa tổ chức: &nbsp;
@@ -340,6 +347,7 @@ export default function Index(): JSX.Element {
                 </span>
                 <TitleCompetition>{r.examTimes} phút </TitleCompetition>
               </Box>
+              {showPrizeInCompetition(r.comId)}
             </Box>
           </Grid>
         ))
@@ -496,9 +504,11 @@ export default function Index(): JSX.Element {
                                   backgroundColor: "#cdebff",
                                 }
                               }}
-                              onClick={(): void => handleGoToExamComp(r.comId)}
+                              
                             >
-                              <ComName>{r.comName}</ComName>
+                              <ComName
+                              onClick={(): void => handleGoToExamComp(r.comId)}
+                              >{r.comName}</ComName>
                               <Box>
                                 <span>
                                   Khoa tổ chức: &nbsp;
@@ -521,6 +531,7 @@ export default function Index(): JSX.Element {
                                 </span>
                                 <TitleCompetition>{r.examTimes} phút </TitleCompetition>
                               </Box>
+                              {showPrizeInCompetition(r.comId)}
                             </Box>
                           </Grid>
                         ))
@@ -610,6 +621,27 @@ export default function Index(): JSX.Element {
                             HIỆN GIỜ CHƯA CÓ CUỘC THI NÀO DIỄN RA CẢ
                           </Box>
                         ) : (
+                          getAllComps?.loading && allCompPrizes?.loading?(
+                            newListDayInHappening?.map((r: IDate, index: number) => (
+                              <Grid key={index} container spacing={1}>
+                                <Grid item md={12} xs={12}>
+                                  <LoaderListCompetition />
+                                </Grid>
+                                <Grid item md={12}>
+                                  <Box
+                                    sx={{
+                                      backgroundColor: "#1565c0",
+                                      height: "1px",
+                                      borderRadius: "3px",
+                                      width: "100%",
+                                      mt: 6
+                                    }}
+                                  >
+                                  </Box>
+                                </Grid>
+                              </Grid>
+                            ))
+                          ):(
                           newListDayInHappening?.map((r: IDate, index: number) => (
                             <Grid key={index} container spacing={1}>
                               <Grid item md={3} xs={3}>
@@ -676,7 +708,7 @@ export default function Index(): JSX.Element {
                                 </Box>
                               </Grid>
                             </Grid>
-                          ))
+                          )))
                         )
                       }
                     </Grid>

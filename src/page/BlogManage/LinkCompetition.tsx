@@ -160,7 +160,7 @@ const LinkCompetition = (props: PropLinkCompetition): JSX.Element => {
     <>
       {message && <MessageAlert message={message} severity={severity} />}
       {allCompsBlogs?.loading && allBlog?.loading && allComps?.loading ? (
-        <Loader />
+        <Loader height='500px' />
       ) : listBlogNoLink.find((r) => r === itemBlog.blogId) !== undefined ? (
         <Box
           sx={{
@@ -227,7 +227,7 @@ const LinkCompetition = (props: PropLinkCompetition): JSX.Element => {
               }}
             >
               {allBlog?.loading ? (
-                <Loader />
+                <Loader height='500px' />
               ) : (
                 <Grid container spacing={1}>
                   <Grid item md={6} xs={12}>

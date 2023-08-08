@@ -260,7 +260,7 @@ const PrizeData = (): JSX.Element => {
               Quản lý phần thưởng cuộc thi
             </Box>
             {stateCompPri.loading || deleteCompPrizState.loading ? (
-              <Loader />
+              <Loader height='500px' />
             ) : (
               <>
                 <Box

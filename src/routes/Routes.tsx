@@ -61,6 +61,7 @@ export const TeacherAdminRoute = [
 ]
 //tài khoản admin,giảng viên, user
 export const ProtectedRoute: IPramsRoute[] = [
+  { path: '/HomeBlogDetail/:id', element: <HomeBlogDetail /> },
   { path: '/HistoryCompetition', element: <HistoryCompetition /> },
   { path: '/Listcompetition', element: <Listcompetition /> },
   { path: '/ListExamCompetition', element: <ListExamCompetition /> },

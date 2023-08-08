@@ -261,7 +261,7 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                                         </tr>
                                                     </Box>
                                                 </Box>
-                                                <Loader/>
+                                                <Loader height='100%'/>
                                             </Box>
                                         )
                                     }

@@ -18,7 +18,6 @@ interface User {
   dateOfBirth: string
   email: string
   password: string
-  userAddress: string
   roleId: number
   depId: number
   isDeleted: number
@@ -100,7 +99,6 @@ const TableUser = (): JSX.Element => {
           dateOfBirth={params.dateofbirth}
           email={params.email}
           password={params.password}
-          userAddress={params.useraddress}
           roleId={params.roleId}
           depId={params.depId}
         />,

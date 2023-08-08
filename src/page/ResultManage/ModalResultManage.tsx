@@ -233,7 +233,7 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
                                 </Box>
                             ) : (
                                 allResults?.loading && allCompUsers?.loading && allUsers?.loading ? (
-                                    <Loader />
+                                    <Loader height='500px' />
                                 ) : (
                                     <Box
                                         sx={{

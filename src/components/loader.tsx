@@ -16,15 +16,19 @@ interface User {
     roleId: number
     depId: number
 }
-const Loader = (): JSX.Element => {
-
+interface LoaderProps {
+    height: string;
+}
+const Loader = (
+    prop: LoaderProps
+): JSX.Element => {
     return (
         <>
             <Box
                 sx={{
                     display: 'flex',
                     width: "100%",
-                    height: "500px",
+                    height: prop.height,
                     justifyContent: "center",
                     alignItems: "center"
                 }}
@@ -185,22 +189,22 @@ const LoaderBlogSub = (): JSX.Element => {
 const LoaderBlogDetail = (): JSX.Element => {
     const repeatCount = 20; // Số lần lặp
 
-    const renderRepeatedElements = ():JSX.Element[] => {
+    const renderRepeatedElements = (): JSX.Element[] => {
         const elements = [];
         for (let i = 0; i < repeatCount; i++) {
-        elements.push(
-            <span
-            key={i} 
-            style={{
-                width: "100%",
-                height: "8px",
-                borderRadius: "5px",
-                animation: "grayAnimation 2s linear infinite",
-                display: "block",
-                marginBottom: "15px",
-            }}
-            />
-        );
+            elements.push(
+                <span
+                    key={i}
+                    style={{
+                        width: "100%",
+                        height: "8px",
+                        borderRadius: "5px",
+                        animation: "grayAnimation 2s linear infinite",
+                        display: "block",
+                        marginBottom: "15px",
+                    }}
+                />
+            );
         }
         return elements;
     };
@@ -211,7 +215,7 @@ const LoaderBlogDetail = (): JSX.Element => {
                 alignItems: "center",
                 flexDirection: "column",
                 gap: "10px",
-                padding:"10px",
+                padding: "10px",
                 backgroundColor: "#e0efff",
             }}
         >
@@ -230,24 +234,24 @@ const LoaderBlogDetail = (): JSX.Element => {
                     backgroundColor: "white",
                     padding: "10px",
                     display: "flex",
-                    gap:'10px',
+                    gap: '10px',
                     flexDirection: "column"
                 }}
             >
                 <span
                     style={{
-                        display:"block",
-                        width:"100%",
-                        height:"10px",
+                        display: "block",
+                        width: "100%",
+                        height: "10px",
                         borderRadius: "5px",
                         animation: "grayAnimation 2s linear infinite ",
                     }}
                 ></span>
                 <span
                     style={{
-                        display:"block",
-                        width:"100%",
-                        height:"10px",
+                        display: "block",
+                        width: "100%",
+                        height: "10px",
                         borderRadius: "5px",
                         animation: "grayAnimation 2s linear infinite ",
                     }}
@@ -255,9 +259,9 @@ const LoaderBlogDetail = (): JSX.Element => {
                 <span>
                     <span
                         style={{
-                            display:"block",
-                            width:"30%",
-                            height:"8px",
+                            display: "block",
+                            width: "30%",
+                            height: "8px",
                             borderRadius: "5px",
                             animation: "grayAnimation 2s linear infinite ",
                         }}
@@ -267,9 +271,9 @@ const LoaderBlogDetail = (): JSX.Element => {
                 <span>
                     <span
                         style={{
-                            display:"block",
-                            width:"30%",
-                            height:"8px",
+                            display: "block",
+                            width: "30%",
+                            height: "8px",
                             borderRadius: "5px",
                             animation: "grayAnimation 2s linear infinite ",
                         }}
@@ -292,4 +296,59 @@ const LoaderBlogDetail = (): JSX.Element => {
         </Box>
     )
 }
-export { LoaderBlogMain, Loader, LoaderBlogSub, LoaderBlogDetail };
+
+const LoaderListCompetition = (): JSX.Element => {
+
+    return (
+        <Box
+            sx={{
+                width: "100%",
+                display: "flex",
+                gap: "20px"
+            }}
+        >
+            <span
+                style={{
+                    display: "block",
+                    width: "100%",
+                    height: "10px",
+                    borderRadius: "5px",
+                    animation: "grayAnimation 2s linear infinite ",
+                }}
+            ></span>
+
+            <span
+                style={{
+                    display: "block",
+                    width: "100%",
+                    height: "10px",
+                    borderRadius: "5px",
+                    animation: "grayAnimation 2s linear infinite ",
+                }}
+            ></span>
+
+            <span
+                style={{
+                    display: "block",
+                    width: "100%",
+                    height: "10px",
+                    borderRadius: "5px",
+                    animation: "grayAnimation 2s linear infinite ",
+                }}
+            ></span>
+
+            <span
+                style={{
+                    display: "block",
+                    width: "100%",
+                    height: "10px",
+                    borderRadius: "5px",
+                    animation: "grayAnimation 2s linear infinite ",
+                }}
+            ></span>
+
+        </Box>
+    )
+}
+
+export { LoaderBlogMain, Loader, LoaderBlogSub, LoaderBlogDetail,LoaderListCompetition };

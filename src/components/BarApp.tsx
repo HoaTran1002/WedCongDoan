@@ -2,7 +2,6 @@ import * as React from 'react'
 import { styled, useTheme } from '@mui/material/styles'
 import Drawer from '@mui/material/Drawer'
 import CssBaseline from '@mui/material/CssBaseline'
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
@@ -49,34 +48,20 @@ import useAuth from '~/hook/useAuth'
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents'
 import { getOneCharacter } from '~/utils/stringUtils'
 import { getLogout } from '~/api/userApi'
+import LoginIcon from '@mui/icons-material/Login';
+import LogoutIcon from '@mui/icons-material/Logout';
 const drawerWidth = 250
+
 const pages = [
   { name: 'TRANG CHỦ', to: '/', iconComponent: <HomeIcon /> },
   { name: 'DANH SÁCH CUỘC THI', to: '/Listcompetition', iconComponent: <FormatListBulletedIcon /> },
-
 ]
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
-interface AppBarProps extends MuiAppBarProps {
-  open?: boolean
-}
-
-const AppBar = styled(MuiAppBar, {
-  shouldForwardProp: (prop) => prop !== 'open'
-})<AppBarProps>(({ theme, open }) => ({
-  transition: theme.transitions.create(['margin', 'width'], {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen
-  }),
-  ...(open && {
-    width: `calc(100% - ${drawerWidth}px)`,
-    marginLeft: `${drawerWidth}px`,
-    transition: theme.transitions.create(['margin', 'width'], {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen
-    })
-  })
-}))
+const settings = [
+  { name: 'QUẢN LÝ', icon: <SettingsIcon />, to: '/CompetitionManage', type: 'Manager', roles: [1, 2] },
+  { name: 'ĐĂNG XUẤT', icon: <LogoutIcon />, to: '/Login', type: 'Logout', roles: [1, 2, 3] },
+  { name: 'ĐĂNG NHẬP', icon: <LoginIcon />, to: '/Login', type: 'Login', roles: [1, 2, 3], },
+]
 
 const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -87,26 +72,12 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 }))
 
 export default function SideBar(): JSX.Element {
+
   const theme = useTheme()
   const navigate = useNavigate()
   const { profile } = useAuth()
   const [open, setOpen] = React.useState(false)
-  const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
-    null
-  )
 
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>): void => {
-    setAnchorElUser(event.currentTarget)
-  }
-
-  const handleCloseNavMenu = (): void => {
-    setAnchorElNav(null)
-  }
-
-  const handleCloseUserMenu = (): void => {
-    setAnchorElUser(null)
-  }
   const handleDrawerOpen = (): void => {
     setOpen(true)
   }
@@ -119,9 +90,7 @@ export default function SideBar(): JSX.Element {
       window.location.reload()
     })
   }
-  const handleGoToHistoryComp = (): void => {
-    navigate('/HistoryCompetition')
-  }
+
 
   return (
     <>
@@ -294,9 +263,8 @@ export default function SideBar(): JSX.Element {
             {pages.map((page, index) => (
               <Box key={index} component='li'>
                 <Link
-                  className={`link_navbar-header ${
-                    location.pathname === page.to ? 'active' : ''
-                  }`}
+                  className={`link_navbar-header ${location.pathname === page.to ? 'active' : ''
+                    }`}
                   to={page.to}
                 >
                   {page.name}
@@ -388,45 +356,50 @@ export default function SideBar(): JSX.Element {
               >
                 {profile?.userName}
               </h3>
+              {
+                settings.map((r, index: number) => (
+                  !profile && r.type === 'Login' ? (
+                    <Button
+                      key={index}
+                      variant='outlined'
+                      startIcon={r.icon}
+                      sx={{
+                        width: '100%'
+                      }}
+                      onClick={(): void => navigate(r.to)}
+                    >
+                      {r.name}
+                    </Button>
+                  ) : (
+                    r.roles.some((r) => r === profile?.roleId) && r.type !== 'Login' && (
+                      r.type === 'Logout' ? (
+                        <Button
+                          key={index}
+                          variant='outlined'
+                          startIcon={r.icon}
+                          sx={{
+                            width: '100%'
+                          }}
+                          onClick={logoutAccount}
+                        >
+                          {r.name}
+                        </Button>
+                      ) : (
+                        <Button
+                          key={index}
+                          variant='outlined'
+                          startIcon={r.icon}
+                          sx={{
+                            width: '100%'
+                          }}
+                          onClick={(): void => navigate(r.to)}
 
-              {profile?.roleId === 1 || profile?.roleId === 2 ? (
-                <>
-                  <Button
-                    variant='outlined'
-                    startIcon={<SettingsIcon />}
-                    sx={{
-                      width: '100%'
-                    }}
-                    onClick={(): void => {
-                      navigate('/CompetitionManage')
-                    }}
-                  >
-                    QUẢN LÝ
-                  </Button>
-                  <Button
-                    variant='outlined'
-                    sx={{
-                      width: '100%'
-                    }}
-                    onClick={logoutAccount}
-                  >
-                    ĐĂNG XUẤT
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <Button
-                    variant='outlined'
-                    startIcon={<SettingsIcon />}
-                    sx={{
-                      width: '100%'
-                    }}
-                    onClick={logoutAccount}
-                  >
-                    ĐĂNG XUẤT
-                  </Button>
-                </>
-              )}
+                        >{r.name}</Button>
+                      )
+                    )
+                  )
+                ))
+              }
             </Box>
           </Box>
         </Box>

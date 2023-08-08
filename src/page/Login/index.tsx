@@ -84,7 +84,6 @@ export default function Login(): JSX.Element {
   if (profile?.roleId === 1 || profile?.roleId === 2) {
     return <Navigate to={'/CompetitionManage'} replace={true} />
   } else if (profile?.roleId == 3) {
-    console.log('okee')
     return <Navigate to={'/'} replace={true} />
   }
 

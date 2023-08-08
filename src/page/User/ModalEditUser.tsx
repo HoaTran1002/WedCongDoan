@@ -29,7 +29,6 @@ interface BasicModalProps {
   dateOfBirth: string
   email: string
   password: string
-  userAddress: string
   roleId: number
   depId: number
 }
@@ -67,7 +66,6 @@ export default function BasicModal(prop: BasicModalProps): JSX.Element {
               dateOfBirth={prop.dateOfBirth}
               email={prop.email}
               password={prop.password}
-              // userAddress={prop.userAddress}// cái này bên mày xoá chưa??
               roleId={prop.roleId}
               depId={prop.depId}
               edit={true}
