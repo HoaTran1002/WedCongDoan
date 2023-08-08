@@ -7,7 +7,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogActions
+  DialogActions,
+  Tooltip
 } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 import AddIcon from '@mui/icons-material/Add'
@@ -17,11 +18,9 @@ import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
 import CircularProgress from '@mui/material/CircularProgress'
 import BasicModal from './ModalEditDep'
 import {Loader} from '~/components/loader'
-
-interface Department {
-  depId: number
-  depName: string
-}
+import { TableWithFixedColumn,ColumnsProps } from '~/components/TableFixed'
+import { IDepartment } from '~/interface/Interface'
+import { LoadingContext } from '.'
 const TableDepartment = (): JSX.Element => {
   const [reset, setReset] = React.useState(false)
   const [id, setId] = React.useState<number>(0)
@@ -29,9 +28,9 @@ const TableDepartment = (): JSX.Element => {
   const [depState, getAllDepCall] = useFetch()
   const [depDeleteState, deleteDepByIdCall] = useFetch()
   const deps = depState.payload
-  
+  const loadingParams = React.useContext(LoadingContext)
   const rows =
-  deps?.map((dep: Department) => ({
+  deps?.map((dep: IDepartment) => ({
     id: dep.depId,
     depName: dep.depName
   })) || []
@@ -59,29 +58,36 @@ const TableDepartment = (): JSX.Element => {
     const request: { _id: number } = { _id: id }
     deleteDepByIdCall(async () => {
       await deleteDepartmentsById(request)
-      window.location.reload()
+      loadingParams.setLoading()
     })
   }
   
   React.useEffect(() => {
     getAllDepCall(getAllDep)
-  }, [reset])
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID ', width: 200 },
-    { field: 'depName', headerName: 'Tên chuyên ngành', width: 200 },
+  }, [loadingParams])
+  const columns: ColumnsProps[] = [
+    { field: 'id', headerName: 'ID ' },
+    { field: 'depName', headerName: 'Tên chuyên ngành'},
     {
       field: 'actions',
       type: 'actions',
-      width: 100,
       getActions: (params: any) => [
-        <BasicModal key={1} id={params.row.id} depName={params.row.depName} />,
+        <BasicModal key='edit' id={params?.id} depName={params?.depName} />,
         <>
-          <GridActionsCellItem
-            key={2}
-            icon={<DeleteIcon />}
-            label='Delete'
-            onClick={(): void => handleDelete(params.row.id)}
-          />
+          <Tooltip
+            key='delete'
+            title='Xóa'
+            placement='top-start'
+          >
+            <Button
+              style={{ width: 50 }}
+              variant='outlined'
+              color='error'
+              onClick={(): void => handleDelete(params?.id)}
+            >
+              <DeleteIcon />
+            </Button>
+          </Tooltip >
           <Dialog
             open={open}
             onClose={handleClose}
@@ -106,33 +112,13 @@ const TableDepartment = (): JSX.Element => {
     }
   ]
   return (
-    <>
-      {depState.loading == true ? (
-        <Loader height='500px' />
-      ) : (
-        <>
-          <Button
-            onClick={handelReset}
-            variant='contained'
-            startIcon={<FlipCameraAndroidIcon />}
-          >
-            Reset
-          </Button>
-          <div style={{ height: 400, width: '100%',backgroundColor:"white" }}>
-            <DataGrid
-              rows={rows}
-              columns={columns}
-              initialState={{
-                pagination: {
-                  paginationModel: { page: 0, pageSize: 6 }
-                }
-              }}
-              pageSizeOptions={[5, 10]}
-            />
-          </div>
-        </>
-      )}
-    </>
+    <TableWithFixedColumn
+      rows={rows}
+      columns={columns}
+      isLoading={depState?.loading}
+      maxWidth={'95%'}
+      maxHeight={'65vh'}
+    />
   )
 }
 

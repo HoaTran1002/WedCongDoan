@@ -15,7 +15,7 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogActions
+  DialogActions,Tooltip
 } from '@mui/material'
 import {
   getAllPrize,
@@ -28,6 +28,8 @@ import CircularProgress from '@mui/material/CircularProgress'
 import FlipCameraAndroidIcon from '@mui/icons-material/FlipCameraAndroid'
 import useFetch from '~/hook/useFetch'
 import MessageAlert from '~/components/MessageAlert'
+import SearchIcon from '@mui/icons-material/Search';
+import { TableWithFixedColumn, ColumnsProps } from '~/components/TableFixed'
 
 //================================
 interface Prize {
@@ -151,27 +153,34 @@ const Index = (): JSX.Element => {
     fetchData()
   }, [])
   const prizes: Prize[] =
-    allPrize.payload?.map((prize: Prize) => ({
+    allPrize?.payload?.map((prize: Prize) => ({
       id: prize.priId,
       priName: prize.priName
     })) || []
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID ', width: 200 },
-    { field: 'priName', headerName: 'Tên giải thưởng', width: 200 },
+  const columns: ColumnsProps[] = [
+    { field: 'id', headerName: 'ID ' },
+    { field: 'priName', headerName: 'Tên giải thưởng' },
     {
       field: 'actions',
       type: 'actions',
-      width: 100,
       getActions: (params: any) => [
         <>
-          <GridActionsCellItem
-            key={1}
-            icon={<EditIcon />}
-            label='Edit'
-            onClick={(): any =>
-              handleEditOpen(params.row.id, params.row.priName)
-            }
-          />
+          <Tooltip
+            key='edit'
+            title='Sửa'
+            placement='top-start'
+          >
+            <Button
+              style={{ width: 50 }}
+              variant='outlined'
+              onClick={(): void =>
+                handleEditOpen(params.id, params.priName)
+              }
+            >
+              <EditIcon />
+            </Button>
+
+          </Tooltip>
           <Dialog
             open={editOpen}
             // open={editOpen}
@@ -180,7 +189,7 @@ const Index = (): JSX.Element => {
             aria-describedby='alert-dialog-description'
           >
             <DialogTitle id='alert-dialog-title'>
-              {'Sửa tên chuyên ngành '}
+              {'Sửa tên giải thưởng '}
             </DialogTitle>
             <DialogContent>
               <div style={{ margin: '10px 0' }}>
@@ -188,7 +197,7 @@ const Index = (): JSX.Element => {
                   defaultValue={prizeName}
                   onChange={onchangePriName}
                   id='outlined-basic'
-                  label='Tên chuyên ngành'
+                  label='Tên giải thưởng'
                   variant='outlined'
                 />
               </div>
@@ -202,116 +211,172 @@ const Index = (): JSX.Element => {
           </Dialog>
         </>,
         <>
-          <GridActionsCellItem
-            key={2}
-            icon={<DeleteIcon />}
-            label='Delete'
-            onClick={(): void => handleDeleteOpen(params.row.id)}
-          />
-          <Dialog
-            open={deleteOpen}
-            aria-labelledby='alert-dialog-title'
-            aria-describedby='alert-dialog-description'
+          <Tooltip
+            key='delete'
+            title='Xóa'
+            placement='top-start'
           >
-            <DialogTitle id='alert-dialog-title'>
-              {'Xóa tên chuyên ngành'}
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText id='alert-dialog-description'>
-                Bạn muốn xóa chuyên ngành này ?
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={(): any => handleDeleteOK()} variant='contained'>
-                OK
-              </Button>
-              <Button onClick={handleClose}>Trở về</Button>
-            </DialogActions>
-          </Dialog>
+            <Button
+              style={{ width: 50 }}
+              variant='outlined'
+              color='error'
+              onClick = {():void => handleDeleteOpen(params.id)}
+            >
+              <DeleteIcon />
+            </Button>
+          </Tooltip >
+        <Dialog
+          open={deleteOpen}
+          aria-labelledby='alert-dialog-title'
+          aria-describedby='alert-dialog-description'
+        >
+          <DialogTitle id='alert-dialog-title'>
+            {'Xóa giải thưởng'}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id='alert-dialog-description'>
+              Bạn muốn xóa giải thưởng này ?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={(): any => handleDeleteOK()} variant='contained'>
+              OK
+            </Button>
+            <Button onClick={handleClose}>Trở về</Button>
+          </DialogActions>
+        </Dialog>
         </>
       ]
     }
   ]
 
-  return (
-    <LayoutAdmin>
-      <>
-        <>
-          <h1 className='color-primary text-center'>Quản lý giải thưởng</h1>
-          {allPrize.loading == true ? (
+return (
+  <LayoutAdmin>
+    <>
+      <Grid
+        container
+        rowSpacing={1}
+        sx={{ width: "100% !important" }}
+      >
+        <Grid item xs={12} style={{ margin: 10 }}>
+          <Box
+            sx={{
+              backgroundColor: "white",
+              borderRadius: "3px",
+              padding: "10px",
+              display: "flex",
+              alignItems: "center",
+              gap: "30px"
+            }}
+          >
+            {/* <Box
+                    sx={{
+                      display:"flex",
+                      borderBottom:"1px solid #0057c1",
+                      gap:"10px"
+                    }}
+                    onKeyDown={handleKeyPressEnter}
+                  >
+                    <Box 
+                      component='input'
+                      value={compSearch}
+                      sx={{
+                        fontSize:"18px",
+                        border:"none",
+                        outline:"none"
+                      }}
+                      placeholder='Tìm giải thưởng'
+                      onChange={(e):void=>setCompSearch(e.target.value)}
+                    />
+                    <Box
+                      onClick={handleSearch}
+                    >
+                      <SearchIcon/>
+                    </Box>
+                  </Box> */}
             <Box
               sx={{
-                display: 'flex',
-                width: '100%',
-                height: '500px',
-                justifyContent: 'center',
-                alignItems: 'center'
+                display: "inline-flex",
+                alignItems: "center",
+                position: "relative",
+                cursor: "pointer",
+                borderRadius: "3px",
+                transition: "all linear 0.2s",
               }}
+              onClick={handelOpenAdd}
             >
-              <CircularProgress />
+              <span
+                className='icon-button'
+                style={{
+                  transition: "all linear 0.2s",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#007ecd",
+                  color: "white",
+                  padding: "5px",
+                }}
+              ><AddIcon /></span>
+              <span
+                style={{
+                  backgroundColor: "#def5ff",
+                  height: "100%",
+                  color: "#002fa7",
+                  fontWeight: "500",
+                  padding: "5px",
+                }}
+              >Thêm giải thưởng</span>
+
             </Box>
-          ) : (
-            <>
-              <Stack direction={'row'} alignItems={'center'} gap={'20px'}>
-                <div>
-                  <Button
-                    onClick={handelOpenAdd}
-                    variant='contained'
-                    startIcon={<AddIcon />}
-                    sx={{
-                      margin: '10px 0'
-                    }}
-                  >
-                    Thêm giải
-                  </Button>
-                  <Dialog
-                    open={addOpen}
-                    onClose={handleClose}
-                    aria-labelledby='alert-dialog-title'
-                    aria-describedby='alert-dialog-description'
-                  >
-                    <DialogTitle id='alert-dialog-title'>
-                      {'Thêm chuyên ngành '}
-                    </DialogTitle>
-                    <DialogContent>
-                      <div style={{ margin: '10px 0' }}>
-                        <TextField
-                          onChange={onchangePriName}
-                          id='outlined-basic'
-                          label='Tên chuyên ngành'
-                          variant='outlined'
-                        />
-                      </div>
-                    </DialogContent>
-                    <DialogActions>
-                      <Button onClick={handelAddOk} variant='contained'>
-                        OK
-                      </Button>
-                      <Button onClick={handelAddClose}>Trở về</Button>
-                    </DialogActions>
-                  </Dialog>
-                </div>
-              </Stack>
-              <div
-                style={{ height: 400, width: '100%', backgroundColor: 'white' }}
-              >
-                <DataGrid
-                  rows={prizes}
-                  columns={columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 6 }
-                    }
-                  }}
-                  pageSizeOptions={[5, 10]}
-                />
-              </div>
-            </>
-          )}
-        </>
-      </>
-    </LayoutAdmin>
-  )
+          </Box>
+        </Grid>
+        <Grid item xs={12} style={{ margin: 0, padding: "0" }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: "100%",
+            }}
+          >
+            <TableWithFixedColumn
+              isLoading={allPrize.loading}
+              rows={prizes}
+              columns={columns}
+              maxWidth={'95%'}
+              maxHeight={'70vh'}
+            />
+          </Box>
+        </Grid>
+      </Grid>
+      <Dialog
+        open={addOpen}
+        onClose={handleClose}
+        aria-labelledby='alert-dialog-title'
+        aria-describedby='alert-dialog-description'
+      >
+        <DialogTitle id='alert-dialog-title'>
+          {'Thêm giải thưởng '}
+        </DialogTitle>
+        <DialogContent>
+          <div style={{ margin: '10px 0' }}>
+            <TextField
+              onChange={onchangePriName}
+              id='outlined-basic'
+              label='Tên giải thưởng'
+              variant='outlined'
+            />
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handelAddOk} variant='contained'>
+            OK
+          </Button>
+          <Button onClick={handelAddClose}>Trở về</Button>
+        </DialogActions>
+      </Dialog>
+    </>
+  </LayoutAdmin>
+)
 }
 
 export default Index

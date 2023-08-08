@@ -15,7 +15,7 @@ export interface ColumnsProps {
 }
 interface TableWithFixedColumnProps {
     columns: ColumnsProps[];
-    rows: string[];
+    rows: any[];
     maxWidth?: number | string;
     maxHeight?: number | string;
     numberItems?: number;

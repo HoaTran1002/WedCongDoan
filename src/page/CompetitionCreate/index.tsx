@@ -195,7 +195,12 @@ const Index = (): JSX.Element => {
     <>
       {message && <MessageAlert message={message} severity={serverity} />}
       <LayoutAdmin>
-        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+          sx={{
+            width:"100% !important",
+            m:"0 !important"
+          }}
+        >
           <Grid item xs={12}>
             <Stack
               direction='row'

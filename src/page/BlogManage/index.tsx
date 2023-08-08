@@ -14,6 +14,7 @@ import LinkOffIcon from '@mui/icons-material/LinkOff'
 import { IBlog, ICompetitionBlogsUser } from '~/interface/Interface'
 import LinkCompetition from './LinkCompetition'
 import MessageAlert from '~/components/MessageAlert'
+import SearchIcon from '@mui/icons-material/Search';
 const Index = (): JSX.Element => {
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
@@ -30,8 +31,9 @@ const Index = (): JSX.Element => {
   const [openLinkCompetition, setOpenLinkCompetition] = React.useState(false)
   const [change, setChange] = React.useState<boolean>(false)
   const [blogIdCheck, setBlogIdCheck] = React.useState(0)
-  const blogs: IBlog[] = getBlog.payload || []
-  const listBlogNoLink = blogs.reduce((newList: number[], curr: IBlog) => {
+  const [listBlog,setListBlog] = React.useState<IBlog[]>([])
+  const [blogSearch,setBlogSearch] = React.useState<string>('')
+  const listBlogNoLink = listBlog?.reduce((newList: number[], curr: IBlog) => {
     const blogIdCurr = curr.blogId
     if (
       allCompetitionBlog?.payload?.find(
@@ -42,10 +44,10 @@ const Index = (): JSX.Element => {
     return newList
   }, [])
   const productsPerPage = 6
-  const totalPages = Math.ceil(blogs.length / productsPerPage)
+  const totalPages = Math.ceil(listBlog?.length / productsPerPage)
   const startIndex = (currentPage - 1) * productsPerPage
   const endIndex = startIndex + productsPerPage
-  const currentProducts = blogs.slice(startIndex, endIndex)
+  const currentProducts = listBlog?.slice(startIndex, endIndex)
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     page: number
@@ -61,23 +63,68 @@ const Index = (): JSX.Element => {
     setChange((r) => !r)
     setOpenLinkCompetition(false)
   }
+  const handleSearch=():void=>{
+    setListBlog(
+      getBlog?.payload
+        ?.filter((item: IBlog) => 
+        item.blogName.trim().toLowerCase()?.includes(blogSearch.trim().toLowerCase())
+      )
+      ?.map((item: IBlog) => ({
+        blogId:item.blogId,
+        blogName:item.blogName,
+        BlogDetail:item.BlogDetail,
+        imgSrc:item.imgSrc,
+        imgName:item.imgName
+      }))
+      .reverse()
+    )
 
+    setBlogSearch('')
+  }
+  const handleKeyPressEnter = (event: React.KeyboardEvent<HTMLDivElement>): void => {
+    if (event.key === 'Enter') {
+      handleSearch()
+    }
+  };
   React.useEffect(() => {
     callAllCompetitionBlogs(getAllCompetitionBlog)
   }, [change])
   React.useEffect(() => {
     callBlog(getAllBlog)
   }, [change])
-
+  React.useEffect(()=>{
+    setListBlog(
+      getBlog?.payload
+        ?.filter((item: IBlog) => 
+        item.blogName.trim().toLowerCase()?.includes(blogSearch.trim().toLowerCase())
+      )
+      ?.map((item: IBlog) => ({
+        blogId:item.blogId,
+        blogName:item.blogName,
+        BlogDetail:item.BlogDetail,
+        imgSrc:item.imgSrc,
+        imgName:item.imgName
+      }))
+      .reverse()
+    )
+  },[getBlog?.loading])
   return (
     <LayoutAdmin>
       <>
-        <h1 className='color-primary text-center'>Quản lý trang blog</h1>
-
         {getBlog.loading ? (
           <Loader height='500px' />
         ) : (
-          <Grid container spacing={{ xs: 2, sm: 2, md: 3 }}>
+          <Grid 
+            container 
+            spacing={{ xs: 2, sm: 2, md: 3 }} 
+            sx={{
+              backgroundColor: 'white',
+              pb: '20px',
+              m: '10px 0 0 0 !important',
+              pl: '0px !important',
+              pt: '0px !important',
+              width:"100% !important"}}
+            >
             <>
               {openFromUrl && (
                 <MessageAlert message='Thêm thành công' severity='success' />
@@ -88,7 +135,81 @@ const Index = (): JSX.Element => {
               {updateFromUrl && (
                 <MessageAlert message='Sửa thành công' severity='success' />
               )}
-              {currentProducts.length === 0 ? (
+              <Grid item xs={12} style={{ margin: 10 }}>
+                    <Box 
+                      sx={{
+                        backgroundColor:"white",
+                        borderRadius:"3px",
+                        padding:"10px",
+                        display:"flex",
+                        alignItems:"center",
+                        gap:"30px"
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display:"flex",
+                          borderBottom:"1px solid #0057c1",
+                          gap:"10px"
+                        }}
+                        onKeyDown={handleKeyPressEnter}
+                      >
+                        <Box 
+                          component='input'
+                          value={blogSearch}
+                          sx={{
+                            fontSize:"18px",
+                            border:"none",
+                            outline:"none"
+                          }}
+                          placeholder='Tìm kiếm bài blog'
+                          onChange={(e):void=>setBlogSearch(e.target.value)}
+                        />
+                        <Box
+                          onClick={handleSearch}
+                        >
+                          <SearchIcon/>
+                        </Box>
+                      </Box>
+                      <Box
+                        sx={{
+                          display:"inline-flex",
+                          alignItems:"center",
+                          position:"relative",
+                          cursor:"pointer",
+                          borderRadius:"3px",
+                          transition:"all linear 0.2s",
+                        }}
+                        onClick={(): void => {
+                          navigate('/BlogCreate')
+                        }}
+                      >
+                        <span
+                          className='icon-button'
+                          style={{
+                            transition:"all linear 0.2s",
+                            display:"flex",
+                            alignItems:"center",
+                            justifyContent:"center",
+                            backgroundColor:"#007ecd",
+                            color:"white",
+                            padding:"5px",
+                          }}
+                        ><AddIcon/></span>
+                        <span
+                          style={{
+                            backgroundColor:"#def5ff",
+                            height:"100%",
+                            color:"#002fa7",
+                            fontWeight:"500",
+                            padding:"5px",
+                          }}
+                        >Thêm trang blog</span>
+                        
+                      </Box>
+                    </Box>
+              </Grid>
+              {currentProducts?.length === 0 ? (
                 <Grid item xs={12} md={12}>
                   <Box
                     className='color-primary'
@@ -102,215 +223,171 @@ const Index = (): JSX.Element => {
                     }}
                   >
                     <span style={{ fontWeight: '500', fontSize: '22px' }}>
-                      Chưa có trang Blog nào được tạo, nhấn vào đây
-                    </span>
-                    <Box
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        height: '50px',
-                        width: '50px',
-                        borderRadius: '50%',
-                        color: 'white',
-                        backgroundColor: '#1565c0',
-                        cursor: 'pointer'
-                      }}
-                      onClick={(): void => {
-                        navigate('/BlogCreate')
-                      }}
-                    >
-                      <AddIcon />
-                    </Box>
-                    <span style={{ fontWeight: '500', fontSize: '22px' }}>
-                      để thêm blog{' '}
+                      Không có blog nào tại đây
                     </span>
                   </Box>
                 </Grid>
               ) : (
                 <>
-                  <Button
-                    onClick={(): void => {
-                      navigate('/BlogCreate')
-                    }}
-                    variant='outlined'
-                    startIcon={<AddIcon />}
-                  >
-                    Thêm Blog mới
-                  </Button>
-                  <Grid
-                    item
-                    container
-                    xs={12}
-                    columnSpacing={4}
-                    sx={{
-                      backgroundColor: 'white',
-                      pb: '20px',
-                      mt: '10px',
-                      pl: '0px !important',
-                      pt: '0px !important'
-                    }}
-                  >
-                    {currentProducts.map((row: any, index: number) => (
-                      <Grid
-                        item
-                        xs={12}
-                        md={4}
-                        key={index}
+                  {currentProducts?.map((row: any, index: number) => (
+                    <Grid
+                      item
+                      xs={12}
+                      md={4}
+                      key={index}
+                      sx={{
+                        marginTop: '10px'
+                      }}
+                    >
+                      <Box
                         sx={{
-                          marginTop: '10px'
+                          display: 'flex',
+                          position: 'relative',
+                          flexDirection: 'column',
+                          width: '100%',
+                          borderRadius: '5px',
+                          overflow: 'hidden'
                         }}
                       >
                         <Box
                           sx={{
-                            display: 'flex',
-                            position: 'relative',
-                            flexDirection: 'column',
-                            width: '100%',
-                            borderRadius: '5px',
-                            overflow: 'hidden'
+                            height: '180px',
+                            flex: 'none',
+                            objectFit: 'cover',
+                            cursor: 'pointer'
+                          }}
+                          onClick={(): void => {
+                            navigate(`/BlogDetail?id=${row.blogId}`)
                           }}
                         >
-                          <Box
-                            sx={{
-                              height: '180px',
-                              flex: 'none',
-                              objectFit: 'cover',
-                              cursor: 'pointer'
+                          <img
+                            src={`data:image/jpeg;base64,${row.imgSrc}`}
+                            alt={row.imgName}
+                            style={{
+                              height: '100%',
+                              width: '100%',
+                              objectFit: 'cover'
                             }}
+                          />
+                        </Box>
+                        <div
+                          style={{
+                            backgroundColor: '#ecf5ff',
+                            padding: '10px',
+                            width: '100%',
+                            position: 'relative'
+                          }}
+                        >
+                          <BlogName
                             onClick={(): void => {
                               navigate(`/BlogDetail?id=${row.blogId}`)
                             }}
                           >
-                            <img
-                              src={`data:image/jpeg;base64,${row.imgSrc}`}
-                              alt={row.imgName}
-                              style={{
-                                height: '100%',
-                                width: '100%',
-                                objectFit: 'cover'
-                              }}
-                            />
-                          </Box>
-                          <div
-                            style={{
-                              backgroundColor: '#ecf5ff',
-                              padding: '10px',
-                              width: '100%',
-                              position: 'relative'
-                            }}
-                          >
-                            <BlogName
-                              onClick={(): void => {
-                                navigate(`/BlogDetail?id=${row.blogId}`)
+                            {row.blogName}
+                          </BlogName>
+                          {listBlogNoLink.some((r) => r === row.blogId) ? (
+                            <Box
+                              sx={{
+                                backgroundColor: '#fff2f2',
+                                border: '1px solid #e20000',
+                                padding: '3px 5px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                borderRadius: '3px',
+                                justifyContent: 'space-between',
+                                mt: 3
                               }}
                             >
-                              {row.blogName}
-                            </BlogName>
-                            {listBlogNoLink.some((r) => r === row.blogId) ? (
                               <Box
                                 sx={{
-                                  backgroundColor: '#fff2f2',
-                                  border: '1px solid #e20000',
-                                  padding: '3px 5px',
                                   display: 'flex',
                                   alignItems: 'center',
-                                  borderRadius: '3px',
-                                  justifyContent: 'space-between',
-                                  mt: 3
+                                  color: '#e20000'
                                 }}
                               >
-                                <Box
-                                  sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    color: '#e20000'
-                                  }}
-                                >
-                                  <span style={{ fontWeight: '500' }}>
-                                    Chưa liên kết cuộc thi{' '}
-                                  </span>
-                                  <LinkOffIcon />
-                                </Box>
-                                <Box
-                                  sx={{
-                                    fontWeight: '500',
-                                    color: '#e20000',
-                                    cursor: 'pointer'
-                                  }}
-                                  onClick={(): void =>
-                                    handleOpenLinkCom(row.blogId)
-                                  }
-                                >
-                                  Liên kết
-                                </Box>
+                                <span style={{ fontWeight: '500' }}>
+                                  Chưa liên kết cuộc thi{' '}
+                                </span>
+                                <LinkOffIcon />
                               </Box>
-                            ) : (
                               <Box
                                 sx={{
-                                  backgroundColor: '#eeffea',
-                                  border: '1px solid #098700',
-                                  padding: '3px 5px',
+                                  fontWeight: '500',
+                                  color: '#e20000',
+                                  cursor: 'pointer'
+                                }}
+                                onClick={(): void =>
+                                  handleOpenLinkCom(row.blogId)
+                                }
+                              >
+                                Liên kết
+                              </Box>
+                            </Box>
+                          ) : (
+                            <Box
+                              sx={{
+                                backgroundColor: '#eeffea',
+                                border: '1px solid #098700',
+                                padding: '3px 5px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                borderRadius: '3px',
+                                justifyContent: 'space-between',
+                                mt: 3
+                              }}
+                            >
+                              <Box
+                                sx={{
                                   display: 'flex',
                                   alignItems: 'center',
-                                  borderRadius: '3px',
-                                  justifyContent: 'space-between',
-                                  mt: 3
+                                  color: '#098700'
                                 }}
                               >
-                                <Box
-                                  sx={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    color: '#098700'
-                                  }}
-                                >
-                                  <span style={{ fontWeight: '500' }}>
-                                    Đã liên kết với cuộc thi{' '}
-                                  </span>
-                                  <LinkIcon />
-                                </Box>
-                                <Box
-                                  sx={{
-                                    fontWeight: '500',
-                                    color: '#098700',
-                                    cursor: 'pointer'
-                                  }}
-                                  onClick={(): void =>
-                                    handleOpenLinkCom(row.blogId)
-                                  }
-                                >
-                                  Xem
-                                </Box>
+                                <span style={{ fontWeight: '500' }}>
+                                  Đã liên kết với cuộc thi{' '}
+                                </span>
+                                <LinkIcon />
                               </Box>
-                            )}
-                            {openLinkCompetition && (
-                              <LinkCompetition
-                                blogId={blogIdCheck}
-                                close={handleCloseLinkCom}
-                              />
-                            )}
-                          </div>
-                        </Box>
-                      </Grid>
-                    ))}
-                    <Box
-                      sx={{
-                        padding: '15px 0',
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}
-                    >
-                      <Pagination
-                        count={totalPages}
-                        color='primary'
-                        page={currentPage}
-                        onChange={handlePageChange}
-                      />
-                    </Box>
-                  </Grid>
+                              <Box
+                                sx={{
+                                  fontWeight: '500',
+                                  color: '#098700',
+                                  cursor: 'pointer'
+                                }}
+                                onClick={(): void =>
+                                  handleOpenLinkCom(row.blogId)
+                                }
+                              >
+                                Xem
+                              </Box>
+                            </Box>
+                          )}
+                          {openLinkCompetition && (
+                            <LinkCompetition
+                              blogId={blogIdCheck}
+                              close={handleCloseLinkCom}
+                            />
+                          )}
+                        </div>
+                      </Box>
+                    </Grid>
+                  ))}
+                  <Box
+                    sx={{
+                      padding: '15px 0',
+                      width: '100%',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Pagination
+                      count={totalPages}
+                      color='primary'
+                      page={currentPage}
+                      onChange={handlePageChange}
+                    />
+                  </Box>
                 </>
               )}
             </>

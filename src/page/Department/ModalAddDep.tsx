@@ -27,11 +27,40 @@ export default function BasicModal(): JSX.Element {
   const handleClose = (): void => setOpen(false)
   return (
     <div>
-      <Stack direction={'row'} gap={'20px'} sx={{ mt: '15px', mb: '15px' }}>
-        <Button variant='contained' onClick={handleOpen} startIcon={<AddIcon/>}>
-          Thêm Chuyên Ngành
-        </Button>
-      </Stack>
+      <Box
+        sx={{
+          display: "inline-flex",
+          alignItems: "center",
+          position: "relative",
+          cursor: "pointer",
+          borderRadius: "3px",
+          transition: "all linear 0.2s",
+        }}
+        onClick={handleOpen}
+      >
+              <span
+                className='icon-button'
+                style={{
+                  transition: "all linear 0.2s",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: "#007ecd",
+                  color: "white",
+                  padding: "5px",
+                }}
+              ><AddIcon /></span>
+              <span
+                style={{
+                  backgroundColor: "#def5ff",
+                  height: "100%",
+                  color: "#002fa7",
+                  fontWeight: "500",
+                  padding: "5px",
+                }}
+              >Thêm chuyên ngành</span>
+
+            </Box>
       <Modal
         open={open}
         onClose={handleClose}

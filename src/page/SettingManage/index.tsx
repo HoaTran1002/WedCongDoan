@@ -7,79 +7,37 @@ import Box from '@mui/material/Box'
 import { blue, green } from '@mui/material/colors'
 
 const Index = (): JSX.Element => {
+  const Settings =[
+    {name:"Giải thưởng",title:"Quản lý thông tin giải thưởng",to:'/PrizeManage'},
+    {name:"Loại Giải thưởng",title:"Quản lý thông tin loại giải thưởng",to:'/PrizeTypeManage'},
+    {name:"Khoa",title:"Quản lý thông tin Khoa",to:'/DepartmentManage'},
+  ]
+
   return (
     <LayoutAdmin>
-      <Grid container spacing={{ xs: 2, sm: 2, md: 3 }} sx={{ mb: 4 }}>
-        <Grid item md={6} xs={12}>
-          <Box sx={cardStyle} className=''>
-            <h2
-              className='color-primary'
-              style={{ margin: '0px', color: '#1565c0' }}
-            >
-              Giải thưởng
-            </h2>
-            <p style={{ color: '#676767', fontSize: '20px' }}>
-              Quản lý thông tin giải thưởng
-            </p>
-            <div>
-              <Link to={'/PrizeManage'}>
-                <Button variant='contained'>Quản lý</Button>
-              </Link>
-            </div>
-          </Box>
-        </Grid>
-        <Grid item md={6} xs={12}>
-          <Box sx={cardStyle} className=''>
-            <h2
-              className='color-primary'
-              style={{ margin: '0px', color: '#1565c0' }}
-            >
-              Loại Giải thưởng
-            </h2>
-            <p style={{ color: '#676767', fontSize: '20px' }}>
-              Thông tin loại giải thưởng
-            </p>
-            <div>
-              <Link to={'/PrizeTypeManage'}>
-                <Button variant='contained'>Quản lý</Button>
-              </Link>
-            </div>
-          </Box>
-        </Grid>
-        {/* <Grid item md={6} xs={12}>
-          <Box sx={cardStyle} className=''>
-            <h2
-              className='color-primary'
-              style={{ margin: '0px', color: '#1565c0' }}
-            >
-              Đề thi
-            </h2>
-            <p style={{color:"#676767",fontSize:"20px"}}>Quản lý thông tin đề thi</p>
-            <div>
-              <Link to={'/ExamsManage'}>
-                <Button variant='contained'>Quản lý</Button>
-              </Link>
-            </div>
-          </Box>
-        </Grid> */}
-        <Grid item md={6} xs={12}>
-          <Box sx={cardStyle} className=''>
-            <h2
-              className='color-primary'
-              style={{ margin: '0px', color: '#1565c0' }}
-            >
-              Khoa
-            </h2>
-            <p style={{ color: '#676767', fontSize: '20px' }}>
-              Quản lý thông tin khoa
-            </p>
-            <div>
-              <Link to={'/DepartmentManage'}>
-                <Button variant='contained'>Quản lý</Button>
-              </Link>
-            </div>
-          </Box>
-        </Grid>
+      <Grid container spacing={{ xs: 2, sm: 2, md: 3 }} sx={{ m:"0 !important",width:"100% !important" }}>
+        {
+          Settings.map((r,index:number)=>(
+            <Grid key={index} item md={6} xs={12}>
+              <Box sx={cardStyle} className=''>
+                <h2
+                  className='color-primary'
+                  style={{ margin: '0px', color: '#1565c0' }}
+                >
+                  {r.name}
+                </h2>
+                <p style={{ color: '#676767', fontSize: '20px' }}>
+                  {r.title}
+                </p>
+                <div>
+                  <Link to={r.to}>
+                    <Button variant='contained'>Quản lý</Button>
+                  </Link>
+                </div>
+              </Box>
+            </Grid>
+          ))
+        }
       </Grid>
     </LayoutAdmin>
   )

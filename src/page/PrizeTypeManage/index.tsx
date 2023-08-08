@@ -16,7 +16,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogActions
+  DialogActions,
+  Tooltip
 } from '@mui/material'
 import { Link } from 'react-router-dom'
 import axios from '~/api/axios'
@@ -29,6 +30,7 @@ import {
   DeletePrizeTypes,
   EditPrizeTypes
 } from '~/api/prizeTypesApi'
+import { TableWithFixedColumn,ColumnsProps } from '~/components/TableFixed'
 
 //================================
 interface PrizeType {
@@ -155,23 +157,30 @@ const Index = (): JSX.Element => {
       id: prizeT.priTid,
       priTname: prizeT.priTname
     })) || []
-  const columns: GridColDef[] = [
-    { field: 'id', headerName: 'ID ', width: 200 },
-    { field: 'priTname', headerName: 'Tên giải thưởng', width: 200 },
+  const columns: ColumnsProps[] = [
+    { field: 'id', headerName: 'ID ' },
+    { field: 'priTname', headerName: 'Tên loại giải thưởng'},
     {
       field: 'actions',
       type: 'actions',
-      width: 100,
       getActions: (params: any) => [
         <>
-          <GridActionsCellItem
-            key={1}
-            icon={<EditIcon />}
-            label='Edit'
-            onClick={(): any =>
-              handleEditOpen(params.row.id, params.row.priTname)
-            }
-          />
+          <Tooltip
+            key='edit'
+            title='Sửa'
+            placement='top-start'
+          >
+            <Button
+              style={{ width: 50 }}
+              variant='outlined'
+              onClick={(): any =>
+                handleEditOpen(params.id, params.priTname)
+              }
+            >
+              <EditIcon />
+            </Button>
+
+          </Tooltip>
           <Dialog
             open={editOpen}
             aria-labelledby='alert-dialog-title'
@@ -200,12 +209,20 @@ const Index = (): JSX.Element => {
           </Dialog>
         </>,
         <>
-          <GridActionsCellItem
-            key={2}
-            icon={<DeleteIcon />}
-            label='Delete'
-            onClick={(): void => handleDeleteOpen(params.row.id)}
-          />
+          <Tooltip
+            key='delete'
+            title='Xóa'
+            placement='top-start'
+          >
+            <Button
+              style={{ width: 50 }}
+              variant='outlined'
+              color='error'
+              onClick={(): void => handleDeleteOpen(params.id)}
+            >
+              <DeleteIcon />
+            </Button>
+          </Tooltip >
           <Dialog
             open={deleteOpen}
             aria-labelledby='alert-dialog-title'
@@ -232,35 +249,79 @@ const Index = (): JSX.Element => {
   ]
   return (
     <LayoutAdmin>
-      <>
         <>
-          <h1 className='color-primary text-center'>
-            Quản lý loại giải thưởng
-          </h1>
-          {allPrizeT.loading == true ? (
+        <Grid
+          container
+          rowSpacing={1}
+          sx={{ width: "100% !important" }}
+        >
+          <Grid item xs={12} style={{ margin: 10 }}>
             <Box
               sx={{
-                display: 'flex',
-                width: '100%',
-                height: '500px',
-                justifyContent: 'center',
-                alignItems: 'center'
+                backgroundColor: "white",
+                borderRadius: "3px",
+                padding: "10px",
+                display: "flex",
+                alignItems: "center",
+                gap: "30px"
               }}
             >
-              <CircularProgress />
+              <Box
+                sx={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  position: "relative",
+                  cursor: "pointer",
+                  borderRadius: "3px",
+                  transition: "all linear 0.2s",
+                }}
+                onClick={handelOpenAdd}
+              >
+                <span
+                  className='icon-button'
+                  style={{
+                    transition: "all linear 0.2s",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "#007ecd",
+                    color: "white",
+                    padding: "5px",
+                  }}
+                ><AddIcon /></span>
+                <span
+                  style={{
+                    backgroundColor: "#def5ff",
+                    height: "100%",
+                    color: "#002fa7",
+                    fontWeight: "500",
+                    padding: "5px",
+                  }}
+                >Thêm loại giải thưởng</span>
+
+              </Box>
             </Box>
-          ) : (
-            <>
-              <Stack direction={'row'} alignItems={'center'} gap={'20px'}>
-                <div>
-                  <Button
-                    onClick={handelOpenAdd}
-                    variant='contained'
-                    startIcon={<AddIcon />}
-                  >
-                    Thêm loại giải thưởng
-                  </Button>
-                  <Dialog
+          </Grid>
+          <Grid item xs={12} style={{ margin: 0, padding: "0" }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              width: "100%",
+            }}
+          >
+            <TableWithFixedColumn
+              isLoading={allPrizeT?.loading}
+              rows={prizesT}
+              columns={columns}
+              maxWidth={'95%'}
+              maxHeight={'70vh'}
+            />
+          </Box>
+        </Grid>
+        </Grid>
+              
+              <Dialog
                     open={addOpen}
                     onClose={handleClose}
                     aria-labelledby='alert-dialog-title'
@@ -286,26 +347,7 @@ const Index = (): JSX.Element => {
                       <Button onClick={handelAddClose}>Trở về</Button>
                     </DialogActions>
                   </Dialog>
-                </div>
-              </Stack>
-              <div
-                style={{ height: 400, width: '100%', backgroundColor: 'white' }}
-              >
-                <DataGrid
-                  rows={prizesT}
-                  columns={columns}
-                  initialState={{
-                    pagination: {
-                      paginationModel: { page: 0, pageSize: 6 }
-                    }
-                  }}
-                  pageSizeOptions={[5, 10]}
-                />
-              </div>
-            </>
-          )}
         </>
-      </>
     </LayoutAdmin>
   )
 }

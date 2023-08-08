@@ -5,7 +5,7 @@ import { Button } from '@mui/material'
 import useFetch from '~/hook/useFetch'
 import { Insert,getDepId,Edit } from '~/api/departmentApi'
 import { EditCalendarOutlined } from '@mui/icons-material'
-
+import { LoadingContext } from '.'
 export default function DepTextFields(prop: {
   edit: boolean
   id: number
@@ -15,6 +15,7 @@ export default function DepTextFields(prop: {
   const [getDep, callDepById] = useFetch()
   const [EditDep, callEditDep] = useFetch()
   const [depInsert, callDeptInsert] = useFetch()
+  const loadingParams = React.useContext(LoadingContext)
   const onchangeDepName = function (event: React.ChangeEvent<HTMLInputElement>): void {
     setDepname(event.target.value)
   }
@@ -38,6 +39,7 @@ export default function DepTextFields(prop: {
         console.log(error)
       }
     })
+    loadingParams.setLoading()
   }
   const onSubmitFormEdit = (): void => {
     callEditDep(async () => {
@@ -47,6 +49,7 @@ export default function DepTextFields(prop: {
         console.log('Thất bại')
       }
     })
+    loadingParams.setLoading()
   }
   React.useEffect(() => {
     const request: { id: number } = { id: prop.id };

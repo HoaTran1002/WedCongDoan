@@ -27,7 +27,7 @@ import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
 import GridViewIcon from '@mui/icons-material/GridView'
 import { IndeterminateCheckBoxOutlined, Opacity } from '@mui/icons-material'
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown'
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import PersonIcon from '@mui/icons-material/Person'
 import WebIcon from '@mui/icons-material/Web'
 import AppsIcon from '@mui/icons-material/Apps'
@@ -37,41 +37,27 @@ import { getOneCharacter } from '~/utils/stringUtils'
 import useAuth from '~/hook/useAuth'
 import useFetch from '~/hook/useFetch'
 import { getLogout } from '~/api/userApi'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ImgBannerLeft from '~/assets/img/congDoanLogin.jpg'
-import HomeIcon from '@mui/icons-material/Home'
-import MilitaryTechIcon from '@mui/icons-material/MilitaryTech'
-import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight'
-import SettingsIcon from '@mui/icons-material/Settings'
-import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
+import HomeIcon from '@mui/icons-material/Home';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRight';
+import SettingsIcon from '@mui/icons-material/Settings';
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 const drawerWidth = 250
 const pagesOfAdmin = [
-  // <<<<<<< HEAD
-  {
-    name: 'CUỘC THI',
-    to: '/CompetitionManage',
-    icon: <GridViewIcon />,
-    roles: [1, 2]
-  },
+  { name: 'CUỘC THI', to: '/CompetitionManage', icon: <GridViewIcon />, roles: [1, 2] },
   { name: 'USER', to: '/User', icon: <PersonIcon />, roles: [1] },
   { name: 'BLOG', to: '/BlogManage', icon: <WebIcon />, roles: [1] },
-  { name: 'KẾT QUẢ', to: '/ResultManage', icon: <AppsIcon />, roles: [1] },
-  { name: 'THÔNG TIN', to: '/SettingManage', icon: <AppsIcon />, roles: [1] },
-  { name: 'TRANG CHỦ', to: '/', roles: [1, 2] }
-  // =======
-  //   { name: 'CUỘC THI', to: '/CompetitionManage', icon: <GridViewIcon />, roles: [1, 2] },
-  //   { name: 'USER', to: '/User', icon: <PersonIcon />, roles: [1] },
-  //   { name: 'BLOG', to: '/BlogManage', icon: <WebIcon />, roles: [1] },
-  //   { name: 'KẾT QUẢ', to: '/ResultManage', icon: <MilitaryTechIcon />, roles: [1] },
-  //   {
-  //     name: 'THÔNG TIN', to: '/SettingManage', icon: <AppsIcon />, childrenSubIcon: <ArrowDropDownIcon />, roles: [1], children: [
-  //       { name: "GIẢI THƯỞNG", to: '/PrizeManage', icon: <SubdirectoryArrowRightIcon /> },
-  //       { name: "LOẠI GIẢI THƯỞNG", to: '/PrizeTypeManage', icon: <SubdirectoryArrowRightIcon /> },
-  //       { name: "KHOA", to: '/DepartmentManage', icon: <SubdirectoryArrowRightIcon /> },
-  //     ]
-  //   },
-  //   { name: 'TRANG CHỦ', to: '/', roles: [1, 2], icon: <HomeIcon /> }
-  // >>>>>>> origin/khoadev
+  { name: 'KẾT QUẢ', to: '/ResultManage', icon: <MilitaryTechIcon />, roles: [1] },
+  {
+    name: 'THÔNG TIN', to: '/SettingManage', icon: <AppsIcon />, childrenSubIcon: <ArrowDropDownIcon />, roles: [1], children: [
+      { name: "GIẢI THƯỞNG", to: '/PrizeManage', icon: <SubdirectoryArrowRightIcon /> },
+      { name: "LOẠI GIẢI THƯỞNG", to: '/PrizeTypeManage', icon: <SubdirectoryArrowRightIcon /> },
+      { name: "KHOA", to: '/DepartmentManage', icon: <SubdirectoryArrowRightIcon /> },
+    ]
+  },
+  { name: 'TRANG CHỦ', to: '/', roles: [1, 2], icon: <HomeIcon /> }
 ]
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -119,31 +105,29 @@ export default function Index(): JSX.Element {
     })
   }
   const buttonStyles: SxProps = {
-    m: '0 10px',
-    padding: '10px',
+    m: "0 10px" ,
+    padding: "10px",
     background: 'transparent',
     boxShadow: 'none',
     display: 'flex',
-    transition: 'all linear 0.2s',
-    gap: '20px',
+    transition: "all linear 0.2s",
+    gap: "20px",
     alignItems: 'center',
     justifyContent: !widthMin ? 'flex-start' : 'center',
     flexDirection: 'row',
     '&:hover': {
-      backgroundColor: '#ffffff37'
+      backgroundColor: '#ffffff37',
     },
     borderRadius: '5px',
     textDecoration: 'none',
     color: 'white',
-    fontSize: '22px',
-    zIndex: '40',
-    position: 'relative'
+    fontSize: "22px",
+    zIndex: "40",
+    position: "relative"
   }
-
+  
   return (
-    <Box
-      sx={{ display: 'flex', width: '100vw', transition: 'all linear 0.2s' }}
-    >
+    <Box sx={{ display: 'flex', width: '100vw', transition: "all linear 0.2s" }}>
       <Box
         sx={{
           zIndex: 5,
@@ -151,51 +135,51 @@ export default function Index(): JSX.Element {
           top: 0,
           bottom: 0,
           left: 0,
-          width: widthMin
-            ? 'var(--width-left-navbar-min)'
-            : 'var(--width-left-navbar-max)',
-          transition: 'all linear 0.2s',
+          width: widthMin ? 'var(--width-left-navbar-min)' : 'var(--width-left-navbar-max)',
+          transition: "all linear 0.2s",
           display: { xs: 'none', md: 'block' },
-          backgroundColor: '#0070df',
+          backgroundColor: "#0070df",
           '&:hover': {
             width: 'var(--width-left-navbar-max)',
-            zIndex: '50'
+            zIndex: "50"
           },
           '&:hover .item_navbar-left': {
-            justifyContent: 'flex-start'
+            justifyContent: "flex-start"
           },
           '&:hover .item_navbar-left-name': {
             opacity: '1  !important',
-            transform: 'translateX(0) !important'
+            transform: "translateX(0) !important",
           },
-          '&:hover .user-Name': {
-            display: 'block !important'
+          '&:hover .user-Name':{
+            display:"block !important"
           },
-          '&:hover .icon-user-name': {
-            display: 'block'
+          '&:hover .icon-user-name':{
+            display:"block"
           }
         }}
       >
         <Box
           sx={{
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
+            position: "absolute",
+            width: "100%",
+            height: "100%",
             bottom: 0,
-            opacity: '0.7',
-            backgroundColor: '#005ebc'
+            opacity: "0.7",
+            backgroundColor: "#005ebc",
           }}
-        ></Box>
+        >
+
+        </Box>
         <Box
           component='img'
           sx={{
-            position: 'absolute',
-            width: '100%',
-            height: '50%',
-            objectFit: 'cover',
+            position: "absolute",
+            width: "100%",
+            height: "50%",
+            objectFit: "cover",
             bottom: 0,
-            opacity: '0.1',
-            zIndex: '-1'
+            opacity: "0.1",
+            zIndex: "-1"
           }}
           src={ImgBannerLeft}
         />
@@ -203,11 +187,11 @@ export default function Index(): JSX.Element {
           sx={{
             display: { xs: 'none', md: 'inlineFlex' },
             width: '100%',
-            height: '66px',
+            height: "66px",
             justifyContent: 'center',
             alignItems: 'center',
             background: 'transparent',
-            position: 'relative'
+            position: "relative"
           }}
           alignItems={'center'}
         >
@@ -221,13 +205,13 @@ export default function Index(): JSX.Element {
           />
           <span
             style={{
-              height: '0.5px',
-              position: 'absolute',
-              backgroundColor: 'white',
-              display: 'inline-block',
-              bottom: '0',
-              left: '10px',
-              right: '10px'
+              height: "0.5px",
+              position: "absolute",
+              backgroundColor: "white",
+              display: "inline-block",
+              bottom: "0",
+              left: "10px",
+              right: "10px"
             }}
           ></span>
         </Box>
@@ -236,20 +220,20 @@ export default function Index(): JSX.Element {
               </Button> */}
         <Box
           sx={{
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between'
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between"
           }}
         >
           <Box>
             <Tooltip title={profile?.userName}>
               <Box
                 sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '20px',
-                  m: '10px 0 10px 20px'
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "20px",
+                  m: "10px 0 10px 20px"
                 }}
               >
                 <Avatar
@@ -265,15 +249,15 @@ export default function Index(): JSX.Element {
                   {getOneCharacter(profile?.userName)}
                 </Avatar>
                 <span
-                  className='user-Name'
+                className='user-Name'
                   style={{
-                    color: 'white',
-                    fontWeight: '500',
-                    zIndex: '30',
-                    fontSize: '19px',
-                    cursor: 'pointer',
-                    bottom: '0',
-                    display: widthMin ? 'none' : 'block'
+                    color: "white",
+                    fontWeight: "500",
+                    zIndex: "30",
+                    fontSize: "19px",
+                    cursor: "pointer",
+                    bottom: "0",
+                    display:widthMin?'none':'block'
                   }}
                 >
                   {profile?.userName}
@@ -282,43 +266,29 @@ export default function Index(): JSX.Element {
             </Tooltip>
             <span
               style={{
-                height: '0.5px',
-                position: 'absolute',
-                backgroundColor: 'white',
-                display: 'inline-block',
-                bottom: '-10px',
-                width: '100%'
+                height: "0.5px",
+                position: "absolute",
+                backgroundColor: "white",
+                display: "inline-block",
+                bottom: "-10px",
+                width: "100%"
               }}
             ></span>
           </Box>
           <ArrowDropDownIcon
             className='icon-user-name'
-            sx={{
-              color: 'white',
-              mr: '10px',
-              display: widthMin ? 'none' : 'inline'
-            }}
-          />
+          sx={{ color: "white", mr: "10px",display:widthMin?'none':'inline' }} />
         </Box>
         <Box
           sx={{
-            mt: '40px',
+            mt: "40px",
             display: { xs: 'none', md: 'flex' },
             flexDirection: 'column',
-            position: 'relative',
-            zIndex: '30',
-            gap: '10px'
+            position: "relative",
+            zIndex: "30",
+            gap: "10px"
           }}
         >
-          {/* <<<<<<< HEAD */}
-          {pagesOfAdmin.map((page, index: number) =>
-            page.roles.find((r) => r === profile?.roleId) ? (
-              <Link
-                key={index}
-                style={{ color: 'white', textDecoration: 'none' }}
-                to={page.to}
-              >
-                {/* =======
           {
             pagesOfAdmin.map((page, index: number) => (
               page.roles.find((r) => r === profile?.roleId) ? (
@@ -520,77 +490,44 @@ export default function Index(): JSX.Element {
                   </Link>
                 )
               ) : (
->>>>>>> origin/khoadev */}
                 <Button
                   key={index}
                   onClick={handleCloseNavMenu}
                   startIcon={page.icon}
                   sx={{
-                    // <<<<<<< HEAD
-                    ...buttonStyles,
-                    ...(location.pathname === page.to && activeButtonStyles)
-                    // =======
-                    //                     padding: '10px',
-                    //                     background: blue[100],
-                    //                     boxShadow: 'none',
-                    //                     display: 'flex',
-                    //                     alignItems: 'center',
-                    //                     justifyContent: 'flex-start',
-                    //                     flexDirection: 'row',
-                    //                     color: "#666",
-                    //                     cursor: "default",
-                    //                     '&:hover': {
-                    //                       backgroundColor: 'transparent',
-                    //                       borderRadius: 'none',
-                    //                       boxShadow: 'none'
-                    //                     },
-                    // >>>>>>> origin/khoadev
+                    padding: '10px',
+                    background: blue[100],
+                    boxShadow: 'none',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'flex-start',
+                    flexDirection: 'row',
+                    color: "#666",
+                    cursor: "default",
+                    '&:hover': {
+                      backgroundColor: 'transparent',
+                      borderRadius: 'none',
+                      boxShadow: 'none'
+                    },
                   }}
                   variant='contained'
                 >
-                  {widthMin ? <></> : page.name}
-                </Button>
-              </Link>
-            ) : (
-              <Button
-                key={index}
-                onClick={handleCloseNavMenu}
-                startIcon={page.icon}
-                sx={{
-                  padding: '10px',
-                  background: blue[100],
-                  boxShadow: 'none',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'flex-start',
-                  flexDirection: 'row',
-                  color: '#666',
-                  cursor: 'default',
-                  '&:hover': {
-                    backgroundColor: 'transparent',
-                    borderRadius: 'none',
-                    boxShadow: 'none'
+                  {
+                    widthMin ? <></> : page.name
                   }
-                }}
-                variant='contained'
-              >
-                {page.name}
-              </Button>
-            )
-          )}
+                </Button>
+              )
+            ))
+          }
         </Box>
       </Box>
       <Box
         sx={{
-          width: widthMin
-            ? 'var(--width-main-content-max)'
-            : 'var(--width-main-content-min)',
-          ml: widthMin
-            ? 'var(--width-left-navbar-min)'
-            : 'var(--width-left-navbar-max)',
+          width: widthMin ? 'var(--width-main-content-max)' : 'var(--width-main-content-min)',
+          ml: widthMin ? 'var(--width-left-navbar-min)' : 'var(--width-left-navbar-max)',
           zIndex: '10',
           position: 'fixed',
-          transition: 'all linear 0.2s',
+          transition: "all linear 0.2s",
           top: 0,
           right: 0,
           left: 0,
@@ -599,28 +536,32 @@ export default function Index(): JSX.Element {
           boxShadow: 'rgba(0, 0, 0, 0.1) -3px 0px 10px 0px',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between'
+          justifyContent: 'space-between',
         }}
       >
         <Box
           sx={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            display: 'flex',
-            color: 'white',
-            backgroundColor: '#1b86ff',
-            borderRadius: '50%',
-            padding: '7px',
-            ml: '20px',
-            cursor: 'pointer',
-            transition: 'all linear 0.2s',
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+            color: "white",
+            backgroundColor: "#1b86ff",
+            borderRadius: "50%",
+            padding: "7px",
+            ml: "20px",
+            cursor: "pointer",
+            transition: "all linear 0.2s",
             '&:hover': {
-              backgroundColor: '#1d79e1'
+              backgroundColor: "#1d79e1"
             }
           }}
           onClick={(): void => setWidthMin((r: any) => !r)}
         >
-          {widthMin ? <MenuIcon /> : <MoreVertIcon />}
+          {widthMin ? (
+            <MenuIcon />
+          ) : (
+            <MoreVertIcon />
+          )}
         </Box>
         <IconButton
           color='inherit'
@@ -633,26 +574,26 @@ export default function Index(): JSX.Element {
         </IconButton>
         <Box
           sx={{
-            alignItems: 'center',
-            justifyContent: 'center',
-            display: 'flex',
-            color: 'white',
-            backgroundColor: '#1b86ff',
-            borderRadius: '50%',
-            padding: '7px',
-            mr: '20px',
-            cursor: 'pointer',
-            transition: 'all linear 0.2s',
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+            color: "white",
+            backgroundColor: "#1b86ff",
+            borderRadius: "50%",
+            padding: "7px",
+            mr: "20px",
+            cursor: "pointer",
+            transition: "all linear 0.2s",
             '&:hover': {
-              backgroundColor: '#1d79e1'
+              backgroundColor: "#1d79e1"
             },
-            '&:hover .box_info-avata': {
-              display: 'block'
+            '&:hover .box_info-avata':{
+              display:"block"
             }
           }}
           onClick={(): void => setWidthMin((r: any) => !r)}
         >
-          <SettingsIcon />
+          <SettingsIcon/>
           <Box
             className='box_info-avata'
             sx={{
@@ -680,7 +621,7 @@ export default function Index(): JSX.Element {
             }}
           >
             <Button
-              startIcon={<PowerSettingsNewIcon />}
+              startIcon={<PowerSettingsNewIcon/>}
               sx={{
                 width: '100%'
               }}
@@ -716,31 +657,35 @@ export default function Index(): JSX.Element {
         </DrawerHeader>
         <Divider />
         <List>
-          {pagesOfAdmin.map((page, index) => (
-            <Link key={index} style={{ textDecoration: 'none' }} to={page.to}>
-              <ListItem key={index} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>{page.icon}</ListItemIcon>
-                  <ListItemText>
-                    <span
-                      className='color-primary'
-                      style={{ fontWeight: '600' }}
-                    >
-                      {page.name}
-                    </span>
-                  </ListItemText>
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
+          {
+            pagesOfAdmin.map((page, index) => (
+              <Link key={index} style={{ textDecoration: 'none' }} to={page.to}>
+                <ListItem key={index} disablePadding>
+                  <ListItemButton>
+                    <ListItemIcon>{page.icon}</ListItemIcon>
+                    <ListItemText>
+                      <span
+                        className='color-primary'
+                        style={{ fontWeight: '600' }}
+                      >
+                        {page.name}
+                      </span>
+                    </ListItemText>
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            ))
+          }
         </List>
       </Drawer>
     </Box>
   )
 }
 
+
+
 const activeButtonStyles: SxProps = {
   backgroundColor: '#ffffff37',
   borderRadius: '5px !important',
-  boxShadow: 'none'
+  boxShadow: 'none',
 }
