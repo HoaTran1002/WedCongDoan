@@ -6,19 +6,21 @@ type Props = {
   children: string | JSX.Element
 }
 const LayoutAdmin = ({ children }: Props): JSX.Element => {
-  const {widthMin} = useAuth()
+  const { widthMin } = useAuth()
   return (
     <>
       <BarAppAdmin />
       <Box
         sx={{
-          width:widthMin ?'var(--width-main-content-max)':'var(--width-main-content-min)',
-          ml: widthMin?'var(--width-left-navbar-min)':'var(--width-left-navbar-max)',
+          width: widthMin
+            ? 'var(--width-main-content-max)'
+            : 'var(--width-main-content-min)',
+          ml: widthMin
+            ? 'var(--width-left-navbar-min)'
+            : 'var(--width-left-navbar-max)'
         }}
       >
-        <Box sx={{ mt: 10,width:"100%"}}>
-          {children}
-        </Box>
+        <Box sx={{ mt: 10, width: '100%' }}>{children}</Box>
       </Box>
     </>
   )

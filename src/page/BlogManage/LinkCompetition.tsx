@@ -50,7 +50,6 @@ const LinkCompetition = (props: PropLinkCompetition): JSX.Element => {
   const blogs: IBlog[] = allBlog.payload || []
   const itemBlog: IBlog =
     allBlog?.payload?.find((r: IBlog) => r.blogId === props.blogId) || []
-
   const mergeListCompetition = allComps?.payload?.reduce(
     (newList: ICompetition[], curr: ICompetition) => {
       const idCom = curr.comId
