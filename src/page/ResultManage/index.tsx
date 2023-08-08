@@ -149,8 +149,8 @@ const ResultManage = (): JSX.Element => {
   },[compState?.loading])
   return (
     <LayoutAdmin>
-      <Grid container spacing={1}>
-      <Grid item xs={12} style={{ margin: 10 }}>
+      <Grid container spacing={1} sx={{width:"100% !important",margin:"0"}}>
+      <Grid item xs={12} >
               <Box 
                 sx={{
                   backgroundColor:"white",
@@ -188,7 +188,7 @@ const ResultManage = (): JSX.Element => {
                 </Box>
               </Box>
             </Grid>
-        <Grid item xs={12} style={{ margin: 10 }}>
+        <Grid item xs={12} >
           <Box
             sx={{
               display: 'flex',

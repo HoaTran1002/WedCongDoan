@@ -29,6 +29,8 @@ import FinishedExam from '~/page/Client/FinishedExam'
 import HistoryCompetition from '~/page/Client/HistoryCompetition'
 import Error from '~/page/404'
 import ResultManage from '~/page/ResultManage'
+import ProfileAdmin from '~/page/Profile/admin'
+import ProfileClient from '~/page/Profile/client'
 interface IPramsRoute {
   path: string
   element: JSX.Element
@@ -53,6 +55,7 @@ export const TeacherAdminRoute = [
   { path: '/CompetitionManage', element: <CompetitionManage /> },
   { path: '/TestCreate', element: <TestCreate /> },
   { path: '/TestManage', element: <TestManage /> },
+  { path: '/ProfileAdmin', element: <ProfileAdmin /> },
   {
     path: '/TestCreate/Test/:examId/Competition/:comId',
     element: <TestCreate />
@@ -68,7 +71,8 @@ export const ProtectedRoute: IPramsRoute[] = [
   { path: '/ExamStart', element: <ExamStart /> },
   { path: '/TestSchedule', element: <TestSchedule /> },
   { path: '/FinishedExam', element: <FinishedExam /> },
-  { path: '/ExamResult/:id', element: <ExamResult /> }
+  { path: '/ExamResult/:id', element: <ExamResult /> },
+  { path: '/Profile', element: <ProfileClient /> }
 ]
 //chưa đăng nhập
 export const PublicRoute: IPramsRoute[] = [
