@@ -52,7 +52,6 @@ const TableUser = (): JSX.Element => {
         dateofbirth: formatDay(user.dateOfBirth),
         email: user.email,
         password: user.password,
-        useraddress: user.userAddress,
         roleId: user.roleId,
         depId: user.depId
       })) || []
@@ -83,10 +82,6 @@ const TableUser = (): JSX.Element => {
     {
       field: 'password',
       headerName: 'Mật Khẩu'
-    },
-    {
-      field: 'useraddress',
-      headerName: 'Địa Chỉ'
     },
     {
       field: 'actions',
@@ -140,20 +135,6 @@ const TableUser = (): JSX.Element => {
   return (
     <UserContex.Provider value={userContextParams}>
       <>{message && <MessageAlert message={message} severity={serverity} />}</>
-
-      {userState.loading || deleteUserState.loading ? (
-        <Box
-          sx={{
-            display: 'flex',
-            width: '100%',
-            height: '500px',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <CircularProgress />
-        </Box>
-      ) : (
         <>
           <Box
             sx={{
@@ -162,14 +143,14 @@ const TableUser = (): JSX.Element => {
             }}
           >
             <TableWithFixedColumn
+              isLoading={userState.loading || deleteUserState.loading }
               rows={rows}
               columns={columns}
-              maxWidth={900}
-              maxHeight={400}
+              maxWidth={'90%'}
+              maxHeight={'65vh'}
             />
           </Box>
         </>
-      )}
     </UserContex.Provider>
   )
 }

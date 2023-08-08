@@ -21,15 +21,20 @@ const initUserDetails: IUserDetails = {
 
 export interface IAuthContext {
   profile?: IUserDetails;
+  widthMin: boolean;
+  setWidthMin: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const AuthContextWrap = createContext<IAuthContext>({
   profile: undefined,
+  widthMin: false,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setWidthMin: () => {},
 });
 
 export default function AuthProvider({ children, ...props }: any): JSX.Element {
   const [profile, setProfile] = useState<IUserDetails | undefined>(undefined);
-
+  const [widthMin, setWidthMin] = useState(false);
   const getProfile = useCallback(async (): Promise<void> => {
     try {
       const { data } = await server.get<IUserDetails>('/Users/profile');
@@ -42,9 +47,13 @@ export default function AuthProvider({ children, ...props }: any): JSX.Element {
   useEffect(() => {
     getProfile();
   }, [getProfile]);
-
+  const contextValue: IAuthContext = {
+    profile,
+    widthMin,
+    setWidthMin,
+  };
   return (
-    <AuthContextWrap.Provider value={{ profile }}>
+    <AuthContextWrap.Provider value={contextValue}>
       {children}
     </AuthContextWrap.Provider>
   );

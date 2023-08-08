@@ -1,8 +1,13 @@
-
+:root{
+  --width-left-navbar-min:80px;
+  --width-left-navbar-max:260px;
+  --width-main-content-min:calc(100vw - var(--width-left-navbar-max));
+  --width-main-content-max:calc(100vw - var(--width-left-navbar-min));
+}
 body,
 html {
   scroll-behavior: smooth;
-  background-color: #fbfbfb;
+  background-color: #f7f7f8 !important;
 }
 
 body::-webkit-scrollbar {
@@ -246,5 +251,13 @@ body::-webkit-scrollbar-track {
   }
   100% {
     background-color: #8e8e8e;
+  }
+}
+
+@keyframes moveUp{
+  from{
+    transform:translateY(0),
+  }to{
+    transform:translateY(-100%),
   }
 }
