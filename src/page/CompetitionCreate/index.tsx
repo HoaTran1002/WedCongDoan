@@ -210,7 +210,7 @@ const Index = (): JSX.Element => {
             >
               <Typography
                 variant='h4'
-                sx={{ fontWeight: 500, color: '#1976d2' }}
+                sx={{ fontWeight: 400, color: '#1976d2' }}
               >
                 Tạo một cuộc thi mới
               </Typography>

@@ -155,7 +155,7 @@ const Index = (): JSX.Element => {
               m:"0 !important"
             }}
           >
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{mr:2}} >
               <Stack
                 direction='row'
                 spacing={20}
@@ -164,13 +164,13 @@ const Index = (): JSX.Element => {
               >
                 <Typography
                   variant='h4'
-                  sx={{ fontWeight: 500, color: '#1976d2' }}
+                  sx={{ fontWeight: 400, color: '#1976d2' }}
                 >
                   Trang Blog mới
                 </Typography>
               </Stack>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{mr:2}}>
                 <Box
                   sx={{
                     display: 'flex',
@@ -205,7 +205,7 @@ const Index = (): JSX.Element => {
                   }
                 </Box>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={12} sx={{mr:2}}>
               <div style={{ marginTop: 20, position: "relative" }}>
                 <Dropzone
                   onDrop={handleImageDrop}
@@ -249,7 +249,7 @@ const Index = (): JSX.Element => {
                 }
               </div>
             </Grid>
-            <Grid item xs={12} style={{ marginTop: '10px' }}>
+            <Grid item xs={12} sx={{mr:2,marginTop: '10px'}}>
               <Box
                 sx={{
                   position: "relative",
@@ -288,7 +288,7 @@ const Index = (): JSX.Element => {
                 }
               </Box>
             </Grid>
-            <Grid item md={12}>
+            <Grid item md={12} sx={{mr:2}}>
               <Box
                 sx={{
                   display:"flex",

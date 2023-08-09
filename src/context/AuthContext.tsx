@@ -8,16 +8,9 @@ export interface IUserDetails {
   email: string;
   roleId: number;
   depId: number;
+  password:string;
 }
 
-const initUserDetails: IUserDetails = {
-  userId: '',
-  userName: '',
-  dateOfBirth: '',
-  email: '',
-  roleId: 1,
-  depId: -1,
-};
 
 export interface IAuthContext {
   profile?: IUserDetails;

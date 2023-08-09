@@ -107,7 +107,7 @@ const TestCreate = (): JSX.Element => {
   const [severity, setSeverity] = useState<string>('')
   const [isAlert, setIsAlert] = useState<boolean>(false)
 
-  
+
   if (message !== '') {
     setTimeout((): void => {
       setIsAlert(false)
@@ -543,49 +543,50 @@ const TestCreate = (): JSX.Element => {
               </Card>
             </Box>
           </Modal>
-          <Box 
+          <Box
             sx={{
-              display:"flex",
-              flexDirection:"column"
+              display: "flex",
+              flexDirection: "column",
+              m:"0 10px"
             }}
           >
-              <Box
+            <Box
               sx={{
-                width:"100%",
-                height:"200px",
-                objectFit:"cover",
-                borderTopLeftRadius:"5px",
-                borderTopRightRadius:"5px"
+                width: "100%",
+                height: "200px",
+                objectFit: "cover",
+                borderTopLeftRadius: "5px",
+                borderTopRightRadius: "5px"
               }}
-                component='img'
-                src='https://hufi.edu.vn/images/slide/banner-web-hufi-01.jpg'
-              />    
+              component='img'
+              src='https://hufi.edu.vn/images/slide/banner-web-hufi-01.jpg'
+            />
           </Box>
-              <Box
-                  sx={{
-                    backgroundColor: "#42a5f5",
-                    padding: "10px",
-                    display:"flex",
-                    gap:"40px",
-                    position:"sticky",
-                    top:"78px",
-                    left:0,
-                  zIndex:"30"
-                  }}
-                >
-                  <IconButton
-                    onClick={
-                      ():void=>{
-                        navigate(`/Tests/Competition/${comId}`)
-                      }
-                    }
-                  >
-                    <ArrowBackIcon sx={{color:"white"}} />
-                  </IconButton>
-                  <Button onClick={handleOpen} variant='contained'>
-                    tạo trắc nghiệm
-                  </Button>
-                </Box>
+          <Box
+            sx={{
+              backgroundColor: "#42a5f5",
+              padding: "10px",
+              display: "flex",
+              gap: "40px",
+              position: "sticky",
+              top: "78px",
+              m:"0 10px",
+              zIndex: "30"
+            }}
+          >
+            <IconButton
+              onClick={
+                (): void => {
+                  navigate(`/Tests/Competition/${comId}`)
+                }
+              }
+            >
+              <ArrowBackIcon sx={{ color: "white" }} />
+            </IconButton>
+            <Button onClick={handleOpen} variant='contained'>
+              tạo trắc nghiệm
+            </Button>
+          </Box>
           {questions.map((q: QuestionData, index: number) => {
             const correctAnswers = q.trueAnswer.split('<====>')
             const arrStr = q.ansOfQues

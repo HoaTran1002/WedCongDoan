@@ -83,11 +83,11 @@ export const editUser = async ({
   depId,
   isDeleted
 }: {
-  userId: string
-  userName: string
+  userId: string | undefined
+  userName: string | undefined
   dateOfBirth: string
-  email: string
-  password: string
+  email: string | undefined
+  password: string | undefined
   roleId: number
   depId: number
   isDeleted: number

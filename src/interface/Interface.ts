@@ -104,3 +104,8 @@ export interface ICompetitionPrizeUser {
     cpid: number,
     userId: string
 }
+
+export interface IRole{
+    roleId: number
+    roleName: string
+}

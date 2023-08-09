@@ -50,6 +50,7 @@ import { getOneCharacter } from '~/utils/stringUtils'
 import { getLogout } from '~/api/userApi'
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PortraitIcon from '@mui/icons-material/Portrait';
 const drawerWidth = 250
 
 const pages = [
@@ -59,8 +60,9 @@ const pages = [
 
 const settings = [
   { name: 'QUẢN LÝ', icon: <SettingsIcon />, to: '/CompetitionManage', type: 'Manager', roles: [1, 2] },
-  { name: 'ĐĂNG XUẤT', icon: <LogoutIcon />, to: '/Login', type: 'Logout', roles: [1, 2, 3] },
+  { name: 'THÔNG TIN', icon: <PortraitIcon />, to: '/Profile', type: 'Profile', roles: [3], },
   { name: 'ĐĂNG NHẬP', icon: <LoginIcon />, to: '/Login', type: 'Login', roles: [1, 2, 3], },
+  { name: 'ĐĂNG XUẤT', icon: <LogoutIcon />, to: '/Login', type: 'Logout', roles: [1, 2, 3] },
 ]
 
 const DrawerHeader = styled('div')(({ theme }) => ({

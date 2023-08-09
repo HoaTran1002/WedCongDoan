@@ -32,6 +32,7 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { formatDay } from '~/utils/dateUtils'
+import useAuth from '~/hook/useAuth'
 //interface
 interface ICompetition {
   comId: number
@@ -49,6 +50,7 @@ interface IDep {
 }
 const CompTable = (): JSX.Element => {
   const navigate = useNavigate();
+  const {profile} = useAuth()
   const [showSuccess, setShowSuccess] = useState(false)
   const [showError, setShowError] = useState(false)
   const [compState, callComp] = useFetch()
@@ -299,11 +301,16 @@ const CompTable = (): JSX.Element => {
                     display:"inline-flex",
                     alignItems:"center",
                     position:"relative",
-                    cursor:"pointer",
+                    cursor:profile?.roleId === 1?"pointer":"default",
                     borderRadius:"3px",
                     transition:"all linear 0.2s",
+                    opacity:profile?.roleId === 1 ?'1':"0.5"
                   }}
-                  onClick={():void=>navigate('/CompetitionCreate')}
+                  onClick={():void=>{
+                    if(profile?.roleId === 1){
+                      navigate('/CompetitionCreate')
+                    }else return
+                  }}
                 >
                   <span
                     className='icon-button'

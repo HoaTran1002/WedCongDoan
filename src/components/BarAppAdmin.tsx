@@ -25,6 +25,7 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
+import PortraitIcon from '@mui/icons-material/Portrait';
 import GridViewIcon from '@mui/icons-material/GridView'
 import { IndeterminateCheckBoxOutlined, Opacity } from '@mui/icons-material'
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -215,18 +216,22 @@ export default function Index(): JSX.Element {
             }}
           ></span>
         </Box>
-        {/* <Button onClick={logoutAccount} sx={{ textAlign: 'center' }}>
-                Đăng xuất
-              </Button> */}
         <Box
           sx={{
             position: "relative",
             display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between"
+            flexDirection:"column"
           }}
         >
-          <Box>
+          <Box
+            sx={{
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width:"100%"
+            }}
+          >
             <Tooltip title={profile?.userName}>
               <Box
                 sx={{
@@ -264,6 +269,49 @@ export default function Index(): JSX.Element {
                 </span>
               </Box>
             </Tooltip>
+          </Box>
+          <Box>
+          <Link
+                    style={{ color: 'white', textDecoration: 'none' }}
+                    to={'/ProfileAdmin'}
+                  >
+                    <Box
+                      className='item_navbar-left'
+                      onClick={handleCloseNavMenu}
+                      sx={{
+                        ...buttonStyles,
+                        ...(location.pathname === '/ProfileAdmin' && activeButtonStyles),
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        <PortraitIcon />
+                      </span>
+                      <span
+                        className='item_navbar-left-name'
+                        style={{
+                          fontSize: "17px",
+                          fontWeight: "300",
+                          // flex:widthMin ?'1':'0',
+                          opacity: widthMin ? '0' : '1',
+                          transform: widthMin ? "translateX(-50%)" : "translateX(0)",
+                          display: 'block',
+                          transition: "all linear 0.2s",
+                          position: 'absolute',
+                          left: "50px"
+                        }}
+                      >
+                        THÔNG TIN
+                      </span>
+                      
+
+                    </Box>
+          </Link>
+          </Box>
             <span
               style={{
                 height: "0.5px",
@@ -274,10 +322,6 @@ export default function Index(): JSX.Element {
                 width: "100%"
               }}
             ></span>
-          </Box>
-          <ArrowDropDownIcon
-            className='icon-user-name'
-          sx={{ color: "white", mr: "10px",display:widthMin?'none':'inline' }} />
         </Box>
         <Box
           sx={{
@@ -490,32 +534,53 @@ export default function Index(): JSX.Element {
                   </Link>
                 )
               ) : (
-                <Button
-                  key={index}
-                  onClick={handleCloseNavMenu}
-                  startIcon={page.icon}
-                  sx={{
-                    padding: '10px',
-                    background: blue[100],
-                    boxShadow: 'none',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'flex-start',
-                    flexDirection: 'row',
-                    color: "#666",
-                    cursor: "default",
-                    '&:hover': {
-                      backgroundColor: 'transparent',
-                      borderRadius: 'none',
-                      boxShadow: 'none'
-                    },
-                  }}
-                  variant='contained'
-                >
-                  {
-                    widthMin ? <></> : page.name
-                  }
-                </Button>
+                <Box
+                   key={index}
+                      className='item_navbar-left'
+                      onClick={handleCloseNavMenu}
+                      sx={{
+                        ...buttonStyles,
+                        color:"#ffffff",
+                        opacity:"0.4",
+                        cursor:"default",
+                        '&:hover':{
+                          backgroundColor:"transparent"
+                        }
+                      }}
+                    >
+                      <span
+                        style={{
+                          // fontSize:"20px",
+                          // flex:widthMin ?'1':'0'
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        {
+                          page.icon
+                        }
+                      </span>
+                      <span
+                        className='item_navbar-left-name'
+                        style={{
+                          fontSize: "17px",
+                          fontWeight: "300",
+                          // flex:widthMin ?'1':'0',
+                          opacity: widthMin ? '0' : '1',
+                          transform: widthMin ? "translateX(-50%)" : "translateX(0)",
+                          display: 'block',
+                          transition: "all linear 0.2s",
+                          position: 'absolute',
+                          left: "50px"
+                        }}
+                      >
+                        {
+                          page.name
+                        }
+                      </span>
+                      
+
+                </Box>
               )
             ))
           }
@@ -591,7 +656,6 @@ export default function Index(): JSX.Element {
               display:"block"
             }
           }}
-          onClick={(): void => setWidthMin((r: any) => !r)}
         >
           <SettingsIcon/>
           <Box
