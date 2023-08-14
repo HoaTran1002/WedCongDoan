@@ -215,11 +215,6 @@ const TestCreate = (): JSX.Element => {
   }
 
   const submitQuestion = (): void => {
-    // console.log('data trả lời:' + bodyQuestion.ansOfQues)
-    // console.log('data trả lời đúng:' + bodyQuestion.trueAnswer)
-    // console.log('data câu hỏi:' + bodyQuestion.quesDetail)
-    // console.log('data loại đap án:' + bodyQuestion.quesTId)
-    // console.log('data Id :' + bodyQuestion.examId)
     const errorConditions = [
       {
         condition: bodyQuestion.ansOfQues === '',
@@ -250,7 +245,6 @@ const TestCreate = (): JSX.Element => {
       }
     }
     const hasError = errorConditions.some((condition) => condition.condition)
-    console.log(hasError)
     if (hasError) {
       return
     } else {

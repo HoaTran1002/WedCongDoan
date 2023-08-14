@@ -21,6 +21,7 @@ import ModalResultManage from './ModalResultManage'
 import DensitySmallIcon from '@mui/icons-material/DensitySmall'
 import { formatDay } from '~/utils/dateUtils'
 import SearchIcon from '@mui/icons-material/Search';
+import { listWhenSearchDeepCheck } from '~/utils/stringUtils'
 const ResultManage = (): JSX.Element => {
   const [compState, callComp] = useFetch()
   const [deps, depCall] = useFetch()
@@ -37,7 +38,7 @@ const ResultManage = (): JSX.Element => {
       )
       return dep.depName || 'null'
     } catch (error) {
-      console.log('lỗi')
+      console.log(error)
     }
     return 'null'
   }
@@ -49,6 +50,20 @@ const ResultManage = (): JSX.Element => {
     setComId(comId)
     setOpenModalListUser(true)
   }
+  const rows = compState?.payload
+  ?.filter((item: ICompetition) =>   
+  item.isDeleted !== 1
+)
+?.map((item: ICompetition) => ({
+  comId: item.comId,
+  comName: item.comName,
+  startDate: formatDay(item.startDate),
+  endDate: formatDay(item.endDate),
+  examTimes: item.examTimes,
+  userQuan: item.userQuan,
+  depName: getNameDep(item.depId)
+}))
+.reverse()
   const columns: ColumnsProps[] = [
     {
       field: 'comId',
@@ -102,23 +117,8 @@ const ResultManage = (): JSX.Element => {
 
     const handleSearch=():void=>{
       setListCompetition(
-        compState?.payload
-          ?.filter((item: ICompetition) =>   
-          item.isDeleted !== 1 &&
-          item.comName.trim().toLowerCase()?.includes(compSearch.trim().toLowerCase())
-        )
-        ?.map((item: ICompetition) => ({
-          comId: item.comId,
-          comName: item.comName,
-          startDate: formatDay(item.startDate),
-          endDate: formatDay(item.endDate),
-          examTimes: item.examTimes,
-          userQuan: item.userQuan,
-          depName: getNameDep(item.depId)
-        }))
-        .reverse()
+        listWhenSearchDeepCheck(compSearch,rows,'comName')
       )
-  
       setCompSearch('')
     }
     const handleKeyPressEnter = (event: React.KeyboardEvent<HTMLDivElement>): void => {
@@ -200,6 +200,7 @@ const ResultManage = (): JSX.Element => {
               columns={columns}
               maxWidth={'95%'}
               maxHeight={'65vh'}
+              numberItems={6}
             />
           </Box>
         </Grid>

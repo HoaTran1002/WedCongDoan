@@ -12,19 +12,15 @@ import MessageAlert from '~/components/MessageAlert'
 import { LoadingContext } from '.'
 import { formatDay } from '~/utils/dateUtils'
 import ModalDelete from '~/components/ModalDelete'
-interface User {
-  userId: string
-  userName: string
-  dateOfBirth: string
-  email: string
-  password: string
-  roleId: number
-  depId: number
-  isDeleted: number
-}
+import { listWhenSearchDeepCheck } from '~/utils/stringUtils'
+import { IUserDetails } from '~/interface/Interface'
 interface IUserContext {
   alertEdit: () => void
   alertAdd: () => void
+}
+interface PropsTable {
+  rows:IUserDetails[],
+  loading:boolean
 }
 export const UserContex = React.createContext<IUserContext>({
   alertEdit: () => {
@@ -34,28 +30,12 @@ export const UserContex = React.createContext<IUserContext>({
     return
   }
 })
-const TableUser = (): JSX.Element => {
-  const [userState, call] = useFetch()
+const TableUser = (prop:PropsTable): JSX.Element => {
   const [deleteUserState, callDelete] = useFetch()
   const [loading, setLoading] = React.useState<boolean>(false)
   const [message, setMessage] = React.useState<string>('')
   const [serverity, setServerity] = React.useState<string>('')
-  const users = userState?.payload
-  const loadingParams = React.useContext(LoadingContext)
-
-  const rows =
-    users
-      ?.filter((user: User) => user.isDeleted !== 1)
-      .map((user: User) => ({
-        id: user.userId,
-        username: user.userName,
-        dateofbirth: formatDay(user.dateOfBirth),
-        email: user.email,
-        password: user.password,
-        roleId: user.roleId,
-        depId: user.depId
-      })) || []
-
+  
   const handleDelete = async (id: string): Promise<void> => {
     const request: { _id: string; value: number } = {
       _id: id,
@@ -63,7 +43,6 @@ const TableUser = (): JSX.Element => {
     }
     await callDelete(async (): Promise<void> => {
       await UpdateIsDeleted(request)
-      // setShowSuccess(true)
     })
     setMessage('đã xoá người Dùng!')
     setServerity('info')
@@ -73,7 +52,8 @@ const TableUser = (): JSX.Element => {
   const columns: ColumnsProps[] = [
     { field: 'id', headerName: 'ID Người Dùng' },
     { field: 'username', headerName: 'Họ và tên' },
-    { field: 'dateofbirth', headerName: 'Ngày Sinh' },
+    { field: 'dateOfBirth', hidden:true},
+    { field:'dateOfBirthToShow',headerName: 'Ngày Sinh'},
     {
       field: 'email',
       headerName: 'Gmail',
@@ -83,6 +63,8 @@ const TableUser = (): JSX.Element => {
       field: 'password',
       headerName: 'Mật Khẩu'
     },
+    {field:'roleIdToShow',headerName:'Quyền'},
+    {field:'roleId',hidden:true},
     {
       field: 'actions',
       type: 'actions',
@@ -91,32 +73,26 @@ const TableUser = (): JSX.Element => {
           key='edit'
           id={params.id}
           userName={params.username}
-          dateOfBirth={params.dateofbirth}
+          dateOfBirth={params.dateOfBirth}
           email={params.email}
           password={params.password}
           roleId={params.roleId}
           depId={params.depId}
         />,
-        <Tooltip key='delete' title='Xóa'>
-          <ModalDelete
-            callBack={(): void => {
-              handleDelete(params.id)
-            }}
-            content={'bạn có muốn xoá người dùng này?'}
-            question={'cảnh báo!!'}
-          />
-
-          {/* <IconButton onClick={(): void => handleDelete(params.id)}>
-            <DeleteIcon color='error' />
-          </IconButton> */}
-        </Tooltip>
+        <div key='delete'>
+            <ModalDelete
+              callBack={(): void => {
+                handleDelete(params.id)
+              }}
+              content={'bạn có muốn xoá người dùng này?'}
+              question={'cảnh báo!!'}
+            />
+        </div>
       ]
     }
   ]
 
-  React.useEffect(() => {
-    call(getAllUser)
-  }, [loading, loadingParams.statusLoading])
+  
   if (message !== '') {
     setTimeout(() => {
       setMessage('')
@@ -132,6 +108,7 @@ const TableUser = (): JSX.Element => {
       setMessage('đã thêm người Dùng!')
     }
   }
+  
   return (
     <UserContex.Provider value={userContextParams}>
       <>{message && <MessageAlert message={message} severity={serverity} />}</>
@@ -143,11 +120,12 @@ const TableUser = (): JSX.Element => {
             }}
           >
             <TableWithFixedColumn
-              isLoading={userState.loading || deleteUserState.loading }
-              rows={rows}
+              isLoading={prop.loading}
+              rows={prop.rows}
               columns={columns}
-              maxWidth={'90%'}
+              maxWidth={'88%'}
               maxHeight={'65vh'}
+              numberItems={6}
             />
           </Box>
         </>

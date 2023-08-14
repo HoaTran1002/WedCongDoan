@@ -2,10 +2,9 @@ import {
   Box,
   Button,
   Modal,
-  styled,
-  SxProps,
   Tooltip,
-  tooltipClasses,
+  SxProps,
+  IconButton,
   TooltipProps,
   Typography
 } from '@mui/material'
@@ -35,16 +34,7 @@ interface IModal {
   id?: number
   callBack?: () => void
 }
-const LightTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.common.white,
-    color: 'rgba(0, 0, 0, 0.87)',
-    boxShadow: theme.shadows[1],
-    fontSize: 11
-  }
-}))
+
 const ModalDelete = ({
   question,
   content,
@@ -64,19 +54,13 @@ const ModalDelete = ({
 
   return (
     <div>
-      <LightTooltip placement='left' title='xoá '>
-        <Button
-          sx={{
-            background: 'white',
-            border: 1,
-            borderRadius: 1,
-            margin: 0.2
-          }}
+      <Tooltip title='Xóa' placement='bottom'>
+        <IconButton
           onClick={handleOpen}
         >
           <DeleteSweepIcon sx={{ color: red[400] }} />
-        </Button>
-      </LightTooltip>
+        </IconButton>
+      </Tooltip>
 
       <Modal
         open={open}

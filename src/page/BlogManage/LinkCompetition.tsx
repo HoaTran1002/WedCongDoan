@@ -75,7 +75,6 @@ const LinkCompetition = (props: PropLinkCompetition): JSX.Element => {
     allCompsBlogs?.payload?.find(
       (r: ICompetitionBlogsUser) => r.blogId === props.blogId
     )
-  // console.log(itemBlogCompetitionHasLink);
   const handleChangeComId = (comIdNew: number): void => {
     if (competitionId === comIdNew) {
       setCheckCompetition(false)
@@ -137,7 +136,7 @@ const LinkCompetition = (props: PropLinkCompetition): JSX.Element => {
       try {
         await DeleteCompetitionBlog(request)
       } catch (error) {
-        console.log('thất bại')
+        console.log(error)
       }
     })
     props.close()

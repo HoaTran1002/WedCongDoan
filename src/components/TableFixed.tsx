@@ -10,7 +10,7 @@ export interface ColumnsProps {
     headerName?: string | null,
     field: string,
     type?: string,
-
+    hidden?:boolean,
     getActions?: (params?: any) => JSX.Element[];
 }
 interface TableWithFixedColumnProps {
@@ -36,7 +36,7 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
     const fixed = actionsColumn ? true : false;
     const page = numberItems ? true : false;
     const productsPerPage = numberItems || 0;
-    const totalPages = Math.ceil(rows?.length / productsPerPage);
+    const totalPages = Math.ceil(rows?.length / productsPerPage) | 0;
     const startIndex = (currentPage - 1) * productsPerPage;
     const endIndex = startIndex + productsPerPage;
     const currentItems = rows?.slice(startIndex, endIndex);
@@ -48,7 +48,7 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
         const elements = [];
         for (let i = 0; i < 9; i++) {
             elements.push(
-                <tr style={{height:"10px"}}>
+                <tr key={i} style={{height:"10px"}}>
                     {columns.map((column, columnIndex) => (
                         <td key={columnIndex} style={{margin:" 0 10px"}}>
                             <span
@@ -219,14 +219,17 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                     border: "1px solid #cacaca",
                                     borderRadius: "5px",
                                     overflow: "hidden",
+                                    width: Number(maxWidthTable) ? `${maxWidthTable}px` : maxWidthTable,
                                     mb: 5
                                 }}
                             >
                                 <Box
                                     sx={{
                                         ...table_container,
-                                        width: Number(maxWidthTable) ? `${maxWidthTable}px` : maxWidthTable,
+                                        
                                         height: Number(maxHeightTable) ? `${maxHeightTable}px` : maxHeightTable,
+                                        backgroundColor: "white",
+                                        borderRadius: "5px",
                                         '&::-webkit-scrollbar': {
                                             height: "8px",
                                             width: '0px'
@@ -247,7 +250,7 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                                 component='thead'
                                             >
                                                 <tr>
-                                                    {columns.filter(r => r.field !== 'actions').map((row, index) => (
+                                                    {columns.filter(r => r.field !== 'actions' && !r.hidden).map((row, index) => (
                                                         <Box
                                                             component='td'
                                                             key={index}
@@ -259,9 +262,9 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                                 </tr>
                                             </Box>
                                             <tbody>
-                                                {currentItems.map((row, index: number) => (
+                                                {currentItems?.map((row, index: number) => (
                                                     <tr key={index}>
-                                                        {columns.filter(r => r.field !== 'actions').map((column: any, columnIndex: number) => (
+                                                        {columns.filter(r => r.field !== 'actions' && !r.hidden).map((column: any, columnIndex: number) => (
                                                             <Box
                                                                 component='td'
                                                                 sx={itemsColumnsRows}
@@ -298,7 +301,7 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {currentItems.map((row, rowIndex) => (
+                                                {currentItems?.map((row, rowIndex) => (
                                                     <tr key={rowIndex}>
                                                         <Box
                                                             component='th'
@@ -330,7 +333,7 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                 </Box>
                                 <Box
                                     sx={{
-
+                                        backgroundColor:"#f6fbff",
                                         padding: "10px 35px"
                                     }}
                                 >
@@ -375,20 +378,32 @@ export const TableWithFixedColumn: React.FC<TableWithFixedColumnProps> = ({
                                                     >
                                                         <tr>
                                                             {columns.filter(r => r.field !== 'actions').map((row, index) => (
-                                                                <Box
-                                                                    component='td'
-                                                                    key={index}
-                                                                    sx={itemsColumnsHeader}
-                                                                >
-                                                                    {row.headerName}
-                                                                </Box>
+                                                                row.hidden ? (
+                                                                    <Box
+                                                                        hidden
+                                                                        component='td'
+                                                                        key={index}
+                                                                        sx={itemsColumnsHeader}
+                                                                    >
+                                                                        {row.headerName}
+                                                                    </Box>
+                                                                ):(
+                                                                    <Box
+                                                                        component='td'
+                                                                        key={index}
+                                                                        sx={itemsColumnsHeader}
+                                                                    >
+                                                                        {row.headerName}
+                                                                    </Box>
+
+                                                                )
                                                             ))}
                                                         </tr>
                                                     </Box>
                                                     <tbody >
                                                         {rows?.map((row, index: number) => (
                                                             <tr key={index}>
-                                                                {columns.filter(r => r.field !== 'actions').map((column: any, columnIndex: number) => (
+                                                                {columns.filter(r => r.field !== 'actions' && !r.hidden).map((column: any, columnIndex: number) => (
                                                                     <Box
                                                                         component='td'
                                                                         sx={itemsColumnsRows}

@@ -81,7 +81,7 @@ const Index = (): JSX.Element => {
             try {
               await DeleteExam(request)
             } catch (error) {
-              console.log('thất bại')
+              console.log(error)
             }
           })
         setDeleteOpen(false)
@@ -98,7 +98,7 @@ const Index = (): JSX.Element => {
             try {
                 await EditExam(requestData)
             } catch (error) {
-                console.log('Thất bại')
+                console.log(error)
             }
         })
         setEditOpen(false)

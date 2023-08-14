@@ -50,6 +50,7 @@ const ProfileAdmin = (): JSX.Element => {
         roleId: number
         depId: number
         isDeleted: number
+        userAddress:''
     } = {
         userId: profile?.userId,
         userName: userName,
@@ -58,7 +59,8 @@ const ProfileAdmin = (): JSX.Element => {
         password: password,
         roleId: Number(role),
         depId: Number(deparment),
-        isDeleted: 0
+        isDeleted: 0,
+        userAddress:''
     }
     const errorConditions = [
         {
@@ -92,7 +94,6 @@ const ProfileAdmin = (): JSX.Element => {
     }
     const handleOpenModal =():void=>{
         setOpenModal(true)
-        console.log(requestData);
         
     }
     const handleCloseModal =():void=>{
@@ -169,7 +170,8 @@ const ProfileAdmin = (): JSX.Element => {
                 <ModalMessage
                     open={openModal}
                     close={handleCloseModal}
-                    header={'Bạn có muốn cập nhập thông tin ?'}
+                    header={'Thông báo'}
+                    title={'Bạn có muốn cập nhập thông tin ?'}
                     handleOK={onSubmitFormEdit}
                 />
                 <Grid item md={12}>

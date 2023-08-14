@@ -45,7 +45,6 @@ export default function Index(): JSX.Element {
   const listAllResults = allResult?.payload
   const allCompetition = getAllComps?.payload?.filter((r:ICompetition)=>r.isDeleted === 0);
 
-  console.log(allCompetition)
   const coutingUserInCom = (comId: number): number => {
     const listCompetionUserByComId: ICompetitionUser[] = listAllCompetitionUser?.filter((r: ICompetitionUser) => r.comId === comId)
     const listUser = listAllResults?.reduce((listNew: IResult[], curr: IResult) => {
@@ -54,7 +53,6 @@ export default function Index(): JSX.Element {
         listNew?.push(curr)
     }, [])
 
-    console.log(listUser, listCompetionUserByComId)
 
     return listUser?.length;
   }
@@ -108,7 +106,6 @@ export default function Index(): JSX.Element {
   });
   const newListDayInHappening = removeDuplicates(listDayInHappening, (item) => `${item.date}-${item.month}-${item.year}`);
   const newListDayBefore = removeDuplicates(listDayInBefore, (item) => `${item.date}-${item.month}-${item.year}`);
-  console.log(newListDayInHappening)
 
   const getDepName = (id: number): string => {
     const dep = getAllDeps?.payload?.find((r: IDepartment) => r?.depId === id)
@@ -275,7 +272,6 @@ export default function Index(): JSX.Element {
     } else {
       setSearchStatus(false)
     }
-    // console.log(compSearch, searchStatus, listCompSearch)
   }
   const handleResetStatus = (): void => {
     setSearchStatus(false)

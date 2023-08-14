@@ -28,6 +28,7 @@ import {useNavigate } from 'react-router-dom'
 import { Insert, getAllBlog } from '~/api/blogApi'
 import { getAllComp } from '~/api/competitionApi'
 import useFetch from '~/hook/useFetch'
+import ModalMessage from '~/components/ModalMessage'
 
 const Index = (): JSX.Element => {
   const navigate = useNavigate();
@@ -308,25 +309,13 @@ const Index = (): JSX.Element => {
                 </Button>
 
               </Box>
-              <Dialog
+              <ModalMessage 
+                close={handleClose} 
+                header={'Thông báo'}
+                title={'Bạn muốn thêm mới trang Blog ?'}
+                handleOK={handleOK}
                 open={open}
-                onClose={handleClose}
-                aria-labelledby='alert-dialog-title'
-                aria-describedby='alert-dialog-description'
-              >
-                <DialogTitle id='alert-dialog-title'>{'Thông tin '}</DialogTitle>
-                <DialogContent>
-                  <DialogContentText id='alert-dialog-description'>
-                    Bạn muốn thêm mới trang Blog ?
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button variant="contained" onClick={handleOK}>
-                    OK
-                  </Button>
-                  <Button onClick={handleClose}>Trở về</Button>
-                </DialogActions>
-              </Dialog>
+              />
             </Grid>
             
           </Grid>

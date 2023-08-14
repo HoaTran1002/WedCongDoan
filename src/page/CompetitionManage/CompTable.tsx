@@ -1,9 +1,7 @@
 import React, { useState } from 'react'
 import {
-  Typography,
   Grid,
   Button,
-  Stack,
   Tooltip,
   Snackbar
 } from '@mui/material'
@@ -12,20 +10,16 @@ import ArticleOutlinedIcon from '@mui/icons-material/ArticleOutlined'
 import { Link, useNavigate } from 'react-router-dom'
 import useFetch from '~/hook/useFetch'
 import {
-  deleteCompetitions,
   getAllComp,
   UpdateIsDeleted
 } from '~/api/competitionApi'
 import SearchIcon from '@mui/icons-material/Search';
 import MilitaryTechOutlinedIcon from '@mui/icons-material/MilitaryTechOutlined'
-import { color } from '@mui/system'
 import { getAllDep } from '~/api/depApi'
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'
 import MuiAlert from '@mui/material/Alert'
-import CircularProgress from '@mui/material/CircularProgress'
 import Box from '@mui/material/Box'
 import { TableWithFixedColumn, ColumnsProps } from '~/components/TableFixed'
-import { Loader } from '~/components/loader'
 import Dialog from '@mui/material/Dialog'
 import DialogActions from '@mui/material/DialogActions'
 import DialogContent from '@mui/material/DialogContent'
@@ -33,21 +27,9 @@ import DialogContentText from '@mui/material/DialogContentText'
 import DialogTitle from '@mui/material/DialogTitle'
 import { formatDay } from '~/utils/dateUtils'
 import useAuth from '~/hook/useAuth'
-//interface
-interface ICompetition {
-  comId: number
-  comName: string
-  startDate: string
-  endDate: string
-  examTimes: number
-  userQuan: number
-  depId: number
-  isDeleted: number
-}
-interface IDep {
-  depId: number
-  depName: string
-}
+import { ICompetition,IDepartment } from '~/interface/Interface'
+import { listWhenSearchDeepCheck } from '~/utils/stringUtils'
+import ModalMessage from '~/components/ModalMessage'
 const CompTable = (): JSX.Element => {
   const navigate = useNavigate();
   const {profile} = useAuth()
@@ -61,36 +43,14 @@ const CompTable = (): JSX.Element => {
   const depList = deps.payload || []
   const [loading, setLoading] = useState<boolean>(false)
   const [compSearch,setCompSearch] = React.useState<string>('')
-  const [listCompetition,setListCompetition] = React.useState<any[]>([]) 
-  React.useEffect(() => {
-    depCall(getAllDep)
-  }, [loading])
-  React.useEffect(() => {
-    callComp(getAllComp)
-    
-  }, [loading])
-  React.useEffect(()=>{
-    setListCompetition(
-      compState?.payload
-      ?.filter((item: ICompetition) => item.isDeleted !== 1)
-      .map((item: ICompetition) => ({
-        comId: item.comId,
-        comName: item.comName,
-        startDate: formatDay(item.startDate),
-        endDate: formatDay(item.endDate),
-        examTimes: item.examTimes,
-        userQuan: item.userQuan,
-        depName: getNameDep(item.depId)
-      })).reverse()
-    )
-  },[compState?.loading])
-
+  const [listCompetition,setListCompetition] = React.useState<any[]>([])
+  
   const getNameDep = (idDep: number): string => {
     try {
-      const dep: IDep = depList?.find((item: any) => item.depId == idDep)
+      const dep: IDepartment = depList?.find((item: any) => item.depId == idDep)
       return dep.depName || 'null'
     } catch (error) {
-      console.log('lỗi')
+      console.log(error)
     }
     return 'null'
   }
@@ -110,22 +70,9 @@ const CompTable = (): JSX.Element => {
   }
 
   const handleSearch=():void=>{
+    
     setListCompetition(
-      compState?.payload
-        ?.filter((item: ICompetition) =>   
-        item.isDeleted !== 1 &&
-        item.comName.trim().toLowerCase()?.includes(compSearch.trim().toLowerCase())
-      )
-      ?.map((item: ICompetition) => ({
-        comId: item.comId,
-        comName: item.comName,
-        startDate: formatDay(item.startDate),
-        endDate: formatDay(item.endDate),
-        examTimes: item.examTimes,
-        userQuan: item.userQuan,
-        depName: getNameDep(item.depId)
-      }))
-      .reverse()
+      listWhenSearchDeepCheck(compSearch,rows,'comName')
     )
 
     setCompSearch('')
@@ -148,6 +95,42 @@ const CompTable = (): JSX.Element => {
       }
     })
   }
+  const rows = compState?.payload
+    ?.filter((item: ICompetition) =>   
+    item.isDeleted !== 1
+  )
+  ?.map((item: ICompetition) => ({
+    comId: item.comId,
+    comName: item.comName,
+    startDate: formatDay(item.startDate),
+    endDate: formatDay(item.endDate),
+    examTimes: item.examTimes,
+    userQuan: item.userQuan,
+    depName: getNameDep(item.depId)
+  }))
+  .reverse() 
+  React.useEffect(() => {
+    depCall(getAllDep)
+  }, [loading])
+  React.useEffect(() => {
+    callComp(getAllComp)
+    
+  }, [loading])
+  React.useEffect(()=>{
+    setListCompetition(
+      compState?.payload
+      ?.filter((item: ICompetition) => item.isDeleted !== 1)
+      .map((item: ICompetition) => ({
+        comId: item.comId,
+        comName: item.comName,
+        startDate: formatDay(item.startDate),
+        endDate: formatDay(item.endDate),
+        examTimes: item.examTimes,
+        userQuan: item.userQuan,
+        depName: getNameDep(item.depId)
+      })).reverse()
+    )
+  },[compState?.loading])
   const columns: ColumnsProps[] = [
     {
       field: 'comId',
@@ -199,16 +182,6 @@ const CompTable = (): JSX.Element => {
             </Button>
           </Link>
         </Tooltip>,
-        // <Tooltip key='edit' title='chỉnh sửa' placement='top-start'>
-        //   <Button
-        //     onClick={(): void => handleClickOpenDelete(params.comId)}
-        //     style={{ width: 50 }}
-        //     variant='outlined'
-        //     color='error'
-        //   >
-        //     <DeleteOutlinedIcon />
-        //   </Button>
-        // </Tooltip>,
         <Tooltip key='delete' title='xoá cuộc thi' placement='top-start'>
           <Button
             onClick={(): void => handleClickOpenDelete(params.comId)}
@@ -222,7 +195,6 @@ const CompTable = (): JSX.Element => {
       ]
     }
   ]
-  console.log(compSearch)
   return (
     <>
       <>
@@ -255,90 +227,91 @@ const CompTable = (): JSX.Element => {
           </MuiAlert>
         </Snackbar>
       </>
-        <Grid
-          container
-          rowSpacing={1}
-          sx={{width:"100% !important"}}
+        <Box 
+          sx={{
+            backgroundColor:"white",
+            borderRadius:"3px",
+            padding:"10px",
+            display:"flex",
+            alignItems:{md:"center",xs:"flex-start"},
+            gap:"30px",
+            flexDirection:{md:"row",xs:"column"},
+            m:"0 20px" 
+          }}
         >
-            <Grid item xs={12} style={{ margin: 10 }}>
-              <Box 
-                sx={{
-                  backgroundColor:"white",
-                  borderRadius:"3px",
-                  padding:"10px",
-                  display:"flex",
-                  alignItems:"center",
-                  gap:"30px"
-                }}
-              >
-                <Box
-                  sx={{
-                    display:"flex",
-                    borderBottom:"1px solid #0057c1",
-                    gap:"10px"
-                  }}
-                  onKeyDown={handleKeyPressEnter}
-                >
-                  <Box 
-                    component='input'
-                    value={compSearch}
-                    sx={{
-                      fontSize:"18px",
-                      border:"none",
-                      outline:"none"
-                    }}
-                    placeholder='Tìm kiếm cuộc thi'
-                    onChange={(e):void=>setCompSearch(e.target.value)}
-                  />
-                  <Box
-                    onClick={handleSearch}
-                  >
-                    <SearchIcon/>
-                  </Box>
-                </Box>
-                <Box
-                  sx={{
-                    display:"inline-flex",
-                    alignItems:"center",
-                    position:"relative",
-                    cursor:profile?.roleId === 1?"pointer":"default",
-                    borderRadius:"3px",
-                    transition:"all linear 0.2s",
-                    opacity:profile?.roleId === 1 ?'1':"0.5"
-                  }}
-                  onClick={():void=>{
-                    if(profile?.roleId === 1){
-                      navigate('/CompetitionCreate')
-                    }else return
-                  }}
-                >
-                  <span
-                    className='icon-button'
-                    style={{
-                      transition:"all linear 0.2s",
-                      display:"flex",
-                      alignItems:"center",
-                      justifyContent:"center",
-                      backgroundColor:"#007ecd",
-                      color:"white",
-                      padding:"5px",
-                    }}
-                  ><AddIcon/></span>
-                  <span
-                    style={{
-                      backgroundColor:"#def5ff",
-                      height:"100%",
-                      color:"#002fa7",
-                      fontWeight:"500",
-                      padding:"5px",
-                    }}
-                  >Thêm cuộc thi</span>
-                  
-                </Box>
-              </Box>
-            </Grid>
-            <Grid item xs={12} style={{ margin: 0,padding:"0" }}>
-              <Box
+          <Box
+            sx={{
+              display:"flex",
+              borderBottom:"1px solid #0057c1",
+              gap:"10px",
+              width:{xs:"100%",md:"auto"}
+            }}
+            onKeyDown={handleKeyPressEnter}
+          >
+            <Box 
+              component='input'
+              value={compSearch}
+              sx={{
+                fontSize:"18px",
+                border:"none",
+                outline:"none",
+                width:{xs:"100%"}
+              }}
+              placeholder='Tìm kiếm cuộc thi'
+              onChange={(e):void=>setCompSearch(e.target.value)}
+            />
+            <Box
+              onClick={handleSearch}
+            >
+              <SearchIcon/>
+            </Box>
+          </Box>
+          <Box
+            sx={{
+              display:"inline-flex",
+              alignItems:"center",
+              position:"relative",
+              cursor:profile?.roleId === 1?"pointer":"default",
+              borderRadius:"3px",
+              transition:"all linear 0.2s",
+              opacity:profile?.roleId === 1 ?'1':"0.5"
+            }}
+            onClick={():void=>{
+              if(profile?.roleId === 1){
+                navigate('/CompetitionCreate')
+              }else return
+            }}
+          >
+            <span
+              className='icon-button'
+              style={{
+                transition:"all linear 0.2s",
+                display:"flex",
+                alignItems:"center",
+                justifyContent:"center",
+                backgroundColor:"#007ecd",
+                color:"white",
+                padding:"5px",
+              }}
+            ><AddIcon/></span>
+            <span
+              style={{
+                backgroundColor:"#def5ff",
+                height:"100%",
+                color:"#002fa7",
+                fontWeight:"500",
+                padding:"5px",
+              }}
+            >Thêm cuộc thi</span>
+            
+          </Box>
+        </Box>
+        <Box
+          sx={{
+            mt:"20px"
+          }}
+          >
+            <Box
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
@@ -350,33 +323,18 @@ const CompTable = (): JSX.Element => {
                   rows={listCompetition}
                   columns={columns}
                   maxWidth={'95%'}
-                  maxHeight={'70vh'}
+                  maxHeight={'65vh'}
+                  numberItems={6}
                 />
               </Box>
-            </Grid>
-        </Grid>
-      <Dialog
-        open={openDelete}
-        onClose={handleCloseDelete}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <DialogTitle id='alert-dialog-title'>{'Thông báo'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id='alert-dialog-description'>
-            Bạn có chắc muốn xóa cuộc thi này
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={(): void => handelDeleteComp(compId)}
-            variant='outlined'
-          >
-            Xóa
-          </Button>
-          <Button onClick={handleCloseDelete}>Trở về</Button>
-        </DialogActions>
-      </Dialog>
+          </Box>
+          <ModalMessage 
+            open={openDelete}
+            close={handleCloseDelete}
+            header={'Thông báo'}
+            title={'Bạn có chắc muốn xóa cuộc thi này?'}
+            handleOK={(): void => handelDeleteComp(compId)}
+          />
     </>
   )
 }

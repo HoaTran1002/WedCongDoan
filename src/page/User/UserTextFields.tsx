@@ -15,7 +15,7 @@ import useFetch from '~/hook/useFetch'
 import { editUser, insert } from '~/api/userApi'
 import MessageAlert from '~/components/MessageAlert'
 import { LoadingContext } from '.'
-import { isEmailValid } from '~/utils/stringUtils'
+import { isEmailValid,validatePassword } from '~/utils/stringUtils'
 import { UserContex } from './TableUser'
 import { UsecontexModalAdd } from './ModalAddUser'
 
@@ -64,17 +64,12 @@ export default function UserTextFields(prop: {
   const loadingParams = React.useContext(LoadingContext)
   const Roles: Role[] = roles.payload || []
   const Deps: Dep[] = departments.payload || []
+  
   const onchangeUserName = function (
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
     setErrorUserName('')
     setUserName(event.target.value)
-  }
-  const onchangeCCCD = function (
-    event: React.ChangeEvent<HTMLInputElement>
-  ): void {
-    setErrorCccd('')
-    setCCCD(event.target.value)
   }
   const onchangePass = function (
     event: React.ChangeEvent<HTMLInputElement>
@@ -106,8 +101,8 @@ export default function UserTextFields(prop: {
     setErrorRole('')
     setRole(Number(event.target.value))
   }
-  const requestData: {
-    userId: string
+  const requestDataEdit: {
+    userId: string | undefined
     userName: string
     dateOfBirth: string
     email: string
@@ -115,6 +110,7 @@ export default function UserTextFields(prop: {
     roleId: number
     depId: number
     isDeleted: number
+    userAddress:string | undefined
   } = {
     userId: cccd,
     userName: userName,
@@ -123,16 +119,25 @@ export default function UserTextFields(prop: {
     password: pass,
     roleId: Number(role),
     depId: Number(dep),
-    isDeleted: 0
+    isDeleted: 0,
+    userAddress:''
   }
-
-  console.log(birthDay.$d)
+  const requestDataInsert: {
+    userName: string
+    dateOfBirth: string
+    email: string
+    password: string
+    roleId: number
+    depId: number
+  } = {
+    userName: userName,
+    dateOfBirth: birthDay.format('YYYY-MM-DD'),
+    email: gmail,
+    password: pass,
+    roleId: Number(role),
+    depId: Number(dep),
+  }
   const errorConditions = [
-    {
-      condition: cccd === '',
-      setError: setErrorCccd,
-      errorMessage: 'Chưa nhập cccd'
-    },
     {
       condition: userName === '',
       setError: setErrorUserName,
@@ -147,6 +152,11 @@ export default function UserTextFields(prop: {
       condition: !isEmailValid(gmail),
       setError: setErrorGmail,
       errorMessage: 'Email không đúng định dạng'
+    },
+    {
+      condition:!validatePassword(pass),
+      setError:setErrorPassword,
+      errorMessage:'Mật khẩu phải có ít nhất 1 ký tự viết hoa, 1 chữ số, 1 ký tự đặc biệt và tối thiểu 5 ký tự tối đa 9 ký tự'
     },
     {
       condition: pass === '',
@@ -167,7 +177,7 @@ export default function UserTextFields(prop: {
       condition: role === 0,
       setError: setErrorRole,
       errorMessage: 'Chưa chọn quyền người dùng'
-    }
+    },
   ]
   const userContextParams = React.useContext(UserContex)
   const modalPrams = React.useContext(UsecontexModalAdd)
@@ -182,13 +192,19 @@ export default function UserTextFields(prop: {
     if (hasError) {
       return
     }
-    await callInsertUser(async (): Promise<void> => {
-      await insert(requestData)
-    })
-    modalPrams.offModal
-    setMessage('đã thêm người Dùng!')
-    setSeverity('success')
-    loadingParams.setLoading()
+    
+    try{
+      await callInsertUser(async (): Promise<void> => {
+        await insert(requestDataInsert)
+      })
+      setMessage('đã thêm người Dùng!')
+      setSeverity('success')
+      modalPrams.offModal
+      loadingParams.setLoading()
+    }catch{
+      setMessage('Thêm người dùng thất bại!')
+      setSeverity('error')
+    }
   }
 
   const onSubmitFormEdit = async (): Promise<void> => {
@@ -203,9 +219,9 @@ export default function UserTextFields(prop: {
       return
     }
     await callEdittUser(async (): Promise<void> => {
-      await editUser(requestData)
+      await editUser(requestDataEdit)
     })
-
+    modalPrams.offModal
     userContextParams.alertEdit()
     loadingParams.setLoading()
   }
@@ -256,13 +272,10 @@ export default function UserTextFields(prop: {
             autoComplete='off'
           >
             <TextField
-              type={'number'}
-              defaultValue={cccd}
-              onChange={onchangeCCCD}
+              disabled
+              value={cccd}
               id='outlined-error-helper-text'
-              label='CCCD'
-              error={Boolean(errorCccd)}
-              helperText={errorCccd}
+              label='ID người dùng'
             />
             <TextField
               defaultValue={userName}
@@ -383,15 +396,6 @@ export default function UserTextFields(prop: {
             autoComplete='off'
           >
             <TextField
-              defaultValue={cccd}
-              onChange={onchangeCCCD}
-              id='outlined-basic'
-              label='CCCD'
-              variant='outlined'
-              error={Boolean(errorCccd)}
-              helperText={errorCccd}
-            />
-            <TextField
               id='filled-basic'
               label='Họ Và Tên'
               onChange={onchangeUserName}
@@ -436,6 +440,7 @@ export default function UserTextFields(prop: {
               id='selectDep'
               label='Chọn Quyền'
               select
+              defaultValue={''}
               error={Boolean(errorRole)}
               helperText={errorRole}
             >
@@ -460,6 +465,7 @@ export default function UserTextFields(prop: {
               id='selectDep'
               label='Chọn Khoa'
               select
+              defaultValue={''}
               error={Boolean(errorDep)}
               helperText={errorDep}
             >

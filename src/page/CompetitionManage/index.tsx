@@ -5,7 +5,7 @@ const Index = (): JSX.Element => {
   return (
     <>
       <LayoutAdmin>
-        <CompTable />
+        <CompTable/>
       </LayoutAdmin>
     </>
   )

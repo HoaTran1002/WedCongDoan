@@ -52,10 +52,10 @@ export const AdminRoute: IPramsRoute[] = [
 ]
 //tài khoản admin và giảng viên
 export const TeacherAdminRoute = [
+  { path: '/ProfileAdmin', element: <ProfileAdmin /> },
   { path: '/CompetitionManage', element: <CompetitionManage /> },
   { path: '/TestCreate', element: <TestCreate /> },
   { path: '/TestManage', element: <TestManage /> },
-  { path: '/ProfileAdmin', element: <ProfileAdmin /> },
   {
     path: '/TestCreate/Test/:examId/Competition/:comId',
     element: <TestCreate />

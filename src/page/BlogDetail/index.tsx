@@ -59,7 +59,6 @@ const Index = (): JSX.Element => {
   }
   const handleClickOpen = (): any => {
     setOpen(true)
-    console.log(comId)
   }
 
   const handleClickDelete = (): any => {
@@ -74,14 +73,14 @@ const Index = (): JSX.Element => {
       try {
         await DeleteCompetitionBlog(requestComBlog)
       } catch (error) {
-        console.log('thất bại')
+        console.log(error)
       }
     })
     callDeleteBlog(async () => {
       try {
         await deleteBlog(request)
       } catch (error) {
-        console.log('thất bại')
+        console.log(error)
       }
     })
   }
@@ -114,7 +113,6 @@ const Index = (): JSX.Element => {
     setOpen(false)
     callEditBlog(async () => {
       try {
-        console.log(requestData)
         if (selectedImage) {
           const reader = new FileReader();
           reader.onload = async (): Promise<void> => {
@@ -124,7 +122,6 @@ const Index = (): JSX.Element => {
               imgSrc: imgSrc.split(',')[1],
             });
           };
-          console.log('đang chọn ảnh',imgSrc.split(',')[1])
           reader.readAsDataURL(selectedImage);
         } else {
           await editBlog(requestData);
@@ -138,12 +135,9 @@ const Index = (): JSX.Element => {
             userId:userId,
             postDate: postDate
           });
-          console.log('Thành công');
-        } else {
-          console.log('Thất bại');
         }
       } catch (error) {
-        console.log('Thất bại')
+        console.log(error)
       }
     })
   }

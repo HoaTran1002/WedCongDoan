@@ -1,4 +1,5 @@
 
+
 export interface ICompetition {
     comId: number,
     comName: string,
@@ -105,7 +106,21 @@ export interface ICompetitionPrizeUser {
     userId: string
 }
 
-export interface IRole{
+export interface IRole {
     roleId: number
     roleName: string
+}
+
+
+export interface IUserDetails {
+    userId?:string,
+    userName: string,
+    dateOfBirth: string,
+    email: string,
+    password: string,
+    depId: number,
+    roleId: number,
+    isDeleted?:number,
+    dateOfBirthToShow?:string
+    roleIdToShow?:string
 }

@@ -7,7 +7,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import { useLocation, Link, useNavigate } from 'react-router-dom'
 import List from '@mui/material/List'
-import Typography from '@mui/material/Typography'
+import CloseIcon from '@mui/icons-material/Close';
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -80,7 +80,7 @@ export default function Index(): JSX.Element {
     null
   )
   const [logOutState, setLogout] = useFetch()
-
+  const [openNavbarMobile,setOpenNavbarMobile] = React.useState<boolean>(true)
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget)
   }
@@ -102,6 +102,7 @@ export default function Index(): JSX.Element {
 
   const logoutAccount = (): void => {
     getLogout().then((): void => {
+      navigate('/Login')
       window.location.reload()
     })
   }
@@ -131,15 +132,20 @@ export default function Index(): JSX.Element {
     <Box sx={{ display: 'flex', width: '100vw', transition: "all linear 0.2s" }}>
       <Box
         sx={{
-          zIndex: 5,
+          zIndex: "999",
           position: 'fixed',
           top: 0,
           bottom: 0,
           left: 0,
+          pb:"30px",
           width: widthMin ? 'var(--width-left-navbar-min)' : 'var(--width-left-navbar-max)',
           transition: "all linear 0.2s",
-          display: { xs: 'none', md: 'block' },
+          transform:{xs:openNavbarMobile?"translateX(-100%)":"translateX(0)",md:"translateX(0)"},
           backgroundColor: "#0070df",
+          overflowY:'scroll',
+          '&::-webkit-scrollbar':{
+            display:"none"
+          },
           '&:hover': {
             width: 'var(--width-left-navbar-max)',
             zIndex: "50"
@@ -172,6 +178,19 @@ export default function Index(): JSX.Element {
 
         </Box>
         <Box
+          sx={{
+            position:"absolute",
+            top:"15px",
+            right:"15px",
+            zIndex:"999",
+            display:{md:"none",xs:"block"}
+
+          }}
+          onClick={(): void => setOpenNavbarMobile((r: any) => !r)}
+        >
+          <CloseIcon sx={{color:"white",fontSize:"28px"}}/>
+        </Box>
+        <Box
           component='img'
           sx={{
             position: "absolute",
@@ -186,7 +205,7 @@ export default function Index(): JSX.Element {
         />
         <Box
           sx={{
-            display: { xs: 'none', md: 'inlineFlex' },
+            display:'inlineFlex' ,
             width: '100%',
             height: "66px",
             justifyContent: 'center',
@@ -326,7 +345,7 @@ export default function Index(): JSX.Element {
         <Box
           sx={{
             mt: "40px",
-            display: { xs: 'none', md: 'flex' },
+            // display: { xs: 'none', md: 'flex' },
             flexDirection: 'column',
             position: "relative",
             zIndex: "30",
@@ -338,6 +357,7 @@ export default function Index(): JSX.Element {
               page.roles.find((r) => r === profile?.roleId) ? (
                 page.children ? (
                   <Box
+                    key={index}
                     className='ItemNavbar'
                     sx={{
                       transition:"all linear 0.2s",
@@ -357,7 +377,6 @@ export default function Index(): JSX.Element {
                     }}
                   >
                     <Link
-                      key={index}
                       style={{ color: 'white', textDecoration: 'none' }}
                       to={page.to}
                       
@@ -588,8 +607,8 @@ export default function Index(): JSX.Element {
       </Box>
       <Box
         sx={{
-          width: widthMin ? 'var(--width-main-content-max)' : 'var(--width-main-content-min)',
-          ml: widthMin ? 'var(--width-left-navbar-min)' : 'var(--width-left-navbar-max)',
+          width: {md:widthMin ? 'var(--width-main-content-max)' : 'var(--width-main-content-min)',xs:"100vw"} ,
+          ml:{md:widthMin ? 'var(--width-left-navbar-min)' : 'var(--width-left-navbar-max)',xs:"0"} ,
           zIndex: '10',
           position: 'fixed',
           transition: "all linear 0.2s",
@@ -608,7 +627,7 @@ export default function Index(): JSX.Element {
           sx={{
             alignItems: "center",
             justifyContent: "center",
-            display: "flex",
+            display: {xs:"none",md:"flex"},
             color: "white",
             backgroundColor: "#1b86ff",
             borderRadius: "50%",
@@ -627,6 +646,26 @@ export default function Index(): JSX.Element {
           ) : (
             <MoreVertIcon />
           )}
+        </Box>
+        <Box
+          sx={{
+            alignItems: "center",
+            justifyContent: "center",
+            display: {xs:"flex",md:"none"},
+            color: "white",
+            backgroundColor: "#1b86ff",
+            borderRadius: "50%",
+            padding: "7px",
+            ml: "20px",
+            cursor: "pointer",
+            transition: "all linear 0.2s",
+            '&:hover': {
+              backgroundColor: "#1d79e1"
+            }
+          }}
+          onClick={(): void => setOpenNavbarMobile((r: any) => !r)}
+        >
+            <MenuIcon />
         </Box>
         <IconButton
           color='inherit'

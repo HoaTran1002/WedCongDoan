@@ -18,7 +18,6 @@ export const insertCompUser = async ({
     comId: number
 }): Promise<void> => {
     try {
-        // console.log(UserId + 'va' + comId)
         await server.post('/CompetitionsUsers', {
             userId,
             comId

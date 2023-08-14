@@ -190,7 +190,6 @@ const Index = (): JSX.Element => {
       }
     })
   }
-  console.log(errStartDate, errEndDate, '-', startDateValue, endDateValue)
   return (
     <>
       {message && <MessageAlert message={message} severity={serverity} />}

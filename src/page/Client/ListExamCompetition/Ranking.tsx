@@ -40,7 +40,6 @@ const Ranking = (props: PropsRanking): JSX.Element => {
         return timeDiffA - timeDiffB;
         }
     })
-    console.log(newlistUser)
     React.useEffect(() => {
         callAllUsers(getAllUser)
     }, [])

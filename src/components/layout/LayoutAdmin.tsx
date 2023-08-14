@@ -12,12 +12,14 @@ const LayoutAdmin = ({ children }: Props): JSX.Element => {
       <BarAppAdmin />
       <Box
         sx={{
-          width: widthMin
+          width:{md:widthMin
             ? 'var(--width-main-content-max)'
             : 'var(--width-main-content-min)',
-          ml: widthMin
+          xs:"100vw"} ,
+          ml:{md: widthMin
             ? 'var(--width-left-navbar-min)'
-            : 'var(--width-left-navbar-max)'
+            : 'var(--width-left-navbar-max)',
+          xs:"0"}
         }}
       >
         <Box sx={{ mt: 10, width: '100%' }}>{children}</Box>

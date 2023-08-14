@@ -11,7 +11,6 @@ interface TimeCountingProps {
 const TimerCount: React.FC<TimeCountingProps> = ({
     examTimes
 }) => {
-    // console.log(examTimes)
     const [time,setTime] = React.useState(examTimes)
     const [timeLeft, setTimeLeft] = React.useState<number>(() => {
         const startTime = localStorage.getItem("startTime");

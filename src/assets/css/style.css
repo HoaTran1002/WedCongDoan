@@ -1,8 +1,8 @@
 :root{
   --width-left-navbar-min:80px;
   --width-left-navbar-max:260px;
-  --width-main-content-min:calc(100vw - var(--width-left-navbar-max));
-  --width-main-content-max:calc(100vw - var(--width-left-navbar-min));
+  --width-main-content-min:calc(100vw - var(--width-left-navbar-max) - 5px);
+  --width-main-content-max:calc(100vw - var(--width-left-navbar-min) - 5px);
 }
 body,
 html {

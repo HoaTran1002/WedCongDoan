@@ -26,7 +26,6 @@ const Index = (): JSX.Element => {
     statusLoading: loading,
 
     setLoading: () => {
-      console.log('okeee')
       setLoading(!loading)
     }
   }

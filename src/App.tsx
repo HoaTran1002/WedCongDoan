@@ -24,7 +24,7 @@ function App(): JSX.Element {
   return (
     <Routes>
       {/* bắt buộc là admin */}
-      <Route element={<PrivateRoute roles={[1]} />}>
+      <Route element={<PrivateRoute roles={[1]}  />}>
         {AdminRoute.map((item: IRoute, index) => (
           <Route key={index} path={item.path} element={item.element} />
         ))}

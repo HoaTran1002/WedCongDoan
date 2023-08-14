@@ -30,24 +30,3 @@ export const InsertPickerQuestion = async ({
         throw new Error(message)
     }
 }
-
-
-// export const getAllPickerQuestionById =async ({ id }: {id: number }): Promise<any> => {
-//     try {
-//         console.log(id)
-//         const { data } = await server.get(`/PickerQuestions/GetAllByComUserId?id=2015`)
-//         return data
-//     } catch (error: any) {
-//         const message = error?.response?.data?.message ?? error.message
-//         throw new Error(message)
-//     }
-// }
-// export const getAllPickerQuestionById =() => {
-//         try {
-//             const { data } = await server.get(`/PickerQuestions/GetAllByComUserId?id=${id}`)
-//             return data
-//         } catch (error: any) {
-//             const message = error?.response?.data?.message ?? error.message
-//             throw new Error(message)
-//         }
-//     }

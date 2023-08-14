@@ -42,7 +42,6 @@ const Index = (): JSX.Element => {
         'https://626d498a5267c14d56798da4.mockapi.io/api/v1/questions'
       )
       .then((response) => {
-        console.log(Questions)
         setQuestion(response.data)
       })
   }, [])

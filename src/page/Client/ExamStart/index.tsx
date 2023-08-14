@@ -22,11 +22,6 @@ import FormControl from '@mui/material/FormControl'
 import FormLabel from '@mui/material/FormLabel'
 import FormGroup from '@mui/material/FormGroup'
 import Checkbox from '@mui/material/Checkbox'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogContentText from '@mui/material/DialogContentText'
-import DialogTitle from '@mui/material/DialogTitle'
 import CloseIcon from '@mui/icons-material/Close'
 import MenuIcon from '@mui/icons-material/Menu'
 import { getAllCompUser } from '~/api/CompetitionUser'
@@ -38,6 +33,7 @@ import useAuth from '~/hook/useAuth'
 import { getAllComp } from '~/api/competitionApi'
 import { InsertResult } from '~/api/resultApi'
 import MessageAlert from '~/components/MessageAlert'
+import ModalMessage from '~/components/ModalMessage'
 interface Question {
   idQues: number
   contentQues: string
@@ -95,7 +91,6 @@ const ExamStart = (): JSX.Element => {
     setExamIndex((r) => r - 1)
     setIdQuesExam(itemPrev?.quesId)
     setQuestionActive(itemPrev)
-    console.log(examIndex, quesId, questions, index, itemPrev)
   }
   const handelNextQues = (quesId: number): void => {
     const index = questions?.findIndex((r: any) => r.quesId === quesId)
@@ -123,12 +118,9 @@ const ExamStart = (): JSX.Element => {
         !ansOfQues.some((x: any) => x.quesId === item.quesId) ||
         !questions.some((x: any) => x.quesId === item.quesId)
     )
-    console.log(mergedArr)
     if (mergedArr.length !== 0) {
-      console.log('thiếu câu hỏi')
       setRemainingQuestion(mergedArr)
     } else {
-      // console.log(ansOfQues,questions);
       // localStorage.removeItem('ansOfQues')
       await callIPickerQuestions(async () => {
         try {
@@ -139,9 +131,7 @@ const ExamStart = (): JSX.Element => {
               answer: item.answer
             })
           }
-          console.log('Thành công')
         } catch (error) {
-          console.log(error)
           setMessage('Kết nối không ổn định, vui lòng tải lại trang!')
           setSeverity('error')
           return
@@ -174,11 +164,9 @@ const ExamStart = (): JSX.Element => {
       await callIResult(async () => {
         try {
           await InsertResult(requestData)
-          console.log('thành công')
           localStorage.clear()
           navigate('/FinishedExam')
         } catch (error) {
-          console.log(error)
           setMessage('Kết nối không ổn định, vui lòng tải lại trang!')
           setSeverity('error')
           return
@@ -219,7 +207,6 @@ const ExamStart = (): JSX.Element => {
     const ansOfQues = ansOfQuesString ? JSON.parse(ansOfQuesString) : []
     const index = ansOfQues?.findIndex((r: any) => r.quesId === idQuesExam)
 
-    console.log(ansOfQues, index, idQuesExam)
     if (
       ansOfQues.find((r: any) => r.quesId === idQuesExam) !== undefined ||
       index !== -1
@@ -268,7 +255,6 @@ const ExamStart = (): JSX.Element => {
     )
   }, [competition])
   React.useEffect(() => {
-    // console.log(questions)
     setQuestionActive(firstElement)
     setIdQuesExam(firstElement?.quesId)
     // localStorage.setItem('ansOfQues',JSON.stringify(questions))
@@ -811,45 +797,20 @@ const ExamStart = (): JSX.Element => {
           </Grid>
         </Grid>
       </Container>
-      <Dialog
-        open={openSubmitExam}
-        onClose={handleCloseSubmitExam}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <DialogTitle id='alert-dialog-title'>{'Thông báo'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id='alert-dialog-description'>
-            Bạn muốn nộp bài thi của mình ?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button variant='contained' onClick={handleOKSubmitExam}>
-            NỘP BÀI
-          </Button>
-          <Button onClick={handleCloseSubmitExam}>THOÁT</Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
+      <ModalMessage 
+        close={handleCloseExitExam} 
+        header={'Thông báo'}
+        title={'Bài thi của bạn sẽ không lưu lại, bạn có muốn thoát không'}
+        handleOK={handleOKExitExam}
         open={openExitExam}
-        onClose={handleCloseExitExam}
-        aria-labelledby='alert-dialog-title'
-        aria-describedby='alert-dialog-description'
-      >
-        <DialogTitle id='alert-dialog-title'>{'Cảnh báo'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id='alert-dialog-description'>
-            Bạn đang thoát phòng thi, bài thi của bạn vẫn sẽ tiếp tục <br />
-            Bạn có muốn thoát không ?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button variant='contained' onClick={handleOKExitExam}>
-            THOÁT
-          </Button>
-          <Button onClick={handleCloseExitExam}>Ở LẠI</Button>
-        </DialogActions>
-      </Dialog>
+      />
+      <ModalMessage 
+        close={handleCloseSubmitExam} 
+        header={'Thông báo'}
+        title={'Bạn muốn nộp bài thi của mình ?'}
+        handleOK={handleOKSubmitExam}
+        open={openSubmitExam}
+      />
       <Box
         onClick={handelCloseNavbar}
         sx={{

@@ -126,7 +126,6 @@ export default function Index(): JSX.Element {
   const isBeforeDate = (dateInput:string):boolean => {
     const date = new Date(dateInput);
     const currentDate = new Date();
-    console.log(date,currentDate)
     if (date > currentDate) {
       return true;
     } else {
@@ -201,9 +200,9 @@ export default function Index(): JSX.Element {
       callAllInsertCompUsers(async () => {
         try {
           await insertCompUser(requestData)
-          console.log('thành công')
         } catch (error) {
-          console.log(error)
+          console.log(error);
+          
         }
       })
     }

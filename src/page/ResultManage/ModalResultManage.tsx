@@ -100,7 +100,6 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
             handleSearchUser(userSearch);
         }
     };
-    console.log(userSearch);
 
     const handleViewExamUser = (cuid: number, userId: string): void => {
         const listPickerQuestions = allPickerQuestion?.payload?.filter((r: IPickerQuestion) => r.cuid === cuid)

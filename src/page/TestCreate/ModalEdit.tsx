@@ -223,12 +223,6 @@ const ModalEdit = ({
   const handleClose = (): void => setOpen(false)
   const handleOpen = (): void => setOpen(true)
   const submitQuestion = async (): Promise<void> => {
-    // console.log('data trả lời:' + bodyQuestion.ansOfQues)
-    // console.log('data trả lời đúng:' + bodyQuestion.trueAnswer.split('<====>').length)
-    // console.log('data câu hỏi:' + bodyQuestion.quesDetail)
-    // console.log('data loại đap án:' + bodyQuestion.quesTId)
-    // console.log('data Id :' + bodyQuestion.examId)
-    // console.log('data quesId :' + bodyQuestion.examId)
 
     const errorConditions = [
       {

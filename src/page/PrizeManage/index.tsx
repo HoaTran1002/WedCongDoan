@@ -71,7 +71,6 @@ const Index = (): JSX.Element => {
     event: React.ChangeEvent<HTMLInputElement>
   ): void {
     setPrizeName(event.target.value)
-    console.log(prizeName)
   }
   // ========================================
   const handelOpenAdd = (): void => {
@@ -104,7 +103,7 @@ const Index = (): JSX.Element => {
       try {
         await DeletePrize(request)
       } catch (error) {
-        console.log('thất bại')
+        console.log(error)
       }
     })
     setDeleteOpen(false)
@@ -121,7 +120,7 @@ const Index = (): JSX.Element => {
       try {
         await EditPrize(requestDataEdit)
       } catch (error) {
-        console.log('Thất bại')
+        console.log(error)
       }
     })
     setEditOpen(false)

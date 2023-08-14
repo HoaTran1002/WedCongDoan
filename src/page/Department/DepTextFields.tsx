@@ -46,7 +46,7 @@ export default function DepTextFields(prop: {
       try {
         await Edit(requestData)
       } catch (error) {
-        console.log('Thất bại')
+        console.log(error)
       }
     })
     loadingParams.setLoading()

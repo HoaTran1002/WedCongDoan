@@ -15,6 +15,7 @@ import { IBlog, ICompetitionBlogsUser } from '~/interface/Interface'
 import LinkCompetition from './LinkCompetition'
 import MessageAlert from '~/components/MessageAlert'
 import SearchIcon from '@mui/icons-material/Search';
+import { listWhenSearchDeepCheck } from '~/utils/stringUtils'
 const Index = (): JSX.Element => {
   const navigate = useNavigate()
   const [currentPage, setCurrentPage] = useState(1)
@@ -48,6 +49,15 @@ const Index = (): JSX.Element => {
   const startIndex = (currentPage - 1) * productsPerPage
   const endIndex = startIndex + productsPerPage
   const currentProducts = listBlog?.slice(startIndex, endIndex)
+  const rows = getBlog?.payload
+    ?.map((item: IBlog) => ({
+    blogId:item.blogId,
+    blogName:item.blogName,
+    BlogDetail:item.BlogDetail,
+    imgSrc:item.imgSrc,
+    imgName:item.imgName
+  }))
+  .reverse()
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     page: number
@@ -55,7 +65,6 @@ const Index = (): JSX.Element => {
     setCurrentPage(page)
   }
   const handleOpenLinkCom = (blogId: number): void => {
-    console.log(blogId)
     setBlogIdCheck(blogId)
     setOpenLinkCompetition(true)
   }
@@ -65,18 +74,7 @@ const Index = (): JSX.Element => {
   }
   const handleSearch=():void=>{
     setListBlog(
-      getBlog?.payload
-        ?.filter((item: IBlog) => 
-        item.blogName.trim().toLowerCase()?.includes(blogSearch.trim().toLowerCase())
-      )
-      ?.map((item: IBlog) => ({
-        blogId:item.blogId,
-        blogName:item.blogName,
-        BlogDetail:item.BlogDetail,
-        imgSrc:item.imgSrc,
-        imgName:item.imgName
-      }))
-      .reverse()
+      listWhenSearchDeepCheck(blogSearch,rows,'blogName')
     )
 
     setBlogSearch('')
@@ -236,12 +234,16 @@ const Index = (): JSX.Element => {
                       md={4}
                       key={index}
                       sx={{
-                        marginTop: '10px'
+                        marginTop: '10px',
+                        p:"20px 10px !important",
+                        display: 'flex',
+                        alignItems:'center',
+                        justifyContent:'center'
                       }}
                     >
                       <Box
                         sx={{
-                          display: 'flex',
+                          
                           position: 'relative',
                           flexDirection: 'column',
                           width: '100%',

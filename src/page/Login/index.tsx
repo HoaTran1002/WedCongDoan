@@ -24,7 +24,7 @@ import {
 import LoginImg from '~/assets/img/congDoanLogin.jpg'
 import CongDoanLogo from '~/assets/img/logo_CongDoan.png'
 import server from '~/api/axios'
-import { Navigate } from 'react-router-dom'
+import { Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '~/hook/useAuth'
 import useFetch from '~/hook/useFetch'
 import { getAllRole } from '~/api/roleApi'
@@ -50,6 +50,8 @@ function Copyright(props: any): JSX.Element {
 const theme = createTheme()
 export default function Login(): JSX.Element {
   const { profile } = useAuth()
+  const location = useLocation();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = React.useState(false)
   const [roleState, getRoleState] = useFetch()
   const handleClickShowPassword = (): void => setShowPassword((show) => !show)
@@ -75,17 +77,21 @@ export default function Login(): JSX.Element {
     }
     try {
       await server.post('/Users/Login', body)
-      location.reload()
+      localStorage.setItem('Login',JSON.stringify('success'))
+      window.location.reload()
     } catch (error) {
       console.log(error)
     }
   }
-
+  // navigate(location.state?.from || '/');
   if (profile?.roleId === 1 || profile?.roleId === 2) {
     return <Navigate to={'/CompetitionManage'} replace={true} />
   } else if (profile?.roleId == 3) {
     return <Navigate to={'/'} replace={true} />
   }
+  // if(profile){
+  //   return <Outlet />
+  // }
 
   return (
     <ThemeProvider theme={theme}>

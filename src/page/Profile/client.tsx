@@ -50,6 +50,7 @@ const ProfileClient = (): JSX.Element => {
         roleId: number
         depId: number
         isDeleted: number
+        userAddress:string
     } = {
         userId: profile?.userId,
         userName: userName,
@@ -58,7 +59,8 @@ const ProfileClient = (): JSX.Element => {
         password: password,
         roleId: Number(role),
         depId: Number(deparment),
-        isDeleted: 0
+        isDeleted: 0,
+        userAddress:''
     }
     const errorConditions = [
         {
@@ -92,7 +94,6 @@ const ProfileClient = (): JSX.Element => {
     }
     const handleOpenModal = (): void => {
         setOpenModal(true)
-        console.log(requestData);
 
     }
     const handleCloseModal = (): void => {
