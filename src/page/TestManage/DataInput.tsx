@@ -62,17 +62,17 @@ const DataInput = ({ setLoad }: { setLoad: () => void }): JSX.Element => {
           await nameExamInsertCall(async () => {
             await insertExams(requesInsertExam)
           })
-          await setLoading(!loading) //loading modal
-          await insertCompExamCall(async (): Promise<void> => {
-            await insertCompExam(requesInsertCompExam)
-          })
-
-          // await setShowSuccess(true)
-          await setLoad()
-          await modalParams.offModal()
+          setLoading(!loading) //loading modal
         } catch (error) {
           // setShowError(true)
         }
+        await insertCompExamCall(async (): Promise<void> => {
+          await insertCompExam(requesInsertCompExam)
+        })
+
+        // await setShowSuccess(true)
+        setLoad()
+        modalParams.offModal()
       })()
     }
   }

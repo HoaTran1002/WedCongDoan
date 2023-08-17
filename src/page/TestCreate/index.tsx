@@ -34,7 +34,7 @@ import LayoutAdmin from '~/components/layout/LayoutAdmin'
 import useFetch from '~/hook/useFetch'
 import CardData from './CardData'
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import SaveIcon from '@mui/icons-material/Save'
 import MessageAlert from '~/components/MessageAlert'
 
@@ -87,7 +87,7 @@ export const LoadingContext = React.createContext<ILoading>({
 })
 
 const TestCreate = (): JSX.Element => {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const [loading, setLoading] = React.useState<boolean>(false)
   const [showError, setShowError] = React.useState<boolean>(false)
   const [open, setOpen] = useState(false)
@@ -106,7 +106,6 @@ const TestCreate = (): JSX.Element => {
   const [message, setMessage] = useState<string>('')
   const [severity, setSeverity] = useState<string>('')
   const [isAlert, setIsAlert] = useState<boolean>(false)
-
 
   if (message !== '') {
     setTimeout((): void => {
@@ -435,10 +434,7 @@ const TestCreate = (): JSX.Element => {
                         onChange={selectQuestionType}
                       >
                         {questionTypes.map((option: QuestType) => (
-                          <MenuItem
-                            key={option.quesTId}
-                            value={option.quesTId}
-                          >
+                          <MenuItem key={option.quesTId} value={option.quesTId}>
                             {option.quesTName}
                           </MenuItem>
                         ))}
@@ -539,18 +535,18 @@ const TestCreate = (): JSX.Element => {
           </Modal>
           <Box
             sx={{
-              display: "flex",
-              flexDirection: "column",
-              m:"0 10px"
+              display: 'flex',
+              flexDirection: 'column',
+              m: '0 10px'
             }}
           >
             <Box
               sx={{
-                width: "100%",
-                height: "200px",
-                objectFit: "cover",
-                borderTopLeftRadius: "5px",
-                borderTopRightRadius: "5px"
+                width: '100%',
+                height: '200px',
+                objectFit: 'cover',
+                borderTopLeftRadius: '5px',
+                borderTopRightRadius: '5px'
               }}
               component='img'
               src='https://hufi.edu.vn/images/slide/banner-web-hufi-01.jpg'
@@ -558,27 +554,25 @@ const TestCreate = (): JSX.Element => {
           </Box>
           <Box
             sx={{
-              backgroundColor: "#42a5f5",
-              padding: "10px",
-              display: "flex",
-              gap: "40px",
-              position: "sticky",
-              top: "78px",
-              m:"0 10px",
-              zIndex: "30"
+              backgroundColor: '#42a5f5',
+              padding: '10px',
+              display: 'flex',
+              gap: '40px',
+              position: 'sticky',
+              top: '78px',
+              m: '0 10px',
+              zIndex: '30'
             }}
           >
             <IconButton
-              onClick={
-                (): void => {
-                  navigate(`/Tests/Competition/${comId}`)
-                }
-              }
+              onClick={(): void => {
+                navigate(`/Tests/Competition/${comId}`)
+              }}
             >
-              <ArrowBackIcon sx={{ color: "white" }} />
+              <ArrowBackIcon sx={{ color: 'white' }} />
             </IconButton>
             <Button onClick={handleOpen} variant='contained'>
-              tạo trắc nghiệm
+              tạo câu hỏi
             </Button>
           </Box>
           {questions.map((q: QuestionData, index: number) => {
