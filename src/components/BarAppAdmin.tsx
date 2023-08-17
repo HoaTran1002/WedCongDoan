@@ -132,7 +132,7 @@ export default function Index(): JSX.Element {
     <Box sx={{ display: 'flex', width: '100vw', transition: "all linear 0.2s" }}>
       <Box
         sx={{
-          zIndex: "999",
+          zIndex: "10",
           position: 'fixed',
           top: 0,
           bottom: 0,
