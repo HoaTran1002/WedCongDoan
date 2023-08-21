@@ -1,4 +1,4 @@
-import AddIcon from '@mui/icons-material/Add'
+
 import { LoadingButton } from '@mui/lab'
 import {
   Box,
@@ -37,7 +37,13 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import SaveIcon from '@mui/icons-material/Save'
 import MessageAlert from '~/components/MessageAlert'
-
+import AddIcon from '@mui/icons-material/Add';
+import UploadIcon from '@mui/icons-material/Upload';
+import readXlsxFile from 'read-excel-file';
+import ModalMessage from '~/components/ModalMessage'
+import ModalWraper from '~/components/ModalWraper'
+import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
+import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 interface IQuestion {
   examId: number
   quesDetail: string
@@ -88,6 +94,7 @@ export const LoadingContext = React.createContext<ILoading>({
 
 const TestCreate = (): JSX.Element => {
   const navigate = useNavigate()
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
   const [loading, setLoading] = React.useState<boolean>(false)
   const [showError, setShowError] = React.useState<boolean>(false)
   const [open, setOpen] = useState(false)
@@ -106,7 +113,8 @@ const TestCreate = (): JSX.Element => {
   const [message, setMessage] = useState<string>('')
   const [severity, setSeverity] = useState<string>('')
   const [isAlert, setIsAlert] = useState<boolean>(false)
-
+  const [openModal, setOpenModal] = useState<boolean>(false)
+  const [listQuesJson, setListQuesJson] = useState<any[]>([])
   if (message !== '') {
     setTimeout((): void => {
       setIsAlert(false)
@@ -115,6 +123,9 @@ const TestCreate = (): JSX.Element => {
   const questions = getQuesState.payload || []
   const questionTypes = getQuesTypeState.payload || []
 
+  const closeModal = (): void => {
+    setOpenModal(false);
+  }
   useEffect((): void => {
     try {
       getQuesTypeStateCall(getAllQuesTpye).then((res: QuestType[]) => {
@@ -129,13 +140,6 @@ const TestCreate = (): JSX.Element => {
       return GetAllByExamID({ id: Number(examId) })
     })
   }, [examId, getQuesStateCall, loading])
-  // Sử dụng useEffect để gọi lại API khi chiều dài của "questions" thay đổi
-  // useEffect(() => {
-  //   getQuesStateCall(async () => {
-  //     return GetAllByExamID({ id: Number(examId) })
-  //   })
-  // }, [questions.length])
-
   const filteredAnswerList = answerList.filter((item) => item !== '')
   const fillterCorretAnswerList = correctAnswerList.filter(
     (item) => item !== ''
@@ -154,6 +158,51 @@ const TestCreate = (): JSX.Element => {
     setQuestionType(Number(value))
   }
 
+  const handleImportXlsx = async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+    const file = event.target.files && event.target.files[0];
+    if (file && (file.name.endsWith('.xlsx') || file.name.endsWith('.xls'))) {
+      try {
+        const data = (await readXlsxFile(file)).filter((value, index) => index !== 0).
+        slice().sort(():number => Math.random() - 0.5)
+
+        setListQuesJson(data);
+      } catch (error) {
+        console.log('Error reading Excel file:', error);
+      } finally {
+        event.target.value = '';
+      }
+
+    } else {
+      console.log('Please select a valid xlsx or xls file.');
+    }
+
+    setOpenModal(true)
+  };
+
+  const handleSubmitImportAns = async (): Promise<void> =>{
+    try{
+      await quesCreateCall(async () => {
+          for (const item of listQuesJson) {
+            await insertQues({
+              ansOfQues:item[1],
+              examId:Number(examId),
+              quesDetail:item[0],
+              trueAnswer:item[2],
+              quesTId:1
+            })
+          }
+          setSeverity('info')
+          setMessage('Thêm tất cả câu hỏi thành công')
+          setLoading(!loading)
+          closeModal();
+        })
+      }catch{
+        setMessage('Thêm thất bại')
+        setSeverity('error')
+        return
+        
+    }
+  }
   const selectAnswer = (
     event: React.ChangeEvent<HTMLInputElement>,
     index: number
@@ -571,9 +620,24 @@ const TestCreate = (): JSX.Element => {
             >
               <ArrowBackIcon sx={{ color: 'white' }} />
             </IconButton>
-            <Button onClick={handleOpen} variant='contained'>
+            <Button onClick={handleOpen} variant='contained' startIcon={<AddIcon />}>
               tạo câu hỏi
             </Button>
+            <input
+              type="file"
+              accept=".xlsx,.xls"
+              style={{ display: 'none' }}
+              onInput={handleImportXlsx}
+              id='xlsxInput'
+            />
+            <Button
+              onClick={(): void => document.getElementById('xlsxInput')?.click()}
+              variant="contained"
+              startIcon={<UploadIcon />}
+            >
+              Thêm câu hỏi có sẵn
+            </Button>
+
           </Box>
           {questions.map((q: QuestionData, index: number) => {
             const correctAnswers = q.trueAnswer.split('<====>')
@@ -599,6 +663,104 @@ const TestCreate = (): JSX.Element => {
               />
             )
           })}
+          <ModalWraper open={openModal} close={closeModal} title={'Danh sách câu hỏi'} >
+            <div>
+              {
+                listQuesJson.map((r: any, index: number) => (
+                  <div key={index}>
+                    {
+                      index === 0 ? (null) : (
+                        <Box
+                          key={index}
+                          sx={{
+                            width: "100%",
+                            mb: 2,
+                            backgroundColor: "#1565c0   ",
+                            padding: "3px",
+                            borderRadius: "3px",
+                            position: "relative"
+                          }}
+                        >
+                          <Box
+                            component='span'
+                            sx={{
+                              color: "white",
+                              display: "inline-block",
+                              fontSize: "17px",
+                              padding: "5px",
+                              fontWeight: "500",
+                              maxWidth: { xs: '90%', md: "96%" }
+                            }}
+                          >
+                            Câu {index} :&nbsp;{r[0]} ?
+                          </Box>
+                          <Box
+                            sx={{
+                              backgroundColor: "white",
+                              borderRadius: "3px",
+                              padding: "10px 4px"
+                            }}
+                          >
+                            <>
+                              <Box
+                                sx={{
+                                  mb: 2,
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  gap: "5px"
+                                }}
+                              >
+                                {
+                                  r[1]?.split('<====>').map((item: string, index: number) => (
+                                    r[2]?.trim() === item?.trim() ? (
+                                      <Box
+                                        key={index}
+                                        sx={{
+                                          display: "flex",
+                                          gap: "10px",
+                                          padding: "5px 3px",
+                                          alignItems: "center",
+                                          backgroundColor: "#daf1ff",
+                                          borderRadius: "2px",
+                                          color: "#0075b9",
+                                          fontWeight: "500"
+                                        }}
+                                      >
+                                        <RadioButtonCheckedIcon /> <span>{item.trim()}</span>
+                                      </Box>
+                                    ) : (
+                                      <Box
+                                        key={index}
+                                        sx={{
+                                          display: "flex",
+                                          gap: "10px",
+                                          padding: "5px 3px",
+                                          alignItems: "center"
+                                        }}
+                                      >
+                                        <RadioButtonUncheckedIcon /> <span>{item.trim()}</span>
+                                      </Box>
+                                    )
+                                  ))
+                                }
+                              </Box>
+                            </>
+                          </Box>
+                        </Box>
+                      )
+                    }
+                  </div>
+                ))
+              }
+              <div style={{
+                display:"flex",
+                justifyContent:"space-between"
+              }}>
+                <Button onClick={handleSubmitImportAns} startIcon={<AddIcon/>} variant='contained'>Thêm các câu hỏi vào đề thi</Button>
+                <Button onClick={closeModal}>Trở về</Button>
+              </div>
+            </div>
+          </ModalWraper>
         </LoadingContext.Provider>
       </LayoutAdmin>
     </>
