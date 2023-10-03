@@ -26,8 +26,10 @@ import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
 import CancelIcon from '@mui/icons-material/Cancel';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import SearchIcon from '@mui/icons-material/Search';
-import { formatDay, formatTime, formatTimeHour, getTimeDifference } from '~/utils/dateUtils';
+import { formatDay, formatTime, formatTimeHour, getTimeDifference, getTimeDifferenceSeconds } from '~/utils/dateUtils';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import Ranking from '../Client/ListExamCompetition/Ranking';
 interface PropsResultManage {
     comId: number
     close: () => void;
@@ -67,7 +69,7 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
     const [whenSearch, setWhenSearch] = React.useState<boolean>(false)
     const [showResult,setShowResult] = React.useState<boolean>(false)
     const [userId ,setUserId] = React.useState<string>('')
-
+    const [openRank, setOpenRank] = React.useState(false)
     const getNameUserById = (userId: string): string => {
         const user = allUsers?.payload?.find((r: IUser) => r.userId === userId)
         return user?.userName || ''
@@ -120,7 +122,13 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
         handleViewExamUser(cuid,userId);
         setShowResult(true)
     }
-
+    
+  const handleWatchRank = (): void => {
+    setOpenRank(true)
+  }
+  const handleExitRank = (): void => {
+    setOpenRank(false)
+  }
 
     React.useEffect(() => {
         callAllCompUsers(getAllCompUser)
@@ -191,6 +199,27 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
                     >
                         <CloseIcon sx={{ fontSize: "30px", color: "#ff1a1a" }} />
                     </Box>
+                    <Tooltip title="Danh sách kết quả ">
+                        <Box
+                            component='div'
+                            sx={{
+                                position:"absolute",
+                                top:"15px",
+                                left:"15px",
+                                width:"40px",
+                                height:"40px",
+                                backgroundColor:"#e0efff",
+                                display:"flex",
+                                alignItems:"center",
+                                justifyContent:"center",
+                                cursor:"pointer",
+                                borderRadius:"50%"
+                            }}
+                            onClick={handleWatchRank}
+                        >
+                            <MilitaryTechIcon className='color-primary'/>
+                        </Box>
+                    </Tooltip>
                     <h3
                         className='color-primary'
                         style={{
@@ -202,7 +231,6 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
                         }}
                     >
                         <span>DANH SÁCH DỰ THI</span>
-
                     </h3>
                     <Box
                         sx={{
@@ -678,6 +706,11 @@ const ModalResultManage = (prop: PropsResultManage): JSX.Element => {
                     </Box>
                 </Box>
             </Box>
+            {openRank && (
+                <>
+                <Ranking  callback={handleExitRank} listuser={listUserHasJoinComp} />
+                </>
+            )}
         </>
     )
 }
