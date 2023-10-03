@@ -13,7 +13,7 @@ interface PropsRanking {
     listuser?: any;
     callback: any;
 }
-interface IUserResult {
+export interface IUserResult {
     comId: number
     cuid: number
     endTimes: string

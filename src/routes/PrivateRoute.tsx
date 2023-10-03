@@ -7,16 +7,6 @@ type Props = {
 
 const PrivateRoute = (props: Props): JSX.Element => {
   const { profile } = useAuth()
-  const checkCookie=(key:string):boolean=> {
-    const cookies = document.cookie.split(';');
-  for (let i = 0; i < cookies.length; i++) {
-    const cookie = cookies[i].split('=');
-    if (cookie[0] === 'idx_web_cookie') {
-      return true;
-    }
-  }
-  return false;
-  }
   const LoginSuccess = localStorage.getItem('Login')
   if(LoginSuccess === "success"){
     if (!profile) {
