@@ -91,6 +91,7 @@ export default function SideBar(): JSX.Element {
     await getLogout().then((): void => {
       window.location.reload()
     })
+    navigate('/')
   }
 
 
@@ -276,24 +277,29 @@ export default function SideBar(): JSX.Element {
           </Box>
         </Box>
         <Box sx={{ display: 'flex', gap: '30px', alignItems: 'center' }}>
-          <Button
-            variant='outlined'
-            startIcon={<HistoryIcon />}
-            sx={{
-              width: '100%',
-              border: '1px solid #fff',
-              borderRadius: '5px',
-              color: 'white',
-              '&:hover': {
-                borderColor: '#fff'
-              }
-            }}
-            onClick={(): void => {
-              navigate('/HistoryCompetition')
-            }}
-          >
-            LỊCH SỬ THI
-          </Button>
+          {
+            profile && (
+              <Button
+                variant='outlined'
+                startIcon={<HistoryIcon />}
+                sx={{
+                  width: '100%',
+                  border: '1px solid #fff',
+                  borderRadius: '5px',
+                  color: 'white',
+                  '&:hover': {
+                    borderColor: '#fff'
+                  }
+                }}
+                onClick={(): void => {
+                  navigate('/HistoryCompetition')
+                }}
+              >
+                LỊCH SỬ THI
+              </Button>
+            )
+          }
+
           <Box
             sx={{
               position: 'relative',

@@ -395,7 +395,7 @@ export default function Index(): JSX.Element {
                 </Box>
               </Box>
               {
-                (listComExam?.length === 0) ?
+                (listComExam?.length == 0) ?
                   (
                     <Box
                       sx={{

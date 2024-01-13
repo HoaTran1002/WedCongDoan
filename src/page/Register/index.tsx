@@ -101,14 +101,10 @@ export default function Register(): JSX.Element {
       await callInsertUser(async (): Promise<void> => {
         await insert(requestData)
       })
-      await server.post('/Users/Login', {
-        email:data.get('email'),
-        password: data.get('password')
-      })
-      navigate('/')
-      location.reload()
+      navigate('/login')
     }catch(er){
       console.log(er)
+      return;
     }
   }
   
